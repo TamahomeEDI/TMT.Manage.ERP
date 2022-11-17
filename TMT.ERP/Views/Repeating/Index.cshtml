@@ -1,0 +1,101 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.Repeating>
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <p>
+        @Html.ActionLink("Create New", "Create")
+    </p>
+    <table>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.NumDayRepeat)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RepeatTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateRun)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DueDateNum)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DueDateTypeID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EndDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RepeatType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SaleInvoiceID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PurchaseID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsTracked)
+            </th>
+            <th></th>
+        </tr>
+    
+    @foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.NumDayRepeat)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RepeatTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateRun)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DueDateNum)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DueDateTypeID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RepeatType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.SaleInvoiceID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PurchaseID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsTracked)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+                @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+                @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+            </td>
+        </tr>
+    }
+    
+    </table>
+</body>
+</html>

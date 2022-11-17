@@ -1,0 +1,112 @@
+﻿@model TMT.ERP.DataAccess.Model.MachineHistory
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = null;
+}
+<script type="text/ecmascript">
+    $(document).ready(function () {
+        $('#btnClose').click(function (e) {
+            e.preventDefault();
+            location.reload();
+        });
+    });
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    @Html.AntiForgeryToken();
+<div class="container">
+    <div class="c_container">
+        <div id="breadcrumb">
+            <div class="container">
+                <div id="con_top">
+                    <div class="c_container">    
+                        <fieldset>
+                            <legend>Machine History</legend>
+
+                            <table style="width:100%;">
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.MachineHistory_MachineID</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.DropDownList("MachineID", null, String.Empty, new { style = "width: 115px;" })
+                                            @Html.ValidationMessageFor(model => model.MachineID)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.MachineHistory_WorkCenterID</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.DropDownList("WorkCenterID", null, String.Empty, new { style = "width: 115px;" })
+                                            @Html.ValidationMessageFor(model => model.WorkCenterID)
+                                        </div>
+                                    </td>
+                                </tr>
+             
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.MachineHistory_MaxDailyRuntime</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.MaxDailyRuntime)
+                                            @Html.ValidationMessageFor(model => model.MaxDailyRuntime)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.MachineHistory_UpdateTime</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.UpdatedDate)
+                                            @Html.ValidationMessageFor(model => model.UpdatedDate)
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.MachineHistory_Cost</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Costs)
+                                            @Html.ValidationMessageFor(model => model.Costs)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.MachineHistory_CurrencyID</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.DropDownList("CurrencyID", null, String.Empty, new { style = "width: 115px;" })
+                                            @Html.ValidationMessageFor(model => model.CurrencyID)
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.MachineHistory_Status</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Status)
+                                            @Html.ValidationMessageFor(model => model.Status)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.MachineHistory_Description</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Description)
+                                            @Html.ValidationMessageFor(model => model.Description)
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table><br>
+                            <p>
+                                <input type="submit" class="btn" value="@Resources.Resource.MachineHistory_Save" />
+                                <input type="submit" value="@Resources.Resource.MachineHistory_Cancel" class="btn" id="btnClose" />
+                            </p>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>    
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

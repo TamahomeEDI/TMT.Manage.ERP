@@ -1,0 +1,792 @@
+﻿@model TMT.ERP.DataAccess.Model.SaleInvoice
+@{
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+    ViewBag.Title = "Edit";
+    var invoiceBreadcrumb = "";
+    var invoiceNo = "";
+    if(Model.Type==1){
+        invoiceBreadcrumb = Resources.Resource.Purchase_EditCreditNote_Title;
+        invoiceNo = Resources.Resource.SaleInvoice_DashboardCreate_CreateCreditNote + " #";
+    }
+    else{
+        invoiceBreadcrumb = Resources.Resource.SaleInvoice_Edit_EditInvoice;
+        invoiceNo = Resources.Resource.SaleInvoice_Create_InvoiceNo;
+    }
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var valueSave = parseInt($('#hidStatus').val());
+        $('#txtSupplier').focus();
+        $("#txtSupplier").autocomplete({
+            source: function (request, response) {
+                var term = request.term;
+                $.ajax({
+                    type: "POST",
+                    url: "/Services/ContactService.asmx/GetCustomerStartWith",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        nameStartsWith: term
+                    }),
+
+                    success: function (data) {
+                        var contact = JSON.parse(data.d);
+                        var results = $.map(contact, function (item) {
+                            return { label: item.Name, value: item.ID };
+                        });
+                        response(results.slice(0, 10));
+                    }
+                });
+            },
+            minLength: 0,
+            focus: function (event, ui) {
+                return false;
+            },
+            select: function (event, ui) {
+                event.preventDefault();
+                $("#txtSupplier").val(ui.item.label);
+                //$("#ContactIDValue").val(ui.item.value);
+            }
+            //change: function (event, ui) {
+            //    event.preventDefault();
+            //    $("#txtSupplier").val(ui.item.label);
+            //    $("#ContactIDValue").val(ui.item.value);
+            //}
+        });
+
+        jQuery.validator.messages.required = "";
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+            //debug: true
+        });
+
+        //For Note
+        var arrNoteID = [];
+        //var subTotal = parseFloat($("#txtSubTotal").text());
+        //$("#txtSubTotal").text(subTotal).formatCurrency();
+
+        var tax = parseFloat($("#txtTax").text());
+        $("#txtTax").text(tax).formatCurrency();
+
+        var total = parseFloat($("#txtInvoiceTotal").text());
+        $("#txtInvoiceTotal").text(total).formatCurrency();
+
+        $("#addline").click(function () {
+            //$.ajax(
+            //    {
+            //        type: "POST",
+            //        url: "/SaleInvoice/AddNewLine/",
+            //        success: function (data) {
+            //            $('#insertRow').append(data);
+
+            //        }
+            //    });
+            addTableRow();
+            return false;
+        });
+    });
+
+    function addTableRow() {
+        var $tr = jQuery('div#form_body table#tblSaleDetail').find("tbody tr:last").clone();
+        jQuery('div#form_body table#tblSaleDetail').find("tbody tr:last").after($tr);
+        CalSubTotal();
+        CalTax();
+        CalTotal();
+    };
+    function RemoveRow(element) {
+        var tr = $(element).closest('tr');
+        tr.remove();
+        CalSubTotal();
+        CalTax();
+        CalTotal();
+    }
+
+    $(document).ready(function () {
+        CalDisc();
+        $(".goodchange").change(function () {
+            ChangeGood(this);
+        });
+
+        $(".taxrate").change(function () {
+            ChangeTax(this);
+        });
+
+        $(".account").change(function () {
+            ChangeAccount(this);
+        });
+
+        $(".disc").change(function () {
+            CalDisc();
+            CalAmount(this);
+            CalSubTotal();
+            CalTax();
+            CalTotal();
+        });
+
+        $(".qty").change(function () {
+            CalDisc();
+            CalAmount(this);
+            CalSubTotal();
+            CalTax();
+            CalTotal();
+        });
+
+        $(".unitprice").change(function () {
+            CalDisc();
+            CalAmount(this);
+            CalSubTotal();
+            CalTax();
+            CalTotal();
+        });
+
+        $("#chkVAT").change(function () {
+            CalTax();
+            CalTotal();
+        });
+        CalTax();
+    });
+
+    function CalDisc() {
+        var totalDisc = CalTotalDisc();
+        if (totalDisc > 0) {
+            $('#discSpan').show();
+            $('#discSpanText').text(totalDisc).formatCurrency();
+        }
+        else {
+            $('#discSpan').hide();
+        }
+    }
+
+    function CalTotalDisc() {
+        var value = 0;
+        $("#tblSaleDetail tr").each(function () {
+            var tr = $(this).closest('tr');
+            var qty = 0;
+            if ($('.qty', tr).val() != "")
+                qty = $('.qty', tr).asNumber();
+
+            var unitprice = 0;
+            if ($('.unitprice', tr).val() != "")
+                unitprice = $('.unitprice', tr).asNumber();
+
+            var disc = 0;
+            if ($('.disc', tr).val() != "")
+                disc = $('.disc', tr).asNumber();
+
+            var retValue = qty * unitprice;
+            if (disc > 0 & qty > 0 & unitprice > 0)
+                value += unitprice * qty * disc / 100;
+        });
+        return value;
+    }
+
+    function ChangeAccount(element) {
+        //var tr = $(element).closest('tr');
+        //var accountID = $("#ddlAccountID", tr).val();
+        //if (accountID == 0) {
+        //    alert("Open add new account");
+        //}
+    }
+
+    function CalAmount(element) {
+        var tr = $(element).closest('tr');
+        $(".amount", tr).val(function () {
+            var qty = 0;
+            if ($('.qty', tr).val() != "")
+                qty = $('.qty', tr).asNumber();
+
+            var unitprice = 0;
+            if ($('.unitprice', tr).val() != "")
+                unitprice = $('.unitprice', tr).asNumber();
+
+            var disc = 0;
+            if ($('.disc', tr).val() != "")
+                disc = $('.disc', tr).asNumber();
+
+            var retValue = qty * unitprice;
+            if (disc > 0)
+                retValue = retValue - retValue * disc / 100;
+            return retValue;
+        }).formatCurrency();
+    }
+
+    function CalSubTotal() {
+        $(".subtotal").text(function () {
+            var value = 0;
+            $(".amount").each(function () {
+                if ($(this).val() != "")
+                    //  value += parseInt($(this).val());
+                    value += $(this).asNumber();
+            });
+            return value;
+        }).formatCurrency();
+    }
+
+    function CalTotal() {
+        $("#txtInvoiceTotal").text(function () {
+            var subtotal = 0;
+            if ($('.subtotal').text() != "")
+                subtotal = $('.subtotal').asNumber();
+            var tax = 0;
+            if ($('#txtTax').text() != "")
+                tax = $('#txtTax').asNumber();
+
+            if ($('#chkVAT').prop('checked')) //Inclusive
+                return subtotal;
+            else //Exclusive
+                return subtotal + tax;
+        }).formatCurrency();
+    }
+
+    function CalTax() {
+        $("#txtTax").text(function () {
+            var value = 0;
+            if ($('#chkVAT').prop('checked')) //Inclusive
+            {
+                $("#tblSaleDetail tr").each(function () {
+                    var tr = $(this).closest('tr');
+                    var taxvalue = $(".taxvalue", tr).asNumber();
+                    var qty = 0;
+                    if ($('.qty', tr).val() != "")
+                        qty = $('.qty', tr).asNumber();
+
+                    var unitprice = 0;
+                    if ($('.unitprice', tr).val() != "")
+                        unitprice = $('.unitprice', tr).asNumber();
+
+                    var disc = 0;
+                    if ($('.disc', tr).val() != "")
+                        disc = $('.disc', tr).asNumber();
+
+                    if (taxvalue > 0 & qty > 0 & unitprice > 0)
+                        value += qty * ((unitprice - (unitprice * disc / 100)) / ((100 + taxvalue) / 100)) * taxvalue / 100;
+                    //value += taxvalue * amount / 100;
+                });
+
+            }//Exclusive
+            else {
+                $("#tblSaleDetail tr").each(function () {
+                    var tr = $(this).closest('tr');
+                    var taxvalue = $(".taxvalue", tr).asNumber();
+                    var amount = $(".amount", tr).asNumber();
+
+                    if (taxvalue > 0 & amount > 0)
+                        value += taxvalue * amount / 100;
+                });
+            }
+
+            if (value > 0) {
+                if ($('#chkVAT').prop('checked')) //Inclusive
+                {
+                    $('#spTotalTax').text('@Resources.Resource.Common_IncludesTax');
+                }
+                else {
+                    $('#spTotalTax').text('@Resources.Resource.Common_TotalTax');
+                }
+            }
+            else {
+                $('#spTotalTax').text('@Resources.Resource.Common_Tax');
+            }
+
+            return value;
+        }).formatCurrency();
+    }
+
+    function ChangeGood(element) {
+        //
+        var good = $(element).val();
+        var tbody = $(element).closest('tr');
+        var goodID = $("#ddlGoodID", tbody).val();
+        if (goodID != "") {
+            if (goodID > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Services/GoodService.asmx/GetGoodByID",
+                    data: JSON.stringify({
+                        goodID: goodID
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        try {
+                            var good = JSON.parse(data.d);
+                            $('.description', tbody).val(good.Decription);
+                            $('.qty', tbody).val("1");
+                            $('.unitprice', tbody).val(good.UnitPrice).formatCurrency();
+                            $('.disc', tbody).val("");
+                            $('.account', tbody).val(good.Accounts);
+                            $('.taxrate', tbody).val(good.TaxRate);
+                            $('.taxvalue', tbody).val(good.TaxRateVal);
+                            CalAmount(element);
+                            CalSubTotal();
+                            CalTax();
+                            CalTotal();
+                        } catch (ex) { }
+                    }
+                }).error(function (event, jqXHR, ajaxSettings, thrownError) {
+                    alert('Error when loading data');
+                });
+            }
+            //else if (goodID == 0) {
+            //    alert("Add new inventory");
+            //}
+        }
+        else {
+            $('.description', tbody).val("");
+            $('.qty', tbody).val("");
+            $('.unitprice', tbody).val("");
+            $('.disc', tbody).val("");
+            CalAmount(element);
+            CalTax();
+            CalSubTotal();
+            CalTotal();
+        }
+
+    }
+
+    function ChangeTax(element) {
+        var tr = $(element).closest('tr');
+        var taxID = $("#ddlTaxRateID", tr).val();
+        if (taxID != "") {
+            if (taxID > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Services/GoodService.asmx/GetTaxByID",
+                    data: JSON.stringify({
+                        taxID: taxID
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        try {
+                            var tax = JSON.parse(data.d);
+                            $('.taxvalue', tr).val(tax.Rate);
+                            CalTax();
+                            CalTotal();
+                        } catch (ex) { }
+                    }
+                }).error(function (event, jqXHR, ajaxSettings, thrownError) {
+                    alert('Error when loading data');
+                });
+
+            }
+        }
+        else {
+            $('.taxvalue', tr).val("0");
+            CalTax();
+            CalTotal();
+        }
+
+    }
+
+    function Reject() {
+        var invoiceID = $('#hdInvoiceID').val();
+        var saleInvoice = {
+            id: invoiceID,
+            status: '5'
+        };
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/SaleInvoice/UpdateStatus/',
+                traditional: true,
+                data: saleInvoice,
+                success: function (data) {
+                    window.location.href = "/SaleInvoice/All/";
+                }
+            });
+    }
+
+    function SaveSaleInvoice(status) {        
+        custom.ShowBug(status);
+        var isValid = $("#frmMain").valid();
+        if (!isValid) {
+            return false;
+        }
+
+        arrNoteID = [];
+        $(".noteID").each(function () {
+            if ($(this).val() != "")
+                arrNoteID.push($(this).val());
+        });
+
+        var supplierName = $('#txtSupplier').val();
+        var createDate = $('#txtDate').val();
+        var invoiceNo = $('#txtInvoiceNo').val();
+        var reference = $('#txtReference').val();
+        //var stockID = $('#StockID').val();
+        var currencyID = $('#CurrencyID').val();
+        var vatID = $('#chkVAT').prop('checked') ? 1 : 0;
+        var userID = $('#hdCurrentUserID').val();
+        var supplierID = 0;
+        var subTotal = $('#txtSubTotal').asNumber();
+        var totalTax = $('#txtTax').asNumber();
+        var totalMoney = $('#txtInvoiceTotal').asNumber();
+        var saleType = $('#hdInvoiceType').val();
+        var dueDate = "";
+        if (saleType == 0)
+            dueDate = $('#txtDueDate').val();
+        var saleInvoiceID = $('#hdInvoiceID').val();
+
+        debugger;
+        var saleInvoiceDetail = BuildJSON();
+        $.ajax({
+            type: "POST",
+            url: "/Services/SaleInvoiceService.asmx/SaveSaleInvoice",
+            async: false,
+            data: JSON.stringify({
+                saleInvoiceID: saleInvoiceID,
+                supplierID: supplierID,
+                supplierName: supplierName,
+                createDate: createDate,
+                dueDate: dueDate,
+                invoiceNo: invoiceNo,
+                reference: reference,
+                //stockID: stockID,
+                currencyID: currencyID,
+                vatID: vatID,
+                userID: userID,
+                subTotal: subTotal,
+                totalTax: totalTax,
+                totalMoney: totalMoney,
+                status: status,
+                saleType: saleType,
+                saleInvoiceDetail: saleInvoiceDetail
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                var retValue = JSON.parse(data.d);
+                //if (!isNaN(retValue))
+                //For note
+                AddNoteByNoteFromID(parseInt($("#hidNoteFromID").val()), parseInt($("#hidNoteType").val()));
+                if (retValue.indexOf("ERROR") != -1) {
+                    alert(retValue);
+                    return;
+                }
+                else {                    
+                    if (status == 0) {
+                        var msgUpdate = '@Resources.Resource.Common_Msg_UpdateSuccess';
+                        var urlUpdate = "/SaleInvoice/Draft/";
+                        CreatePopupMessage('divMessage', msgUpdate, '@Resources.Resource.Common_Message', 120, 400, urlUpdate);
+                    } else if (status == 1) {
+                        if (saleType == 1) {
+                            var msgCn = '@Resources.Resource.Common_Msg_UpdateSuccess';
+                            var urlCn = "/SaleInvoice/AllocCreditBalance/" + saleInvoiceID;
+                            CreatePopupMessage('divMessage', msgCn, '@Resources.Resource.Common_Message', 120, 400, urlCn);
+                        } else {
+                            var msgUpdateSuccess = '@Resources.Resource.Common_Msg_UpdateSuccess';
+                            var urlUpdateSuccess = "/SaleInvoice/Awaiting/";
+                            CreatePopupMessage('divMessage', msgUpdateSuccess, '@Resources.Resource.Common_Message', 120, 400, urlUpdateSuccess);
+                        }
+                    } else if (status == 2) {
+                        if (saleType == 0) {
+                            $.ajax(
+                              {
+                                  type: 'POST',
+                                  url: '/SaleInvoice/CreateInvoiceStockOut',
+                                  traditional: true,
+                                  dataType: "text",
+                                  data: { "saleInvoiceId": retValue, "userId": userID },
+                                  success: function (dataStockOut) {
+                                      var msgSuccessStockOut = '@Resources.Resource.Common_Msg_Approved';
+                                      msgSuccessStockOut += '<br/>';
+                                      msgSuccessStockOut += '@Resources.Resource.Common_Msg_ShipmentNoFirstSale';
+                                      msgSuccessStockOut += dataStockOut;
+                                      msgSuccessStockOut += '@Resources.Resource.Common_Msg_ShipmentNoLastSale';
+                                      var urlSuccessStockOut = '/SaleInvoice/AwaitingPayment/';
+                                      CreatePopupMessage('divMessage', msgSuccessStockOut, '@Resources.Resource.Common_Message', 160, 400, urlSuccessStockOut);
+                                  }
+                              });
+                          }
+                          if (saleType == 1) {
+                              var msgApprovedCn = '@Resources.Resource.Common_Msg_UpdateSuccess';
+                              var urlApprovedCn = "/SaleInvoice/AllocCreditBalance/" + saleInvoiceID;
+                              CreatePopupMessage('divMessage', msgApprovedCn, '@Resources.Resource.Common_Message', 160, 400, urlApprovedCn);
+                        }
+                    } else {
+
+                    }
+
+        }
+            }
+        });
+        //}).error(function (data) {
+        //    alert('Error in save invoice\n' + data);
+        //});
+}
+
+//For note
+function AddNoteByNoteFromID(id, noteType) {
+    var note = {
+        noteFromID: id,
+        noteType: noteType,
+        arrNoteID: arrNoteID,
+        change: "Edit",
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: '/Note/AddNoteByNoteFromID/',
+        data: note,
+        traditional: true,
+        success: function () {
+        }
+
+    });
+}
+
+function BuildJSON() {
+    var arrayData = [];
+    $("#tblSaleDetail tr").each(function () {
+        var tr = $(this).closest('tr');
+        var goodID = $("#ddlGoodID", tr).val();
+        if (goodID != "-1" && parseInt(goodID) > 0) {
+            var item = {
+                "goodId": goodID,
+                "quantity": $("#txtQty", tr).val(),
+                "price": $("#txtUnitPrice", tr).val(),
+                "taxRateID": $("#ddlTaxRateID", tr).val(),
+                "accountID": $("#ddlAccountID", tr).val(),
+                "discount": $("#txtDisc", tr).val(),
+                "totalMoney": $("#txtAmount", tr).val(),
+                "description": $("#txtDescription", tr).val(),
+            };
+            arrayData.push(item);
+        }
+    });
+    return JSON.stringify(arrayData);
+}
+</script>
+<input type="hidden" id="hidNoteType" value="@ViewBag.NoteType" />
+<input type="hidden" id="hidNoteFromID" value="@ViewBag.NoteFromID" />
+<input type="hidden" id="hdInvoiceID" value="@Model.ID" class="invoiceid" />
+<input type="hidden" id="hdInvoiceType" value="@Model.Type" class="invoicetype" />
+<input type="hidden" id="hdCurrentUserID" value="@user.ID" />
+<input type="hidden" id="hidStatus" value="@Model.Status" />
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    //@Html.ValidationSummary(true)
+
+    <div id="breadcrumb">
+        <div class="container">
+            <div id="con_top">
+                <div class="c_container">
+                    <h3>@invoiceBreadcrumb @Model.Code</h3>
+                    <div id="breadcrumbs">
+                        <ul>
+                            <li><span>@Resources.Resource.Common_Sales</span></li>
+                            <li><a href="/SaleInvoice/Dashboard/">@Resources.Resource.Sale_SaleInvoices</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    
+    <div id="con_form">
+        <div class="error" style="display: none;">
+            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: -5px 10px 0px 0px;" />
+            <span></span>.<br clear="all" />
+        </div>
+        <div id="divMessage"></div>
+
+        <div class="container">
+            <div class="c_container">
+                <div class="form_position1">
+                    <div class="form_left">
+                        <div class="form-group">
+                            <label for="invoice">@invoiceNo</label>
+                            @Html.TextBox("txtInvoiceNo", Model.Code, new { @class = "form-control readonly" })
+                        </div>
+                        <div class="form-group">
+                            <label for="createdate">@Resources.Resource.SaleInvoice_Create_Reference</label>
+                            @Html.TextBox("txtReference", Model.Reference, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            <label for="schedule">@Resources.Resource.SaleInvoice_Create_Currency</label>
+                            @Html.DropDownList("CurrencyID", (IEnumerable<SelectListItem>)ViewData["Currency"], new { @class = "form-control required" })
+                        </div>
+                        <div class="form-group" id="divvat">
+                            <label for="createdate">@Resources.Resource.SaleInvoice_Create_VAT</label>
+                            @Html.CheckBox("chkVAT", Model.UseVAT == 1 ? true : false, new { @class = "checkbox" })
+                        </div>
+                    </div>
+
+                    <div class="form_right">
+                        <div class="form-group">
+                            <label for="to">@Resources.Resource.SaleInvoice_Create_To</label>
+                            @Html.TextBox("txtSupplier", Model.ContactName, new { @class = "form-control required" })
+                        </div>
+                        <div class="form-group">
+                            <label for="createdate">@Resources.Resource.Common_Date</label>
+                            @Html.TextBox("txtDate", Model.CreatedDate.ToString("dd-MMM-yyyy"), new { @class = "form-control datepicker" })
+                        </div>
+                        @if (Model.Type == 0)
+                        {
+                            <div class="form-group">
+                                <label for="createdate">@Resources.Resource.Common_DueDate</label>
+                                @Html.TextBox("txtDueDate", Model.DueDate == null ? "" : ((System.DateTime)Model.DueDate).ToString("dd-MMM-yyyy"), new { @class = "form-control datepicker" })
+                            </div>
+                        }
+                    </div>
+                </div>
+
+                <div class="con_clear"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="con_body">
+        <div class="container">
+            <div class="c_container">
+                <div id="form_body">
+                    <table id="tblSaleDetail">
+                        <thead>
+                            <tr>
+                                <th style="width: 140px;"><span>@Resources.Resource.Common_Item</span></th>
+                                <th style="width: 170px;"><span>@Resources.Resource.Common_Description</span></th>
+                                <th style="width: 80px;"><span>@Resources.Resource.Common_Quantity</span></th>
+                                <th style="width: 90px;"><span>@Resources.Resource.SaleInvoice_Create_UnitPrice</span></th>
+                                @if(Model.Type==0)
+                                {
+                                    <th style="width: 80px;"><span>@Resources.Resource.SaleInvoice_Create_Disc</span></th>
+                                }
+                                <th style="width: 140px;"><span>@Resources.Resource.Common_Account</span></th>
+                                <th style="width: 140px;"><span>@Resources.Resource.SaleInvoice_Create_TaxRate</span></th>
+                                <th style="width: 100px;"><span>@Resources.Resource.Common_Amount</span></th>
+                                <th style="width: 20px;"><span></span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="insertRow">
+                            @if (Model.SaleInvoiceDetails.Count == 0)
+                            { 
+                                <tr>
+                                    <td>@Html.DropDownList("ddlGoodID", new SelectList(ViewBag.GoodID, "Value", "Text", ""), "", new { @class = "goodchange colCheckValid" })</td>
+                                    <td>
+                                        <input type="text" id="txtDescription" class="txt1 description" /></td>
+                                    <td>
+                                        <input type="text" id="txtQty" name="txtQty" class="numeric text-right qty checkvalid" /></td>
+                                    <td>
+                                        <input type="text" id="txtUnitPrice" name="txtUnitPrice" class="numeric unitprice currency checkvalid" /></td>
+                                    @if(Model.Type==0)
+                                    {
+                                    <td>
+                                        <input type="text" id="txtDisc" class="numeric currency disc" /></td>
+                                    }
+                                    <td>@Html.DropDownList("ddlAccountID", new SelectList(ViewBag.AccountID, "Value", "Text", ""), "", new { @class = "account checkvalid" })</td>
+                                    <td>@Html.DropDownList("ddlTaxRateID", new SelectList(ViewBag.TaxRateID, "Value", "Text", ""), "", new { @class = "taxrate checkvalid" })
+                                        <input type="hidden" value="0" class="taxvalue" />
+                                    </td>
+                                    <td>
+                                        <input type="text" id="txtAmount" class="txt1 amount currency numeric" /></td>
+                                    <td>
+                                        <div class="remove" id="delRow" onclick="RemoveRow(this);"></div>
+                                    </td>
+                                </tr>
+                            }
+                            else{
+                            foreach (var item in Model.SaleInvoiceDetails)
+                            {
+                                <tr>
+                                    @*<td><img src="/images/icon_table.png" /></td>*@
+                                    <td>@Html.DropDownList("ddlGoodID", new SelectList(ViewBag.GoodID, "Value", "Text", item.GoodID), "", new { @class = "goodchange colCheckValid" })</td>
+                                    <td>
+                                        <input type="text" id="txtDescription" value="@item.Good.Description" class="txt1 description" /></td>
+                                    <td>
+                                        <input type="text" id="txtQty" name="txtQty" value="@item.Quantity" class="numeric text-right qty checkvalid" /></td>
+                                    <td>
+                                        <input type="text" id="txtUnitPrice" name="txtUnitPrice" value="@item.Price" class="numeric unitprice currency checkvalid" /></td>
+                                    @if(Model.Type==0)
+                                    {
+                                    <td>
+                                        <input type="text" id="txtDisc" value="@item.Discount" class="numeric disc" /></td>
+                                    }
+                                    <td>@Html.DropDownList("ddlAccountID", new SelectList(ViewBag.AccountID, "Value", "Text", item.AccountID), "", new { @class = "account checkvalid" })</td>
+                                    <td>@Html.DropDownList("ddlTaxRateID", new SelectList(ViewBag.TaxRateID, "Value", "Text", item.TaxRateID), "", new { @class = "taxrate checkvalid" })
+                                        <input type="hidden" value="@item.TaxRate.Rate" class="taxvalue" />
+                                    </td>
+                                    <td>
+                                        <input type="text" id="txtAmount" value="@item.TotalMoney" class="txt1 amount currency numeric" /></td>
+                                    <td>
+                                        <div class="remove" id="delRow" onclick="RemoveRow(this);"></div>
+                                    </td>
+                                </tr>
+                            }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tablefooter">
+                    <div class="pos1">
+                        @*<button id="addline" class="addline">@Resources.Resource.Common_AddNewLine</button>*@
+                        <input type="button" id="addline" class="addline" value="@Resources.Resource.Common_AddNewLine" />
+                    </div>
+                    <div class="pos2 posprice">
+                        <p>
+                            <span class="ta_label">@Resources.Resource.Common_SubTotal
+                                <span style="font-style: italic; font-size: 12px;" id="discSpan">(@Resources.Resource.Purchase_Discount_Span
+                                    <span style="font-style: italic; font-size: 12px;" id="discSpanText" class="currency"></span>)
+                                </span>
+                            </span>
+                            <span class="price subtotal currency" id="txtSubTotal">@Model.SubTotal</span>
+                        </p>
+                        <p><span class="ta_label"  id="spTotalTax">@Resources.Resource.Common_Tax</span><span class="price vat" id="txtTax">@Model.TotalTax</span></p>
+                    </div>
+                    <div class="pos3 posprice">
+                        <p><span class="ta_label">@Resources.Resource.Common_Total</span><span class="price total" id="txtInvoiceTotal">@Model.TotalMoney</span></p>
+                    </div>
+                </div>                
+                <div class="btn-group">
+                    <button id="btnSaveSale" type="button" onclick="SaveSaleInvoice(parseInt($('#hidStatus').val()));" class="btn btn-defaultxero">@Resources.Resource.Common_Save</button>
+                    @if (Model.Status < 1)
+                    {
+                        <button type="button" style="margin-left: -10px;" class="btn btn-defaultxero dropdown-toggle" data-toggle="dropdown">
+                            <span class="caret"></span>
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>                        
+                        <ul class="dropdown-menu" role="menu">
+                            <li id="form_save_and_submit"><a href="javascript:void(0);" onclick="SaveSaleInvoice(1);">@Resources.Resource.Common_SaveAndSubmit</a></li>
+                        </ul>
+                    }
+                </div>
+                <input id="btnApproveSale" type="button" class="btn btn-defaultxero" value="Approve" onclick="SaveSaleInvoice(2);">
+                @if (Model.Status == 1)
+                {
+                    <input id="btnRejectSale" type="button" class="btn btn-defaultxero" value="Reject" onclick="Reject();" />
+                }
+                <input id="btnCancelSale" type="button" value="Cancel" onclick="javascript: location.href = '/SaleInvoice/Dashboard/';" class="btn btn-defaultxero" />
+                <div class="cleardiv"></div>
+            </div>
+        </div>
+
+    </div>    
+}
+@Html.Partial("Note/_ViewNote")
+<div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+
+

@@ -1,0 +1,214 @@
+﻿@using PagedList.Mvc
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.ProductionMonitor>
+<script type="text/javascript">
+    $(document).ready(function () {        
+        $('#searchString').focus();
+        $('#sPageSize').html($('#hdfPageSize').val());
+        var countModel = $('#hdfCountList').val();
+        if (countModel == 0) {
+            $('#error').css('display', 'block');
+            $('#tabs-1').css('display', 'none');
+            $('#function').css('display', 'none');
+        } else {
+            $('#error').css('display', 'none');
+        }
+        $('#btnAddNewSchedule').click(function () {
+            window.location.href = "/ProductionMonitors/Create/";
+        });
+        $('#btnSearch').click(function () {
+            var valueSearch = $('#searchString').val();
+            if (valueSearch == "" || valueSearch == undefined || valueSearch == null) {
+                location.href = "/ProductionMonitors/Completed/";
+                return false;
+            }
+        });
+    });
+    function SetPageSize(pageSize) {
+        debugger;
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/ProductionMonitors/SetPageSize',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+</script>
+@{
+    var ooProduct = ViewBag.Product as List<ProductionMonitor>;
+    var draft = 0;
+    var processing = 0;
+    var completed = 0;
+    if(ooProduct!=null)
+    {
+        draft = ooProduct.Count(x => x.Status == 0);
+        processing = ooProduct.Count(x => x.Status == 1);
+        completed = ooProduct.Count(x => x.Status == 2);
+    }
+}
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<input type="hidden" value="@Model.Count" id="hdfCountList"/>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+           <div class="c_container">
+                <h3>@Resources.Resource.ProductionMonitors_Index_Parent</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.ProductionMonitors_Index_Children01</span></li>
+                        <li><span>@Resources.Resource.ProductionMonitors_Index_Children02</span></li>
+                        <li><a href="/ProductionMonitors/">@Resources.Resource.ProductionMonitors_Index_Children03</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div id="con_body">
+    <div class="container">
+        <div class="c_container">
+            <div class="cleardiv"></div>
+            <input type="submit" value="@Resources.Resource.ProductionMonitors_Index_Add" id="btnAddNewSchedule" class="btn btn-defaultxero"/>
+            <div class="cleardiv"></div>
+            <div style="float: right; display: inline;">
+                @using (Html.BeginForm("Completed", "ProductionMonitors", FormMethod.Get, new { }))
+                {
+                    @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { style = "width:175px !important;height:30px !important;", @class = "required", placeholder = "Please insert MPS No" })
+                    <input type="submit" id="btnSearch" value="@Resources.Resource.IncomingShipment_Index_Search" class="btn btn-defaultxero" />
+                }
+            </div>
+
+
+            <ul class="nav nav-tabs">
+                <li>
+                    <a href="/ProductionMonitors/Index/">
+                        @Resources.Resource.ProductionMonitors_Index_Draft&nbsp;(@draft)
+                    </a>
+                </li>
+                <li>
+                    <a href="/ProductionMonitors/Process/">
+                        @Resources.Resource.ProductionMonitors_Index_Processing&nbsp;(@processing)
+                    </a>
+                </li>
+                <li class="active">
+                    <a href="/ProductionMonitors/Completed/">
+                        @Resources.Resource.ProductionMonitors_Index_Completed&nbsp;(@completed)
+                    </a>
+                </li>
+            </ul>
+            <div class="cleardiv"></div>
+            <div id="tabbody">
+                <div id="tabs-1">
+                    <table id="Pending">
+                        <thead>
+                            <tr>
+                                <th>@Resources.Resource.ProductionMonitors_Index_MachineNo</th>
+                                <th>@Resources.Resource.ProductionMonitors_Create_WorkOrderNo</th>
+                                <th>@Resources.Resource.ProductionMonitors_Create_ProductItem</th>
+                                <th>@Resources.Resource.ProductionMonitors_Create_ScheduleStartTime</th>
+                                <th>@Resources.Resource.ProductionMonitors_Create_ScheduleEndTime</th>
+                                <th>@Resources.Resource.ProductionMonitors_Create_ProcessTime</th>
+                                <th>@Resources.Resource.ProductionMonitors_Create_StartTime</th>
+                                <th>@Resources.Resource.ProductionMonitors_Create_EndTime</th>
+                                @*<th>ProcessTime</th>*@
+                            </tr>
+                        </thead>
+                        <tbody>
+
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <a href="/ProductionMonitors/ViewCompleted?id=@item.ID">@item.Machine.Code</a>
+                                    </td>
+                                    <td>
+                                        @if (ViewBag.WorkOrderNo(item.AllocWOID) != null)
+                                        {
+                                            @ViewBag.WorkOrderNo(item.AllocWOID)
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (ViewBag.Item(Convert.ToInt32(item.GoodID)) != null)
+                                        {
+                                            @ViewBag.Item(Convert.ToInt32(item.GoodID))
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.ScheduleStartTime != null)
+                                        {
+                                            @TMT.ERP.Commons.Utility.DateFormat(Convert.ToDateTime(item.ScheduleStartTime))
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.ScheduleEndTime != null)
+                                        {                                        
+                                            @TMT.ERP.Commons.Utility.DateFormat(Convert.ToDateTime(item.ScheduleEndTime))
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.ProcessTime != null)
+                                        {
+                                            @item.ProcessTime
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.RealStartTime != null)
+                                        {
+                                            @TMT.ERP.Commons.Utility.DateFormat(Convert.ToDateTime(item.RealStartTime))
+                                        }
+                                    </td>
+                                    <td>
+                                        @{
+                                        DateTime realEndTime = Convert.ToDateTime(item.EndStartTime);
+                                        }
+                                        @if (item.EndStartTime != null)
+                                        {
+                                            @TMT.ERP.Commons.Utility.DateFormat(Convert.ToDateTime(item.EndStartTime))
+                                        }                                        
+                                    </td>
+                                    @*<td>
+                                        @if (item.EndStartTime != null && item.RealStartTime != null)
+                                        {
+                                            var total = Convert.ToDateTime(item.EndStartTime).Subtract(Convert.ToDateTime(item.RealStartTime));
+                                            @total.TotalMinutes
+                                        }
+                                    </td>*@
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div style="height: 50px; padding-top: 5px;">
+                        <div style="float: left;">
+                            @Html.PagedListPager(Model, page => Url.Action("Completed", new { page, currentFilter = ViewBag.CurrentFilter }))
+                        </div>
+                        <div style="width: 25%; float: right;">
+                            <label style="margin-left: 70px; margin-top: 10px;">Showing&nbsp;</label>
+                            <div id="showpag" class="dropdown" style="float: right;">
+                                <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cleardiv"></div>
+                <div id="error">
+                    <label>
+                        @Resources.Resource.SaleInvoices_Error
+                    </label>
+                </div>
+                <div class="cleardiv"></div>
+            </div>
+        </div>
+    </div>
+</div>

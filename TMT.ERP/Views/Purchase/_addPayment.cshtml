@@ -1,0 +1,44 @@
+﻿                           <div style="float: left; width: 15%;">
+                                <label>Amount Paid</label>
+                                <br />
+                                 <input type="hidden" value="@ViewBag.IDPayment" id="purchaseId" name="purchaseId"/>
+                                <input type="text" id="txtsotienthanhtoan" class="numeric" value="@ViewBag.amountRemain" style = "width:80px;height:26px;"/>
+                            </div>
+                            <div style="float: left; width: 17%; margin-left: 10px;">
+                                <label>Date Paid</label>
+                                <br />
+                                <input style="width: 85px;height:26px;" type="text" name="txtDatePaid" id="txtDatePaid" class="datepicker">
+                            </div>
+                            <div style="float: left; width: 23%;">
+                                <label>Paid To</label>
+                                <br />
+                                @{
+                        int[] groupID1 = new int[1] { 4 };
+                        List<TMT.ERP.BusinessLogic.Utils.AccountInfo> account1 = TMT.ERP.BusinessLogic.Utils.AccountManager.GetAccountByGroups(groupID1).ToList();                                               
+                                }                                
+                                <select id="AccountPaymentID" style = "width:130px;height:26px;" class="required form-control">
+                                    <option value=""></option>
+                                    @foreach (var item in account1)
+                                    {
+                                        var accountType = item.AccountID + "-" + item.AccountType;
+                                       <option value="@accountType">@item.AccountName</option>
+                                    }
+                                </select>
+
+                                <label for="AccountPaymentID" class="error onRight" style="width: 80%; display: none;">
+                                    <img src="/images/ico_error.png" width="11" height="11" />
+                                    @Resources.Resource.Purchase_Payment_Validate_AccountPayment
+                                </label>
+                            </div>
+                            <div style="float: left; width: 25%;">
+                                <label>Reference</label>
+                                <br />
+                                <input type="text" id="txtReference" name="txtReference" style = "width:130px;height:26px;" class="txt_box1" />
+                            </div>
+                            <div style="float: left; width: 12%; text-align: right;">
+                                @if(ViewBag.Status >= 3){
+                                <input type="button" disabled="disabled" value="Add payment" id="AddPament" class="btn btn-default" style="margin-top: 15px;width:110px" />
+                                } else {
+                                      <input type="button" value="Add payment" id="AddPament" class="btn btn-default" style="margin-top: 15px;width:110px" />
+                                }
+                            </div>

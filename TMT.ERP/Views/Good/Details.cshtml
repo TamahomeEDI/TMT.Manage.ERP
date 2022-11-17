@@ -1,0 +1,118 @@
+﻿@model TMT.ERP.DataAccess.Model.Good
+
+@{
+    Layout = null;
+}
+<script type="text/ecmascript">
+
+    $(document).ready(function () {
+        $("#SalePrice").val(function () {
+            
+            var amount = $('#SalePrice').val();
+            return amount;
+        }).formatCurrency();
+
+        $("#PurchasePrice").val(function () {
+            
+            var amount = $('#PurchasePrice').val();
+            return amount;
+        }).formatCurrency();
+    });
+</script>
+
+@using (Html.BeginForm())
+{
+    <input type="hidden" id="hidID" value="@Model.ID"/>
+    <div id="popup-breadcrumb" style="margin-top: -6px; width: 102%">
+        <div style="float: left; width: 50%">
+            <div style="width: 90%; height: 30px; margin-bottom: 5px; margin-top: 5px; margin-left: 10px;">
+                <div style="float: left; width: 30%;">
+                    <label>@Resources.Resource.Good_Create_Code</label>
+                </div>
+                <div style="float: right; width: 70%">
+                    <input type="text" name="Code" id="Code" style="width: 175px;" value="@Model.Code" maxlength="40"/>
+                </div>
+            </div>
+            <div style="width: 90%; height: 30px; margin-bottom: 5px; margin-top: 5px; margin-left: 10px;">
+                <div style="float: left; width: 30%">
+                    <label>@Resources.Resource.Good_Create_Category</label>
+                </div>
+                <div style="float: right; width: 70%">
+                    @Html.DropDownList("CategoryID", null, string.Empty, new { @disabled = "disabled",style = "width: 175px;" })
+                </div>
+            </div>
+            <div style="width: 90%; height: 30px; margin-bottom: 5px; margin-top: 5px; margin-left: 10px;">
+                <div style="float: left; width: 30%">
+                    <label>@Resources.Resource.Good_Create_Type</label>
+                </div>
+                <div style="float: right; width: 70%">
+                    @Html.DropDownList("ProductTypeID", null, string.Empty, new { @disabled = "disabled",style = "width: 175px;" })
+                </div>
+            </div>
+            <div style="width: 90%; height: 30px; margin-bottom: 5px; margin-top: 5px; margin-left: 10px;">
+                <div style="float: left; width: 30%">
+                    <label>@Resources.Resource.Good_Create_UOM</label>
+                </div>
+                <div style="float: right; width: 70%">
+                    @Html.DropDownList("UOMID", null, string.Empty, new { @disabled = "disabled",style = "width: 175px;" })
+                </div>
+            </div>
+            <div style="width: 90%; height: 30px; margin-bottom: 5px; margin-top: 5px; margin-left: 10px;">
+                <div style="float: left; width: 30%">
+                    <label>@Resources.Resource.Good_Create_Description</label>
+                </div>
+                <div style="float: right; width: 70%">
+                    <textarea id="Description" maxlength="1000" style="width: 175px;" readonly="">@Model.Description</textarea>
+                </div>
+            </div>
+        </div>
+        <div style="float: left; width: 49%">
+            <div style="display: inline-block">
+                <p class="x-boxed1">
+                    <label>@Resources.Resource.Good_Create_Attachment</label>
+                </p>
+            </div>
+            <div style=" border: 1px solid #ccc; height: 158px;">
+                <a href="javascript:void(0);" class="btn btn-defaultxero" style="margin-left: 10px;" id="btBrowser">Browser</a>
+                <img src="@ViewBag.Images" title="image" alt="image" id="imageGood" style="margin-top: 3px; max-height: 150px; max-width: 200px; margin-left: 20px;"/>
+                <input id="Images" name="Images" type="hidden" value="@ViewBag.Images"/>
+            </div>
+        </div>
+
+        <div style="border: 1px solid #CCCCCC; height: 70px; margin-left: 10px; width: 660px; margin-top: 230px; border-radius: 10px 10px 10px 10px;">
+            <p class="x-boxed" style="margin-left: 5px; margin-top: 5px;">
+                <label>For Purchase</label>
+            </p>
+            <p style="display: inline; margin-left: 5px;">
+                <label style="font-weight: normal">@Resources.Resource.Good_Create_UnitPrice</label>
+                <input type="text" id="PurchasePrice" readonly="" class="currency" value="@Model.OutputPrice"/>
+            </p>
+            <p style="display: inline">
+                <label style="font-weight: normal">@Resources.Resource.Good_Create_Account</label>
+                @Html.DropDownList("PurchaseAccountID", null, string.Empty, new { @disabled = "disabled",style = "width: 150px;" })
+            </p>
+            <p style="display: inline">
+                <label style="font-weight: normal">@Resources.Resource.Good_Create_TaxRate</label>
+                @Html.DropDownList("PurchaseTaxRateID", null, string.Empty, new { @disabled = "disabled",style = "width: 150px;" })
+            </p>
+        </div>
+
+        <div style="border: 1px solid #CCCCCC; height: 70px; margin-left: 10px; width: 660px;  margin-top: 15px; border-radius: 10px 10px 10px 10px; margin-bottom: 10px;">
+            <p class="x-boxed" style="margin-left: 5px; margin-top: 5px;">
+                <label>For Sale</label>
+            </p>
+            <p style="display: inline; margin-left: 5px;">
+                <label style="font-weight: normal">@Resources.Resource.Good_Create_UnitPrice</label>
+                <input type="text" id="SalePrice" readonly="" class="currency" value="@Model.InputPrice"/>
+            </p>
+            <p style="display: inline">
+                <label style="font-weight: normal">@Resources.Resource.Good_Create_Account</label>
+                @Html.DropDownList("SaleAccountID", null, string.Empty, new { @disabled = "disabled",style = "width: 150px;" })
+            </p>
+            <p style="display: inline">
+                <label style="font-weight: normal">@Resources.Resource.Good_Create_TaxRate</label>
+                @Html.DropDownList("SaleTaxRateID", null, string.Empty, new { @disabled = "disabled",style = "width: 150px;" })
+            </p>
+        </div>
+    </div>
+}

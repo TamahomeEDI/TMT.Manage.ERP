@@ -1,0 +1,24 @@
+﻿@model TMT.ERP.DataAccess.Model.BomDetail
+
+@{
+    Layout = null;
+    ErpEntities db = new ErpEntities();
+
+}
+
+
+<input type="hidden" id="BOMID" value="@Model.ID" />
+@foreach (var item in ViewData.Model)
+{
+    <li>
+        @item.Description
+        @{var children = db.BomDetails.Where(bom => bom.BomId == item.BomID && bom.ParentBomID == item.BomID);
+          if (children.Count() > 0)
+          {
+              <ul> @Html.Partial("~/View/Shared/BOM/itemControl.cshtml", children)</ul>
+          }
+          }        
+    </li>
+}
+
+

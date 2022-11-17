@@ -1,0 +1,74 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMT.ERP.Web", "TMT.ERP\TMT.ERP.Web.csproj", "{3AB0F5FF-F92F-48D4-97C4-10A9BAA5254D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonLib", "CommonLib\CommonLib.csproj", "{12744D22-49A9-4D55-AC33-9B5BF6FD24F2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMT.ERP.DataAccess", "TMT.ERP.DataAccess\TMT.ERP.DataAccess.csproj", "{CF18A315-63AB-4FE9-95EB-938B34F1C4CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMT.ERP.BusinessLogic", "TMT.ERP.BusinessLogic\TMT.ERP.BusinessLogic.csproj", "{F487BA34-E8C3-41AD-A697-AC8FDB112806}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMT.ERP.Console", "TMT.ERP.Console\TMT.ERP.Console.csproj", "{1BDF3DBE-B510-4073-8DAA-CDE4E8299CE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TMT.ERP.UnitTest", "TMT.ERP.UnitTest\TMT.ERP.UnitTest.csproj", "{8C6BAA92-C346-4DED-A8D1-E8814710B16C}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 7
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://192.168.35.43:8080/tfs/managementsoftwares
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = CommonLib\\CommonLib.csproj
+		SccProjectName1 = CommonLib
+		SccLocalPath1 = CommonLib
+		SccProjectUniqueName2 = TMT.ERP.BusinessLogic\\TMT.ERP.BusinessLogic.csproj
+		SccProjectName2 = TMT.ERP.BusinessLogic
+		SccLocalPath2 = TMT.ERP.BusinessLogic
+		SccProjectUniqueName3 = TMT.ERP.Console\\TMT.ERP.Console.csproj
+		SccProjectName3 = TMT.ERP.Console
+		SccLocalPath3 = TMT.ERP.Console
+		SccProjectUniqueName4 = TMT.ERP.DataAccess\\TMT.ERP.DataAccess.csproj
+		SccProjectName4 = TMT.ERP.DataAccess
+		SccLocalPath4 = TMT.ERP.DataAccess
+		SccProjectUniqueName5 = TMT.ERP.UnitTest\\TMT.ERP.UnitTest.csproj
+		SccProjectName5 = TMT.ERP.UnitTest
+		SccLocalPath5 = TMT.ERP.UnitTest
+		SccProjectUniqueName6 = TMT.ERP\\TMT.ERP.Web.csproj
+		SccProjectName6 = TMT.ERP
+		SccLocalPath6 = TMT.ERP
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{3AB0F5FF-F92F-48D4-97C4-10A9BAA5254D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AB0F5FF-F92F-48D4-97C4-10A9BAA5254D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AB0F5FF-F92F-48D4-97C4-10A9BAA5254D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AB0F5FF-F92F-48D4-97C4-10A9BAA5254D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12744D22-49A9-4D55-AC33-9B5BF6FD24F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12744D22-49A9-4D55-AC33-9B5BF6FD24F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12744D22-49A9-4D55-AC33-9B5BF6FD24F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12744D22-49A9-4D55-AC33-9B5BF6FD24F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF18A315-63AB-4FE9-95EB-938B34F1C4CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF18A315-63AB-4FE9-95EB-938B34F1C4CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF18A315-63AB-4FE9-95EB-938B34F1C4CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF18A315-63AB-4FE9-95EB-938B34F1C4CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F487BA34-E8C3-41AD-A697-AC8FDB112806}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F487BA34-E8C3-41AD-A697-AC8FDB112806}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F487BA34-E8C3-41AD-A697-AC8FDB112806}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F487BA34-E8C3-41AD-A697-AC8FDB112806}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1BDF3DBE-B510-4073-8DAA-CDE4E8299CE6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1BDF3DBE-B510-4073-8DAA-CDE4E8299CE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1BDF3DBE-B510-4073-8DAA-CDE4E8299CE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1BDF3DBE-B510-4073-8DAA-CDE4E8299CE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C6BAA92-C346-4DED-A8D1-E8814710B16C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C6BAA92-C346-4DED-A8D1-E8814710B16C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C6BAA92-C346-4DED-A8D1-E8814710B16C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C6BAA92-C346-4DED-A8D1-E8814710B16C}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

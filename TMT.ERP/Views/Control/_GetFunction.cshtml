@@ -1,0 +1,33 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.Function>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#ddlFunction').change(function () {
+            
+            var functionId = $(this).val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Control/GetControl/",
+                    data:
+                        {
+                            "functionId": functionId
+                        },
+                    success: function (data) {                        
+                        $('#loadControl').empty();
+                        $('#loadControl').html(data);
+                        $('#loadControl').css('display', 'block');
+                    }
+                });
+        });
+    });
+</script>
+<select id="ddlFunction" name="ddlFunction" style="width: 200px; height: 25px;" class="required">
+    <option value="">@Resources.Resource.Common_SelectItem</option>
+    @if (Model != null && Model.Any())
+    {
+        foreach (var item in Model)
+        {
+        <option value="@item.ID">@item.Name</option>
+        }
+    }
+</select>

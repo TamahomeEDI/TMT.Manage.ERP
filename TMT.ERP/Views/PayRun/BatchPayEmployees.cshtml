@@ -1,0 +1,130 @@
+﻿@using TMT.ERP.BusinessLogic.Utils
+@model TMT.ERP.DataAccess.Model.PayRun
+@{
+    var fromDate = Convert.ToDateTime(Model.FromDate);
+    var toDate = Convert.ToDateTime(Model.ToDate);
+    var paymentDate = Convert.ToDateTime(Model.PaymentDate);
+    var ooPayRunEmployee = Model.PayRunEmployees.Where(x => x.Active == true).ToList();
+    var totalPayment = ooPayRunEmployee.Sum(x => x.Amount);
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var payrunId = $('#hdfPayRunId').val();
+        $('#btnCancel').click(function () {
+            location.href = "/PayRun/ViewPayRun?payrunId=" + payrunId;
+        });
+        $('#btnMakePayment').click(function () {
+            location.href = "/PayRun/";
+        });
+    });
+</script>
+<input type="hidden" value="@ViewBag.ID" id="hdfPayRunId"/>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.PayRun_BatchPay</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>&nbsp;@Resources.Resource.PayRun_Index</span></li>
+                        <li><a href="/PayRun/ViewPayRun?payrunId=@ViewBag.ID">PayRun&nbsp;(@fromDate.ToString("d")&nbsp;-&nbsp;@toDate.ToString("d"))</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div id="tabbody">
+                <div class="cleardiv"></div>
+                <div style="width: 40%; float: left">
+                    <b>@Resources.Resource.PayRun_PaymentDate</b>
+                    <div class="cleardiv"></div>
+                    <input type="text" class="form-control datepicker" value="@TMT.ERP.Commons.Utility.DateFormat(paymentDate)"/>
+                </div>
+                <div style="width: 40%; float: left">
+                    <b>@Resources.Resource.PayRun_BankAccount</b>
+                    @{
+                        var list = ViewBag.AccountID as List<AccountInfo>;
+                        
+                    }
+                    <div class="cleardiv"></div>
+                    <select id="ddlAccount" class="form-control">
+                        @foreach (var item in list)
+                        {
+                            <option value="@item.AccountID">@item.AccountName</option>
+                        }
+                    </select>
+                </div>
+                <div style="width: 60%; float: right">
+                </div>
+                <div class="cleardiv"></div>
+                <p>@Resources.Resource.PayRun_Statement</p>
+                <div style="clear: both; height: 10px;"></div>
+                <div style="width: 40%; float: left;">
+                    <b>@Resources.Resource.PayRun_Details</b>
+                    <div class="cleardiv"></div>
+                    <input type="text" class="form-control" value="Wages" />
+                </div>
+                <div class="cleardiv"></div>
+                <table id="batchPayments">
+                    <thead>
+                        <tr>
+                            <th>@Resources.Resource.PayRun_To</th>
+                            <th>@Resources.Resource.PayRun_Reference</th>
+                            <th>@Resources.Resource.PayRun_DueDate</th>
+                            <th>@Resources.Resource.PayRun_BankAccount</th>
+                            <th>@Resources.Resource.PayRun_Details</th>
+                            <th>@Resources.Resource.PayRun_Due</th>
+                            @*<th>@Resources.Resource.PayRun_PaymentVND</th>*@
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var x in ooPayRunEmployee)
+                        {
+                            <tr>
+                                <td>
+                                    @{
+                            var fullName = "";
+                            if (x.Employee.FirstName != null)
+                            {
+                                fullName += x.Employee.FirstName;
+                            }
+                            if (x.Employee.LastName != null)
+                            {
+                                fullName += " " + x.Employee.LastName;
+                            }
+                                    }
+                                    @fullName
+                                </td>
+                                <td>@Model.Code</td>
+                                <td>                                    
+                                    @TMT.ERP.Commons.Utility.DateFormat(fromDate)
+                                </td>
+                                <td>
+                                    <input type="text" id="txtBank" class="form-control" />
+                                </td>
+                                <td>Wages</td>
+                                <td>@x.RemainAmount</td>                                
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="cleardiv"></div>
+                <div style="float: right; text-align: right; width: 40%;">
+                    <hr />
+                    <h4><b>@Resources.Resource.PayRun_Index_Total:&nbsp;</b><b class="currency">@totalPayment</b></h4>
+                    <hr />
+                    <hr />
+                </div>
+                <div class="cleardiv"></div>
+            </div>
+            <div style="float: right; text-align: right; width: 40%;">
+                <input type="submit" value="@Resources.Resource.PayRun_MakeAPayment" id="btnMakePayment" class="btn btn-defaultxero" />
+                <input type="submit" value="@Resources.Resource.PayRun_Back" id="btnCancel" class="btn btn-defaultxero" />
+            </div>
+        </div>
+    </div>
+</div>

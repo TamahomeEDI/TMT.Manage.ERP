@@ -1,0 +1,126 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.StockInCard
+<script type="text/javascript">
+    $(document).ready(function () {
+        var stock = $('#hdfStock').val();
+        $('#StockID').val(stock);
+        $('#btnClose').click(function () {
+            location.href = "/IncomingShipment/";
+        });
+        $('#btnSubmit').click(function () {
+
+        });
+    });
+</script>
+<input type="hidden" id="hdfStock" value="@Model.StockID"/>
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div id="tabbody">
+                @{
+                    var createDate = Convert.ToDateTime(Model.CreatedDate);
+                    var product = ViewBag.Product as ProductionMonitor;
+                }
+                <div style="clear: both; height: 10px;"></div>
+                <input type="button" id="btnClose" value="Close" class="btn" />
+                <input type="button" id="btnSubmit" value="Submit" class="btn" />
+                <div style="clear: both; height: 10px;"></div>
+                <div style="display: inline;">
+                    <div style="width: 50%; float: left;">
+                        <label>Shipment No&nbsp;:&nbsp;</label><label><b>@Model.Code</b></label>
+                    </div>
+                    <div style="width: 50%; float: right;">
+                        <label>WorkOrder No</label>
+                        <label>
+                            <b>
+                                @if (product != null)
+                                {
+                                    @product.AllocWO.WorkOrder.Code
+                                }
+                                else
+                                {
+                                    <label>No data</label>
+                                }
+                            </b>
+                        </label>
+                    </div>
+                </div>
+                <div style="clear: both; height: 10px;"></div>
+                <div style="display: inline;">
+                    <div style="width: 50%; float: left;">
+                        <label>Order Date&nbsp;:&nbsp;</label>
+                        <input type="text" class="form-control datepicker" id="txtOrderDate" style="width: 220px !important;" />
+                    </div>
+                    <div style="width: 50%; float: right;">
+                        <label>Create Date</label>
+                        <label>
+                            <b>
+                                @createDate.ToString("d")
+                            </b>
+                        </label>
+                    </div>
+                </div>
+                <div style="clear: both; height: 10px;"></div>
+                <h4>Return Information</h4>
+                <div style="clear: both; height: 10px;"></div>
+                <div style="display: inline;">
+                    <div style="float: left; width: 50%;">
+                        <label>Return To Stock&nbsp;:&nbsp;</label>
+                        @Html.DropDownList("StockID", null, String.Empty, new { @class = "form-control", style = "width:220px !important;" })
+                    </div>
+                    <div style="float: left; width: 50%;">
+                        <label>Return Date</label>
+                        <input type="text" class="form-control datepicker" id="txtReturnDate" style="width: 220px !important;" />
+                    </div>
+                </div>
+                <div style="clear: both; height: 10px;"></div>
+                <h4>Work Order Details</h4>
+                <div style="clear: both; height: 10px;"></div>
+                @{
+                    //IList<AllocWOItemDetail> list = null;
+                    //if (product != null)
+                    //{
+                    //    list = product.AllocWO.AllocWOItemDetails.ToList();
+                    //}
+                    var list = Model.StockInCardsDetails.ToList();
+                        
+                }
+                <table style="width: 940px;">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Description</th>
+                            <th>UOM</th>
+                            <th>Qty</th>
+                            <th>Qty Used</th>
+                            <th>Qty Return</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var x in list)
+                        {
+                            var good = ViewBag.Good(x.GoodID) as Good;
+                            <tr>
+                                <td>@good.Name</td>
+                                <td>@good.Description</td>
+                                <td>@good.UOM.Name</td>
+                                <td>@x.Quantity</td>
+                                <td>
+                                    @{
+                            var used = x.Quantity - x.QuantityReq;
+                                    }
+                                    @used
+                                </td>
+                                <td>
+                                    @x.QuantityReq
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+</div>
+

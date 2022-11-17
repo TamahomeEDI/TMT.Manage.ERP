@@ -1,0 +1,548 @@
+﻿@using System.Globalization
+@using System.Threading;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - TMT ERP</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/main.css")" rel="stylesheet" type="text/css" />
+    @*<link href="@Url.Content("~/Content/popup_css.css")" rel="stylesheet" type="text/css" />*@
+    <!--[if IE 7]>
+            <link href="css/ie7.css" rel="stylesheet" type="text/css" />
+        <![endif]-->
+
+    <script src="@Url.Content("~/Scripts/1.10.2.jquery.min/jquery.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/1.10.3.jquery-ui.min/jquery-ui.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/ERPScripts/jquery.formatCurrency-1.4.0.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery-check-all.js")"></script>
+    <script src="@Url.Content("~/Scripts/custom.js")"></script>
+    <script src="@Url.Content("~/Scripts/bootstrap.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.numeric.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.maskedinput.min.js")"></script>
+    @*<script src="@Url.Content("~/Scripts/jquery.popup.js")"></script>*@
+    <script src="@Url.Content("~/Scripts/Highcharts-3.0.1/js/highcharts.src.js")"></script>
+    <script src="@Url.Content("~/Scripts/Highcharts-3.0.1/js/highcharts-more.js")"></script>
+    <script src="@Url.Content("~/Scripts/Highcharts-3.0.1/js/modules/funnel.js")"></script>
+    <script src="@Url.Content("~/Scripts/globalization/en-US.js")"></script>
+    <script src="@Url.Content("~/Scripts/core.js")"></script>
+    <script src="@Url.Content("~/Scripts/parser.js")"></script>    
+    @*auto complete *@
+    <link href="@Url.Content("~/Content/jquery.ui.autocomplete.css")" rel="stylesheet" />
+    <script src="@Url.Content("~/Scripts/jquery.ui.autocomplete.js")"></script>
+    @*<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">*@
+    @*auto complete *@
+
+    <link href="~/Content/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet" />
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            custom.Init();
+            $('.currency').formatCurrency();
+
+            $('.currency').blur(function () {
+                $('.currency').formatCurrency();
+            });
+
+            $('#logout').click(function () {
+                var url = "/Login/Logout";
+                
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: url,
+                        success: function (data) {
+                            //window.location.href = data;
+                        }
+                    });
+            });
+
+            $('.dropdown-menu').mouseleave(function () {
+                $("body").trigger("click");
+            });
+        });
+        $(document).ready(function () {
+            var x = $('#hdfValue').val();
+            if (x == null) {
+                x = 0;
+            }
+            switch (parseInt(x)) {
+                case 0:
+                    $('#aDashboard').addClass('activemenu');
+
+                    break;
+                case 1:
+                    $('#aInventory').addClass('activemenu');
+                    break;
+                case 2:
+                    $('#aAccounting').addClass('activemenu');
+                    break;
+                case 3:
+                    $('#aSales').addClass('activemenu');
+                    break;
+                case 4:
+                    $('#aPurchase').addClass('activemenu');
+                    break;
+                case 5:
+                    $('#aReports').addClass('activemenu');
+                    break;
+                case 6:
+                    $('#aContact').addClass('activemenu');
+                    break;
+                case 7:
+                    $('#aSetting').addClass('activemenu');
+                    break;
+                case 8:
+                    $('#aPermission').addClass('activemenu');
+                    break;
+                default:
+                    $('#aDashboard').addClass('activemenu');
+                    break;
+            }
+        });
+
+        function SetTab(value) {
+
+            $.ajax(
+                {
+
+                    type: "POST",
+                    url: "/Home/SetTabActive/",
+                    data:
+                        {
+                            tabSelect: value
+                        },
+                    success: function () {
+
+                    }
+                });
+        }
+        function SetTabParent(value) {
+            
+            $.ajax(
+                {
+
+                    type: "POST",
+                    url: "/Home/SetTabActive/",
+                    data:
+                        {
+                            tabSelect: value
+                        },
+                    success: function () {
+                        location.reload();
+                    }
+                });
+        }
+        function NewSalePurchase(status) {
+            
+            if (status == 0) {
+                location.href = "/SaleInvoice/Create/";
+            }
+            if (status == 1) {
+                location.href = "/Purchase/Create/";
+            }
+            if (status == 2) {
+                location.href = "/purchase/CreateCreditNotePurchase/";
+            }
+            if (status == 3) {
+                location.href = "/SaleInvoice/CreateRepeatingInvoice/";
+            }
+            if (status == 4) {
+                location.href = "/SaleInvoice/CreateCreditNote/";
+            }
+        }
+    </script>
+
+    @{var currentUser = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+      var userName = currentUser == null ? "" : currentUser.UserName;
+      var x = Session["Tab"] ?? 0;
+    }
+    @*        @Styles.Render("~/Content/css")*@
+    @Scripts.Render("~/bundles/modernizr")
+
+</head>
+<body>
+    <input type="hidden" value="@x" id="hdfValue"/>
+    <!---------------HEADER--------------------->
+    <div id="header">
+        <div id="header_r">
+            <div class="container">
+                <!-------Header top------>
+                <div id="h_top">
+                    <div class="c_container">
+                        <span id="ht_webcome">Welcome @userName</span>
+                        <div id="ht_menu" style="width: 395px !important;">
+                            <ul>
+                                <li id="ht_email">
+                                    <div class="email">
+                                        <div id="numberemail">3</div>
+                                    </div>
+                                    <a href="/Login/Profile/">@userName</a></li>
+                                <li>
+                                    @using (Html.BeginForm("Logout", "Login", FormMethod.Post, new { id = "logoutForm" }))
+                                    {
+                                        @Html.AntiForgeryToken()
+                                        <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+                                    }
+
+                                    @*<a href="#" id="logout">Logout</a>*@
+                                </li>
+
+                                <li class="ht_arrow dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">My TMT <span class="caret"></span></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        <li><a href="/Company/">Go to my TMT</a></li>
+                                        <li><a href="/Home/" onclick="SetTabParent(0);">Dashboard</a></li>
+                                    </ul>
+                                </li>
+                                <li class="ht_arrow dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Help <span class="caret"></span></a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="#">Help Centre</a></li>
+                                        <li><a href="#">Turn off tips</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <ul>
+                                <li class="ht_arrow dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">Language <span class="caret"></span></a>
+                                    <ul class="dropdown-menu" role="menu">
+                                        @{
+                                            CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+                                            <li><a href="/Home/ChangeCurrentCulture/1">ThaiLand</a></li>
+                                            <li><a href="/Home/ChangeCurrentCulture/0">English</a></li>
+                                            <li><a href="/Home/ChangeCurrentCulture/2">China</a></li>
+                                        }
+                                    </ul>
+                                </li>
+                            </ul>
+                            <label>Version 1.9</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-------Header Menu------>
+                <div class="clr_line">
+                </div>
+                <div id="h_menu">
+                    <div class="c_container">
+                        <div id="hm_logo">
+                            <a href="#">
+                                <img src="/Images/logo.png" /></a>
+                        </div>
+                        <div id="hm_menu">
+                            <ul id="nav" style="height: 65px !important;">
+                                <li class="lifirst"><a href="/Home/" onclick="SetTabParent(0);" id="aDashboard">Dash board&nbsp;&nbsp;<span class="caret"></span></a></li>
+                                <li class="lifirst"><a href="javascript:void(0);" onclick="SetTabParent(1);" id="aInventory">Inventory&nbsp;&nbsp;<span class="caret"></span></a>
+                                    <ul>
+                                        <li><a href="javascript:void(0);" onclick="SetTab(1);">Machine Management&nbsp;»</a>
+                                            <ul>
+                                                <li><a href="/ProductionMonitors/" onclick="SetTab(1);">Machine Capacity Planning</a></li>
+                                            </ul>
+                                        </li>
+
+                                        <li><a href="javascript:void(0);" onclick="SetTab(1);">Processing&nbsp;»</a>
+                                            <ul>
+                                                <li><a href="/WorkOrder/All/" onclick="SetTab(1);">Work Order</a></li>
+                                                <li><a href="/AllocWO/" onclick="SetTab(1);">Allocate</a></li>
+                                            </ul>
+                                        </li>
+
+                                        <li><a href="javascript:void(0);" onclick="SetTab(1);">Stock&nbsp;»</a>
+                                            <ul>
+                                                <li><a href="/IncomingShipment/" onclick="SetTab(1);">Incoming Shipment</a></li>
+                                                <li><a href="/OutgoingShipment/" onclick="SetTab(1);">Outgoing Shipment</a></li>
+                                                @*<li><a href="javascript:void(0);" onclick="SetTab(1);">Current Stock </a></li>*@
+                                                <li><a href="/StockMovement/Draft" onclick="SetTab(1);">Transfer Stock</a></li>
+                                            </ul>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="lifirst"><a href="javascript:void(0);" onclick="SetTabParent(2);" id="aAccounting">Accounting&nbsp;&nbsp;<span class="caret"></span></a>
+                                    <ul>
+                                        <li>
+                                            <a href="/BankAccounts/" onclick="SetTab(2);">Bank account</a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" onclick="SetTab(2);">Account Payable</a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:void(0);" onclick="SetTab(2);">Account Receivable</a>
+                                        </li>
+                                        <li>
+                                            <a href="/PayRun/" onclick="SetTab(2);">Pay Roll</a>
+                                        </li>
+                                        <li>
+                                            <a href="/ExpensiveClaim/CurrentClaim/" onclick="SetTab(2);">Expense Claims</a>
+                                        </li>
+                                        <li>
+                                            <a href="/FixedAssets/" onclick="SetTab(2);">Fixed Asset</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="lifirst"><a href="javascript:void(0);" onclick="SetTabParent(3);" id="aSales">Sales&nbsp;&nbsp;<span class="caret"></span></a>
+                                    <ul>
+                                        <li>
+                                            <a href="/SaleInvoice/Dashboard/" onclick="SetTab(3);">Sale Order</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="lifirst"><a href="javascript:void(0);" onclick="SetTabParent(4);" id="aPurchase">Purchase&nbsp;&nbsp;<span class="caret"></span></a>
+                                    <ul>
+                                        <li>
+                                            <a href="/Purchase/Dashboard/" onclick="SetTab(4);">Purchase Order</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="lifirst"><a href="javascript:void(0);" onclick="SetTabParent(5);" id="aReports">Reports&nbsp;&nbsp;<span class="caret"></span></a>
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:void(0);" onclick="SetTab(5);">All Reports</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Report/Profit_Loss/" onclick="SetTab(5);">Profit and Loss</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Report/Inventory_Items_Summary/" onclick="SetTab(5);">Inventory Items Summary</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Report/CashSummary_Report/" onclick="SetTab(5);">Cash Summary</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Report/Customer_Invoice_Report/" onclick="SetTab(5);">Customer Invoice</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Report/Supplier_Invoice_Report/" onclick="SetTab(5);">Supplier Invoice</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="lifirst"><a href="javascript:void(0);" onclick="SetTabParent(6);" id="aContact">Contacts&nbsp;&nbsp;<span class="caret"></span></a>
+                                    <ul>
+                                        <li>
+                                            <a href="/Contacts/" onclick="SetTab(6);">Contacts</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Contacts/Customer/" onclick="SetTab(6);">Customer</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Contacts/Supplier/" onclick="SetTab(6);">Supplier</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Contacts/Employee/" onclick="SetTab(6);">Employee</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="lifirst"><a href="javascript:void(0);" onclick="SetTabParent(7);" id="aSetting">Settings&nbsp;&nbsp;<span class="caret"></span></a>
+                                    <ul>
+                                        <li>
+                                            <a href="/ProductTypes/" onclick="SetTab(7);">Inventory Types</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Category/" onclick="SetTab(7);">Inventory Categories</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Good/" onclick="SetTab(7);">Inventory Items</a>
+                                        </li>
+                                        <li>
+                                            <a href="/BOM/" onclick="SetTab(7);">Inventory BOM</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Stock/" onclick="SetTab(7);">Stocks</a>
+                                        </li>
+                                        <li>
+                                            <a href="/WorkCenter/" onclick="SetTab(7);">Work Center</a>
+                                        </li>
+                                        <li>
+                                            <a href="/UOM/" onclick="SetTab(7);">UOM</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Currency/" onclick="SetTab(7);">Currencies</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Machines/" onclick="SetTab(7);">Machines</a>
+                                        </li>
+                                        <li>
+                                            <a href="/PayItems/" onclick="SetTab(7);">Pay Items</a>
+                                        </li>
+                                        <li>
+                                            <a href="/TaxRate/" onclick="SetTab(7);">Tax Rate</a>
+                                        </li>
+                                        <li>
+                                            <a href="/Accounts/" onclick="SetTab(7);">Chart of Account</a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                @if (currentUser != null && currentUser.ID == 1)
+                                {
+                                    <li class="lifirst"><a href="javascript:void(0);" onclick="SetTabParent(8);" id="aPermission">Permission&nbsp;&nbsp;<span class="caret"></span></a>
+                                        <ul>
+                                            <li>
+                                                <a href="/Function/" onclick="SetTab(8);">Function</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Control/" onclick="SetTab(8);">Control</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Roles/" onclick="SetTab(8);">Roles</a>
+                                            </li>
+                                            <li>
+                                                <a href="/Users/" onclick="SetTab(8);">Users</a>
+                                            </li>
+                                        </ul>
+                                    </li>
+                                }
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!---------------END HEADER--------------------->
+
+
+        <!---------------CONTENT--------------------->
+
+
+        @*        <header>
+            <div class="content-wrapper">
+                <section id="login">
+                    @Html.Partial("_LoginPartial")
+                </section>
+                <div class="float-left">
+                    <p class="site-title">@Html.ActionLink("TMT Company", "Index", "Home")</p>                    
+                </div>
+                <div class="float-right">                    
+                    <nav>
+                        <div id='cssmenu'>
+                            <ul>
+                                <li>@Html.ActionLink("Dashboard", "Dashboard", "Home")</li>
+                                <li class='has-sub'>@Html.ActionLink("Accounts", "Accounts", "Home")
+                                    <ul>
+                                        <li><span>@Html.ActionLink("Accounts", "Index", "Accounts")</span></li>
+                                        <li><span>@Html.ActionLink("Bank Accounts", "Index", "BankAccounts")</span></li>
+                                        <li><span>@Html.ActionLink("Sales", "Index", "SaleInvoice/dashboard")</span></li>
+                                        <li class='last'><span>@Html.ActionLink("Purchases", "Index", "Purchase/dashboard")</span></li>
+                                    </ul>
+                                </li>
+                                <li class='has-sub'>@Html.ActionLink("Catalogs", "Catalogs", "Home")
+                                    <ul>
+                                        <li>@Html.ActionLink("UOM", "UOM", "Home")</li>
+                                        <li>@Html.ActionLink("Stock", "Stock", "Home")</li>
+                                    </ul>
+                                </li>
+                                <li>@Html.ActionLink("Reports", "Reports", "Home")</li>
+                                <li>@Html.ActionLink("Contacts", "Contacts", "Home")
+                                    <ul>
+                                        <li><span>@Html.ActionLink("Company", "Index", "Company")</span></li>
+                                    </ul>
+
+                                </li>
+                                <li><a href="#">Settings</a>
+                                    <ul>
+                                        <li><a id="InventoryId">Inventory Items</a></li>                                        
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
+                </div>
+            </div>
+        </header>*@
+    </div>
+    <div id="content">
+
+        @RenderSection("featured", required: false)
+        <section class="content-wrapper main-content clear-fix">
+            @RenderBody()
+        </section>
+    </div>
+
+
+    <!---------------FOOTER--------------------->
+    <div id="footer">
+        <div class="container">
+            <div id="f_social">
+                <div class="c_container">
+                    <div id="fs_newsletter">
+                        <h3>NEWSLETTER</h3>
+                        <div id="box_newsletter">
+                            <input type="text" name="newsletter" placeholder="Enter your email adress" />
+                            <input type="submit" value="" id="addemail" />
+                        </div>
+                    </div>
+                    <div id="fs_social">
+                        <ul>
+                            <li><a href="#">
+                                <img src="/Images/socials/facebook.png" /></a></li>
+                            <li><a href="#">
+                                <img src="/Images/socials/google.png" /></a></li>
+                            <li><a href="#">
+                                <img src="/Images/socials/tumbl.png" /></a></li>
+                            <li><a href="#">
+                                <img src="/Images/socials/twitter.png" /></a></li>
+                            <li><a href="#">
+                                <img src="/Images/socials/vimeo.png" /></a></li>
+                            <li><a href="#">
+                                <img src="/Images/socials/drib.png" /></a></li>
+
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="clr_line"></div>
+            <div id="f_contact">
+                <div class="c_container">
+                    <div id="mapcontact">
+                        <img src="/Images/map_contact.jpg" />
+                    </div>
+                    <div id="contact_info">
+                        <h3>OUR CONTACT</h3>
+                        <div class="boxcontact">
+                            <h4>Write Us via Email</h4>
+                            <p><a href="mailto:John.M@TMT-inventory.com">John.M@TMT-inventory.com</a></p>
+                        </div>
+                        <div class="boxcontact">
+                            <h4>Visit Us</h4>
+                            42 B Road, MM City<br />
+                            DQ 1502
+                        </div>
+                        <div class="boxcontact">
+                            <h4>Phone Us</h4>
+                            <p>+1 (502) 042 85 85</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="clr_line"></div>
+            <div id="f_copyright">
+                <div id="backtotop"></div>
+                <div class="c_container">
+                    <div id="fc_menu">
+                        <ul>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Term & Conditions</a></li>
+                        </ul>
+                    </div>
+                    <div id="fc_copyright"><span>Copyright @DateTime.Now.Year Takachan</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    @*        <footer>
+            <div class="content-wrapper">
+                <div class="float-left">
+                    <p>&copy; @DateTime.Now.Year - CMC MVC Application</p>
+                </div>
+            </div>
+        </footer>*@
+
+    @* @Scripts.Render("~/bundles/jquery")*@
+    @RenderSection("scripts", required: false)
+</body>
+</html>

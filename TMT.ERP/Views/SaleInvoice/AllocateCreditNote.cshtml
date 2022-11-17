@@ -1,0 +1,203 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.SaleInvoice>
+
+<script type="text/javascript">
+
+    $(document).ready(function ($) {
+        CalRemainCredit();
+        $(".amountToCredit").change(function () {
+            
+            CalTotalCredit();
+            CalRemainCredit();
+        });
+    });
+
+
+    function CalTotalCredit() {      
+        $("#txtTotalAmount").text(function () {
+            var value = 0;
+            $("#tblcreditNoteDetails tr").each(function () {
+                var tr = $(this).closest('tr');
+                var amountToCredit = 0;
+                if ($('.amountToCredit', tr).val() != "")
+                    amountToCredit = $('.amountToCredit', tr).asNumber();
+              
+                if (amountToCredit > 0)                   
+                    value += amountToCredit;
+            });
+            return value;
+        }).formatCurrency();
+    }
+    function CalRemainCredit() {
+        $("#txtRemainCredit").text(function () {
+            var value = 0;
+            if($('#txtCreditBalance').text() != "")
+                var CreditBalance = $('#txtCreditBalance').asNumber();
+            if ($('#txtTotalAmount').text() != "")
+                var TotalAmount = $('#txtTotalAmount').asNumber();
+            if (CreditBalance > 0 & TotalAmount <= CreditBalance)
+                value = CreditBalance - TotalAmount;
+            return value;
+        }).formatCurrency();
+    }
+
+    function SaveAllocCreditNote() {
+        //alert(BuildJSON());
+        
+        var creditNoteDetail = BuildJSON();
+        var CreditNoteID = $('#hidCreditNoteID').val();
+        $.ajax({
+            type: "POST",
+            url: '/SaleInvoice/AlloCreditNote/',
+            data: JSON.stringify({
+                CreditNoteID: CreditNoteID,
+                creditNoteDetail: creditNoteDetail
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                
+               // var retValue = JSON.parse(data.d);
+                if (data == 3) {
+                    window.location.href = "/SaleInvoice/PaidDetails?id=" + CreditNoteID;
+                }else{
+                    window.location.href = "/SaleInvoice/AwaitingPaymentDetails/" + CreditNoteID;
+                }
+                //var retValue = JSON.parse(data.d);
+               // addPaymentNote();
+            }
+        })
+    }
+
+    function BuildJSON() {
+        var arrayData = [];
+        $("#tblcreditNoteDetails tr").each(function () {
+            var tr = $(this).closest('tr');
+            var saleInvoiceID = $("#saleInvoiceID", tr).val();
+            if (saleInvoiceID != "-1" && parseInt(saleInvoiceID) > 0) {
+                var item = {
+                    "saleInvoiceID": saleInvoiceID,
+                    "amountToCredit": $("#amountToCredit", tr).val()
+                };
+                arrayData.push(item);
+            }
+        });
+        return JSON.stringify(arrayData);
+    }
+
+</script>
+
+<input type="hidden" id="hidCreditNoteID" value="@ViewBag.CreditNoteID" />
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.CreditNote_AllocateCreditBalance</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><a href="/SaleInvoice/Dashboard/"><span>@Resources.Resource.Common_Sales</span></a></li>
+                        <li> <a href="/SaleInvoice/Edit/@ViewBag.CreditNoteID">@ViewBag.CreditNoteCode</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div class="form_position1">
+                <div class="form_left">                    
+                 <h4><span style="font-size: 13px;">@Resources.Resource.CreditNote_Allocate_Balance_On 
+                     <span style="font-size: 13px;">
+                          <a href="/SaleInvoice/Edit/@ViewBag.CreditNoteID">Credit Note @ViewBag.CreditNoteCode</a>
+                     </span></span> </h4>                 
+                </div>
+
+                </div>
+            </div>
+
+        </div>
+</div>
+<div id="con_body">
+    <div class="container">
+        <div class="c_container">
+            <div id="myDiv">
+                <table id="tblcreditNoteDetails" style="width:100%">
+                    <thead>
+                        <tr>
+                            <th><span>@Resources.Resource.CreditNote_Allocate_Balance_Invoice</span></th>
+                            <th><span>@Resources.Resource.CreditNote_Allocate_Balance_Date</span></th>
+                            <th><span>@Resources.Resource.CreditNote_Allocate_Balance_Invoiced</span></th>
+                            <th><span>@Resources.Resource.CreditNote_Allocate_Balance_AmountDue</span></th>
+                            <th><span>@Resources.Resource.CreditNote_Allocate_Balance_Amount_To_Credit</span></th>                            
+                        </tr>
+                    </thead>
+                    <tbody id="insertRow">
+                         @foreach (var item in Model)
+                        {	
+
+                            <tr>
+                                <td>
+                                    <label>@item.Code</label>
+                                    <input type="hidden" id="saleInvoiceID" value="@item.ID" />
+                                </td>
+
+                                <td>
+                                    @Html.Raw(TMT.ERP.Commons.Utility.DateFormat(item.CreatedDate))
+                                </td>
+
+                                <td style="text-align: right" id="qtydathang">
+                                    <label style="text-align: right" class="currency" id="totalMoney">@item.TotalMoney</label>                               
+                               </td> 
+                              <td style="text-align: right">      
+                                  <label style="text-align: right" class="currency" id="remainMoney">@item.RemainMoney</label>                                                          
+                               </td>                                   
+                               <td>
+                                    <input style="text-align: right" type="text" id="amountToCredit" value="0" class="amountToCredit currency numeric" />
+
+                               </td>
+                               
+                            </tr>							
+                        }
+                    </tbody>
+                </table>
+            </div>
+              <div class="tablefooter">      
+                <div class="posprice" style="width: 350px; float: right;height:auto;">
+                    <p style="font-size: 12px;font-weight:normal;">
+                        <span class="ta_label">@Resources.Resource.CreditNote_Allocate_Outstanding_Credit_Balance</span>
+                        <span id="txtCreditBalance" class="price subtotal currency">@ViewBag.OutStandingCreditBalance</span>
+                    </p>
+                    <p style="font-size: 12px;font-weight:normal;">
+                        <span class="ta_label">@Resources.Resource.CreditNote_Allocate_Total_Amount_To_Credit</span>
+                        <span id="txtTotalAmount" class="price totalAmount currency">0.00</span>
+                    </p>
+                    <hr style="margin-top: 61px; margin-bottom: 1px" />
+                    <p>
+                        <span class="ta_label">@Resources.Resource.CreditNote_Allocate_Remain_Credit</span>
+                        <span id="txtRemainCredit" class="price remainCredit remainCredit currency">0.00</span>
+                    </p>
+                </div>
+
+            </div>
+
+            <div class="form_button1">            
+                     <div class="btn-group">
+                    <input type="button" class="btn btn-defaultxero" id="btnCreate" value="Allocate Credit"onclick="SaveAllocCreditNote();" />                                     
+                    <input type="button" value="Cancel"  onclick="javascript: location.href = '/SaleInvoice/AwaitingPaymentDetails/' + $('#hidCreditNoteID').val();" class="btn btn-defaultxero" />
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<div>
+     
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

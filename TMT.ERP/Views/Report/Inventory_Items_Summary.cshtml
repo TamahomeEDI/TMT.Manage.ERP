@@ -1,0 +1,207 @@
+﻿@model TMT.ERP.Models.Inventory_Items_Summary
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnSearch').click(function () {
+            var createdate = $('#CreatedDate').val();
+            var duedate = $('#DueDate').val();
+            window.location.href = "/Report/Inventory_Items_Summary?dtFrom=" + createdate + "&dtTo=" + duedate;
+        });
+    });
+</script>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Model.TitleDocument</h3>
+            </div>
+        </div>
+     </div>
+</div>
+<div id="con_body">
+    <div class="container">
+        <div id="Report_Search">    
+            <div >
+                <label>
+                    From:
+                </label> 
+                <br />
+                <input style="width: 175px; height: 26px;" type="text" name="CreatedDate" id="CreatedDate" class="dtFrom">
+            </div>
+            <div >
+                <label>To:</label>
+                <br />
+                <input style="width: 175px; height: 26px;" type="text" name="DueDate" id="DueDate" class="dtTo">
+            </div>
+            <div>
+                <input type="submit" value="Update" id="btnSearch" class="btn btn-defaultxero" />
+            </div>    
+        </div>
+        <div id="Report_Css">
+            <div class="MainTitle1">@Model.TitleDocument</div>
+            <div class="MainTitle2">@Model.CompanyName</div>
+            <div class="MainTitle2">@Model.ReportDate</div>
+            <table>
+                <thead>
+                    <tr>
+                         @foreach (var item in Model.ColumnName)
+                         {
+                        <th>
+                            @item
+                        </th>
+                         }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Inventory_Item_Summary)
+                    {
+                        <tr>
+                            <td class="Indent1">
+                                @item.Item
+                            </td>
+                            @*Purchase*@
+                            <td>
+                                @item.Purchases_Price.Value.Name
+                            </td>
+                            <td>
+                                @item.Purchases_Price.s_Qty
+                            </td>
+                            <td>
+                                @item.Purchases_Price.Total.Name
+                            </td>
+                            <td>
+                                @item.Purchases_Price.Avg.Name
+                            </td>
+                            @*Purchase*@
+                            @*WO_Price*@
+                            <td>
+                                @item.WO_Price.Value.Name
+                            </td>
+                            <td>
+                                @item.WO_Price.s_Qty
+                            </td>
+                            <td>
+                                @item.WO_Price.Total.Name
+                            </td>
+                            <td>
+                                @item.WO_Price.Avg.Name
+                            </td>
+                            @*WO_Price*@
+                            @*MPS_Price*@
+                            <td>
+                                @item.MPS_Price.Value.Name
+                            </td>
+                            <td>
+                                @item.MPS_Price.s_Qty
+                            </td>
+                            <td>
+                                @item.MPS_Price.Total.Name
+                            </td>
+                            <td>
+                                @item.MPS_Price.Avg.Name
+                            </td>
+                            @*MPS_Price*@
+                            @*Sale_Price*@
+                            <td>
+                                @item.Sales_Price.Value.Name
+                            </td>
+                            <td>
+                                @item.Sales_Price.s_Qty
+                            </td>
+                            <td>
+                                @item.Sales_Price.Total.Name
+                            </td>
+                            <td>
+                                @item.Sales_Price.Avg.Name
+                            </td>
+                            @*Sale_Price*@
+                            @*Net*@
+                            <td>
+                                @item.Net.s_Qty
+                            </td>
+                            <td>
+                                @item.Net.Total.Name
+                            </td>                    
+                            @*Net*@
+                        </tr>
+                    }
+                    <tr>
+                        <td class="SectionTitle2 Total3">
+                            Total
+                        </td>
+                        @*Purchase*@
+                        <td class="Total3">
+                        </td>
+                        <td class="Total3">
+                            @Model.s_Total_Purchases_Price_Qty
+                        </td>
+                        <td class="Total3">
+                            @Model.s_Total_Purchases_Price_Total
+                        </td>
+                        <td class="Total3">
+                        </td>
+                        @*Purchase*@
+                        @*WO_Price*@
+                        <td class="Total3">
+                        </td>
+                        <td class="Total3">
+                            @Model.s_Total_WO_Price_Qty
+                        </td>
+                        <td class="Total3">
+                            @Model.s_Total_WO_Price_Total
+                        </td>
+                        <td class="Total3">
+                        </td>
+                        @*WO_Price*@
+                        @*MPS_Price*@
+                        <td class="Total3">
+                        </td>
+                        <td class="Total3">
+                            @Model.s_Total_MPS_Price_Qty
+                        </td>
+                        <td class="Total3">
+                            @Model.s_Total_MPS_Price_Total
+                        </td>
+                        <td class="Total3">
+                        </td>
+                        @*MPS_Price*@
+                        @*Sale_Price*@
+                        <td class="Total3">
+                        </td>
+                        <td class="Total3">
+                            @Model.s_Total_Sales_Price_Qty
+                        </td>
+                        <td class="Total3">
+                            @Model.s_Total_Sales_Price_Total
+                        </td>
+                        <td class="Total3">
+                        </td>
+                        @*Sale_Price*@
+                        @*Net*@
+                        <td class="Total3">
+                            @Model.s_Total_Net_Qty
+                        </td>
+                        <td class="Total3">
+                            @Model.s_Total_Net_Total
+                        </td>                
+                        @*Net*@
+                    </tr>
+            
+                </tbody>
+            </table>
+        </div>
+        <div id="Report_Button">
+            <div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Export <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="/Report/ExportReport?iType=2">Excel</a>
+                        </li>
+                    </ul>
+                </div>        
+            </div>    
+        </div>
+    </div>
+</div>

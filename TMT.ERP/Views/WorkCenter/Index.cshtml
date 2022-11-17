@@ -1,0 +1,232 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.WorkCenter>
+@{
+    ViewBag.Title = "Index";
+}
+<script type="text/javascript">
+
+    window.onload = function () {
+        $("#cbCheckAll").prop('checked', false);
+        $(".cbCheck").prop('checked', false);
+    }
+
+    $(document).ready(function () {
+        debugger;
+        if ($('#hidError').val() == "Success") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%;  font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_DeleteSuccess</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 'auto',
+                width: 300,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() != "Success" && $('#hidError').val() != "") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_DeleteFail</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 'auto',
+                width: 'auto',
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        }
+
+
+        $('#sPageSize').html($('#hdfPageSize').val());
+        $('#btnClose').click(function () {
+            location.href = "/Home/";
+        });
+        $('#btnNew').click(function () {
+            location.href = "/WorkCenter/Create/";
+        });
+
+        $('#btnDelete').click(function () {
+            debugger;
+            var valueString = [];
+            $("input[name=cbCheck]:checked").each(
+            function () {
+                valueString.push(this.value);
+            });
+            if (valueString.length > 0) {
+                var DelConfirmed = {
+                    delConfirm: valueString,
+                }
+                $('#confirmDel').empty();
+                $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Delete the selected items ?</p>');
+                $("#confirmDel").dialog({
+                    modal: true,
+                    height: 'auto',
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                            $.ajax(
+                                {
+                                    type: 'POST',
+                                    url: '/WorkCenter/Delete/',
+                                    traditional: true,
+                                    data: DelConfirmed,
+                                    success: function (data) {
+                                        if (data == 'Success') {
+                                            location.reload();
+                                        } else {
+                                            location.reload();
+                                        }
+                                    }
+                                });
+                        },
+                        'Cancel': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#confirmDel').dialog('open');
+
+            } else {
+                $('#Inform').empty();
+                $('#Inform').append('<p style="height:0px !important;text-align:center;">You have not selected items to delete !</p>');
+                $("#Inform").dialog({
+                    modal: true,
+                    height: 'auto',
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#Inform').dialog('open');
+            }
+        });
+
+        //Checked all or Uncheck all element is checkbox
+        $('#cbCheckAll').click(function () {
+            $(".cbCheck").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+function SetPageSize(pageSize) {
+    debugger;
+    $.ajax(
+        {
+            type: 'POST',
+            url: '/WorkCenter/SetPageSize',
+            data: { "pageSize": pageSize },
+            success: function () {
+                location.reload();
+            }
+        });
+}
+</script>
+
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<input type="hidden" id="hidError" value="@ViewBag.Error">
+<div id="dialog" title="Basic modal dialog"></div>
+<div id="confirmDel" title="Confirm" style="background: white; margin-top: 10px;"></div>
+<div id="Inform" title="Inform" style="background: white; margin-top: 10px;"></div>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.WorkCenter_Title</h3>
+                @*<div id="breadcrumbs">
+                    <ul>
+                        <li><span>Settings</span></li>
+                        <li><a href="/WorkCenter/Index/">@Resources.Resource.WorkCenter_Title</a></li>
+                    </ul>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <input type="submit" style="margin-top: 10px;" id="btnNew" value="@Resources.Resource.WorkCenter_AddNew" class="btn btn-defaultxero" />
+            <input type="button" style="margin-top: 10px;" id="btnDelete" class="btn btn-defaultxero" value="@Resources.Resource.WorkCenter_Delete" />
+            <div style="float: right; display: inline;">
+                @using (Html.BeginForm("Index", "WorkCenter", FormMethod.Get, new { id = "frmWorkCenterIndex", style = "margin:10px !important;" }))
+                {
+                    @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { style = "margin-top: 2px; margin-right: 10px;", @class = "form-control", placeholder = "Input Work Center Code to search" })
+                    <input type="submit" id="btnSearch" value="@Resources.Resource.IncomingShipment_Index_Search" class="btn btn-defaultxero" />
+                }
+            </div>
+            <div id="tabbody">
+                <div id="tabs-1">
+                    @if (Model.Count > 0)
+                    {
+                        <table id="tableWorkcenter">
+                            <thead>
+                                <tr>
+                                    <th style="width: 30px;">
+                                        <input type="checkbox" id="cbCheckAll" />
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.WorkCenter_Code
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.WorkCenter_Description
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td >
+                                            <input type="checkbox" id="cbCheck" name="cbCheck" class="cbCheck" value="@item.ID"/>
+                                        </td>
+                                        <td style="word-break: break-all; width: 200px;">
+                                            <a href="/WorkCenter/Edit/@item.ID">@item.Code</a>
+                                        </td>
+                                        <td style="word-break: break-all; width: 400px;">
+                                            @item.Description
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                        <div style="display: inline;">
+                            <div style="width: 60%; float: left; margin-top: 10px;">
+                                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilter = ViewBag.CurrentFilter }))
+                            </div>
+                            <div style="float: left; margin-top: 10px; margin-left: 225px;">
+                                <label style="width: 70px; margin-top: 10px; font-size: 12px; font-weight: bold">@Resources.Resource.Common_PageSize</label>
+                                <div id="showpag" class="dropdown" style="float: right;">
+                                    <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                        <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                        <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                        <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                        <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        @Html.Raw("<div id='divNoRecord'>" + @Resources.Resource.Common_Msg_CountDisplay + "</div>")
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

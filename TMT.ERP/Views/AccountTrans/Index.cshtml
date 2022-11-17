@@ -1,0 +1,371 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.AccountTran>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+
+    window.onload = function () {
+        $("#cbCheckAll").prop('checked', false);
+        $(".cbCheck").prop('checked', false);
+    }
+
+    $(document).ready(function () {
+
+        $('.currency').blur(function () {
+            $('.currency').formatCurrency();
+        });
+
+        /******************** Bank Account Import Statement************************/
+        /*********************/
+        $('.ImportID').unbind('click').click(function (e) {
+            debugger;
+            var id = $('#hidID').val();
+            location.href = "/BankAccounts/ImportStatement/" + id
+        })
+
+        /******************** Reconcile ************************/
+        /*********************/
+        $('.ReconcileAcc').unbind('click').click(function (e) {
+            var id = $('#hidID').val();
+            location.href = "/AccountTrans/Reconcile/" + id
+        });
+
+        /******************** Begin Edit a Bank Account ************************/
+        /*********************/
+        $("#BankAccountEditID").unbind('click').click(function (e) {
+            e.preventDefault();
+            var id = $('#hidID').val();
+            debugger;
+            var _url = "/BankAccounts/Edit/" + id
+            $.ajax({
+                type: 'GET',
+                url: _url,
+                success: function () {
+                    custom.CreatePopup("#dialog", "Edit Bank Acount", 400, 'auto', _url, false);
+                    $("#dialog").dialog("open");
+                }
+            });
+
+        });
+
+        //Reconcile Transaction
+        $('#btnReconcile').click(function () {
+            debugger;
+            var valueString = [];
+            $("input[name=cbCheck]:checked").each(
+            function () {
+                valueString.push(this.value);
+            });
+            if (valueString.length > 0) {
+                var id = $('#hidID').val();
+                var accTrans = {
+                    accTransID: valueString,
+                    id: id
+                }
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/AccountTrans/MarkasReconcile/',
+                        traditional: true,
+                        data: accTrans,
+                        success: function (data) {
+                            window.location.href = "/AccountTrans/Index/" + id;
+                        }
+                    });
+                window.location.href = "/AccountTrans/Index/" + id;
+            } else {
+                $('#confirmDel').empty();
+                $('#confirmDel').append('<p style="height:0px !important;text-align:center;">You have not selected items !</p>');
+                $("#confirmDel").dialog({
+                    modal: true,
+                    height: 140,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#confirmDel').dialog('open');
+            }
+        });
+
+        //Delete Category
+        $('#btnDelete').click(function () {
+            debugger;
+            var valueString = [];
+            $("input[name=cbCheck]:checked").each(
+            function () {
+                valueString.push(this.value);
+            });
+            if (valueString.length > 0) {
+                var id = $('#hidID').val();
+                var DelConfirmed = {
+                    delConfirm: valueString,
+                    id: id
+                }
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/AccountTrans/DeleteConfirmed/',
+                        traditional: true,
+                        data: DelConfirmed,
+                        success: function (data) {
+                            location.reload();
+                        }
+                    });
+            } else {
+                $('#confirmDel').empty();
+                $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Please select item !</p>');
+                $("#confirmDel").dialog({
+                    modal: true,
+                    height: 120,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#confirmDel').dialog('open');
+            }
+        });
+
+        //Checked all or Uncheck all element is checkbox
+        $('#cbCheckAll').click(function () {
+            $(".cbCheck").prop('checked', $(this).prop('checked'));
+        });
+
+        $('#sPageSize').html($('#hdfPageSize').val());
+    });
+
+    function SetPageSize(pageSize) {
+        debugger;
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/AccountTrans/SetPageSize',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+
+</script>
+
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container" style="display: inline-block">
+            <h3>@ViewBag.Name &nbsp;&nbsp;&nbsp; @ViewBag.Num</h3>
+        </div>
+    </div>
+</div>
+
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <input type="hidden" id="hidID" value="@ViewBag.ID"/>
+            <div style="padding: 2px 0px">
+                <div style="display: inline-block">
+                    <p style="display: inline-block; border-style: none solid none none; border-right-width: 2px; border-right-color: darkgrey;">
+                        <label style="font-weight: normal; color: darkgray">Statement Balance</label>
+                        <br />
+                        <label style="font-size: 25px;">@ViewBag.Balance</label>
+                    </p>
+                    <p style="display: inline-block; margin-left: 20px;">
+                        <label style="font-weight: normal; color: darkgray">Balance in TMT</label>
+                        <br />
+                        <label style="font-size: 25px;">@ViewBag.TMTBalance</label>
+                    </p>
+                </div>
+                <div class="bank" style="float: right; width: 65%; margin-top: -55px; margin-right: 20px;">
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-defaultxero dropdown-toggle" data-toggle="dropdown">
+                            @Resources.Resource.BankAccount_ManageAccount_Label<span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu" role="menu" style="margin-left: -100px; width: 300px;">
+                            <li>
+                                <ul>
+                                    <li>
+                                        <div>
+                                            <h3>@Resources.Resource.BankAccounts_Index_Find</h3>
+                                            <ul>
+                                                <li>
+                                                    <a href="/AccountTrans/Index/@ViewBag.ID" >@Resources.Resource.BankAccounts_Index_Transaction</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/AccountTrans/BankStatement/@ViewBag.ID">@Resources.Resource.BankAccounts_Index_BankStatement</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div>
+                                            <h3>@Resources.Resource.BankAccounts_Index_New</h3>
+                                            <ul>
+                                                <li>
+                                                    <a href="/BankAccounts/SpendMoney/@ViewBag.ID">@Resources.Resource.BankAccounts_Index_Spend</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/BankAccounts/ReceiveMoney/@ViewBag.ID">@Resources.Resource.BankAccounts_Index_Receive</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/BankAccounts/TransferMoney/@ViewBag.ID">@Resources.Resource.BankAccounts_Index_Transfer</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div>
+                                            <h3>@Resources.Resource.BankAccounts_Index_Reconcile</h3>
+                                            <ul>
+                                                <li>
+                                                    <a href="#" class="ReconcileAcc">@Resources.Resource.BankAccounts_Index_ReconcileAcc</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Reconciliation Report</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="ImportID">@Resources.Resource.BankAccounts_Index_Import</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <ul>
+                                    <li class="li-bottom">
+                                        <div>
+                                            <ul>
+                                                <li>
+                                                    <a href="#" id="BankAccountEditID">@Resources.Resource.BankAccounts_Index_Edit</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <ul style="margin-bottom: 10px;" class="group nav nav-tabs">
+                    <li class="selected">
+                        <a href="/AccountTrans/Reconcile/@ViewBag.ID">Reconcile</a></li>
+                    <li class="selected">
+                        <a href="/AccountTrans/BankStatement/@ViewBag.ID" id="BankStm">Bank Statement</a></li>
+                    <li class="active">
+                        <a href="/AccountTrans/Index/@ViewBag.ID" id="AccTrans">Account Transaction</a></li>
+                </ul>
+                <div style="float: right;">
+                    @using (Html.BeginForm("Index", "AccountTrans", FormMethod.Get, new { style = "margin:10px !important;" }))
+                    {
+                        @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "form-control", placeholder = "Input Name or Description", style = "margin-top: 2px; margin-right: 10px;" })
+                        <input type="submit" id="btnSearch" value="@Resources.Resource.Category_Search" class="btn btn-defaultxero" />
+                    }
+                </div>
+                <div id="dialog" title="Basic modal dialog"></div>
+                <div id="confirmSearch" title="Information"></div>
+                <div id="confirmDel" title="Delete Confirm"></div>
+                @if (Model.Count > 0)
+                {
+                    <input type="button" id="btnDelete" class="btn-defaultxero" value="Delete" style="margin-top: 10px;" />
+                    <input type="button" id="btnReconcile" class="btn-defaultxero" value="Mark as Reconsile" />
+                    <table class="table" id="Transaction" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th style="width: 60px;">
+                                    <input type="checkbox" id="cbCheckAll" />
+                                </th>
+                                <th>
+                                    @Resources.Resource.AccountTrans_Index_Status
+                                </th>
+                                <th style="width: 300px;">
+                                    @Resources.Resource.AccountTrans_Index_Description
+                                </th>
+                                <th>
+                                    @Resources.Resource.AccountTrans_Index_Reference
+                                </th>
+                                <th>
+                                    @Resources.Resource.AccountTrans_Index_Spent
+                                </th>
+                                <th>
+                                    @Resources.Resource.AccountTrans_Index_Received
+                                </th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                @if (item.Status == 0 || item.Status == null)
+                                {
+                                    <td>
+                                        <input type="checkbox" id="cbCheck" name="cbCheck" class="cbCheck" value="@item.ID"/>
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>
+                                        <img src="~/Images/active.png" style="max-width: 30px; max-height: 30px;" />
+                                    </td>
+                                }
+                                @if (item.Status == 2)
+                                {
+                                    <td>Mark As Reconciled
+                                    </td>
+                                }
+                                else
+                                {
+                                    <td>Unreconcile
+                                    </td>
+                                }
+                                <td style="word-break: break-all; width: 300px;">
+                                    <a id="AccTransID" href="#">@Html.DisplayFor(modelItem => item.Description)@Html.HiddenFor(modelItem => item.ID)</a>
+                                </td>
+
+                                <td style="word-break: break-all">
+                                    @Html.DisplayFor(modelItem => item.Reference)
+                                </td>
+                                <td style="word-break: break-all">
+                                    <p class="currency">@item.Spent</p>
+                                </td>
+                                <td style="word-break: break-all">
+                                    <p class="currency">@item.Received</p>
+                                </td>
+                            </tr>
+                        }
+                    </table>
+                    <div style="display: inline;">
+                        <div style="width: 60%; float: left; margin-top: 10px;">
+                            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilter = ViewBag.CurrentFilter, id = ViewBag.ID }))
+                        </div>
+                        <div style="float: left; margin-top: 10px; margin-left: 225px;">
+                            <label style="width: 70px; margin-top: 10px; font-size: 12px; font-weight: bold">@Resources.Resource.Common_PageSize</label>
+                            <div id="showpag" class="dropdown" style="float: right;">
+                                <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    @Html.Raw("<div id='divNoRecord'>" + @Resources.Resource.Common_Msg_CountDisplay + "</div>")
+                }
+            </div>
+        </div>
+    </div>
+</div>

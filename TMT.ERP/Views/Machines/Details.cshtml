@@ -1,0 +1,91 @@
+﻿@model TMT.ERP.DataAccess.Model.Machine
+
+@{
+    ViewBag.Title = "Create";
+    Layout = null;  
+}
+<script type="text/ecmascript">
+
+    $(document).ready(function () {
+        $('#btnClose').click(function (e) {
+            e.preventDefault();
+            location.reload();
+        });
+    });
+</script>
+
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>Machine</legend>
+        <table style="width: 100%">
+            <tr>
+                <td style="width:25%">@Html.DisplayNameFor(model => model.Code)</td>
+                <td style="width:25%">
+                    <div class="editor-field">
+                        @Html.DisplayFor(model => model.Code)
+                    </div>
+                </td>
+                <td style="width:25%">@Html.DisplayNameFor(model => model.Name)</td>
+                <td style="width:25%">
+                    <div class="editor-field">
+                        @Html.DisplayFor(model => model.Name)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%">@Html.DisplayNameFor(model => model.Description)</td>
+                <td style="width:25%">
+                    <div class="editor-field">
+                        @Html.DisplayFor(model => model.Description)
+                    </div>
+                </td>
+                <td style="width:25%">@Html.DisplayNameFor(model => model.WorkCenterID)</td>
+                <td style="width:25%">
+                    <div class="editor-field">
+                        @Html.DisplayFor(model => model.WorkCenterID)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%">@Html.DisplayNameFor(model => model.DefaultSetupTime)</td>
+                <td style="width:25%">
+                    <div class="editor-field">
+                        @Html.DisplayFor(model => model.DefaultSetupTime)
+                    </div>
+                </td>
+                <td style="width:30%">@Html.DisplayNameFor(model => model.DefaultRunTime)</td>
+                <td style="width:20%">
+                    <div class="editor-field">
+                        @Html.DisplayFor(model => model.DefaultRunTime)
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td style="width:25%">@Html.DisplayNameFor(model => model.CostPerMinute)</td>
+                <td style="width:25%">
+                    <div class="editor-field">
+                        @Html.DisplayFor(model => model.CostPerMinute)
+                    </div>
+                </td>
+                <td style="width:25%">@Html.DisplayNameFor(model => model.Status)</td>
+                <td style="width:25%">
+                    <div class="editor-field">
+                        @Html.DisplayFor(model => model.Status)
+                    </div>
+                </td>
+            </tr>
+        </table><br/>
+        <p>
+             @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+              
+        </p>
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

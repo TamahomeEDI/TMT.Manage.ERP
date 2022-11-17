@@ -1,0 +1,37 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.Control>
+<label>
+    Control
+</label>
+<table class="tableOver" id="tableControl">
+    <thead style="display: none;">
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.FunctionID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ControlName)
+            </th>
+        </tr>
+    </thead>
+    <tbody id="bodyControl">
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td style="display: none;">
+                    <input type="hidden" id="hdfControlId" value="@item.ID"/>
+                </td>
+                <td style="border-top:1px solid #ccc;">
+                    @Html.DisplayFor(modelItem => item.ControlName)
+                </td>
+                <td style="border-top:1px solid #ccc;">
+                    <select id="ddlViewType" name="ddlViewType" style="width: 80px !important; height: 25px !important;">
+                        <option value="0">Hidden</option>
+                        <option value="1">Disabled</option>
+                        <option value="2" selected="selected">Show</option>
+                    </select>
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

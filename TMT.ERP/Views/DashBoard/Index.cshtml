@@ -1,0 +1,133 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.Purchase>
+
+@{
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+
+<script src="@Url.Content("~/Scripts/ERPScripts/Purchase/Purchase.js")"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#apaid').click(function () {
+            
+            var tabNum = $(this).attr('title');
+            tabNum = 3;
+            window.location.href = encodeURI('/Purchase/Index?tabNum=' + tabNum);
+
+        });
+
+        $('#aRepeating').click(function () {
+            
+            var tabNum = $(this).attr('title');
+            tabNum = 4;
+            window.location.href = "/Purchase/Index?tabNum=" + tabNum;
+
+        });
+
+        $('#aSeeall').click(function () {
+            
+            var tabNum = $(this).attr('title');
+            tabNum = 5;
+            window.location.href = "/Purchase/Index?tabNum=" + tabNum;
+        });
+
+        $('#btnSent').click(function () {
+            alert('NOT DONE ! SMILE !');
+        });
+        $('#btnImport').click(function () {
+            alert("NOT DONE ! SMILE !");
+        });
+        //$('#ActionID').change(function () {
+        //    var giatri = $(this).val();
+        //    alert(giatri);
+        //    switch (giatri) {
+        //        case '0':
+        //            alert('NOT DONE ! SMILE !' + giatri);
+        //            break;
+        //        case '1':
+        //            window.location.href = encodeURI('/Purchase/CreateRepeatingPurchase');
+        //            break;
+        //        case '2':
+        //            window.location.href = encodeURI('/Purchase/CreateCreditNotePurchase');
+        //            break;
+        //        default:
+        //    }
+        //});
+        $('#dasDraft').click(function () {
+            var tabNum = $(this).attr('title');
+            tabNum = 0;
+            window.location.href = "/Purchase/Index?tabNum=" + tabNum;
+        });
+        $('#dasAwait').click(function () {
+            var tabNum = $(this).attr('title');
+            tabNum = 1;
+            window.location.href = "/Purchase/Index?tabNum=" + tabNum;
+        });
+        $('#dasAwaitPay').click(function () {
+            var tabNum = $(this).attr('title');
+            tabNum = 2;
+            window.location.href = "/Purchase/Index?tabNum=" + tabNum;
+        });
+        $('#dasAwaitPay2').click(function () {
+            var tabNum = $(this).attr('title');
+            tabNum = 2;
+            window.location.href = "/Purchase/Index?tabNum=" + tabNum;
+        });
+
+    });
+</script>
+<div class="container">
+    <div class="c_container">
+        <div id="con_body">
+            <div id="toolbar">
+                <ul>
+                    <li class="item1 dropdown parent">
+                        <a href="javascript:void(0);" class="dropdown-toggle firstchild" data-toggle="dropdown"><span class="icon icon_new"></span><span>New Invoice</span></a>
+                        <ul class="dropdown-menu">
+                            @if (user.UsersInRoles.ToList().Exists(x => x.Role.RolePermission.CreateBillDraft == true))
+                            {
+                                <li><a href="/Purchase/Create/">Bill</a></li>
+                            
+                                <li><a href="/Purchase/CreateRepeatingPurchase/">Repeating Bill</a></li>
+                                <li><a href="/Purchase/CreateCreditNotePurchase/">Credit Note</a></li>
+                            }
+                        </ul>
+                    </li>
+                    @if (user.UsersInRoles.ToList().Exists(x => x.Role.RolePermission.CreateBillDraft == true))
+                    {
+                        <li class="item2"><a href="/Purchase/CreateCreditNotePurchase/"><span class="icon icon_new"></span><span>New Credit Note</span></a></li>
+                    }
+                    <li class="item3"><a href="javascript:void(0);" onclick="sendStatements(this);"><span class="icon icon_send"></span><span>Send Statements</span></a></li>
+                    <li class="item4"><a href="javascript:void(0);" onclick="saleInvoiceImport(this);"><span class="icon icon_import"></span><span>ImPort</span></a></li>
+                </ul>
+
+            </div>
+
+            <hr />
+            <div style="display: inline; width: 100%;">
+                <a style="text-decoration: none; color: #048FC2; font-size: 30px !important;" href="/Purchase/Paid/" title="Invoices">Bill</a>|
+    <a style="text-decoration: none; color: #048FC2;" href="javascript:void(0);" title="3" id="apaid">Paid</a>|  
+    <a style="text-decoration: none; color: #048FC2;" href="javascript:void(0);" title="4" id="aRepeating">Repeating</a>|
+    <a style="text-decoration: none; color: #048FC2;" href="javascript:void(0);" title="5" id="aSeeall">See all</a>|
+            </div>
+            <div style="clear: both; height: 20px;"></div>
+            <div style="display: inline; height: 100px;">
+                <div style="width: 24%; float: left;" id="dasDraft">
+                    <p>Draft(@ViewBag.Draft)</p>
+                    <h2 style="color: #888888; text-align: justify;">@ViewBag.MDraft</h2>
+                </div>
+                <div style="width: 24%; float: left;" id="dasAwait">
+                    <p>Awaiting Approval(@ViewBag.Awaiting)</p>
+                    <h2 style="color: #048FC2; text-align: justify;">@ViewBag.MAwaiting</h2>
+                </div>
+                <div style="width: 24%; float: left;" id="dasAwaitPay">
+                    <p>Awaiting Payement(@ViewBag.AwaitingPay)</p>
+                    <h2 style="color: #048FC2; text-align: justify;">@ViewBag.MAwaitingPay</h2>
+                </div>
+                <div style="width: 24%; float: left;" id="dasAwaitPay2">
+                    <p>Overdue(@ViewBag.AwaitingPay)</p>
+                    <h2 style="color: #CC0000; text-align: justify;">@ViewBag.MAwaitingPay</h2>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

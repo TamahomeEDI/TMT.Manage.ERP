@@ -1,0 +1,51 @@
+﻿@model TMT.ERP.DataAccess.Model.Stock
+
+@{
+    ViewBag.Title = "Details";
+    Layout = null;
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Stock</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Code)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Code)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Name)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Name)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CurrentCompanyID)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CurrentCompanyID)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.MaxQuatity)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.MaxQuatity)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Description)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Description)
+    </div><br/>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+     
+</p>

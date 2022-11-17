@@ -1,0 +1,242 @@
+﻿@using PagedList.Mvc
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.StockInCard>
+@{
+    var ooStocks = ViewBag.Stocks as List<StockInCard>;
+    var draft = 0;
+    var done = 0;
+    if (ooStocks != null)
+    {
+        draft = ooStocks.Count(x => x.Status < 2);
+        done = ooStocks.Count(x => x.Status == 2);
+    }
+        
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sPageSize').html($('#hdfPageSize').val());
+        var countModel = $('#hdfCountList').val();
+        if (countModel == 0) {
+            $('#error').css('display', 'block');
+            $('#tabs-1').css('display', 'none');
+            $('#function').css('display', 'none');
+        } else {
+            $('#error').css('display', 'none');
+        }
+        $('#btnSearch').click(function () {
+            debugger;
+            var valueSearch = $('#searchString').val();
+            if (valueSearch == "" || valueSearch == undefined || valueSearch == null) {
+                location.href = "/IncomingShipment/";
+                return false;
+            }
+        });
+
+        jQuery.validator.messages.required = "";
+        $("#frmIncomingShipmentIndex").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+    });
+    function SetPageSize(pageSize) {
+        debugger;
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/IncomingShipment/SetPageSize',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+    function SortDate(value) {
+        debugger;
+        $.ajax(
+            {
+                type: "POST",
+                url: "/IncomingShipment/SetDateAsc/",
+                data:
+                    {
+                        "value": value
+                    },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+</script>
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<input type="hidden" value="@Model.Count" id="hdfCountList"/>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.IncomingShipment_Index_List</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.IncomingShipment_Inventory</span></li>
+                        <li><span>@Resources.Resource.IncomingShipment_Stock</span></li>
+                        <li><a href="/IncomingShipment/Index/">@Resources.Resource.IncomingShipment_Index_List</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_body">
+    <div class="container">
+        <div class="c_container">
+            <div class="cleardiv"></div>
+            <div class="error" style="display: none;">
+                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: -5px 10px 0px 0px;" />
+                <span></span>.
+            </div>
+            <div id="divMessage"></div>
+            <div class="cleardiv"></div>
+            <div style="float: right; display: inline;">
+                @using (Html.BeginForm("Index", "IncomingShipment", FormMethod.Get, new { id = "frmIncomingShipmentIndex" }))
+                {
+                    @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { style = "width:175px !important;height:30px !important;", @class = "required", placeholder = @Resources.Resource.Common_Incoming_InputSearch })
+                    <input type="submit" id="btnSearch" value="@Resources.Resource.IncomingShipment_Index_Search" class="btn btn-defaultxero" />
+                }
+            </div>
+            <ul class="nav nav-tabs">
+                <li class="active">
+                    <a href="/IncomingShipment/Index/">@Resources.Resource.IncomingShipment_Index_Draft<span>&nbsp;&nbsp;(@draft)</span></a>
+                </li>
+                <li>
+                    <a href="/IncomingShipment/History/">@Resources.Resource.IncomingShipment_Index_History<span>&nbsp;&nbsp;(@done)</span></a>
+                </li>
+            </ul>
+            <div class="cleardiv"></div>
+            <div id="tabbody">
+                <div id="tabs-1">
+                    <table id="tblDraft" class="tableOver">
+                        <thead>
+                            <tr>
+                                <th>@Resources.Resource.IncomingShipment_Index_ShipmentNo
+                                </th>
+                                <th>
+                                    @*@Resources.Resource.IncomingShipment_Index_Type*@
+                                    Total Qty
+                                </th>
+                                <th>@Resources.Resource.IncomingShipment_Index_SourceNo
+                                </th>
+                                <th>@Resources.Resource.IncomingShipment_Index_Date
+                                    <span style="float: right;">
+                                        <a href="javascript:void(0);" onclick="SortDate('desc');">
+                                            <img src="~/Images/sort_asc.png" /></a>
+                                        <a href="javascript:void(0);" onclick="SortDate('asc');">
+                                            <img src="~/Images/sort_desc.png" /></a>
+                                    </span>
+                                </th>
+                                @*<th>@Resources.Resource.IncomingShipment_Index_Reference</th>
+                                <th>@Resources.Resource.IncomingShipment_Index_From
+                                </th>*@
+                                <th>@Resources.Resource.IncomingShipment_Index_Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {                                                                                               
+                                <tr>
+                                    <td>
+                                        @switch (item.Type)
+                                        {
+                                            case 0:
+                                            <a href="/IncomingShipment/PurchaseOrder?id=@item.ID&isDone=0">@item.Code</a>
+                                                break;
+                                            case 1:
+                                            <a href="/IncomingShipment/WorkOrder?id=@item.ID&isDone=0">@item.Code</a>
+                                                break;
+                                            case 2:
+                                            <a href="/IncomingShipment/ReturnWorkOrder?id=@item.ID&isDone=0">@item.Code</a>
+                                                break;
+                                        }
+                                    </td>
+                                    <td>
+                                        @item.StockInCardsDetails.Sum(x => x.QuantityReq)
+                                    </td>
+                                    <td>
+                                        @if (ViewBag.SourceNo(Convert.ToInt32(item.SourceID), Convert.ToInt32(item.Type)) != null)
+                                        {
+                                            @ViewBag.SourceNo(Convert.ToInt32(item.SourceID), Convert.ToInt32(item.Type))
+                                        }
+                                    </td>
+                                    <td>
+                                        @TMT.ERP.Commons.Utility.DateFormat(item.CreatedDate)
+                                    </td>
+                                    @*<td>
+                                        @if (item.Sender != null)
+                                        {
+                                            @item.Sender
+                                        }
+                                    </td>*@
+                                    @*<td>
+                                        @if (item.Stock != null && item.Stock.Name != null)
+                                        {
+                                            @item.Stock.Name                                            
+                                        }
+                                    </td>*@
+                                    <td>
+                                        @if (item.Status == 0)
+                                        {
+                                            <label>Draft</label>
+                                        }
+                                        @if (item.Status == 1)
+                                        {
+                                            <label>Partial</label>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div style="height: 50px; padding-top: 5px;">
+                        <div style="float: left;">
+                            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilter = ViewBag.CurrentFilter }))
+                        </div>
+                        <div style="width: 25%; float: right;">
+                            <label style="margin-left: 70px; margin-top: 10px;">Showing&nbsp;</label>
+                            <div id="showpag" class="dropdown" style="float: right;">
+                                <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="cleardiv"></div>
+                <div id="error">
+                    <label>
+                        @Resources.Resource.SaleInvoices_Error
+                    </label>
+                </div>
+                <div class="cleardiv"></div>
+            </div>
+        </div>
+    </div>
+</div>

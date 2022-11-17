@@ -1,0 +1,80 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model IEnumerable<TMT.ERP.DataAccess.Model.AccountGroup>
+
+@{
+    ViewBag.Title = "SetGroup";
+    Layout = null;
+}
+
+<script type="text/ecmascript">
+    $(document).ready(function () {
+        $('#btnCancel').click(function (e) {
+            e.preventDefault();
+            location.reload();
+        });
+
+        // Create
+        $('#btnGroup').click(function (e) {
+            
+            var id = $('#hidID').val();
+            var valueString = [];
+            $("input[name=Group]:checked").each(
+            function () {
+                valueString.push(this.value);
+            });
+            if (valueString.length > 0) {
+                var DelConfirmed = {
+                    delConfirm: valueString,
+                    _id: id
+                }
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/Accounts/SetGroup/',
+                        traditional: true,
+                        data: DelConfirmed,
+                        success: function (data) {
+                            window.location.href = "/Accounts/Index/";
+                        }
+                    });
+            }
+        });
+    });
+</script>
+
+@using (Html.BeginForm())
+{
+    <input type="hidden" id="hidID" value="@ViewBag.ID" >
+    <div class="container">
+        <div class="c_container">
+            <div id="breadcrumb">
+                <div class="container">
+                    <div id="con_top">
+                        <div class="c_container">
+                            <div>
+                                <label>Account Code : </label>
+                                <label style="font-weight: normal;">&nbsp; @ViewBag.Code </label>
+                            </div>
+                            <div>
+                                <label>Account Name: </label>
+                                <label style="font-weight: normal;">&nbsp; @ViewBag.Name </label>
+                            </div>
+                            <div>
+                                @foreach (var item in Model) {
+                                    <p style="display:inline-block">
+                                        <input type="checkbox" name="Group" style="margin-left: 15px;" value="@item.ID"/> 
+                                        <label style="font-weight: normal"> @item.Name </label>
+                                    </p><br>
+                                }
+                            </div>
+                            <p style="margin-top: 10px;">
+                                <input type="submit" id="btnGroup" class="btn" value="@Resources.Resource.AccountGroup_SetGroup" />
+                                <input type="submit" value="@Resources.Resource.AccountGroup_Cancel" class="btn" id="btnCancel" />
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div> 
+}

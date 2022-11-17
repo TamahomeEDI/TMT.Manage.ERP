@@ -1,0 +1,475 @@
+﻿@using PagedList.Mvc;
+@using Microsoft.VisualBasic;
+@using System.Globalization;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.Purchase>
+@{
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+<script>
+    $(document).ready(function () {
+        SetTypeSearch("0");
+        $('#searchString').val('');
+        $('#createdate').val('');
+        $('#duadate').val('');
+        $('#sPageSize').html($('#hdfPageSize').val());
+        $('#aClearDraft').click(function () {
+            $('#searchString').val('');
+            $('#type').val(0);
+            $('#createdate').val('');
+            $('#duadate').val('');
+        });
+        $('#type').change(function () {
+            var x = $(this).val();
+            SetTypeSearch(x);
+        });
+        $('#cbCheckAllDraft').click(function () {
+            $("input[name=chkPurchase]").prop('checked', $(this).prop('checked'));
+        });
+        $('#aWaitingApproved').click(function () {
+
+            var valueString = [];
+            $("input[name=chkPurchase]:checked").each(
+                function () {
+                    valueString.push(this.id);
+                }
+            );
+            if (valueString.length > 0) {
+                var purchase = {
+                    purchaseID: valueString,
+                    status: '1'
+                }
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/Purchase/Approved/',
+                        traditional: true,
+                        data: purchase,
+                        success: function (data) {
+                            // window.location.href = '/Purchase/Awaiting/';
+                            var msg = '@Resources.Resource.Common_Msg_SubmitSuccess';
+                            var _url = '/Purchase/Awaiting/';
+                            CreatePopupMessage('divMessage', msg, '@Resources.Resource.Common_Message', 120, 300, _url);
+                        }
+                    });
+                } else {
+                    $('#confirmDel').empty();
+                    $('#confirmDel').append('<p style="height:0px !important;text-align:center;">You have not selected any items to submit for approve. </p>');
+                    $("#confirmDel").dialog({
+                        modal: true,
+                        height: 140,
+                        autoOpen: false,
+                        buttons: {
+                            'OK': function () {
+                                $(this).dialog('close');
+                            }
+                        }
+                    });
+                    $('#confirmDel').dialog('open');
+                }
+
+        });
+
+        $('#aApproved').click(function () {
+            debugger;
+            var userId = $('#hdfUserID').val();
+            var valueString = [];
+            $("input[name=chkPurchase]:checked").each(
+                function () {
+                    valueString.push(this.id);
+                }
+            );
+            if (valueString.length > 0) {
+                var purchase = {
+                    purchaseID: valueString,
+                    status: '2'
+                };
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/Purchase/Approved/',
+                        traditional: true,
+                        data: purchase,
+                        success: function (data) {
+                            var msgSuccessStockIn = '@Resources.Resource.Common_Msg_Approved';
+                            if (data != "success") {
+                                msgSuccessStockIn += '<br/>';
+                                msgSuccessStockIn += '@Resources.Resource.Common_Msg_IncomingShipmentBegin';
+                                msgSuccessStockIn += data;
+                                msgSuccessStockIn += ' @Resources.Resource.Common_Msg_IncomingShipmentEnd';
+                            }
+                            var _url = "/Purchase/AwaitingPayment/";
+                            CreatePopupMessage('divMessage', msgSuccessStockIn, '@Resources.Resource.Common_Message', 160, 400, _url);
+                        }
+                    });
+                }
+                else {
+                    $('#confirmDel').empty();
+                    $('#confirmDel').append('<p style="height:0px !important;text-align:center;">You have not selected any items to approve.</p>');
+                    $("#confirmDel").dialog({
+                        modal: true,
+                        height: 140,
+                        autoOpen: false,
+                        buttons: {
+                            'OK': function () {
+                                $(this).dialog('close');
+                            }
+                        }
+                    });
+                    $('#confirmDel').dialog('open');
+                }
+        });
+
+        $('#aDelete').click(function () {
+
+            var valueString = [];
+            $("input[name=chkPurchase]:checked").each(
+                function () {
+                    valueString.push(this.id);
+                }
+            );
+            if (valueString.length > 0) {
+                var purchase = {
+                    purchaseID: valueString
+                }
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/Purchase/DelPurchase/',
+                        traditional: true,
+                        data: purchase,
+                        success: function (data) {
+                            // window.location.href = "/Purchase/Draft/";
+                            var msg = '@Resources.Resource.Common_Msg_DeleteSuccess';
+                            var _url = "/Purchase/Draft/";
+                            CreatePopupMessage('divMessage', msg, '@Resources.Resource.Common_Message', 120, 300, _url);
+                        }
+                    });
+                } else {
+                    $('#confirmDel').empty();
+                    $('#confirmDel').append('<p style="height:0px !important;text-align:center;">You have not selected any items to delete. </p>');
+                    $("#confirmDel").dialog({
+                        modal: true,
+                        height: 140,
+                        autoOpen: false,
+                        buttons: {
+                            'OK': function () {
+                                $(this).dialog('close');
+                            }
+                        }
+                    });
+                    $('#confirmDel').dialog('open');
+                }
+        });
+    });
+
+
+        function SetPageSize(pageSize) {
+
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Purchase/SetPageSize/',
+                    data: { "pageSize": pageSize },
+                    success: function () {
+                        location.reload();
+                    }
+                });
+        }
+
+        function SetTypeSearch(typeSearch) {
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Purchase/SetTypeSearch/",
+                    data:
+                        {
+                            "typeSearch": typeSearch
+                        },
+                    success: function () {
+
+                    }
+                });
+        }
+</script>
+<input type="hidden" value="@user.ID" id="hdfUserID"/>
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<div id="divMessage" style="background: white;"></div>
+<div class="container">
+    <div class="c_container">
+        <div id="breadcrumb">
+            <div class="container">
+                <div id="con_top">
+                    <div class="c_container">
+                        <h3>@Resources.Resource.Common_Bills</h3>
+                        <div id="breadcrumbs">
+                            <ul>
+                                <li><a href="/Purchase/Dashboard/"><span>@Resources.Resource.Common_Purchases</span></a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div id="con_body">
+            <div class="container">
+                <div class="c_container">
+                    <div id="toolbar" class="toolbar">
+                        <div class="btn-group">
+                            <button type="button" onclick="NewSalePurchase(1);" class="btn btn-defaultxero">@Resources.Resource.Purchase_New_Order</button>
+                            <button type="button" style="margin-left: -10px;" class="btn btn-defaultxero dropdown-toggle" data-toggle="dropdown">
+                                <span class="caret"></span>
+                                <span class="sr-only">Toggle Dropdown</span>
+                            </button>
+                            <ul class="dropdown-menu" role="menu">
+                                <li><a href="/Purchase/CreateRepeatingPurchase/">@Resources.Resource.Purchase_Repeating</a></li>
+
+                            </ul>
+                        </div>
+                        <div class="btn-group">
+                            <button type="button" onclick="NewSalePurchase(2);" class="btn btn-defaultxero">@Resources.Resource.SaleInvoice_DashboardCreate_CreateditNote</button>
+
+                        </div>
+                    </div>
+                    @using (Html.BeginForm("Draft", "Purchase", FormMethod.Get))
+                    {
+                        <div id="searchDraft" style="display: inline;">
+                            <div class="divitemleft">
+                                <label>@Resources.Resource.SaleInvoice_Dashboard_RefOrContact</label>
+                                <br />
+                                @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { style = "width:175px;height:26px;" })
+                            </div>
+                            <div class="divitemleft">
+                                <label>@Resources.Resource.SaleInvoice_Dashboard_SearchWith</label>
+                                <br />
+                                <select id="type" name="type" style="width: 175px; height: 25px;">
+                                    <option value="0">@Resources.Resource.SaleInvoice_Dashboard_AnyDate</option>
+                                    <option value="1">@Resources.Resource.SaleInvoice_Transaction_Date</option>
+                                    <option value="2">@Resources.Resource.SaleInvoice_End_DueDate</option>
+                                </select>
+                            </div>
+                            <div class="divitemleft">
+                                <label>@Resources.Resource.SaleInvoice_Create_Date</label>
+                                <br />
+                                @Html.TextBox("createdate", ViewBag.CreateDate as string, new { style = "width:175px;height:26px;", @class = "dtFrom" })
+                            </div>
+                            <div class="divitemleft">
+                                <label>@Resources.Resource.SaleInvoice_Create_DueDate</label>
+                                <br />
+                                @Html.TextBox("duadate", ViewBag.DueDate as string, new { style = "width:175px;height:26px;", @class = "dtTo" })
+                            </div>
+                            <div class="divitemright">
+                                <a href="javascript:void(0);" id="aClearDraft">@Resources.Resource.Common_Clear</a>&nbsp;
+                                <input type="submit" value="@Resources.Resource.SaleInvoice_DashboardCreate_Search" id="btnSearch" class="btn btn-defaultxero" style="margin-top: 15px;" />
+                            </div>
+                        </div>
+                    }
+                    <div style="clear: both; height: 10px;"></div>
+
+                    <ul class="nav nav-tabs">
+                        @{           
+                            var db = new ErpEntities();
+                            var purchase = db.Purchases.ToList();
+
+                            List<Purchase> purchaseAll = db.Purchases.OrderByDescending(pur => pur.ID).ToList();
+                            List<Purchase> repAndPurLst = new List<Purchase>();
+                            for (int i = 0; i < purchaseAll.Count; i++)
+                            {
+                                Purchase oPur = purchaseAll.ElementAt(i);
+                                Repeating repeating = null;
+                                //For repeating purchase
+                                repeating = db.Repeatings.Where(re => re.RepeatType == 1 && re.PurchaseID == oPur.ID && re.DateRun > DateTime.Now).FirstOrDefault();
+                                if (repeating != null)
+                                {
+                                    purchaseAll.Remove(oPur);
+                                }
+                            }
+                            for (int i = 0; i < purchase.Count; i++)
+                            {
+                                Purchase oPur = purchase.ElementAt(i);
+                                Repeating repAndPurchase = null;
+                                //For repeating purchase
+                                repAndPurchase = db.Repeatings.Where(re => re.RepeatType == 1 && re.PurchaseID == oPur.ID).FirstOrDefault();
+                                if (repAndPurchase != null)
+                                {
+                                    repAndPurLst.Add(oPur);
+                                }
+                            }
+                        }
+                        <li><a href="/Purchase/All">All (@purchaseAll.Count())</a></li>
+                        <li class="active"><a href="/Purchase/Draft/">Draft (@purchase.Count(x => x.Status == 0))</a></li>
+                        <li><a href="/Purchase/Awaiting/">Awaiting Approval (@purchase.Count(x => x.Status == 1))</a></li>
+                        <li><a href="/Purchase/AwaitingPayment/">Awaiting Payment (@purchase.Count(x => x.Status == 2))</a></li>
+                        <li><a href="/Purchase/Paid/">Paid (@purchase.Count(x => x.Status == 3))</a></li>
+                        <li><a href="/Purchase/Repeating/">Repeating (@repAndPurLst.Count())</a></li>
+                    </ul>
+
+                    <div style="clear: both; height: 10px;"></div>
+                    @if (Model.ToList().Count > 0)
+                    {
+                        <div class="bovien">
+                            @*                            @if (user.UsersInRoles.ToList().Exists(x => x.Role.RolePermission.ApproveBill == true))
+                            {
+                                 *@
+                            <input type="button" id="aWaitingApproved" value="@Resources.Resource.SaleInvoice_Dashboard_SubmitForApproved" class="btn btn-defaultxero"/>
+                            <input type="button" id="aApproved" value="@Resources.Resource.SaleInvoice_Dashboard_Approved" class="btn btn-defaultxero" />
+                            <input type="button" id="aDelete" value="@Resources.Resource.SaleInvoice_Dashboard_Deleted" class="btn btn-defaultxero" />
+
+                            @*                                <a class="btn btn-defaultxero" href="javascript:void(0);" id="aWaitingApproved">Submit for Approval</a>
+                                <a class="btn btn-defaultxero" href="javascript:void(0);" id="aApproved">Approve</a>*@
+                            @*                         }
+                            @if (((ViewBag.IsDelete == true) && (user.UsersInRoles.ToList().Exists(x => x.Role.RolePermission.DeleteBill == true)))
+                             || (user.UsersInRoles.ToList().Exists(x => x.Role.RolePermission.DeleteBillCreatedByOther == true)))
+                            {
+                                *@
+                            @* <a class="btn btn-defaultxero" href="javascript:void(0);" id="aDelete">Delete</a>*@
+                            @*     }*@
+                            @*<a class="btn btn-defaultxero" href="javascript:void(0);" id="aPrint">Print</a>*@
+                        </div>
+                    }
+                    <div id="tabbody">
+                        <div id="tabs-1">
+                            @if (Model.ToList().Count > 0)
+                            {
+                                <div id="confirmDel" title="No items selected!"></div>
+                                <table id="draftPurchase" class="tableOver">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                <input type="checkbox" id="cbCheckAllDraft" />
+                                            </th>
+
+
+                                            <th>@Resources.Resource.Purchase_List_Number
+                                            </th>
+                                            <th>
+                                                @Resources.Resource.Purchase_List_Reference
+                                            </th>
+                                            <th>
+                                                @Resources.Resource.Purchase_List_ContactName
+                                            </th>
+                                            <th>
+                                                @Resources.Resource.Purchase_List_Date
+                                            </th>
+                                            <th>
+                                                @Resources.Resource.Purchase_List_DueDate
+                                            </th>
+                                            @*                                            <th>@Resources.Resource.SaleInvoice_List_Paid
+                                            </th>*@
+                                            <th>@Resources.Resource.SaleInvoice_List_Due
+                                            </th>
+                                            @*                                            <th>
+                                                @Resources.Resource.Purchase_List_Status
+                                            </th>*@
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model)
+                                        {
+                                            <tr>
+
+                                                <td>@Html.CheckBox("chkPurchase", false, new { id = item.ID })</td>
+
+                                                @*                                                <td>
+                                                 @if(item.Type == 0){
+                                                 <a href="/Purchase/Edit/@item.ID" title="@item.ID">@Html.DisplayFor(modelItem => item.Code)</a>
+                                                 Repeating repeating = db.Repeatings.Where(re => re.RepeatType == 1 && re.PurchaseID == item.ID).FirstOrDefault();
+                                                 if (repeating != null)
+                                                 {
+                                                 <a href="/Purchase/Edit/@item.ID" title="@item.ID">@Html.DisplayFor(modelItem => item.Contact.ContactName)</a>
+                                                 }
+                                               
+                                                 }else {
+                                                 <a href="/Purchase/Edit/@item.ID" title="@item.ID">@Html.DisplayFor(modelItem => item.Contact.ContactName)</a>
+                                                 }
+                                                </td>*@
+
+                                                <td>
+                                                    <a href="/Purchase/Edit/@item.ID" title="@item.ID">@Html.DisplayFor(modelItem => item.Code)</a>
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Reference)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Contact.ContactName)
+                                                </td>
+                                                <td>
+                                                    @TMT.ERP.Commons.Utility.DateFormat(item.CreatedDate)
+                                                </td>
+                                                <td>
+                                                    @{
+                                            DateTime due = item.DueDate != null ? Convert.ToDateTime(item.DueDate) : DateTime.Now;
+                                                    }
+                                                    @TMT.ERP.Commons.Utility.DateFormat(due)
+                                                </td>
+
+                                                @{double money = ViewBag.TotalMoneySale(item.ID);
+                                                }
+                                                @*@{
+                                                string formatString = "";
+                                                string dueMoney = money.ToString(formatString);
+                                                double negAmount = -12345.67;
+                                                    if(item.Type == 1){
+                                                        CultureInfo culture = (CultureInfo)CultureInfo.CurrentCulture.Clone();
+                                                        culture.NumberFormat.CurrencyNegativePattern = 1;
+                                                        dueMoney = string.Format(culture, "{0:c}", -money);
+                                                        string fmt2 = "#,##0.00;(#,##0.00)";
+                                                        
+                                                        FormatNumber(-100, UseParensForNegativeNumbers:=TriState.True);
+                                                    }
+                                                }*@
+                                                @if (item.Type == 1 && money != 0)
+                                                {
+                                                    <td style="text-align: right">(<span class="currency">@money</span>)
+                                                    </td>
+                                                }
+                                                else
+                                                {
+                                                    <td style="text-align: right">
+                                                        <span class="currency">@money</span>
+                                                    </td>
+                                                }
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                                <div style="clear: both; height: 10px;"></div>
+
+                                <br />
+                                <div style="display: inline;">
+                                    <div style="width: 70%; float: left;">
+                                        @*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount*@
+                                        @Html.PagedListPager(Model, page => Url.Action("Draft", new { page, currentFilter = ViewBag.CurrentFilter, type = 0, createdate = ViewBag.CreateDate, duadate = ViewBag.DueDate }))
+                                    </div>
+                                    <div style="width: 25%; float: right;">
+                                        <label style="margin-left: 70px; margin-top: 10px;">Showing&nbsp;</label>
+                                        <div id="showpag" class="dropdown" style="float: right;">
+                                            <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                                            <ul class="dropdown-menu">
+                                                <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                                <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                                <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                                <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                                <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            else
+                            {
+                                <div style="clear: both; height: 20px;"></div>
+                                <div style="width: 100%; clear: both; height: 50px; float: left;">
+                                    @Resources.Resource.Purchase_List_No_Records
+                                </div>
+                               
+                            }
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

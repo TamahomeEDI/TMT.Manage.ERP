@@ -1,0 +1,132 @@
+﻿@model TMT.ERP.Models.CustomerInvoice_SupplierInvoice_Report
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnSearch').click(function () {
+            var createdate = $('#CreatedDate').val();
+            var duedate = $('#DueDate').val();
+            window.location.href = "/Report/Supplier_Invoice_Report?dtFrom=" + createdate + "&dtTo=" + duedate;
+        });
+    });
+</script>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Model.TitleDocument</h3>
+            </div>
+        </div>
+     </div>
+</div>
+<div id="con_body">
+    <div class="container">
+        <div id="Report_Search">    
+            <div >
+                <label>
+                    From:
+                </label> 
+                <br />
+                <input style="width: 175px; height: 26px;" type="text" name="CreatedDate" id="CreatedDate" class="dtFrom">
+            </div>
+            <div >
+                <label>To:</label>
+                <br />
+                <input style="width: 175px; height: 26px;" type="text" name="DueDate" id="DueDate" class="dtTo">
+            </div>
+            <div>
+                <input type="submit" value="Update" id="btnSearch" class="btn btn-defaultxero" />
+            </div>    
+        </div>
+        <div id="Report_Css">
+            <div class="MainTitle1">@Model.TitleDocument</div>
+            <div class="MainTitle2">@Model.CompanyName</div>
+            <div class="MainTitle2">@Model.ReportDate</div>
+            <table>
+                <thead>
+                    <tr>
+                         @foreach (var item in Model.ColumnName)
+                         {
+                        <th>
+                            @item
+                        </th>
+                         }
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CustomerInvoice_SupplierInvoices)
+                    {
+                        <tr>
+                            <td>
+                                @item.Reference
+                            </td>
+                            <td>
+                                @if (@item.Type.Value > -1)
+                                {
+                                    @Model.s_Type[@item.Type.Value]
+                                }                        
+                            </td>
+                            <td>
+                                @item.ContactName
+                            </td>
+                            <td>
+                                @item.Date
+                            </td>
+                            <td>
+                                @item.Due_Date
+                            </td>
+                            <td>
+                                @item.Paid_Date
+                            </td>
+                            <td>
+                                @item.s_Invoice_Total
+                            </td>
+                            <td>
+                                @item.s_Paid
+                            </td>
+                            <td>
+                                @item.s_Due
+                            </td>
+                            <td>
+                                @if (@item.Status.Value > -1)
+                                {
+                                    @Model.s_Status[@item.Status.Value]    
+                                }
+                        
+                            </td>                    
+                        </tr>
+                    }
+                    <tr>
+                        <td colspan="6" class="SectionTitle2 Total3">
+                            @Model.label_Total
+                        </td>                
+                        <td class="Total3">
+                            @Model.s_Total_Invoice_Total
+                        </td>
+                        <td class="Total3">
+                            @Model.s_Total_Paid
+                        </td>
+                        <td class="Total3">
+                            @Model.s_Total_Due
+                        </td>     
+                        <td class="Total3">
+                        </td>
+                    </tr>
+            
+                </tbody>
+            </table>
+        </div>
+        <div id="Report_Button">
+            <div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Export <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="/Report/ExportReport?iType=5">Excel</a>
+                        </li>
+                    </ul>
+                </div>        
+            </div>    
+        </div>
+    </div>
+</div>

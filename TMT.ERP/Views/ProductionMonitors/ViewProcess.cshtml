@@ -1,0 +1,340 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.ProductionMonitor
+<script type="text/javascript">
+    $(document).ready(function () {
+        //$('#WorkCenterID').val($('#hdfworkcenterId').val());
+        //$('#AllocID').val($('#hdfallocId').val());
+        //$('#MachineID').val($('#hdfmachineId').val());
+        //$("#WorkCenterID").prop("disabled", true);
+        //$("#AllocID").prop("disabled", true);
+        //$("#MachineID").prop("disabled", true);
+        //$('#txtScheduleStartTime').attr('readonly', 'readonly');
+        //$('#txtScheduleEndTime').attr('readonly', 'readonly');
+
+        $('#btnSave').click(function () {
+            
+            var id = $('#hdfId').val();
+            var actualEndDate = $('#txtaEndDate').val();
+            var actualProduct = $('#txtProductProcedu').val();
+            var listAlloc = GetAllocateDetails();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/ProductionMonitors/ApprovedSave/',
+                    data:
+                        {
+                            "id": id,
+                            "actualEndDate": actualEndDate,
+                            "actualProduct": actualProduct,
+                            "listAlloc": listAlloc
+                        },
+                    success: function () {
+                        location.href = "/ProductionMonitors/Process/";
+                    }
+                });
+
+        });
+        $('#btnSubmit').click(function () {
+            
+            var id = $('#hdfId').val();
+            var actualEndDate = $('#txtaEndDate').val();
+            var actualProduct = $('#txtProductProcedu').val();
+            var listAlloc = GetAllocateDetails();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/ProductionMonitors/ApprovedSubmit/',
+                    data:
+                        {
+                            "id": id,
+                            "actualEndDate": actualEndDate,
+                            "actualProduct": actualProduct,
+                            "listAlloc": listAlloc
+                        },
+                    success: function () {
+                        $('#confirmDel').empty();
+                        $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Are you want return Material ?</p>');
+                        $("#confirmDel").dialog({
+                            modal: true,
+                            height: 140,
+                            autoOpen: false,
+                            buttons: {
+                                'Agree': function () {
+                                    ReturnMaterial(id);
+                                    location.href = "/ProductionMonitors/Completed/";
+                                },
+                                Cancel: function () {
+                                    $(this).dialog('close');
+                                    location.href = "/ProductionMonitors/Process/";
+                                }
+                            }
+                        });
+                        $('#confirmDel').dialog('open');
+                    }
+                });
+        });
+        $('#btnComplete').click(function () {
+            
+            var id = $('#hdfId').val();
+            var actualEndDate = $('#txtaEndDate').val();
+            var actualProduct = $('#txtProductProcedu').val();
+            var listAlloc = GetAllocateDetails();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/ProductionMonitors/ApprovedCompleted/',
+                    data:
+                        {
+                            "id": id,
+                            "actualEndDate": actualEndDate,
+                            "actualProduct": actualProduct,
+                            "listAlloc": listAlloc
+                        },
+                    success: function () {
+                        location.href = "/ProductionMonitors/Completed/";
+                    }
+                });
+        });
+        $('#btnCancel').click(function () {
+            location.href = "/ProductionMonitors/Process/";
+        });
+        $('#txtaEndDate').change(function () {
+            
+            var startDate = $('#aStartDate').html();
+            var endDate = $('#txtaEndDate').val();
+            $.ajax({
+                type: 'POST',
+                url: '/ProductionMonitors/GetProcessTime/',
+                data: { "startDate": startDate, "endDate": endDate },
+                success: function (data) {
+                    $('#processTime').html(data);
+                }
+            });
+
+        });
+        $('input[name=txtQtyUsed]').change(function () {
+            var tr = $(this).closest('tr');
+            var qtyInput = $(this).val();
+            var qtyRemain = $('#txtRemain', tr).html();
+            if (parseInt(qtyInput) > parseInt(qtyRemain)) {
+                $(this).val(qtyRemain);
+                $('#btnSave').css('display', 'none');
+                $('#btnSubmit').css('display', 'none');
+            } else {
+                $('#btnSave').css('display', 'inline-block');
+                $('#btnSubmit').css('display', 'inline-block');
+            }
+        });
+    });
+
+    function GetAllocateDetails() {
+        var array = [];
+        $('#Allocate > tbody > tr').each(function () {
+            var tr = $(this).closest('tr');
+            var item = {
+                "id": $('#hdfAllDetailsId', tr).val(),
+                "used": $('#txtQtyUsed', tr).val()
+            };
+            array.push(item);
+        });
+        return JSON.stringify(array);
+
+    }
+
+    function ReturnMaterial(id) {
+        
+        var x = id;
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/ProductionMonitors/ReturnMaterial/',
+                data:
+                    {
+                        "id": id
+                    },
+                success: function () {
+
+                }
+            });
+    }
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+</script>
+<style type="text/css">
+    .form-control {
+        border: 0px;
+        box-shadow: inset 0 0px 0px rgba(0, 0, 0, 0.075) !important;
+    }
+</style>
+<div id="confirmDel" title="Confirm!"></div>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.ProductionMonitors_Index_Parent</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.ProductionMonitors_Index_Children01</span></li>
+                        <li><span>@Resources.Resource.ProductionMonitors_Index_Children02</span></li>
+                        <li><a href="/ProductionMonitors/">@Resources.Resource.ProductionMonitors_Index_Children03</a></li>
+                    </ul>
+                </div>
+            </div>
+            </div>
+    </div>
+</div>
+<input type="hidden" value="@Model.ID" id="hdfId"/>
+<input type="hidden" id="hdfworkcenterId" value="@Model.WorkCenterID"/>
+<input type="hidden" id="hdfallocId" value="@Model.AllocWOID"/>
+<input type="hidden" id="hdfmachineId" value="@Model.MachineID"/>
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div class="cleardiv"></div>
+            
+                <input type="submit" id="btnSave" value="@Resources.Resource.ProductionMonitors_Create_Save" class="btn btn-defaultxero" />
+                <input type="submit" id="btnSubmit" value="Submit" class="btn btn-defaultxero" />
+                <input type="submit" id="btnComplete" value="Complete" class="btn btn-defaultxero" />
+                <input type="submit" id="btnCancel" value="Cancel" class="btn btn-defaultxero" />
+
+            
+            <div class="cleardiv"></div>
+            <div class="form_position1 bovien">
+                <div class="form_left">
+                    <div class="form-group">
+                        <label class="labelstock">@Resources.Resource.ProductionMonitors_Create_MPSNo:</label>
+                        <input type="text" id="txtMPSNo" value="@Model.Code" class="form-control" readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">@Resources.Resource.ProductionMonitors_Create_WorkCenter:</label>
+                        @*@Html.DropDownList("WorkCenterID", null, String.Empty, new { @class = "form-control" })*@
+                        <input type="text" id="WorkCenterID" value="@Model.WorkCenter.Code" class="form-control" readonly="readonly"/>
+                    </div>
+                    <div class="form-group" id="loadAlloc">
+                        <label class="labelstock">Allocate:</label>
+                        @*@Html.DropDownList("AllocID", null, String.Empty, new { @class = "form-control" })*@
+                        <input type="text" id="AllocID" value="@Model.AllocWO.Code" class="form-control" readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">Order Product:</label>
+                        <label>@ViewBag.Item</label>
+                    </div>
+                </div>
+
+                <div class="form_right">
+                    <div class="form-group" id="loadMachine">
+                        <label class="labelstock">@Resources.Resource.ProductionMonitors_Create_MachineName:</label>
+                        @*@Html.DropDownList("MachineID", null, String.Empty, new { @class = "form-control" })*@
+                        <input type="text" id="MachineID" value="@Model.Machine.Code" class="form-control" readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        @{
+                            DateTime scheduleStartTime = Convert.ToDateTime(Model.ScheduleStartTime);
+                        }
+                        <label class="labelstock">@Resources.Resource.ProductionMonitors_Create_ScheduleStartTime:</label>
+                        @*@Html.TextBox("txtScheduleStartTime", scheduleStartTime.ToString("d"), new { @class = "form-control" })*@
+                        <input type="text" id="txtScheduleStartTime" value="@TMT.ERP.Commons.Utility.DateFormat(scheduleStartTime)" class="form-control" readonly="readonly"/>
+
+                    </div>
+                    <div class="form-group">
+                        @{
+                            DateTime scheduleEndTime = Convert.ToDateTime(Model.ScheduleEndTime);
+                        }
+                        <label class="labelstock">@Resources.Resource.ProductionMonitors_Create_ScheduleEndTime:</label>
+                        @*@Html.TextBox("txtScheduleEndTime", scheduleEndTime.ToString("d"), new { @class = "form-control" })*@
+                        <input type="text" id="txtScheduleEndTime" value="@TMT.ERP.Commons.Utility.DateFormat(scheduleEndTime)" class="form-control" readonly="readonly"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">Quantity:</label>
+                        <label>@Model.OrderQuantity</label>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="cleardiv"></div>
+            <h4>Process Information</h4>
+            <div class="cleardiv"></div>
+            <div id="process">
+                <div style="float: left; width: 20%;">
+                    @{
+                        DateTime aStartDate = DateTime.Parse(Model.RealStartTime.ToString());
+                    }
+                    <label>Actual Start Date</label><label><b id="aStartDate">@TMT.ERP.Commons.Utility.DateFormat(aStartDate)
+
+                    </b>
+                    </label>
+                </div>
+                <div style="float: left; width: 20%;">
+                    <label>Actual End Date</label><input type="text" class="dt_To" id="txtaEndDate" style="width: 150px;" />
+                </div>
+                <div style="float: left; width: 20%;">
+                    <label>Actual Process Time</label><label><b id="processTime">0</b></label>
+                </div>
+                <div style="float: left; width: 20%;">
+                    <label>Actual Product Produce</label><input type="text" id="txtProductProcedu" style="width: 150px;text-align: right;" onkeypress="return isNumber(event)"/>
+                </div>
+                <div style="float: left; width: 20%;">
+                    @{
+                        var productSave = Model.ImplementQuantity ?? 0;
+                    }
+                    <label>Product Save</label>
+                    <label><b id="productSave">@productSave</b></label>
+                </div>
+            </div>
+            <div class="cleardiv"></div>
+            <h4>Item Details</h4>
+            <div class="cleardiv"></div>
+            <table style="width: 940px;" id="Allocate">
+                <thead>
+                    <tr>
+                        <th>Item Code</th>
+                        <th>Description</th>
+                        <th>Actual Item Allocate</th>
+                        <th>Remain Item</th>
+                        <th>UOM</th>
+                        <th>Unit Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        var x = ViewBag.ListAllocate as List<AllocWOItemDetail>;
+                    }
+                    @if (x != null)
+                    {
+                        foreach (var item in x)
+                        {
+                            var g = ViewBag.Good(item.GoodID) as Good;                            
+                        <tr>
+                            <td style="display: none;">
+                                <input type="hidden" value="@item.ID" id="hdfAllDetailsId"/>
+                            </td>
+                            <td style="text-align: center;">@g.Code</td>
+                            <td style="text-align: center;">@g.Description</td>
+                            <td style="text-align: center;">
+                                <b id="txtRemain">
+                                    @{
+                                        var remain = item.AllocQty - item.ImplementQuantity;
+                                    }
+                                    @remain
+                                </b>
+                            </td>
+                            <td style="width: 160px;">
+                                <input type="text" id="txtQtyUsed" style="width: 150px !important;text-align: right;" onkeypress="return isNumber(event)" name="txtQtyUsed" /></td>
+                            <td style="text-align: center;">@g.UOM.Name</td>
+                            <td style="text-align: center;">@item.Price</td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>

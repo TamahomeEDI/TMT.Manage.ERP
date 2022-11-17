@@ -1,0 +1,47 @@
+﻿@model TMT.ERP.DataAccess.Model.AccountType
+
+@{
+    ViewBag.Title = "Details";
+    Layout = null;
+}
+
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+   
+
+    <fieldset>
+        <legend>Account Type</legend>
+
+        <div class="display-label">
+             @Html.LabelFor(model => model.Name)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Name)
+        </div>
+
+        <div class="display-label">
+             @Html.LabelFor(model => model.Type)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Type)
+        </div>
+
+        <div class="display-label">
+             @Html.LabelFor(model => model.ParentID)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.ParentID)
+        </div>
+        <br/>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+             
+        </p>
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

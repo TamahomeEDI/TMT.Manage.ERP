@@ -1,0 +1,215 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model IEnumerable<TMT.ERP.DataAccess.Model.StockOutCardsDetail>
+
+@{  
+    var oStockOut = ViewBag.StockOutCard as StockOutCard;
+    var oStockMovement = ViewBag.StockMovement as StockMovement;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        var enable = $('#hdfEnable').val();
+        if (enable == "1") {
+            $('#btnShipmentSubmit').css('display', 'inline-block');
+            $('tbody > tr > td#qty').each(function () {
+                $(this).find('.qtyDone').css('display', 'none');
+                $(this).find('.numeric').css('display', 'block');
+            });
+        }
+        if (enable == "0") {
+            $('#btnShipmentSubmit').css('display', 'none');
+            $('tbody > tr > td#qty').each(function () {
+                $(this).find('.qtyDone').css('display', 'block');
+                $(this).find('input[name=txtQuantity]').css('display', 'none');
+            });
+        }
+
+        $('#btnShipmentSubmit').click(function () {
+            var stockCardId = $('#hdfStockCardId').val();
+            var quatity = [];
+            var id = [];
+            $('#tableShipment > tbody > tr > td#qty').each(function () {
+                var giatri = $(this).find('#txtQuantity').val();
+                quatity.push(giatri.toString());
+            });
+            $('#tableShipment > tbody > tr > td#stDetail').each(function () {
+                var valueId = $(this).find('#hdfStockOutCardDetailID').val();
+                id.push(valueId.toString());
+            });
+
+            var packaged = {
+                quatity: quatity,
+                listid: id,
+                stockOutCardId: stockCardId
+            };
+
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/OutgoingShipment/UpdateStatus/',
+                    traditional: true,
+                    data: packaged,
+                    success: function (data) {
+                        if (data == "success") {
+                            var url = "/OutgoingShipment/";
+                            var msg = 'OutgoingShipment success';
+                            CreatePopupMessage('divMessage', msg, '@Resources.Resource.Common_Message', 160, 400, url);
+                            return false;
+                        } else {
+                            var url0 = "/OutgoingShipment/";
+                            var msg0 = 'OutgoingShipment fail';
+                            CreatePopupMessage('divMessage', msg0, '@Resources.Resource.Common_Message', 160, 400, url0);
+                            return false;
+                        }
+                    }
+                });
+        });
+        $('#btnClose').click(function () {
+            location.href = "/OutgoingShipment/";
+        });
+    });
+</script>
+
+
+<input type="hidden" value="@ViewBag.Enable" id="hdfEnable"/>
+@if (oStockOut != null)
+{
+    <input type="hidden" value="@oStockOut.ID" id="hdfStockCardId"/>
+}
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.OutgoingShipment_List</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.OutgoingShipment_Inventory</span></li>
+                        <li><span>@Resources.Resource.OutgoingShipment_Stock</span></li>
+                        <li><a href="/OutgoingShipment/Index">@Resources.Resource.OutgoingShipment_List</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div class="cleardiv"></div>
+            <div id="divMessage" style="background: white;"></div>
+            <div class="cleardiv"></div>
+            <input type="submit" value="Close" class="btn btn-defaultxero" id="btnClose" />
+            <input type="submit" value="Submit" class="btn btn-defaultxero" id="btnShipmentSubmit" />
+            <div class="cleardiv"></div>
+            <div class="form_position1 bovien">
+                <div class="form_left">
+                    <div class="form-group">
+                        <label class="labelstock">@Resources.Resource.IncomingShipment_Index_ShipmentNo</label>
+                        <label>
+                            @if (oStockOut != null && oStockOut.Code != null)
+                            {
+                                @oStockOut.Code
+                            }
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">Movement Date</label>
+                        <label>
+                            @if (oStockMovement != null)
+                            {
+                                @TMT.ERP.Commons.Utility.DateFormat(oStockMovement.CreatedDate)
+                            }
+                        </label>
+                    </div>
+                </div>
+                <div class="form_right">
+                    <div class="form-group">
+                        <label class="labelstock">Stock Movement No</label>
+                        <label>
+                            @if (oStockMovement != null && oStockMovement.Code != null)
+                            {
+                                @oStockMovement.Code
+                            }
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">Create By</label>
+                        <label>
+                            @if (oStockOut != null && oStockOut.Receiver != null)
+                            {
+                                @oStockOut.Receiver
+                            }
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="cleardiv"></div>
+            <div id="tabbody">
+                <div id="tabs-1">
+                    <table id="tableShipment">
+                        <thead>
+                            <tr>
+                                <th>Item Code</th>
+                                <th>Description</th>
+                                <th>UOM</th>
+                                <th style="width: 8%;">Qty</th>
+                                <th style="width: 8%;">QtyReq</th>
+                                <th style="width: 8%;">OST Qty</th>
+                                <th>Unit Price</th>
+                                <th>DISC%</th>
+                                <th>Sub Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {                                
+                                <tr>
+                                    <td id="stDetail" style="display: none;">
+                                        <input type="hidden" id="hdfStockOutCardDetailID" value="@item.ID"/></td>
+                                    <td style="display: none;"></td>
+                                    <td>
+                                        @item.Good.Code
+                                    </td>
+                                    <td>
+                                        @item.Good.Description
+
+                                    </td>
+                                    <td>
+                                        @item.UOM.Name
+                                    </td>
+                                    <td id="qty">
+                                        @{
+                                var quantityRef = item.QuantityRef ?? item.Quantity;
+                                        }
+                                        <input type="text" id="txtQuantity" onchange="OnChange(this)" onkeypress="return isNumber(event)" style="max-width: 50px !important;" name="txtQuantity"/>
+                                        <label class="qtyDone" style="display: none; max-width: 50px;">@item.Quantity</label>
+                                    </td>
+                                    <td id="qtydisplay" style="max-width: 50px !important;">
+                                        @item.Quantity
+                                    </td>
+                                    <td id="qtytotal" style="max-width: 50px !important;">
+                                        @{
+                                var value = item.Quantity - quantityRef;
+                                        }
+                                        @value
+                                    </td>
+                                    <td class="currency">
+                                        @item.Price
+                                    </td>
+                                    <td>
+                                        @item.Discount
+                                    </td>
+                                    <td class="currency">
+                                        @item.TotalMoney
+                                    </td>
+                                </tr>                                
+                            }
+                        </tbody>
+                    </table>
+                    <div class="cleardiv"></div>
+                    <div class="cleardiv"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

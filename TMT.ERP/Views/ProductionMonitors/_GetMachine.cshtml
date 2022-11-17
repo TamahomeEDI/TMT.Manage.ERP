@@ -1,0 +1,15 @@
+﻿@using TMT.ERP.DataAccess.Model
+<b>@Resources.Resource.ProductionMonitors_Create_MachineName:</b>
+@{
+    var ooMachines = ViewBag.MachineID as List<Machine>;
+}
+<select id="MachineID" name="MachineID" style="width: 200px !important;" class="form-control required">
+    <option value="">@Resources.Resource.Common_SelectItem</option>
+    @if (ooMachines != null && ooMachines.Count > 0)
+    {
+        foreach (var item in ooMachines)
+        {
+        <option value="@item.ID">@item.Code</option>
+        }
+    }
+</select>

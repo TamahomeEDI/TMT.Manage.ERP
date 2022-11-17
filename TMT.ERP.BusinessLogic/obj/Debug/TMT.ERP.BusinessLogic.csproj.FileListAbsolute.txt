@@ -1,0 +1,17 @@
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\bin\Debug\TMT.ERP.BusinessLogic.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\bin\Debug\TMT.ERP.BusinessLogic.pdb
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\bin\Debug\CommonLib.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\bin\Debug\EntityFramework.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\bin\Debug\GenericParsing.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\bin\Debug\PagedList.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\bin\Debug\PagedList.Mvc.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\bin\Debug\TMT.ERP.DataAccess.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\bin\Debug\LinqKit.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\bin\Debug\CommonLib.pdb
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\bin\Debug\TMT.ERP.DataAccess.pdb
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\bin\Debug\EntityFramework.xml
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\bin\Debug\PagedList.xml
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\bin\Debug\PagedList.Mvc.xml
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\obj\Debug\TMT.ERP.BusinessLogic.csprojResolveAssemblyReference.cache
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\obj\Debug\TMT.ERP.BusinessLogic.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.BusinessLogic\obj\Debug\TMT.ERP.BusinessLogic.pdb

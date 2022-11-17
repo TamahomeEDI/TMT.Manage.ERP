@@ -1,0 +1,313 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.Company>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "Index";
+
+    var currentUser = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+
+<script type="text/javascript">
+
+    window.onload = function () {
+        $("#cbCheckAll").prop('checked', false);
+        $(".cbCheck").prop('checked', false);
+    }
+
+    $(document).ready(function () {
+        debugger;
+
+        $("#Company").find("input:first").focus();
+
+        $('#sPageSize').html($('#hdfPageSize').val());
+
+        if ($('#hidError').val() == "Error") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Error</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 120,
+                width: 'auto',
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() != "Success" && $('#hidError').val() != "" && $('#hidError').val() != "Create" && $('#hidError').val() != "Edit") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_DeleteFail</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 120,
+                width: 'auto',
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() == "Success") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%;  font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_DeleteSuccess</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 120,
+                width: 300,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() == "Create") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%;  font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_CreateSuccess</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 120,
+                width: 300,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() == "Edit") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%;  font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_EditSuccess</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 120,
+                width: 300,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        }
+    });
+
+    $(document).ready(function () {
+        debugger;
+
+        /******************** Add new a Company ************************/
+        $('#btnAddNew').click(function (e) {
+            e.preventDefault();
+            debugger;
+            location.href = "/Company/Create/";
+        });
+
+        /******************** Begin Edit a Company ************************/
+        /*********************/
+        $("table > tbody > tr > td > a#CompanyEditID").unbind('click').click(function (e) {
+            e.preventDefault();
+            debugger;
+            location.href = "/Company/Edit/" + $(this).find('input').val();
+        });
+
+        //Delete Company
+        $('#btnDelete').click(function () {
+            debugger;
+            var valueString = [];
+            $("input[name=cbCheck]:checked").each(
+            function () {
+                valueString.push(this.value);
+            });
+            if (valueString.length > 0) {
+                var DelConfirmed = {
+                    delConfirm: valueString,
+                }
+                $('#confirmDel').empty();
+                $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Delete the selected item ?</p>');
+                $("#confirmDel").dialog({
+                    modal: true,
+                    height: 120,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                            $.ajax(
+                                {
+                                    type: 'POST',
+                                    url: '/Company/DeleteConfirmed/',
+                                    traditional: true,
+                                    data: DelConfirmed,
+                                    success: function (data) {
+                                        if (data == 'Success') {
+                                            location.reload();
+                                        } else {
+                                            location.reload();
+                                        }
+                                    }
+                                });
+                        },
+                        'Cancel': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#confirmDel').dialog('open');
+
+            } else {
+                $('#Inform').empty();
+                $('#Inform').append('<p style="height:0px !important;text-align:center;">You have not selected items to delete !</p>');
+                $("#Inform").dialog({
+                    modal: true,
+                    height: 120,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#Inform').dialog('open');
+            }
+        });
+
+        //Checked all or Uncheck all element is checkbox
+        $('#cbCheckAll').click(function () {
+            $(".cbCheck").prop('checked', $(this).prop('checked'));
+        });
+    });
+
+    function SetPageSize(pageSize) {
+        debugger;
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/Good/SetPageSize',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+</script>
+
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container">
+            <h3>@Resources.Resource.Company_Title</h3>
+            <div id="breadcrumbs">
+                <ul>
+                    <li><span>Setting</span></li>
+                    <li><a href="/Company/Index/">@Resources.Resource.Company_Title</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="hidError" value="@ViewBag.Error">
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div class="Error"></div>
+            <div id="dialog" title="Basic modal dialog" style="display: none"></div>
+            <div id="confirmDel" title="Confirm!" style="display: none"></div>
+            <div id="Inform" title="Inform" style="background: white"></div>
+            <div>
+                <input type="button" id="btnAddNew" style="margin-top: 10px;" class="btn btn-defaultxero" value="@Resources.Resource.Company_Index_Addnew" />
+                <input type="button" id="btnDelete" style="margin-top: 10px;" class="btn btn-defaultxero" value="@Resources.Resource.Company_Index_Delete" />
+                <div style="float: right;">
+                    @using (Html.BeginForm("Index", "Company", FormMethod.Get, new { style = "margin:10px !important;" }))
+                    {
+                        @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "form-control", placeholder = "Input Company's Display or Trading Name", style="margin-top: 2px; margin-right: 10px;" })
+                        <input type="submit" id="btnSearch" value="@Resources.Resource.Category_Search" class="btn btn-defaultxero" />
+                    }
+                </div>
+            </div>
+            @if (Model.Count > 0)
+            {
+                <table id="Company" class="table">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px;">
+                                <input type="checkbox" id="cbCheckAll" />
+                            </th>
+                            <th>
+                                @Resources.Resource.Company_DisplayName
+                            </th>
+                            <th>
+                                @Resources.Resource.Company_TradingName
+                            </th>
+                            <th>
+                                @Resources.Resource.Company_Tel_Num
+                            </th>
+                            <th>
+                                @Resources.Resource.Company_Email
+                            </th>
+                            <th>
+                                @Resources.Resource.Company_Website
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="Company">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" id="cbCheck" name="cbCheck" class="cbCheck" value="@item.ID"/>
+                            </td>
+                            <td style="word-break: break-all; width: 200px;">
+                                <a id="CompanyEditID" href="#" title="@item.DisplayName">@Html.DisplayFor(modelItem => item.DisplayName)@Html.HiddenFor(modelItem => item.ID)</a>
+                            </td>
+                            <td style="word-break: break-all; width: 200px;">
+                                @Html.DisplayFor(modelItem => item.TradingName)
+                            </td>
+                            <td style="word-break: break-all; width: 120px;">
+                                @Html.DisplayFor(modelItem => item.Tel_Country) - @Html.DisplayFor(modelItem => item.Tel_Area) - @Html.DisplayFor(modelItem => item.Tel_Num)
+                            </td>
+                            <td style="word-break: break-all; width: 120px;">
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td style="word-break: break-all; width: 120px;">
+                                @Html.DisplayFor(modelItem => item.Website)
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+                <div style="display: inline;">
+                    <div style="width: 60%; float: left; margin-top: 10px;">
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilter = ViewBag.CurrentFilter}))
+                    </div>
+                    <div style="float: left; margin-top: 10px; margin-left: 225px;">
+                        <label style="width: 70px; margin-top: 10px; font-size: 12px; font-weight: bold">@Resources.Resource.Common_PageSize</label>
+                        <div id="showpag" class="dropdown" style="float: right;">
+                            <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @Html.Raw("<div id='divNoRecord'>"+ @Resources.Resource.Common_Msg_CountDisplay+ "</div>")
+            }
+
+        </div>
+    </div>
+</div>

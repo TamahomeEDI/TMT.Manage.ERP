@@ -1,0 +1,188 @@
+﻿
+
+@{
+    Layout = null;
+    ViewBag.Title = "Bills";
+        <script type="text/javascript">
+            $(document).ready(function () {
+                custom.Init();
+            })
+    </script>
+}
+<link href="@Url.Content("~/Content/theme.blue.css")" rel="stylesheet" type="text/css" />
+<link href="@Url.Content("~/Content/jquery.tablesorter.pager.css")" rel="stylesheet" type="text/css" />
+<script src="@Url.Content("~/Scripts/ERPScripts/Purchase/Purchase.js")"></script>
+ <script src="@Url.Content("~/Scripts/jquery.tablesorter.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.tablesorter.widgets.js")" type="text/javascript"></script>
+<script src="@Url.Content("~/Scripts/jquery.tablesorter.pager1.js")" type="text/javascript"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        var _vlDashboard = @ViewBag.TypeStatus
+        LoadContent(_vlDashboard);
+        switch (_vlDashboard) {
+            case '0':
+                var index = $('#tabs a[href="#tabs-2"]').parent().index();
+                $("#tabs").tabs("option", "active", index);
+                break;
+            case '1':
+                var index = $('#tabs a[href="#tabs-3"]').parent().index();
+                $("#tabs").tabs("option", "active", index);
+                break;
+            case '2':
+                var index = $('#tabs a[href="#tabs-4"]').parent().index();
+                $("#tabs").tabs("option", "active", index);
+                break;
+            case '3':
+                var index = $('#tabs a[href="#tabs-5"]').parent().index();
+                $("#tabs").tabs("option", "active", index);
+                break;
+            case '4':
+                var index = $('#tabs a[href="#tabs-6"]').parent().index();
+                $("#tabs").tabs("option", "active", index);
+                break;
+            case '5':
+                var index = $('#tabs a[href="#tabs-1"]').parent().index();
+                $("#tabs").tabs("option", "active", index);
+                break;
+
+
+        }
+
+        //Load content by tab
+        function LoadContent(id) {
+            
+            switch (id) {
+                case '5':
+                    tab = "#tabs-1";
+                    jQuery.ajax({
+                        type: 'GET',
+                        contentType: 'application/html',
+                        url: 'Purchase/All',
+                        success: function (response) {
+                            alert(response);
+                            // $("#grdPurchaseAll").html(response);
+                            DelDataOtherTab(tab);
+                            $(tab).html(response);
+                            ajaxifyTextSearchButtonHide();
+                            ajaxifyTextSearchButton();
+                            ajaxifySearchPurchaseButton();
+                            ajaxifyDatePicker();
+                        }
+                    });
+                    break;
+                case '0':
+                    tab = "#tabs-2";
+                    // jQuery('div.searchDraft table#searchPurchase').hide();
+                    jQuery.ajax({
+                        type: 'GET',
+                        contentType: 'application/html',
+                        url: 'Purchase/Draft',
+                        success: function (response) {
+                            DelDataOtherTab(tab);
+                            $(tab).html(response);
+                            //  ajaxifyTableSorterDraft();
+                            ajaxifyTextSearchButtonHide();
+                            ajaxifyTextSearchButton();
+                            ajaxifySearchPurchaseButton();
+                            ajaxifyDatePicker();
+                        }
+                    });
+                    break;
+                case '1':
+                    tab = "#tabs-3";
+                    jQuery.ajax({
+                        type: 'GET',
+                        contentType: 'application/html',
+                        url: 'Purchase/AwaitingApprove',
+                        success: function (response) {
+                            DelDataOtherTab(tab);
+                            $(tab).html(response);
+                            ajaxifyTextSearchButtonHide();
+                            ajaxifyTextSearchButton();
+                            ajaxifySearchPurchaseButton();
+                            ajaxifyDatePicker();
+                        }
+
+                    });
+                    break;
+                case '2':
+                    //pass url3
+                    tab = "#tabs-4";
+                    jQuery.ajax({
+                        type: 'GET',
+                        contentType: 'application/html',
+                        url: 'Purchase/AwaitingPayment',
+                        success: function (response) {
+                            DelDataOtherTab(tab);
+                            $(tab).html(response);
+                            ajaxifyTextSearchButtonHide();
+                            ajaxifyTextSearchButton();
+                            ajaxifySearchPurchaseButton();
+                            ajaxifyDatePicker();
+                        }
+                    });
+                    break;
+                case '3':
+                    //pass url3
+                    tab = "#tabs-5";
+                    jQuery.ajax({
+                        type: 'GET',
+                        contentType: 'application/html',
+                        url: 'Purchase/Paid',
+                        success: function (response) {
+                            DelDataOtherTab(tab);
+                            $(tab).html(response);
+                            ajaxifyTextSearchButtonHide();
+                            ajaxifyTextSearchButton();
+                            ajaxifySearchPurchaseButton();
+                            ajaxifyDatePicker();
+                        }
+                    });
+                    break;
+                case '4':
+                    break;
+            }
+        }
+        //end
+    });
+    </script>
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+ <div class="ajax-loading" id="loading" style="display:none">
+        Loading....
+     </div>
+<input type="hidden" id="vlDashboard" value = '@ViewBag.TypeStatus' />
+<div id="tabs">
+<ul>
+<li><a href="#tabs-1" title="5">All(@Html.Raw(ViewBag.GT01))</a></li>
+<li><a href="#tabs-2" title="0">Draft(@Html.Raw(ViewBag.GT02))</a></li>
+<li><a href="#tabs-3" title="1">Awaiting Approval(@Html.Raw(ViewBag.GT03))</a></li>
+<li><a href="#tabs-4" title="2">Awaiting Payment(@Html.Raw(ViewBag.GT04))</a></li>
+<li><a href="#tabs-5" title="3">Paid(@Html.Raw(ViewBag.GT05))</a></li>
+<li><a href="#tabs-6" title="4">Repeating(@Html.Raw(ViewBag.GT06))</a></li>
+</ul>
+@*    @using (Html.BeginForm("All", "Purchase", FormMethod.Get))
+    {
+*@
+    <div id="tabs-1">
+    </div>
+
+    <div id="tabs-2">
+    </div>
+
+    <div id="tabs-3">
+    </div>
+    <div id="tabs-4">
+    </div>
+    <div id="tabs-5">
+    </div>
+    <div id="tabs-6">
+    </div>
+    </div>
+

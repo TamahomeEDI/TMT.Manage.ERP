@@ -1,0 +1,16 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.RolePermission
+@{
+    Layout = null;
+    var listRolePermission = ViewBag.ListRolePermission as List<string>;
+    var rolePermissinon = ViewBag.ListRolePermission as RolePermission;
+}
+<br />
+<h1><b><i>List Permission Of Role</i></b></h1>
+@if (listRolePermission != null)
+{
+    foreach (var item in listRolePermission)
+    {
+    <input type="checkbox" name="cbRol" id="cbRol" value="@item"/><b><i>@item</i></b><br />
+    }
+}

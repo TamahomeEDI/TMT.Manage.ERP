@@ -1,0 +1,187 @@
+﻿@model TMT.ERP.DataAccess.Model.BOM
+
+@{
+    Layout = null;
+    <script src="@Url.Content("~/Scripts/custom.js")"></script>
+}
+
+<script type="text/ecmascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker();
+        $('#btnClose').click(function (e) {
+            $('#dialog').dialog("close");
+        });
+
+        $('#Name').focus();
+
+        jQuery.validator.messages.required = "";
+
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+        //Press enter
+        $('.noEnterSubmit').keypress(function (e) {
+            debugger;
+            if (e.which == 13) return false;
+            //or...
+            if (e.which == 13) e.preventDefault();
+        });
+
+        $('#btnCreate').click(function (e) {
+            debugger;
+            var itemID = $('#hidItemID').val();
+            var name = $('#Name').val();
+            var description = $('#Description').val();
+            var date = $('#Date').val();
+            if ($('#Active').is(":checked")) {
+                var active = 1;
+            } else
+                var active = 0;
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            $.ajax(
+                {
+                    type: 'POST',
+                    traditional: true,
+                    url: '/BOM/Create/',
+                    data: { "name": name, "description": description, "date": date, "active": active, "itemID": itemID },
+                    success: function (data) {
+                        ChangeBOM();
+                        $('#hidError').val(data);
+                        $('#dialog').dialog("close");
+                    },
+                    async: false
+                });
+        });
+    });
+
+    function ChangeBOM() {
+        debugger;
+        var id = $('#GoodID').val();
+        $.ajax(
+        {
+            type: 'POST',
+            url: '/BOM/ChangeItem/',
+            traditional: true,
+            data: {
+                'id': id
+            },
+            success: function (data) {
+                debugger;
+                $('div#BomLIST').empty();
+                $('div#BomLIST').html(data);
+                $('div#BomLIST').show();
+                $('div#Choose').hide();
+                if ($('#hidError').val() == "Create") {
+                    $('#Inform').empty();
+                    $('#Inform').append('<p style="width: 100%; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_CreateSuccess</p>');
+                    $("#Inform").dialog({
+                        modal: true,
+                        height: 120,
+                        width: 300,
+                        autoOpen: false,
+                        buttons: {
+                            'OK': function () {
+                                $(this).dialog('close');
+                            }
+                        }
+                    });
+                    $('#Inform').dialog('open');
+                } else if ($('#hidError').val() == "Error") {
+                    $('#Inform').empty();
+                    $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Error</p>');
+                    $("#Inform").dialog({
+                        modal: true,
+                        height: 120,
+                        width: 'auto',
+                        autoOpen: false,
+                        buttons: {
+                            'OK': function () {
+                                $(this).dialog('close');
+                            }
+                        }
+                    });
+                    $('#Inform').dialog('open');
+                }
+            }
+        });
+}
+
+</script>
+<input type="hidden" id="hidID" />
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <input type="hidden" id="hidItemID" value="@ViewBag.ItemID">
+    <div id="popup-breadcrumb" style="margin-top: -6px;">
+        <div class="error" style="display: none; margin-top: 5px; border: 2px solid red; height: 30px; border-radius: 6px; line-height: 2">
+            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+            <span style="font-size: 12px;"></span>.<br clear="all" />
+        </div>
+        <div style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;">
+            <div style="height: 30px; width: 100%; margin-top: 5px;">
+                <div style="float: left; width: 35%">
+                    <label>@Resources.Resource.BOM_Name_Column</label>
+                </div>
+                <div style="float: right; width: 60%">
+                    <input id="Name" type="text" class="required noEnterSubmit" style="width: 200px;" maxlength="250" />
+                </div>
+            </div>
+            <div style="height: 65px; width: 100%">
+                <div style="float: left; width: 35%">
+                    <label>@Resources.Resource.BOM_Good_Description</label>
+                </div>
+                <div style="float: right; width: 60%">
+                    <textarea id="Description" maxlength="1000" style="width: 200px; resize: none" rows="3"></textarea>
+                </div>
+            </div>
+            <div style="height: 30px; width: 100%; margin-top: 5px;">
+                <div style="float: left; width: 35%">
+                    <label>@Resources.Resource.BOM_EffectiveDate</label>
+                </div>
+                <div style="float: right; width: 60%">
+                    @*<input type="text" id="Date" style="width: 170px;" class="datepicker" readonly="" />*@
+                    @Html.TextBox("Date", "", new { @class = "datepicker", style = "width: 200px", @readonly = "" })
+                </div>
+            </div>
+            <div style="height: 30px; width: 100%; margin-top: 5px;">
+                <div style="float: left; width: 35%">
+                    <label>@Resources.Resource.BOM_Active</label>
+                </div>
+                <div style="float: right; width: 60%">
+                    <input id="Active" type="checkbox" checked />
+                </div>
+            </div>
+            <div>
+                <input type="button" style="margin-left: 142px;" id="btnCreate" class="btn btn-defaultxero" value="@Resources.Resource.BOM_Save"/>
+                <input type="button" style="margin-left: 6px;" class="btn btn-defaultxero" id="btnClose" value="@Resources.Resource.BOM_Cancel"/>
+            </div>
+        </div>
+    </div>
+}
+
+
+
+
+
+
+
+

@@ -1,0 +1,289 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.ProductionMonitor
+<script type="text/javascript">
+    $(document).ready(function () {
+        var returnOrder = $('#hdfReturnWorkOrder').val();
+        if (returnOrder == 1) {
+            $('#aReturn').css('display', 'block');
+            //$('#btnSave').attr('disabled', 'disabled');
+            //$('#btnSaveStock').attr('disabled', 'disabled');
+            //$('#btnApprove').attr('disabled', 'disabled');
+            //$('#txtworkorderImplement').attr('readonly', 'readonly');
+            //$('#ProductMornitor > tbody#workorderrow > tr').each(function () {
+            //    var tr = $(this).closest('tr');
+            //    $('#txtImplementQuanlity', tr).attr('readonly', 'readonly');
+            //});
+
+
+        }
+        $('#btnClose').click(function () {
+            window.location.href = "/ProductionMonitors/Index/";
+        });
+        $('#btnSave').click(function () {
+            
+            var pId = $('#hdfProductinonMonitorId').val();
+            var pImplementQty = $('#txtworkorderImplement').val();
+            var listworkorderDetails = BuildJSON();
+            var save = "Save"; if (pImplementQty == 0) {
+                alert("Can't Save & Stock when Implement Quantity = 0");
+                return false;
+            } else {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "/ProductionMonitors/SaveAll/",
+                        data:
+                            {
+                                "pId": pId,
+                                "implementQty": pImplementQty,
+                                "listworkorderDetails": listworkorderDetails,
+                                "save": save
+                            },
+                        success: function (data) {
+                            window.location.href = "/ProductionMonitors/Index/";
+                        }
+                    });
+            }
+        });
+        $('#btnSaveStock').click(function () {
+            
+            var pId = $('#hdfProductinonMonitorId').val();
+            var pImplementQty = $('#txtworkorderImplement').val();
+            var listworkorderDetails = BuildJSON();
+            var save = "SaveStock";
+            if (pImplementQty == 0) {
+                alert("Can't Save & Stock when Implement Quantity = 0");
+                return false;
+            } else {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "/ProductionMonitors/SaveAll/",
+                        data:
+                            {
+                                "pId": pId,
+                                "implementQty": pImplementQty,
+                                "listworkorderDetails": listworkorderDetails,
+                                "save": save
+                            },
+                        success: function (data) {
+                            window.location.href = "/ProductionMonitors/Index/";
+                        }
+                    });
+            }
+        });
+        $('#btnApprove').click(function () {
+            
+            var pId = $('#hdfProductinonMonitorId').val();
+            var pImplementQty = $('#txtworkorderImplement').val();
+            var listworkorderDetails = BuildJSON();
+            var save = "Approved";
+            if (pImplementQty == 0) {
+                alert("Can't approved when Implement Quantity = 0");
+                return false;
+            } else {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "/ProductionMonitors/SaveAll/",
+                        data:
+                            {
+                                "pId": pId,
+                                "implementQty": pImplementQty,
+                                "listworkorderDetails": listworkorderDetails,
+                                "save": save
+                            },
+                        success: function (data) {
+                            window.location.href = "/ProductionMonitors/Index/";
+                        }
+                    });
+            }
+        });
+    });
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+    function OnChange(element) {
+        
+        var tr = $(element).closest('tr');
+        var implement = $('input[name=txtImplementQuanlity]', tr).val();
+        var pimp = $('#txtworkorderImplement').val();
+        if (parseInt(implement) < parseInt(pimp)) {
+            $('input[name=txtImplementQuanlity]', tr).val(pimp);
+        }
+        var remains = $('#txtRemainQuanlity', tr).html();
+        if (parseInt(implement) > parseInt(remains)) {
+            $('#txtImplementQuanlity', tr).val(remains);
+        }
+    }
+
+    function OnchangeProductMonitor(element) {
+        
+        var implement = $('#txtworkorderImplement').val();
+        var remain = $('#lblworkorderQtyRemain').html();
+        if (parseInt(implement) < parseInt(remain)) {
+            $('#ProductMornitor > tbody#workorderrow > tr').each(function () {
+                var tr = $(this).closest('tr');
+                $('#txtImplementQuanlity', tr).val(parseInt(implement));
+            });
+            $('#btnSaveStock').css('display', 'inline-block');
+            $('#btnSave').css('display', 'inline-block');
+        } else if (parseInt(implement) == parseInt(remain)) {
+            $('#ProductMornitor > tbody#workorderrow > tr').each(function () {
+                var tr = $(this).closest('tr');
+                $('#txtImplementQuanlity', tr).val(parseInt(implement));
+            });
+            $('#btnSaveStock').css('display', 'none');
+            $('#btnSave').css('display', 'none');
+        } else {
+            $('#txtworkorderImplement').val(remain);
+            $('#ProductMornitor > tbody#workorderrow > tr').each(function () {
+                var tr = $(this).closest('tr');
+                $('#txtImplementQuanlity', tr).val(parseInt(remain));
+            });
+        }
+    }
+    function BuildJSON() {
+        
+        var arrayData = [];
+        $('#ProductMornitor > tbody#workorderrow > tr').each(function () {
+            var tr = $(this).closest('tr');
+            var item =
+                {
+                    "workorderDetailsId": $('#hdfWorkOrderDetailsId', tr).val(),
+                    "implementQty": $('#txtImplementQuanlity', tr).val()
+                };
+            arrayData.push(item);
+        });
+        return JSON.stringify(arrayData);
+    }
+</script>
+<input type="hidden" id="hdfReturnWorkOrder" value="@ViewBag.WorkOrderDisplay"/>
+<div style="display: inline;">
+    <input type="submit" id="btnClose" value="@Resources.Resource.ProductionMonitors_Return_Close" />
+</div>
+<div style="clear: both; height: 10px;">
+</div>
+@{
+    var listOrder = ViewBag.ListOrder as List<WorkOrderDetail>;
+    var Object = ViewBag.Object as ProductionMonitor;
+}
+
+<div style="display: inline;">
+    <div style="width: 50%; float: left;">
+        <p>
+            <label>@Resources.Resource.ProductionMonitors_Create_MPSNo:</label>@ViewBag.MpsNo
+        </p>
+        <p>
+            <label>@Resources.Resource.ProductionMonitors_Create_WorkCenter:</label>@ViewBag.WorkCenterNo
+        </p>
+        <p>
+            <label>
+                @Resources.Resource.ProductionMonitors_Create_WorkOrderNo:<a href="/ProductionMonitors/ReturnWorkOrder?pId=@Object.ID" title="return WorkOrder" id="aReturn" style="display: none;">Return</a>
+            </label>
+            @ViewBag.WorkOrderNo
+        </p>
+    </div>
+    <div style="width: 50%; float: left;">
+        <p>
+            <label>@Resources.Resource.ProductionMonitors_Index_MachineNo:</label>@ViewBag.MachineNo
+        </p>
+        <p>
+            <label>@Resources.Resource.ProductionMonitors_View_CreateDate:</label>@{
+                DateTime implementDate = ViewBag.ImplementDate != null ? Convert.ToDateTime(ViewBag.ImplementDate) : DateTime.Now;
+            }
+            @implementDate.ToString("d")
+        </p>
+    </div>
+</div>
+<div style="clear: both;"></div>
+
+<h1>@Resources.Resource.ProductionMonitors_View_WorkOrder</h1>
+<table id="tblWorkOrder" class="table">
+    <thead>
+        <tr>
+            <th>@Resources.Resource.ProductionMonitors_Return_GoodName</th>
+            <th>@Resources.Resource.ProductionMonitors_Return_OrderQty</th>
+            <th>@Resources.Resource.ProductionMonitors_Return_UsedQty</th>
+            <th>@Resources.Resource.ProductionMonitors_Return_ReturnQty</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <tr>
+            @if (Object != null)
+            {
+                <input type="hidden" value="@Object.ID" id="hdfProductinonMonitorId"/>    
+                <td>@ViewBag.GoodName(Convert.ToInt32(Object.GoodID))</td>
+                <td>
+                    <label id="lblworkorderQtyOrder">@Object.OrderQuantity</label></td>
+                <td>
+                    <input type="text" id="txtworkorderImplement" value="0" onchange="OnchangeProductMonitor(this);" onkeypress="return isNumber(event)" maxlength="4" onfocus="if (this.value=='0') this.value='';" onblur="if (this.value=='') this.value='0';" /></td>
+                <td>
+                    <label id="lblworkorderQtyRemain">@Object.RemainQuantity</label>
+                </td>
+            }
+        </tr>
+    </tbody>
+</table>
+<h1>@Resources.Resource.ProductionMonitors_View_ProductMonitor</h1>
+<table id="ProductMornitor" class="table">
+    <thead>
+        <tr>
+            <th>@Resources.Resource.ProductionMonitors_Return_GoodName</th>
+            <th>@Resources.Resource.ProductionMonitors_View_BeginDate</th>
+            <th>@Resources.Resource.ProductionMonitors_View_EndDate</th>
+            <th>@Resources.Resource.ProductionMonitors_Return_OrderQty</th>
+            <th>@Resources.Resource.ProductionMonitors_Return_UsedQty</th>
+            <th>@Resources.Resource.ProductionMonitors_Return_ReturnQty</th>
+            @*<th>Process Time(M)</th>
+            <th>Default Time(M) </th>
+            <th>Remain Time(M) </th>*@
+        </tr>
+    </thead>
+    <tbody id="workorderrow">
+        @foreach (var item in listOrder)
+        {
+            <tr>
+
+                <input type="hidden" value="@item.ID" id="hdfWorkOrderDetailsId"/>
+                <td>@ViewBag.GoodName(item.GoodID)</td>
+                @if (Object != null)
+                {
+                    <td>
+                        @{
+                    DateTime imp = Object.ImplementDate != null ? Convert.ToDateTime(Object.ImplementDate) : DateTime.Now;
+                        }
+                        @TMT.ERP.Commons.Utility.DateFormat(imp)
+                    </td>
+                    <td>
+                        @{
+                    DateTime end = Object.ImplementDate != null ? Convert.ToDateTime(Object.ImplementDate) : DateTime.Now;
+                        }
+                        @TMT.ERP.Commons.Utility.DateFormat(end)
+                    </td>
+                    <td>
+                        <label id="txtOrderQuanlity">@item.OrderQuantity</label>
+                    </td>
+                    <td>
+                        <input type="text" id="txtImplementQuanlity" name="txtImplementQuanlity" value="0" onchange="OnChange(this)" onkeypress="return isNumber(event)" maxlength="4" onfocus="if (this.value=='0') this.value='';" onblur="if (this.value=='') this.value='0';" /></td>
+                    <td>
+                        <label id="txtRemainQuanlity">@item.RemainQuantity</label>
+                    </td>
+                }
+
+            </tr>
+        }
+    </tbody>
+</table>
+<div class="cleardiv"></div>
+<div style="display: inline-block;">
+    <input type="submit" id="btnSave" value="@Resources.Resource.ProductionMonitors_View_Save" class="btn btn-defaultxero" />
+    <input type="submit" id="btnSaveStock" value="@Resources.Resource.ProductionMonitors_View_SaveStock" class="btn btn-defaultxero" />
+    <input type="submit" id="btnApprove" value="@Resources.Resource.ProductionMonitors_View_Approve" class="btn btn-defaultxero" />
+</div>

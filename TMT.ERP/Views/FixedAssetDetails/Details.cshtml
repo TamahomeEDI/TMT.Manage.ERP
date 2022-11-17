@@ -1,0 +1,113 @@
+﻿@model TMT.ERP.DataAccess.Model.FixedAssetDetail
+
+@{
+    ViewBag.Title = "Details";
+    Layout = null;
+}
+
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+   
+
+    <fieldset>
+        <legend>Asset</legend>
+
+        <table>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.Item)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.Item)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.Code)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.Code)
+                    </div></td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.AccountID)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.AccountID)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.PurchaseDate)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.PurchaseDate)
+                    </div></td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.PurchasePrice)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.PurchasePrice)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.Description)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.Description)
+                    </div></td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.AssetType)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.AssetType)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.DepreciationRate)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.DepreciationRate)
+                    </div></td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.DepreciationMethod)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.DepreciationMethod)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.DepreciationAccountID)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.DepreciationAccountID)
+                    </div></td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.CreatedEmployeeID)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.CreatedEmployeeID)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.ApprovalEmployeeID)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.ApprovalEmployeeID)
+                    </div></td>
+            </tr>
+        </table>
+        <br/>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+             
+        </p>
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

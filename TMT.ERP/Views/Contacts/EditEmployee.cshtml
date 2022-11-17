@@ -1,0 +1,416 @@
+﻿@model TMT.ERP.DataAccess.Model.Employee
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+<script type="text/ecmascript">
+
+    $(document).ready(function () {
+        $('#btnClose').click(function (e) {
+            e.preventDefault();
+            location.href = "/Contacts/Employee/";
+        });
+
+        $('#FirstName').focus();
+
+        $(".numeric").numeric();
+
+        $('#OrdRate').change(function () {
+            $("#OrdRate").val(function () {
+                var amount = $('#OrdRate').asNumber();
+                return amount;
+            }).formatCurrency();
+        });
+
+        jQuery.validator.messages.required = "";
+
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+            messages: {
+                email: {
+                    required: " ",
+                    email: '&nbsp;Please enter a valid email address.'
+                }
+            },
+        });
+
+        $('#btnSame').click(function (e) {
+            debugger;
+            var attention = $('#Attention').val();
+            var address = $('#Address').val();
+            var zipcode = $('#ZipCode').val();
+            var state = $('#State').val();
+            var city = $('#City').val();
+            var country = $('#Country').val();
+            $('#PAttention').val(attention);
+            $('#PAddress').val(address);
+            $('#PZipCode').val(zipcode);
+            $('#PState').val(state);
+            $('#PCity').val(city);
+            $('#PCountry').val(country);
+        });
+
+        //$('#telCountry').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#telCountry').val().replace(/[^0-9]/g, '');
+        //    $('#telCountry').val(valueString);
+        //});
+        //$('#telArea').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#telArea').val().replace(/[^0-9]/g, '');
+        //    $('#telArea').val(valueString);
+        //});
+        //$('#telNo').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#telNo').val().replace(/[^0-9]/g, '');
+        //    $('#telNo').val(valueString);
+        //});
+        //$('#mobiCountry').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#mobiCountry').val().replace(/[^0-9]/g, '');
+        //    $('#mobiCountry').val(valueString);
+        //});
+        //$('#mobiArea').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#mobiArea').val().replace(/[^0-9]/g, '');
+        //    $('#mobiArea').val(valueString);
+        //});
+        //$('#mobiNo').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#mobiNo').val().replace(/[^0-9]/g, '');
+        //    $('#mobiNo').val(valueString);
+        //});
+        //$('#directCountry').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#directCountry').val().replace(/[^0-9]/g, '');
+        //    $('#directCountry').val(valueString);
+        //});
+        //$('#directArea').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#directArea').val().replace(/[^0-9]/g, '');
+        //    $('#directArea').val(valueString);
+        //});
+        //$('#directNo').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#directNo').val().replace(/[^0-9]/g, '');
+        //    $('#directlNo').val(valueString);
+        //});
+        //$('#faxCountry').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#faxCountry').val().replace(/[^0-9]/g, '');
+        //    $('#faxCountry').val(valueString);
+        //});
+        //$('#faxArea').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#faxArea').val().replace(/[^0-9]/g, '');
+        //    $('#faxArea').val(valueString);
+        //});
+        //$('#faxNo').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#faxNo').val().replace(/[^0-9]/g, '');
+        //    $('#faxNo').val(valueString);
+        //});
+    });
+
+
+    //Create new Contact
+    $(document).ready(function () {
+        $('#btnSave').click(function (e) {
+            debugger;
+            var id = $('#hidID').val();
+            var fname = $('#FirstName').val();
+            var lname = $('#LastName').val();
+            var email = $('#Email').val();
+            var company = $('#hdCurrentUserCompanyID').val();
+            var attention = $('#Attention').val();
+            var address = $('#Address').val();
+            var zipcode = $('#ZipCode').val();
+            var state = $('#State').val();
+            var city = $('#City').val();
+            var country = $('#Country').val();
+            var pAttention = $('#PAttention').val();
+            var pAddress = $('#PAddress').val();
+            var pZipcode = $('#PZipCode').val();
+            var pState = $('#PState').val();
+            var pCity = $('#PCity').val();
+            var pCountry = $('#PCountry').val();
+            var telCountry = $('#telCountry').val();
+            var telArea = $('#telArea').val();
+            var telNo = $('#telNo').val();
+            var dCountry = $('#directCountry').val();
+            var dArea = $('#directArea').val();
+            var dNo = $('#directNo').val();
+            var mCountry = $('#mobiCountry').val();
+            var mArea = $('#mobiArea').val();
+            var mNo = $('#mobiNo').val();
+            var fCountry = $('#faxCountry').val();
+            var fArea = $('#faxArea').val();
+            var fNo = $('#faxNo').val();
+            var twi = $('#Twi').val();
+            var taxNo = $('#TaxNumber').val();
+            var ordRate = $('#OrdRate').val();
+            var baName = $('#BAName').val();
+            var baNumber = $('#BANumber').val();
+            var baDetails = $('#BADetails').val();
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            $.ajax(
+            {
+                type: 'POST',
+                traditional: true,
+                url: '/Contacts/EditEmployee/',
+                data: {
+                    "fname": fname, "lname": lname, "email": email, "ordRate": ordRate, "id": id,
+                    "attention": attention, "address": address, "zipcode": zipcode, "state": state,
+                    "city": city, "country": country, "pAddress": pAddress, "pAttention": pAttention,
+                    "pZipcode": pZipcode, "pState": pState, "pCity": pCity, "pCountry": pCountry,
+                    "telCountry": telCountry, "telArea": telArea, "telNo": telNo, "dCountry": dCountry,
+                    "dArea": dArea, "dNo": dNo, "mCountry": mCountry, "mArea": mArea, "mNo": mNo,
+                    "fCountry": fCountry, "fArea": fArea, "fNo": fNo, "twi": twi, "taxNo": taxNo,
+                    "baDetails": baDetails, "baName": baName, "baNumber": baNumber, "company": company
+                },
+                success: function (data) {
+                    window.location.href = "/Contacts/Employee/";
+                }
+            });
+        });
+    });
+</script>
+
+<style type="text/css">
+    #colright, #colcenter, #colleft {
+        width: 33%;
+        float: left;
+    }
+</style>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <input type="hidden" id="hdCurrentUserCompanyID" value="@user.CompanyID" />
+    <input type="hidden" id="hidID" value="@Model.ID">
+    <div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Model.ID">@Resources.Resource.Contacts_Employee_EditTitle</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><a href="/Contacts/Employee/">@Resources.Resource.Contacts_Employee_Title</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div id="popup-breadcrumb" style="width: 100%; margin-left: 0px; margin-top: 10px; margin-bottom: 10px;">
+            <div class="container">
+                <div id="con_top">
+                    <div class="c_container">
+                        <div class="error" style="display: none; margin-top: 5px; height: 30px; border-radius: 6px; line-height: 2">
+                            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                            <span></span>.<br clear="all" />
+                        </div>
+                        <div>
+                            <p class="x-boxed" style="margin-bottom: 10px;">
+                                <label>Employee </label>
+                            </p>
+                            <div>
+                                <p style="display: inline-block">
+                                    @Resources.Resource.Employees_FirstName
+                                    <br />
+                                    <input id="FirstName" name="FirstName" class="required" type="text" size="22" value="@Model.FirstName" maxlength="25"/>
+                                </p>
+                                <p style="display: inline-block">
+                                    @Resources.Resource.Employees_Lastname
+                                    <br />
+                                    <input id="LastName" name="LastName" class="required" type="text" size="22" value="@Model.LastName" maxlength="25"/>
+                                </p>
+                            </div>
+                            <div>
+                                <p style="display: inline-block">
+                                    <label>@Resources.Resource.Employees_Code</label>
+                                    <br />
+                                    <input type="text" value="@Model.Code" size="22" readonly="" id="Code"/>
+                                </p>
+                                <p style="display: inline-block; width: 490px;">
+                                    @Resources.Resource.Employees_Email
+                                    <br />
+                                    <label style="display: inline-flex; width: 100%">
+                                    <input id="Email" name="email" class="email" type="text" size="22" value="@Model.Email" maxlength="50" placeholder="ex: you@yourdomain.com" />
+                               </label> </p>
+                            </div>
+                        </div>
+                        <hr class="x-boxed" />
+                        <div>
+                            <p class="x-boxed" style="margin-bottom: 10px;">
+                                <label>Contact Details </label>
+                            </p>
+                            <div id="colleft">
+                                <p class="x-boxed1"><b>Postal Address </b></p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Employees_PostAtt
+                                    </label>
+                                    <input id="Attention" type="text" size="25" style="width: 140px;" value="@Model.PostAttention" maxlength="250"/>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Employees_PostAdd
+                                    </label>
+                                    <textarea id="Address" rows="3" style="resize: none; width: 140px;" maxlength="1000">@Model.PostAddress</textarea>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Employees_PostCity
+                                    </label>
+                                    <input id="City" type="text" size="25" style="width: 140px;" value="@Model.PostCity" maxlength="250"/>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Employees_PostStt
+                                    </label>
+                                    <input id="State" type="text" size="25" style="width: 140px;" value="@Model.PostState" maxlength="250"/>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Employees_PostZip
+                                    </label>
+                                    <input id="ZipCode" type="text" size="25" style="width: 140px;" value="@Model.PostZipCode" maxlength="40"/>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Employees_PostCtry
+                                    </label>
+                                    <input id="Country" type="text" size="25" style="width: 140px;" value="@Model.PostCountry" maxlength="40"/>
+                                </p>
+                            </div>
+
+                            <div id="colcenter">
+                                <p class="x-boxed1"><b>Physical Address </b><a href="#" id="btnSame">[Same as postal address] </a></p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Employees_PhysAtt
+                                    </label>
+                                    <input id="PAttention" type="text" size="25" style="width: 140px;" value="@Model.PhysAttention" maxlength="250"/>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Employees_PhysAdd
+                                    </label>
+                                    <textarea id="PAddress" rows="3" style="resize: none; width: 140px;" maxlength="1000">@Model.PhysAddress</textarea>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Employees_PhysCity
+                                    </label>
+                                    <input id="PCity" type="text" size="25" style="width: 140px;" value="@Model.PhysCity" maxlength="250"/>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Employees_PhysStt
+                                    </label>
+                                    <input id="PState" type="text" size="25" style="width: 140px;" value="@Model.PhysState" maxlength="250"/>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Employees_PhysZip
+                                    </label>
+                                    <input id="PZipCode" type="text" size="25" style="width: 140px;" value="@Model.PhysZipCode" maxlength="40"/>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Employees_PhysCtry
+                                    </label>
+                                    <input id="PCountry" type="text" size="25" style="width: 140px;" value="@Model.PhysCountry" maxlength="250"/>
+                                </p>
+                            </div>
+
+                            <div id="colright">
+                                <p class="x-boxed1"><b>Telephone </b></p>
+                                <p>
+                                    <label style="float: left; width: 100px; font-weight: normal;">@Resources.Resource.Employees_Tel_Num </label>
+                                    <input id="telCountry" type="text" size="5" style="width: 60px;" placeholder="Country" class="numeric" value="@Model.Tel_Country" maxlength="5"/>
+                                    <input id="telArea" type="text" size="5" style="width: 40px;" placeholder="Area" class="numeric" value="@Model.Tel_Area" maxlength="5"/>
+                                    <input id="telNo" type="text" size="15" style="width: 80px;" placeholder="Tel No" class="numeric" value="@Model.Tel_Num" maxlength="15"/>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 100px; font-weight: normal;">@Resources.Resource.Employees_DirNb </label>
+                                    <input id="directCountry" type="text" size="5" style="width: 60px;" placeholder="Country" class="numeric" value="@Model.Direct_Country" maxlength="5"/>
+                                    <input id="directArea" type="text" size="5" style="width: 40px;" placeholder="Area" class="numeric" value="@Model.Direct_Area" maxlength="5"/>
+                                    <input id="directNo" type="text" size="15" style="width: 80px;" placeholder="Tel No" class="numeric" value="@Model.Direct_Num" maxlength="15"/>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 100px; font-weight: normal;">@Resources.Resource.Employees_MobNb </label>
+                                    <input id="mobiCountry" type="text" size="5" style="width: 60px;" placeholder="Country" class="numeric" value="@Model.Mobi_Country" maxlength="5"/>
+                                    <input id="mobiArea" type="text" size="5" style="width: 40px;" placeholder="Area" class="numeric" value="@Model.Mobi_Area" maxlength="5"/>
+                                    <input id="mobiNo" type="text" size="15" style="width: 80px;" placeholder="Tel No" class="numeric" value="@Model.Mobi_Num" maxlength="15"/>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 100px; font-weight: normal;">@Resources.Resource.Employees_FaxNb </label>
+                                    <input id="faxCountry" type="text" size="5" style="width: 60px;" placeholder="Country" class="numeric" value="@Model.Fax_Country" maxlength="5"/>
+                                    <input id="faxArea" type="text" size="5" style="width: 40px;" placeholder="Area" class="numeric" value="@Model.Fax_Area" maxlength="5"/>
+                                    <input id="faxNo" type="text" size="15" style="width: 80px;" placeholder="Tel No" class="numeric" value="@Model.Fax_Num" maxlength="15"/>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 100px; font-weight: normal;">@Resources.Resource.Employees_Twi </label>
+                                    <input id="Twi" type="text" size="25" style="width: 188px;" value="@Model.Twitter"  maxlength="1000"/>
+                                </p>
+                            </div>
+                        </div>
+                        <hr style="margin-top: 310px; margin-bottom: 5px;" />
+                        <div>
+                            <p class="x-boxed" style="margin-bottom: 10px;">
+                                <label>Employee Details</label>
+                            </p>
+                            <div>
+                                <p style="display: inline-block">
+                                    @Resources.Resource.Employees_TaxNb
+                                    <br />
+                                    <input id="TaxNumber" type="text" size="25" value="@Model.TaxNumber" maxlength="40" />
+                                </p>
+                                <p style="display: inline-block">
+                                    @Resources.Resource.Employees_OrdRate
+                                    <br />
+                                    <input id="OrdRate" type="text" size="25" value="@Model.OrdinaryRate" class="numeric currency" maxlength="20"/>
+                                </p>
+                                <hr style="margin-top: 5px; margin-bottom: 5px;" />
+                            </div>
+                            <hr style="margin-bottom: 5px; margin-top: 5px;" />
+                            <p class="x-boxed" style="margin-bottom: 10px;">
+                                <label>Payment Details</label>
+                            </p>
+                            <div>
+                                <p style="display: inline-block">
+                                    @Resources.Resource.Employees_BAName
+                                    <br />
+                                    <input id="BAName" type="text" size="25" value="@Model.BankAccountName" maxlength="40"/>
+                                </p>
+                                <p style="display: inline-block">
+                                    @Resources.Resource.Employees_BANum
+                                    <br />
+                                    <input id="BANumber" type="text" size="25" value="@Model.BankAccountNumber" maxlength="250"/>
+                                </p>
+                                <p style="display: inline-block">
+                                    @Resources.Resource.Employees_BADetails
+                                    <br />
+                                    <input id="BADetails" type="text" size="25" style="width: 320px" value="@Model.PaymentDetails" maxlength="250"/>
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <input id="btnSave" type="button" class="btn btn-defaultxero" value="@Resources.Resource.Employees_Save" />
+                            <input type="button" class="btn btn-defaultxero" value="@Resources.Resource.Employees_Cancel" id="btnClose"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+  
+}

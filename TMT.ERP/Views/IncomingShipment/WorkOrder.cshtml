@@ -1,0 +1,163 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.StockInCard
+<script type="text/javascript">
+    $(document).ready(function () {
+        var stock = $('#hdfStock').val();
+        $('#StockID').val(stock);
+        var isDone = $('#hdfIsDone').val();
+        $('#btnClose').click(function () {
+            if (isDone == 0) {
+                location.href = "/IncomingShipment/";
+            }
+            if (isDone == 1) {
+                location.href = "/IncomingShipment/History/";
+            }
+        });
+        $('#btnSubmit').click(function () {
+            
+        });
+    });
+</script>
+
+@{
+    var createDate = Convert.ToDateTime(Model.CreatedDate);
+    var receivedDate = Convert.ToDateTime(Model.ReceiveDate);
+    var product = ViewBag.Product as ProductionMonitor;
+}
+<input type="hidden" id="hdfStock" value="@Model.StockID"/>
+<input type="hidden" id="hdfIsDone" value="@ViewBag.Done"/>
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div class="cleardiv"></div>
+            <input type="button" id="btnClose" value="Close" class="btn btn-defaultxero" />
+            <input type="button" id="btnSubmit" value="Submit" class="btn btn-defaultxero" />
+            <div class="cleardiv"></div>
+            <div class="form_position1 bovien">
+                <div class="form_left">
+                    <div class="form-group">
+                        <label class="labelstock">Shipment No</label>
+                        <label>@Model.Code</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">WorkOrder No</label>
+                        <label>
+                            @if (product != null)
+                            {
+                                @product.AllocWO.WorkOrder.Code
+                            }
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">Create By</label>
+                        <label>
+                            @if(Model.Sender!=null)
+                            {
+                                @Model.Sender
+                            }       
+                        </label>
+                    </div>
+                </div>
+                <div class="form_right">
+                    <div class="form-group">
+                        <label class="labelstock">MPS No</label>
+                        <label>
+                            @if (product != null)
+                            {
+                                @product.Code
+                            }
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">Machine No</label>
+                        <label>
+                            @if (product != null)
+                            {
+                                @product.Machine.Code
+                            }
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">Work Center No</label>
+                        <label>
+                            @if (product != null)
+                            {
+                                @product.WorkCenter.Code
+                            }</label>
+                    </div>
+                </div>
+            </div>
+            <div class="cleardiv"></div>
+            <h4>Stock In Details</h4>
+            <div class="cleardiv"></div>
+            <div style="display: inline;">
+                <div style="float: left; width: 40%;">
+                    <label class="labelstock">To Stock</label>
+                    <div class="cleardiv"></div>
+                    @Html.DropDownList("StockID", null, String.Empty, new { @class = "form-control", style = "width:220px !important;" })
+                </div>
+                <div style="float: left; width: 30%;">
+                    <label class="labelstock">Create Date</label>
+                    <div class="cleardiv"></div>
+                    <label>
+                        @TMT.ERP.Commons.Utility.DateFormat(createDate)
+                    </label>
+                </div>
+                @if (Convert.ToInt32(ViewBag.Done) == 1)
+                {
+                    <div style="float: left; width: 30%;">
+                        <label>Received Date</label>
+                        <div class="cleardiv"></div>
+                        <label>                            
+                            @TMT.ERP.Commons.Utility.DateFormat(DateTime.Now)
+                        </label>
+                    </div>    
+                }
+
+            </div>
+            <div class="cleardiv"></div>
+            <h4>Item Detail</h4>
+            <div class="cleardiv"></div>
+            <div style="display: inline;">
+                <div style="float: left; width: 40%;">
+                    <label class="labelstock">
+                        Goods Name                        
+                    </label>
+                    <div class="cleardiv"></div>
+                    <label>
+                        @{
+                            StockInCardsDetail xCardsDetail = Model.StockInCardsDetails.FirstOrDefault(x => x.StockInCardID == Model.ID);
+                        }
+                        @if (xCardsDetail != null)
+                        {
+                            @xCardsDetail.Good.Name
+                        }
+                    </label>
+                </div>
+                <div style="float: left; width: 30%;">
+                    <label class="labelstock">
+                        Order Quantity
+                    </label>
+                    <div class="cleardiv"></div>
+                    <label>
+                        @if (product != null)
+                        {
+                            @product.AllocWO.WorkOrder.OrderQuantity
+                        }
+                    </label>
+                </div>
+                <div style="float: right; width: 30%;">
+                    <label class="labelstock">Implemented Qty</label>
+                    <div class="cleardiv"></div>
+                    <label>
+                        @if (xCardsDetail != null)
+                        {
+                            @xCardsDetail.QuantityReq
+                        }
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

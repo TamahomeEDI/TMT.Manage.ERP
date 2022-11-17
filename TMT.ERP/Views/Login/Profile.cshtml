@@ -1,0 +1,36 @@
+﻿@model TMT.ERP.DataAccess.Model.User
+
+
+	<div id="con_form">
+		<div class="container">
+			<div class="c_container">
+
+                <legend>User</legend>
+                <div style="display: inline; width: 350px;">
+                    <div style="width: 100px; float: left;">
+                        @{
+                            var img = TMT.ERP.Commons.Constant.UPLOAD_DOCUMENT_FOLDER + "/Users/no_avatar.png";
+                            if (!string.IsNullOrEmpty(Model.Avartar))
+                            {
+                                img = Model.Avartar;
+                            }
+                        }
+                        <img src="@img.Replace("~", "")" title="@Model.FullName" style="max-width: 100px;max-height: 100px;"/>
+                    </div>
+                    <div style="width: 250px; float: left">
+                        <span>
+                            <label>Username:&nbsp;</label>@Model.UserName</span>
+                        <span>
+                            <label>FullName:&nbsp;</label>@Model.FullName</span>
+                        <span>
+                            <label>Email:&nbsp;</label>@Model.Email</span>
+                        <span>
+                            <label>Phone:&nbsp;</label>@Model.Phone</span>
+                        <span><a href="/Login/ChangePassword/">
+                            <label>Change Password</label></a></span>
+                    </div>
+                </div>
+
+			</div>
+		</div>
+	</div>

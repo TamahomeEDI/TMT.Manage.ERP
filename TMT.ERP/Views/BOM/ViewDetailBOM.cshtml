@@ -1,0 +1,247 @@
+﻿@model TMT.ERP.DataAccess.Model.BomDetail
+@{
+    Layout = null;
+    <script src="@Url.Content("~/Scripts/jquery.numeric.js")"></script>
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".numeric").numeric();
+
+        $('#quantity').change(function (e) {
+
+            var quanity = $('#quantity').asNumber();
+            if (quanity > 100) {
+                $('#quantity').val(0);
+                return false;
+            } else {
+                var quanitys = $('#quantity').val().replace(/[^0-9]/g, '');
+                if (quanitys == "") {
+                    quanitys = 0;
+                }
+                $('#quantity').val(quanitys);
+            }
+        });
+
+        $('#GoodID').change(function (e) {
+
+            var value = $('#GoodID').val();
+            if (value != "" && value != null) {
+                $('#btnCreateNew').removeAttr("disabled", "disabled");
+            } else
+                $('#btnCreateNew').attr("disabled", "disabled");
+        });
+
+        //Change Category
+        $("#Category").change(function () {
+
+            ChangeItem();
+        });
+
+        function ChangeItem() {
+
+            var id = $('#Category').val();
+            $.ajax(
+            {
+                type: 'POST',
+                url: '/BOM/ChangeCategory/',
+                traditional: true,
+                data: {
+                    'id': id
+                },
+                success: function (data) {
+
+                    $('div#itemList').empty();
+                    $('div#itemList').html(data);
+                    // $('#itemList').show();
+                    // $('div#BomLIST').hide();
+                    //  $('div#Choose').show();
+                }
+            });
+        }
+    });
+
+    $('#btnCreateNew').click(function () {
+        debugger;
+        //var BOM = {
+        //    BomID: parseInt($('#BomID').val()),
+        //    GoodID: parseInt($('#Good').val()),
+        //    ParentGoodID: parseInt($('#ParentGoodID').val()),
+        //    quantity: $('#quantity').val(),
+        //    BomDetailID: $('#BomDetailID').val(),
+        //    itemID: $('#ItemID').val()
+        //}
+        var BOM = {
+            BomID: parseInt($('#BomID').val()),
+            GoodID: parseInt($('#GoodID').val()),
+            ParentGoodID: parseInt($('#ParentGoodID').val()),
+            quantity: $('#quantity').val(),
+            description: $('#description').val()
+        }
+
+        var Qty = $('#quantity').val();
+        if (Qty != "" && Qty != null) {
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/BOM/AddTreeView/',
+                    traditional: true,
+                    data: BOM,
+                    success: function (data) {
+
+                        //  window.location.href = '/BOM/ViewDetailBOM/';
+                        $('div#ViewTreeView').empty();
+                        $('div#ViewTreeView').html(data);
+                        $('#Category').val('');
+                        $('#GoodID').val('');
+                        $('#quantity').val('');
+                        $('#description').val('');
+                        $('#GoodID').attr("disabled", "disabled");
+                        $('#btnCreateNew').attr("disabled", "disabled");
+                        $('#Inform').empty();
+                        $('#Inform').append('<p style="width: 100%; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_CreateSuccess</p>');
+                        $("#Inform").dialog({
+                            modal: true,
+                            height: 120,
+                            width: 300,
+                            autoOpen: false,
+                            buttons: {
+                                'OK': function () {
+                                    $(this).dialog('close');
+                                }
+                            }
+                        });
+                        $('#Inform').dialog('open');
+                    }
+                });
+            } else {
+                $('#Inform').empty();
+                $('#Inform').append('<p style="width: 100%; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">Quantity must bigger than 0</p>');
+                $("#Inform").dialog({
+                    modal: true,
+                    height: 120,
+                    width: 300,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#Inform').dialog('open');
+                return false;
+            }
+    });
+
+        $('#btnDelete').click(function () {
+            debugger;
+            var BomDetailID = $('#BomDetailID').val();
+            var itemID = $('#ItemID').val();
+            $('#confirmDel').empty();
+            $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Delete the selected item ?</p>');
+            $("#confirmDel").dialog({
+                modal: true,
+                height: 120,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        DeleteObject(BomDetailID, itemID);
+                    },
+                    'Cancel': function () {
+                        $('#confirmDel').dialog('close');
+                    }
+                }
+            });
+            $('#confirmDel').dialog('open');
+        });
+
+        function DeleteObject(BomDetailID, itemID) {
+            $.ajax(
+               {
+                   type: 'POST',
+                   url: '/BOM/DeleteBom/',
+                   traditional: true,
+                   data: {
+                       'BomDetailID': BomDetailID, 'itemID': itemID
+                   },
+                   success: function (data) {
+                       debugger;
+                       $('#Inform').empty();
+                       $('#Inform').append('<p style="width: 100%; height:0px !important; font-weight: bold; font-size: 12px; text-align:center;">@Resources.Resource.Common_Msg_DeleteSuccess</p>');
+                       $("#Inform").dialog({
+                           modal: true,
+                           height: 120,
+                           autoOpen: false,
+                           buttons: {
+                               'OK': function () {
+
+                                   $('div#ViewTreeView').empty();
+                                   $('div#ViewTreeView').html(data);
+                                   $('#Inform').dialog('close');
+                                   $('#confirmDel').dialog('close');
+                                   $('#Category').val("");
+                                   $('#GoodID').val("");
+                                   $('#quantity').val("");
+                                   $('#description').val("");
+                               }
+                           }
+                       });
+                       $('#Inform').dialog('open');
+                   }
+               });
+           }
+</script>
+
+
+ <div id="confirmDel" title="Inform" style="background: white"></div>
+<input type="hidden" id="BomID" value="@Model.BomID" />
+<input type="hidden" id="ParentGoodID" value="@Model.GoodID" />
+<input type="hidden" id="BomDetailID" value="@Model.ID" />
+<div class="form_position1">
+    <div class="form_right">
+        <div class="form-group">
+            <label style="width: 100px;">Category : </label>
+            @Html.DropDownList("Category", new SelectList(ViewBag.CategoryID, "Value", "Text", ViewBag.Category), "", new { @class = "category form-control", style = " width: 150px;" })
+        </div>
+        <div id="itemList" class="form-group">
+            <label style="width: 100px;">Item :</label>
+           @{
+                TMT.ERP.DataAccess.Model.ErpEntities db = new TMT.ERP.DataAccess.Model.ErpEntities();
+                int categoryID = (int)ViewBag.Category;
+                List<TMT.ERP.DataAccess.Model.Good> goods = db.Goods.Where(gd => gd.CategoryID == categoryID).ToList();                                               
+            }
+            <select id="GoodID" style="width: 150px; height: 26px;" class="form-control">
+                <option value=""></option>
+                @foreach (var item in goods)
+                {
+                    //var accountType = item.AccountID + "-" + item.AccountType;
+                    if (item.ID == Model.GoodID)
+                    {
+                    <option value="@item.ID" selected="selected">@item.Code</option>
+                    }
+                    else
+                    {
+                    <option value="@item.ID">@item.Code</option>
+                    }
+                }
+            </select>
+           @* @Html.DropDownList("GoodID", new SelectList(ViewBag.GoodID, "Value", "Text", Model.GoodID), "", new { @class = "good form-control", style = "width: 150px;" })*@
+        </div>
+        <div class="form-group">
+            <label style="width: 100px;">Quantity : </label>
+            @Html.TextBox("quantity", Model.Quantity, new { @class = "form-control numeric", style = "width: 150px;", maxlength = "9" })
+        </div>
+        <div class="form-group">
+            <label style="width: 100px;">Description : </label>
+            @Html.TextBox("description", Model.Description, new { @class = "form-control", style = "width: 150px; " })
+        </div>
+        <div style="float: left; width: 50%; margin-bottom: 10px; margin-top: 10px;">
+            <input type="button" id="btnCreateNew" class="btn-defaultxero" value="@Resources.Resource.ProductTypes_AddNew" />
+            <input type="button" id="btnDelete" class="btn-defaultxero" value="@Resources.Resource.ProductTypes_Delete" />
+        </div>
+    </div>
+
+</div>
+
+

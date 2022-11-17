@@ -1,0 +1,16 @@
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\bin\Debug\TMT.ERP.Console.exe.config
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\bin\Debug\TMT.ERP.Console.exe
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\bin\Debug\TMT.ERP.Console.pdb
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\bin\Debug\TMT.ERP.BusinessLogic.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\bin\Debug\TMT.ERP.DataAccess.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\bin\Debug\EntityFramework.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\bin\Debug\GenericParsing.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\bin\Debug\CommonLib.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\bin\Debug\LinqKit.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\bin\Debug\TMT.ERP.BusinessLogic.pdb
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\bin\Debug\TMT.ERP.DataAccess.pdb
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\bin\Debug\EntityFramework.xml
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\bin\Debug\CommonLib.pdb
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\obj\Debug\TMT.ERP.Console.csprojResolveAssemblyReference.cache
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\obj\Debug\TMT.ERP.Console.exe
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.Console\obj\Debug\TMT.ERP.Console.pdb

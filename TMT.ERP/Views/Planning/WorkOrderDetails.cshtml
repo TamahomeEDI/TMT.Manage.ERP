@@ -1,0 +1,95 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model IEnumerable<TMT.ERP.DataAccess.Model.WorkOrderDetail>
+<h1>Return Information</h1>
+<div style="display: inline-block;">
+    <input type="submit" id="btnCreateReturn" value="Create Return" class="btn" />
+    <input type="submit" id="btnClose" value="Close" class="btn" />
+</div>
+<div style="clear: both; height: 10px;">
+</div>
+<div style="display: inline;">
+    <p>
+        <label>WorkOrder No:</label><span><input type="text" id="txtWorkOrderNo" value="@ViewBag.WorkOrderCode" /></span>
+    </p>
+    <p>
+        <label>Stock Name:</label><span><input type="text" id="txtStockName" value="@ViewBag.StockName" /></span>
+    </p>
+    <p>
+        <label>Machine Name:</label><span><input type="text" id="txtMachineName" value="@ViewBag.MachineName" /></span>
+    </p>
+    <p>
+        <label>Schedule Start Time:</label><span><input type="text" id="txtScheduleStartTime" class="datepicker" /></span>
+    </p>
+    <p>
+        <label>Schedule End Time:</label><span><input type="text" id="txtScheduleEndTime" class="datepicker" /></span>
+    </p>
+</div>
+<div style="clear: both; height: 10px;"></div>
+<div style="display: inline;">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Good Name</th>
+                <th>Req Quanlity</th>
+                <th>Use Quanlity</th>
+                <th>Remain Quanlity</th>
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var workOrder = ViewBag.WorkOrder as WorkOrderDetail;
+            }
+            @if (workOrder != null)
+            {
+                <tr>
+                    <td>
+                        @ViewBag.GoodName(workOrder.GoodID)                        
+                    </td>
+                    <td>
+                        @workOrder.OrderQuantity
+                    </td>
+                    <td>
+                        @workOrder.ImplementQuantity
+                    </td>
+                    <td>
+                        @workOrder.RemainQuantity
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<div style="clear: both; height: 10px;"></div>
+<table id="WorkOrderDetail" class="table">
+    <thead>
+        <tr>
+            <th>Item Name
+            </th>
+            <th>Req Quanlity
+            </th>
+            <th>Use Quanlity
+            </th>
+            <th>Remain Quanlity
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @ViewBag.GoodName(item.GoodID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.OrderQuantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ImplementQuantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.RemainQuantity)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

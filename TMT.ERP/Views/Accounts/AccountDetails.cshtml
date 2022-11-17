@@ -1,0 +1,277 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.AccountTran>
+
+@{
+    ViewBag.Title = "AccountDetails";    
+}
+
+<script type="text/ecmascript">
+    $(document).ready(function () {
+        $('#sPageSize').html($('#hdfPageSize').val());
+
+        if ($('#hidError').val() == "Error") {
+            $('#confirmDel').empty();
+            $('#confirmDel').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Error</p>');
+            $("#confirmDel").dialog({
+                modal: true,
+                height: 120,
+                width: 'auto',
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#confirmDel').dialog('open');
+        } else if ($('#hidError').val() == "Edit") {
+            $('#confirmDel').empty();
+            $('#confirmDel').append('<p style="width: 100%; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_EditSuccess</p>');
+            $("#confirmDel").dialog({
+                modal: true,
+                height: 120,
+                width: 300,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#confirmDel').dialog('open');
+        }
+
+        /******************** Begin Edit a Account ************************/
+        $("#AccountEditID").unbind('click').click(function (e) {
+            var id = $('#hidID').val();
+            
+            var _url = "/Accounts/Edit/" + id
+            $.ajax({
+                type: 'GET',
+                url: _url,
+                success: function () {
+                    custom.CreatePopup("#dialog", "Edit Account", 750, 'auto', _url, false);
+                    $("#dialog").dialog("open");
+                }
+            });
+        });
+
+        /******************** Begin Edit a Bank Account ************************/
+        $("#BankAccountEditID").unbind('click').click(function (e) {
+            var id = $('#hidID').val();
+            
+            var _url = "/Accounts/BankEdit/" + id
+            $.ajax({
+                type: 'GET',
+                url: _url,
+                success: function () {
+                    custom.CreatePopup("#dialog", "Edit Bank Account", 450, 'auto', _url, false);
+                    $("#dialog").dialog("open");
+                }
+            });
+        });
+    });
+
+    function SetPageSize(pageSize) {
+        
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/Accounts/SetPageSize',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+
+
+
+</script>
+
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<input type="hidden" id="hidID" value="@ViewBag.ID">
+<input type="hidden" id="hidError" value="@ViewBag.Error"/>
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container">
+            <h3 style="word-break: break-all; width: 800px;">@Resources.Resource.BankAccounts_Index_Transaction : @ViewBag.Name</h3>
+            <div id="breadcrumbs">
+                <ul>
+                    <li><a href="/Accounts/Index/">@Resources.Resource.Account_Title</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="con_form" style="margin-top: 20px;">
+    <div class="container">
+        <div class="c_container">
+            <div id="dialog"></div>
+            <div id="confirmDel" title="Inform" style="background: white"></div>
+            <table class="table" style="border: none">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Type</th>
+                        <th>Tax</th>
+                        <th>On Dashbroad</th>
+                        <th>In Expenses Claim</th>
+                        <th>Enable Payment</th>
+                        <th>@{
+                            var Month = DateTime.Now.Month;
+                            var Year = DateTime.Now.Year;
+                        }@Month - @Year</th>
+                        <th>YTD</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        @if (ViewBag.Type == 0)
+                        {
+                            <td class="tdNoBorder">&nbsp;</td>
+                        }
+                        else
+                        {
+                            <td class="tdNoBorder">@ViewBag.Code</td>
+                        }
+                        <td class="tdNoBorder">@ViewBag.Type</td>
+                        <td class="tdNoBorder">@ViewBag.Tax</td>
+                        @if (ViewBag.Type == 0)
+                        {
+                            <td class="tdNoBorder">No</td>
+                            <td class="tdNoBorder">No</td>
+                            <td class="tdNoBorder">No</td>
+                        }
+                        else
+                        {
+                            if (ViewBag.Dashbroad == 1)
+                            {
+                            <td class="tdNoBorder">Yes</td>
+                            }
+                            else
+                            {
+                            <td class="tdNoBorder">No</td>
+                            }
+                            if (ViewBag.Expense == 1)
+                            {
+                            <td class="tdNoBorder">Yes</td>
+                            }
+                            else
+                            {
+                            <td class="tdNoBorder">No</td>
+                            }
+                            if (ViewBag.Payment == 1)
+                            {
+                            <td class="tdNoBorder">Yes</td>
+                            }
+                            else
+                            {
+                            <td class="tdNoBorder">No</td>
+                            }
+                        }
+                        <td class="tdNoBorder">@ViewBag.SumYear</td>
+                        <td class="tdNoBorder">@ViewBag.YTD</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div style="margin-top: -18px; margin-bottom: 15px; border: 1px solid #ccc; height: 40px;">
+                @if (ViewBag.Type == 0)
+                {
+                    <input type="button" class="btn-defaultxero" value="Edit Account" id="BankAccountEditID" style="float: right; margin-top: 3px; margin-right: 3px;" />
+                }
+                else
+                {
+                    <input type="button" class="btn-defaultxero" value="Edit Account" id="AccountEditID" style="float: right; margin-top: 3px; margin-right: 3px;" />
+                }
+            </div>
+            <div>
+                <h2>Transactions</h2>
+            </div>
+            @if (Model.Count > 0)
+            {
+                <table class="table table-striped" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="width: 120px;">Date
+                            </th>
+                            <th>Transaction
+                            </th>
+                            <th style="width: 150px;">Debit
+                            </th>
+                            <th style="width: 150px;">Credit
+                            </th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td style="display: table-cell">
+                                @TMT.ERP.Commons.Utility.DateFormat(Convert.ToDateTime(item.Date))
+                            </td>
+                            @if(item.SourceType == 0){
+                                <td style="text-align: left; display: table-cell">
+                                    <a href="/SaleInvoice/AwaitingPaymentDetails?id=@item.SourceID">@Html.DisplayFor(modelItem => item.TransactionName)</a>
+                                </td>
+                            }
+                            else if(item.SourceType == 1){
+                                <td style="text-align: left; display: table-cell">
+                                    <a href="/Purchase/AwaitingPaymentDetails?id=@item.SourceID">@Html.DisplayFor(modelItem => item.TransactionName)</a>
+                                </td>
+                            }
+                            else if(item.SourceType == 2){
+                                if(item.Received != null){
+                                    <td style="text-align: left; display: table-cell">
+                                        <a href="/AccountTrans/BankTransDetail?id=@item.SourceID&type=0">@Html.DisplayFor(modelItem => item.TransactionName)</a>
+                                    </td>
+                                }
+                                else{
+                                    <td style="text-align: left; display: table-cell">
+                                        <a href="/AccountTrans/BankTransDetail?id=@item.SourceID&type=1">@Html.DisplayFor(modelItem => item.TransactionName)</a>
+                                    </td>
+                                }
+                            }
+                            else if (item.SourceType == 3) { 
+                                <td style="text-align: left; display: table-cell">
+                                    <a href="/PayRun/Details?payrunId=@item.SourceID">@Html.DisplayFor(modelItem => item.TransactionName)</a>
+                                </td>
+                            }else{
+                                <td><a href="#">Transaction:</a></td>
+                            }
+                            <td class="currency" style="display: table-cell">
+                                @Html.DisplayFor(modelItem => item.Spent)
+                            </td>
+                            <td class="currency" style="display: table-cell">
+                                @Html.DisplayFor(modelItem => item.Received)
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <div style="display: inline;">
+                    <div style="width: 60%; float: left; margin-top: 10px;">
+                        @Html.PagedListPager(Model, page => Url.Action("AccountDetails", new { id = ViewBag.ID, type = ViewBag.Type, page }))
+                    </div>
+                    <div style="float: left; margin-top: 10px; margin-left: 225px;">
+                        <label style="width: 70px; margin-top: 10px; font-size: 12px; font-weight: bold">@Resources.Resource.Common_PageSize</label>
+                        <div id="showpag" class="dropdown" style="float: right;">
+                            <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @Html.Raw("<div id='divNoRecord'>"+ @Resources.Resource.Common_Msg_CountDisplay+ "</div>")
+            }
+        </div>
+    </div>
+</div>

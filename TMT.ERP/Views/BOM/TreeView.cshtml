@@ -1,0 +1,17 @@
+﻿@{
+    Layout = null;
+}
+<script>
+    $(document).ready(function () {
+        
+        //$("#treeview").treeview({ collapsed: true });
+        $("#treeview").treeview({ expanded: true });
+
+    });
+
+
+</script>
+
+<ul id="treeview" class="treeview">
+    @Html.Partial("BOM/_itemControl", ViewData["BOM"])
+</ul>

@@ -1,0 +1,68 @@
+﻿@model TMT.ERP.DataAccess.Model.SaleInvoiceSetting
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>SaleInvoiceSetting</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.BillDefaultDueDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.BillDefaultDueDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.SaleInvoiceDefaultDueDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.SaleInvoiceDefaultDueDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.InvoicePrefix)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.InvoicePrefix)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CreditNotePrefix)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CreditNotePrefix)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.NextNumber)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.NextNumber)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.DueDateType.Code)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.DueDateType.Code)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.DueDateType1.Code)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.DueDateType1.Code)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    <p>
+        <input type="submit" value="Delete" /> |
+         
+    </p>
+}

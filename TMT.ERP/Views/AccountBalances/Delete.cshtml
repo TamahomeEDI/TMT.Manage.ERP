@@ -1,0 +1,39 @@
+﻿@model TMT.ERP.DataAccess.Model.AccountBalance
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>AccountBalance</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.AccoutID)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.AccoutID)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Debit)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Debit)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Credit)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Credit)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    <p>
+        <input type="submit" value="Delete" /> |
+         
+    </p>
+}

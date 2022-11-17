@@ -1,0 +1,181 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model IEnumerable<TMT.ERP.DataAccess.Model.Good>
+
+@{
+    ViewBag.Title = "Add Sub Goods";
+    Layout = null;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnClose').click(function (e) {
+            e.preventDefault();
+            location.reload();
+        });
+
+        //Begin Add Sub Goods
+        $('#btnAddNewSub').click(function (e) {
+            e.preventDefault();
+            
+            var valueString = [];
+            $("input[name=cbCheck]:checked").each(
+            function () {
+                valueString.push(this.id);
+                var boxes = $('input[name=cbCheck]:checked');
+                var parentID = $('#hidParentID').val();
+                if (boxes.length > 0) {
+                    $(boxes).each(function () {
+                        alert(boxes.length)
+                        _AddObject(valueString, parentID);
+                    });
+                } else {
+                    $('#confirmDel').empty();
+                    $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Please select item !</p>');
+                    $("#confirmDel").dialog({
+                        modal: true,
+                        height: 140,
+                        autoOpen: false,
+                        buttons: {
+                            'Agree': function () {
+                                $(this).dialog('close');
+                            },
+                            Cancel: function () {
+                                $(this).dialog('close');
+                            }
+                        }
+                    });
+                    $('#confirmDel').dialog('open');
+                }
+            }
+            );
+        });
+
+        //Add Sub Good
+        function _AddObject(_id, parentID) {
+            
+            jQuery.ajax({
+                type: 'POST',
+                traditional: true,
+                url: "/Good/AddSubGood/",
+                data: { '_id': _id, 'parentID': parentID },
+                success: function () {
+                    location.reload();
+                }
+            });
+        }
+        
+        //Checked all or Uncheck all element is checkbox
+        $('#cbCheckedAll').click(function () {
+            $(".cbCheck").prop('checked', $(this).prop('checked'));
+        });
+    });
+</script>
+<style type="text/css">
+    #apright,#apleft{
+	    width:50%;
+	    float:left;	
+    }
+</style>
+
+<input type="hidden" id="hidParentID" value="@ViewBag.ParentID">
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <legend>Good</legend>
+        <div id="apleft">
+            <h2>Goods</h2>
+            <table id="Goods" class="table" style="width: 300px;">
+                <thead>
+                    <tr>
+                        <th>
+                            <input type="checkbox" id="cbCheckedAll" />
+                        </th>
+                        <th>
+                            @Resources.Resource.Good_Create_Name
+                        </th>
+                        <th>
+                            @Resources.Resource.Good_Create_Code
+                        </th>
+                        <th>
+                            @Resources.Resource.Good_Create_Description
+                        </th>
+                   </tr>
+                </thead>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.CheckBox("cbCheck", false, new { id = item.ID })
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Code)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Description)
+                    </td>
+                </tr>
+            }    
+            </table>
+        </div>
+        <div id="apright">
+            @{ 
+            var subGoods = ViewBag.ListSubGood as List<SubGood>;
+             }
+            <h2>Sub-Goods</h2>
+            @if (subGoods.Count == 0)
+            { 
+                @Html.Raw("<label id='lblDraft'>No data available</label>")
+            }
+            else if (subGoods != null && subGoods.Count > 0)
+            {
+                <table class="table" style="width: 300px;" id="SubGoods">
+                <thead>
+                    <tr>
+                        <th>
+                            @Resources.Resource.Good_Create_Name
+                        </th>
+                        <th>
+                            @Resources.Resource.Good_Create_Code
+                        </th>
+                        <th>
+                            @Resources.Resource.Good_Create_Description
+                        </th>
+                    </tr>
+                </thead>
+                @foreach (var items in subGoods)
+                {
+                <tbody>
+                    <tr>
+                        <td>
+                            @ViewBag.GoodName(Convert.ToInt32(items.GoodID))
+                        </td>
+                        <td>
+                            @ViewBag.GoodCode(Convert.ToInt32(items.GoodID))
+                        </td>
+                        <td>
+                            @ViewBag.GoodDescription(Convert.ToInt32(items.GoodID))
+                        </td>
+                    </tr>
+                </tbody>
+                }
+            </table>
+            }
+            else
+            {
+                @Html.Raw("<label id='lblDraft'>No data available</label>")
+            }
+            
+        </div>
+    </fieldset>
+    <div style="float: left; width: 50%;">
+        <button id="btnAddNewSub" class="btn">Add to Sub-Goods</button>
+    </div>
+    
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

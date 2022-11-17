@@ -1,0 +1,54 @@
+/* CSS Document */
+.form-control{
+	height:auto;
+}
+#con_form input[type="text"], #con_form select{
+	width:250px;
+}
+#con_form select{
+	height:30px;
+}
+.form_left,.form_right{
+	width:450px;
+}
+#con_form input[type="text"], #con_form select{
+	height:25px;
+}
+#con_form #reference input{
+	width:220px !important;
+}
+#con_form .inputdate {
+	float:right;
+	padding-left:5px;
+}
+#con_form .inputdate input{
+	width:130px !important;
+	
+}
+.formbutton{
+	padding-left:40px;
+	padding-right:30px;
+}
+#btnapprove #btnapprove1{
+	width:150px;
+}
+.box_content{
+	width:430px !important;
+}
+.form_left, .form_right{
+	width:450px !important;
+	
+}
+#slideshow .nav .description #info{
+	width:268px;
+	height:72px;
+}
+.con_clr{
+	height:0px;
+}
+.box_statics_info{
+	width:220px;
+}
+.box_home .box_home3{
+	width:680px;
+}

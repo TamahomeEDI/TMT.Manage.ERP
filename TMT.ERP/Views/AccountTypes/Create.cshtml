@@ -1,0 +1,123 @@
+﻿@model TMT.ERP.DataAccess.Model.AccountType
+
+@{
+    Layout = null;  
+    <script src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+}
+<script type="text/ecmascript">
+
+    $(document).ready(function () {
+        $('#btnClose').click(function (e) {
+            e.preventDefault();
+            location.reload();
+        });
+
+        $('#Name').focus();
+
+        jQuery.validator.messages.required = "";
+
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+        function ExistsName(name) {
+            var id = 0;
+            $.ajax({
+                type: 'POST',
+                url: '/AccountTypes/ExistsName/',
+                data: { "name": name, "id": id },
+                success: function (data) {
+                    debugger;
+                    if (data == 1) {
+                        result = 1;
+                    }
+                    if (data == 0)
+                        result = 0;
+                },
+                async: false
+            });
+        }
+
+        //Press enter
+        $('.noEnterSubmit').keypress(function (e) {
+            debugger;
+            if (e.which == 13) return false;
+            //or...
+            if (e.which == 13) e.preventDefault();
+        });
+
+        $('#btnSave').click(function (e) {
+            debugger;
+            var name = $('#Name').val();
+
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+
+            ExistsName(name);
+            if (result == 1) {
+                $('#AlertName').show();
+                return false;
+            } else {
+                $('#AlertName').hide();
+                $.ajax({
+                    type: 'POST',
+                    tradition: true,
+                    url: '/AccountTypes/Create',
+                    data: {
+                        name: name,
+                    },
+                    success: function (data) {
+                        location.href = "Index/";
+                    }
+                })
+            }
+        });
+    });
+</script>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <div id="popup-breadcrumb">
+        <div style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;">
+            <div class="error" style="display: none; margin-top: 5px; border: 2px solid red; height: 30px; border-radius: 6px; line-height: 2">
+                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                <span style="font-size: 12px;"></span>.<br clear="all" />
+            </div>
+            <div id="AlertName" style="display: none; margin-top: 5px; border: 2px solid red; height: 30px; border-radius: 6px; line-height: 2">
+                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                <label style="color: red; font-weight: normal">Please enter a unique Name. </label>
+            </div>
+            <div style="height: 30px; width: 100%">
+                <div style="float: left; width: 30%">
+                    <label>@Resources.Resource.AccountType_Name</label>
+                </div>
+                <div style="float: right; width: 70%">
+                    <input type="text" id="Name" name="Name" style="width: 170px;" maxlength="250" class="required noEnterSubmit" />
+                </div>
+            </div>
+            <div style="margin-bottom: 10px;margin-left: 115px; float: left; margin-top: 5px;">
+                <input type="button" class="btn btn-defaultxero" value="@Resources.Resource.AccountType_Save" id="btnSave"/>
+                <input type="button" style="margin-left: 6px;" class="btn btn-defaultxero" value="@Resources.Resource.AccountType_Close" id="btnClose"/>
+            </div>
+        </div>
+    </div>
+}

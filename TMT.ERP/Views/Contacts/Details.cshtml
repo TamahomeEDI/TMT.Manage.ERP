@@ -1,0 +1,165 @@
+﻿@model TMT.ERP.DataAccess.Model.Contact
+
+@{
+    ViewBag.Title = "Details";
+    Layout = null;
+}
+
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+   
+
+    <fieldset>
+        <legend>Asset</legend>
+
+        <table>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.Code)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.Code)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.ContactName)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.ContactName)
+                    </div></td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.FullName)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.FullName)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.ShortName)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.ShortName)
+                    </div></td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.Type)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.Type)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.Email)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.Email)
+                    </div></td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.Address)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.Address)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.CountryID)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.CountryID)
+                    </div></td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.ZipCode)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.ZipCode)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.State)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.State)
+                    </div></td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.City)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.City)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.TeleNum)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.TeleNum)
+                    </div></td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.MobileNum)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.MobileNum)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.FaxNum)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.FaxNum)
+                    </div></td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.SkypeName)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.SkypeName)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.TaxCode)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.TaxCode)
+                    </div></td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.BankAccoutNum)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.BankAccoutNum)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.BankAccountName)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.BankAccountName)
+                    </div></td>
+            </tr>
+            <tr>
+                <td style="width: 25%"><div class="editor-label">
+                        @Html.DisplayNameFor(model => model.Description)
+                    </div></td>
+                <td style="width: 25%"><div class="editor-field">
+                        @Html.DisplayFor(model => model.Description)
+                    </div></td>
+                <td style="width: 25%"></td>
+                <td style="width: 25%"></td>
+            </tr>
+        </table>
+        <br/>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+             
+        </p>
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

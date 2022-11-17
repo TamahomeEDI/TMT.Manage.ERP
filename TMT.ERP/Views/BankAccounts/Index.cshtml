@@ -1,0 +1,310 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.Models.BankResultCollection
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        if ($('#hidError').val() == "Error") {
+            $('#confirmDel').empty();
+            $('#confirmDel').append('<label style="width: 100%; color: red; font-weight: bold; font-size: 12px; margin-top: 10px; margin-bottom: 10px;">@Resources.Resource.Common_Msg_Error</label>');
+            $("#confirmDel").dialog({
+                modal: true,
+                height: 150,
+                width: 400,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#confirmDel').dialog('open');
+        } else if ($('#hidError').val() == "Create") {
+            $('#confirmDel').empty();
+            $('#confirmDel').append('<label style="width: 100%; color: red; font-weight: bold; font-size: 12px; margin-top: 10px; margin-bottom: 10px;">@Resources.Resource.Common_Msg_CreateSuccess</label>');
+            $("#confirmDel").dialog({
+                modal: true,
+                height: 140,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#confirmDel').dialog('open');
+        } else if ($('#hidError').val() == "Edit") {
+            $('#confirmDel').empty();
+            $('#confirmDel').append('<label style="width: 100%; color: red; font-weight: bold; font-size: 12px; margin-top: 10px; margin-bottom: 10px;">@Resources.Resource.Common_Msg_EditSuccess</label>');
+            $("#confirmDel").dialog({
+                modal: true,
+                height: 140,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#confirmDel').dialog('open');
+        }
+
+        /********************Import Bank Statement********************************/
+        $('.ImportID').unbind('click').click(function (e) {
+            
+            location.href = "/BankAccounts/ImportStatement/" + $(this).find('input').val()
+        })
+
+        /********************Show On Dashboard ********************************/
+        $('.ShowOn').unbind('click').click(function (e) {
+            var id = $(this).find("input[name=Bank]").val();
+            if ($(this).find("input[name=Bank]").is(":checked")) {
+                $(this).find("input[name=Bank]").removeAttr("checked");
+            } else
+                $(this).find("input[name=Bank]").attr("checked", "checked");
+            $.ajax({
+                type: 'POST',
+                url: "/BankAccounts/ShowOnDashBoard/",
+                tradition: true,
+                data: {
+                    "id": id
+                },
+                success: function (data) {
+                    
+                    $('#Inform').empty();
+                    $('#Inform').append('<p style="width: 100%; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_UpdateSuccess</p>');
+                     $("#Inform").dialog({
+                         modal: true,
+                         height: 120,
+                         width: 300,
+                         autoOpen: false,
+                         buttons: {
+                             'OK': function () {
+                                 $(this).dialog('close');
+                             }
+                         }
+                     });
+                     $('#Inform').dialog('open');
+                }
+            });
+        })
+
+        /******************** Begin Add New Bank Account ************************/
+        $("#btnAddNew").click(function (e) {
+            
+            $.ajax({
+                type: 'GET',
+                url: "/BankAccounts/Create/",
+                success: function () {
+                    
+                    custom.CreatePopup("#dialog", "New Bank Account", 450, 'auto', "/BankAccounts/Create/", false);
+                    $("#dialog").dialog("open");
+                }
+            });
+
+        });
+
+        /******************** Transfer Money to another account ************************/
+        $("#btnTrans").click(function (e) {
+            location.href = "/BankAccounts/TransferMoney/";
+        });
+
+        $("div > div > div > div > div > div > ul > li > ul > li > ul > li > a#BankAccountTransID").unbind('click').click(function (e) {
+            location.href = "/BankAccounts/TransferMoney/" + $(this).find('input').val()
+        });
+
+        /******************** Begin Edit a Bank Account ************************/
+        /*********************/
+        $("div > div > div > div > div > div > ul > li > ul > li > div > ul > li > a#BankAccountEditID").unbind('click').click(function (e) {
+            e.preventDefault();
+            
+            var _url = "/BankAccounts/Edit/" + $(this).find('input').val()
+            $.ajax({
+                type: 'GET',
+                url: _url,
+                success: function () {
+                    custom.CreatePopup("#dialog", "Edit Bank Account", 450, 'auto', _url, false);
+                    $("#dialog").dialog("open");
+                }
+            });
+
+        });
+
+
+        /******************** Bank Transactions************************/
+        /*********************/
+        $('.BankTransaction').unbind('click').click(function (e) {
+            location.href = "/AccountTrans/Index/" + $(this).find('input').val();
+        });
+
+        /******************** Bank Statements************************/
+        /*********************/
+        $('.BankStatement').unbind('click').click(function (e) {
+            location.href = "/AccountTrans/BankStatement/" + $(this).find('input').val();
+        });
+
+        /******************** Bank Statements************************/
+        /*********************/
+        $('.ReconcileAcc').unbind('click').click(function (e) {
+            location.href = "/AccountTrans/Reconcile/" + $(this).find('input').val();
+        });
+
+        /******************** Bank Account Spend Money************************/
+        /*********************/
+        $("div > div > div > div > div > div > ul > li > ul > li > ul > li > a#BankAccountSpendID").unbind('click').click(function (e) {
+            location.href = "/BankAccounts/SpendMoney/" + $(this).find('input').val();
+        });
+
+        /******************** Bank Account Receive Money************************/
+        /*********************/
+        $("div > div > div > div > div > div > ul > li > ul > li > ul > li > a#BankAccountReceivedID").unbind('click').click(function (e) {
+            e.preventDefault();
+            
+            location.href = "/BankAccounts/ReceiveMoney/" + $(this).find('input').val()
+        });
+    })
+
+</script>
+
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container">
+            <h3>@Resources.Resource.BankAccounts_Index_Title</h3>
+        </div>
+    </div>
+</div>
+
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div style="margin-top: 10px; margin-bottom: 30px;">
+                <div id="dialog"></div>
+                <div id="confirmDel" style="background: white" title="Confirm"></div>
+                <div id="Inform" style="background: white" title="Inform"></div>
+                <button style="margin-top: 10px;" id="btnAddNew" class="btn btn-defaultxero">@Resources.Resource.BankAccounts_Index_AddNew</button>
+                <button style="margin-top: 10px;" id="btnTrans" class="btn btn-defaultxero">@Resources.Resource.BankAccounts_Index_Transfer</button>
+            </div>
+            @if (Model.BankResults.Count > 0)
+            {
+                foreach (var item in Model.BankResults)
+                {    
+                <div style="height: 260px; border: 1px solid rgb(193, 193, 193); margin-bottom: 10px;">
+                    <div style="float: left; margin-top: 10px; width: 35%">
+                        <p style="margin-left: 10px; color: blue; font-size: 15px; font-weight: bold;">@Html.DisplayFor(modelItem => item.AccoutName)</p>
+                        <p style="margin-left: 10px;">@Html.DisplayFor(modelItem => item.AccoutNum)</p>
+                    </div>
+                    <div class="bank" style="float: right; width: 65%; margin-top: -55px; margin-right: 20px;">
+
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-defaultxero dropdown-toggle" data-toggle="dropdown">
+                               @Resources.Resource.BankAccount_ManageAccount_Label<span class="caret"></span>
+                            </button>
+
+                            <ul class="dropdown-menu" role="menu" style="margin-left: -100px; width: 300px;">
+                                <li>
+                                    <ul>
+                                        <li>
+                                            <div>
+                                                <h3>@Resources.Resource.BankAccounts_Index_Find</h3>
+                                                <ul>
+                                                    <li>
+                                                        <a href="/AccountTrans/Index/@item.BankID" >@Html.HiddenFor(modelItem => item.Total) @Html.HiddenFor(modelItem => item.TotalBalance) @Resources.Resource.BankAccounts_Index_Transaction</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/AccountTrans/BankStatement/@item.BankID">@Html.HiddenFor(modelItem => item.Total) @Html.HiddenFor(modelItem => item.TotalBalance)  @Resources.Resource.BankAccounts_Index_BankStatement</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div>
+                                                <h3>@Resources.Resource.BankAccounts_Index_New</h3>
+                                                <ul>
+                                                    <li>
+                                                        <a href="/BankAccounts/SpendMoney/@item.BankID">@Resources.Resource.BankAccounts_Index_Spend</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/BankAccounts/ReceiveMoney/@item.BankID">@Resources.Resource.BankAccounts_Index_Receive</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="/BankAccounts/TransferMoney/@item.BankID">@Html.HiddenFor(modelItem => item.BankID) @Resources.Resource.BankAccounts_Index_Transfer</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                        <li>
+                                            <div>
+                                               <h3>@Resources.Resource.BankAccounts_Index_Reconcile</h3>
+                                                <ul>
+                                                    <li>
+                                                        <a href="/AccountTrans/Reconcile/@item.BankID">@Resources.Resource.BankAccounts_Index_ReconcileAcc</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#">Reconciliation Report</a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="#" class="ImportID">@Html.HiddenFor(modelItem => item.BankID) @Resources.Resource.BankAccounts_Index_Import</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li>
+                                    <ul>
+                                        <li class="li-bottom">
+                                            <div>
+                                                <ul>
+                                                    <li>
+                                                        <a href="#" id="BankAccountEditID">@Html.HiddenFor(modelItem => item.BankID)@Resources.Resource.BankAccounts_Index_Edit</a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                        </div>
+                    </div>
+                    <div>
+                        <div style="margin-top: 10px; width: 25%">
+                            <p style="margin-left: 10px; color: blue; font-size: 15px;">@Resources.Resource.BankAccounts_Index_StatementBalance</p>
+                            <p style="margin-left: 10px;">@Html.DisplayFor(modelItem => item.Total)</p>
+                            <hr class="x-boxed" style="width: 60%; margin-left: 15px;">
+                            <p style="margin-left: 10px; color: blue; font-size: 15px;">@Resources.Resource.BankAccounts_Index_TMTBalance</p>
+                            <p style="margin-left: 10px;">@Html.DisplayFor(modelItem => item.TotalBalance)</p>
+                        </div>
+                        <div class="flash" style="text-align: center; margin-right: 5px; height: 152px; float: right; margin-top: -150px; width: 770px; border: 1px solid rgb(193, 193, 193);">
+                            @{Html.RenderAction("BasicLine", "Chart", new { ID = item.BankID, iType = 2, chartname = "chart" + item.BankID });}
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px;">
+                        <p  class="ShowOn" style="float: right; margin-right: 20px; display: inline-block;">
+                            @if(item.ShowDashboard == 0)
+                            {
+                                <input type="checkbox" name="cbShow"/>
+                            }
+                            else{
+                                <input type="checkbox" name="cbShow" checked/>
+                            }
+                            <input type="hidden" name="Bank" value="@item.BankID" >
+                            Show account on Dashboard
+                        </p>
+                    </div>
+                </div>
+                }
+            }
+            else
+            {
+                @Html.Raw("<div id='divNoRecord'>" + @Resources.Resource.Common_Msg_CountDisplay + "</div>")
+            }
+        </div>
+    </div>
+</div>

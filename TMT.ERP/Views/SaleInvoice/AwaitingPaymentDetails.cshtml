@@ -1,0 +1,580 @@
+﻿@using TMT.ERP.BusinessLogic.Utils
+@using TMT.ERP.Commons
+@using TMT.ERP.DataAccess.Model
+@model IEnumerable<TMT.ERP.DataAccess.Model.SaleInvoiceDetail>
+<script type="text/javascript">
+    $(document).ready(function () {        
+        jQuery.validator.messages.required = "";
+        $("#frmPaymentSale").validate({
+            invalidHandler: function (e, validator) {
+
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+        $('.datepicker').click(function () {
+            $(this).datepicker();
+        });
+        $('#AddPament').click(function () {
+
+            var isValid = $("#frmPaymentSale").valid();
+            if (!isValid) {
+                return;
+            }
+            var baccount = $('#BankAccountID').val();
+            if (baccount == "" || baccount == undefined) {
+                var message = "Select Paid To ";
+                $('#BankAccountID').css('border', '1px solid Red');
+                $("div.error span").html(message);
+                $("div.error").show();
+                $("#txtFrom").focus();
+                return false;
+            }
+
+            var id = $('#hdSaleInvoicesId').val();
+            var paymentTo = "abcxyz";// Chưa biết lấy ở đâu
+            var money = $('#txtsotienthanhtoan').asNumber();
+            var datepaid = $('#txtDatePaid').val();
+            var accountType = $('#BankAccountID').val();
+            var account = accountType.split('-');
+            var paidTo = account[0];
+            var type = account[1];
+            var reference = $('#txtReference').val();
+            var remainMoney = $('#remainMoneySO').asNumber();
+            var overPayment = money - remainMoney;
+
+            if (money > remainMoney) {
+
+                //var overPayment = (money - remainMoney).asNumber();
+                //money = remainMoney;
+                //$('#divMessage').empty();
+                //$('#divMessage').append('<p>The payment you entered exceeds the amount owed by <b class="currency">' + overPayment.toFixed(2) + '</b>.Would you like to create an overpayment?</p>');
+                //$('#divMessage').append('<div class="cleardiv"></div>');
+                //$('#divMessage').append('<h2>Over payment</h2>');
+                //$('#divMessage').append('<div class="cleardiv"></div>');
+                //$('#divMessage').append('<div style="display: block;width:100%;">');
+                //Left
+                //$('#divMessage').append('<div style="float:left;width:50%;"><b>Description</b><br/><input type="text" id="txtDescription" name="txtDescription"></div>');
+                //EndLeft
+                //Right
+                //$('#divMessage').append('<div style="float:right;width:50%;text-align:right;"><b>Amount THB</b><br/><b>' + overPayment.toFixed(2) + '</b></div>');
+                //EndRight
+                //$('#divMessage').append('</div>');
+                //$('#divMessage').append('<div class="cleardiv"></div>');
+                //$("#divMessage").dialog({
+                //    modal: true,
+                //    width: 400,
+                //    height: 300,
+                //    autoOpen: false,
+                //    buttons: {
+                //        "OK": {
+                //            text: 'OK',
+                //            class: 'btn btn-defaultxero',
+                //            click: function () {
+                //                $.ajax({
+                //                    type: 'POST',
+                //                    url: '/SaleInvoice/AddPament/',
+                //                    data:
+                //                        {
+                //                            "id": id,
+                //                            "paymentTo": paymentTo,
+                //                            "money": money,
+                //                            "datepaid": datepaid,
+                //                            "paidTo": paidTo,
+                //                            "type": type,
+                //                            "reference": reference
+                //                        }
+                //                    , success: function () {
+
+                //                    }
+                //                });
+                //                addPaymentNote();
+                //            }
+                //        },
+                //        "Cancel": {
+                //            text: 'Cancel',
+                //            class: 'btn btn-defaultxero',
+                //            click: function () {
+                //                location.reload();
+                //            }
+                //        }
+                //    }
+                //});
+                //$('#divMessage').dialog('open');
+                //return false;
+            } else {
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/SaleInvoice/AddPament/',
+                        data:
+                            {
+                                "id": id,
+                                "paymentTo": paymentTo,
+                                "money": money,
+                                "datepaid": datepaid,
+                                "paidTo": paidTo,
+                                "type": type,
+                                "reference": reference
+                            }
+                        , success: function () {
+                        }
+                    });
+                addPaymentNote();
+            }
+
+
+
+        });
+        $('a#viewbill').click(function () {
+
+            var id = $(this).attr('title');
+            var totalmoney = $('#totalmoney').attr('title');
+            window.location.href = "/SaleInvoice/ViewBill?id=" + id + "&totalmoney=" + totalmoney;
+        });
+        $('#btnAdd').click(function () {
+            var value = $('#noteAdd').css('display');
+            if (value == 'none') {
+                $('#noteAdd').css('display', 'block');
+            } else {
+                $('#noteAdd').css('display', 'none');
+            }
+        });
+        $('#btnCancel').click(function () {
+            $('#noteAdd').css('display', 'none');
+        });
+        $('#btnShow').click(function () {
+
+            var saleInvoidId = $('#hdSaleInvoicesId').val();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Note/GetNotesAwaitingPaymentDetail/',
+                    data: { 'saleInvoidId': saleInvoidId },
+                    success: function (data) {
+                        $('#noteShow').html(data);
+                    }
+                });
+            var value = $('#noteShow').css('display');
+            if (value == 'none') {
+                $('#noteShow').css('display', 'block');
+            } else {
+                $('#noteShow').css('display', 'none');
+            }
+        });
+        $('#btnSave').click(function () {
+
+            var noteFromId = $('#hdSaleInvoicesId').val();
+            var createDate = "";
+            var notes = $('#txtNotes').val();
+            var type = 4;
+            var expectedDate = $('#txtExpectedPaymentDate').val();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Note/Create/',
+                    data: {
+                        "noteFromId": noteFromId,
+                        "createDate": createDate,
+                        "notes": notes,
+                        "type": type,
+                        "status": 0,
+                        "changes": "Note",
+                        "expectedDate": expectedDate
+                    },
+                    success: function (data) {
+                    }
+                });
+            var value = $('#noteAdd').css('display');
+            if (value == 'none') {
+                $('#noteAdd').css('display', 'block');
+            } else {
+                $('#txtNotes').val('');
+                $('#txtExpectedPaymentDate').val('');
+                $('#noteAdd').css('display', 'none');
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/Note/GetNotesAwaitingPaymentDetail/',
+                        data: { 'saleInvoidId': noteFromId },
+                        success: function (data) {
+                            $('#noteShow').empty();
+                            $('#noteShow').html(data);
+                            var valueShow = $('#noteShow').css('display');
+                            if (valueShow == 'none') {
+                                $('#noteShow').css('display', 'block');
+                            }
+                        }
+                    });
+            }
+        });
+        function addPaymentNote() {
+
+            var noteFromId = $('#hdSaleInvoicesId').val();
+            var createDate = "";
+            var amoutDue = $('#txtsotienthanhtoan').val();
+            var totalAmountDue = $('#hdfAmountDue').val();
+            var amoutEnd = totalAmountDue - amoutDue;
+            var toSupplier = $('#hdfTo').val();
+            var expectedDate = $('#txtExpectedPaymentDate').val();
+            var notes = "Payment received from " + toSupplier + " on " + expectedDate + " for " + amoutDue + ". There is " + amoutEnd + " due for this invoice. ";
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Note/Create/',
+                    data:
+                        {
+                            "noteFromId": noteFromId,
+                            "createDate": createDate,
+                            "notes": notes,
+                            "type": 4,
+                            "status": 0,
+                            "changes": "Partially Paid ",
+                            "expectedDate": expectedDate
+                        },
+                    success: function () {
+                    }
+                });
+        }
+    });
+</script>
+@{
+    var objSale = ViewBag.objSale as SaleInvoice;
+}
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>Invoice @objSale.Code</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.Sale_Sales</span></li>
+                        <li>
+                            <a href="/SaleInvoice/Dashboard/">
+                                @Resources.Resource.Sale_SaleInvoices
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="cleardiv"></div>
+<div id="con_body">
+    <div class="container">
+        <div class="c_container">
+            <div class="cleardiv"></div>
+            <div class="error" style="display: none;">
+                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: -5px 10px 0px 0px;" />
+                <span></span>.
+            </div>
+            <div id="divMessage" style="background: white;"></div>
+            <div class="cleardiv"></div>
+            <div id="form_body">
+                <div class="cleardiv"></div>
+                <div class="paymentdetail">
+                    <div class="left">
+                        <label>@Resources.Resource.SaleInvoice_Create_To</label>
+                        <div class="cleardiv"></div>
+                        <a href="javascript:void(0);">@objSale.ContactName</a>
+                        <input type="hidden" id="hdfTo" value="@objSale.ContactName"/>
+                    </div>
+                    <div class="left">
+                        <label>@Resources.Resource.Common_Date</label>
+                        <div class="cleardiv"></div>
+                        @TMT.ERP.Commons.Utility.DateFormat(objSale.CreatedDate)
+                    </div>
+                    @if (objSale.Type == 0)
+                    {
+                        <div class="left">
+                            <label>
+                                <label>@Resources.Resource.Common_DueDate</label>
+                            </label>
+                            <div class="cleardiv"></div>
+                            @if (objSale.DueDate != null)
+                            {
+                                @TMT.ERP.Commons.Utility.DateFormat(Convert.ToDateTime(objSale.DueDate))
+                            }
+                        </div>
+                    }
+                    <div class="left">
+
+                        @if (objSale.Type == 0)
+                        {
+                            <label>SO #</label>
+                        }
+                        @if (objSale.Type == 1)
+                        {
+                            <label>Credit Note #</label>
+                        }
+                        <div class="cleardiv"></div>
+                        @objSale.Code
+                    </div>
+                    <div class="left">
+                        <label>@Resources.Resource.SaleInvoice_Create_Reference</label>
+                        <div class="cleardiv"></div>
+                        @if (objSale.Reference != null)
+                        {
+                            @objSale.Reference
+                        }
+                    </div>
+                </div>
+                <div class="cleardiv"></div>
+                <hr style="margin: 5px !important;" />
+                <table>
+                    <thead>
+                        <tr>
+                            <th>
+                                @Resources.Resource.SaleInvoice_Await_GoodCode
+                            </th>
+                            <th>
+                                @Resources.Resource.SaleInvoice_Await_Description
+                            </th>
+                            <th>
+                                @Resources.Resource.SaleInvoice_Await_Quanlity
+                            </th>
+                            <th>
+                                @Resources.Resource.SaleInvoice_Await_Price
+                            </th>
+                            <th>
+                                @Resources.Resource.SaleInvoice_Await_Discount
+                            </th>
+                            <th>
+                                @Resources.Resource.SaleInvoice_Await_Account
+                            </th>
+                            <th>
+                                @Resources.Resource.SaleInvoice_Await_TaxRate
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @item.Good.Code
+                                </td>
+                                <td>
+                                    @item.Description
+                                </td>
+                                <td class="currency">
+                                    @item.Quantity
+                                </td>
+                                <td class="currency">
+                                    @if (item.Price != null)
+                                    {
+                                        @item.Price
+                                    }
+                                </td>
+                                <td class="currency">
+                                    @if (item.Discount != null)
+                                    {
+                                        @item.Discount
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.Account.Name != null)
+                                    {
+                                        @item.Account.Name
+                                    }
+                                </td>
+                                <td>
+                                    @if (item.TaxRate.Name != null)
+                                    {
+                                        @item.TaxRate.Name
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="cleardiv"></div>
+                <div class="paymentdetail">
+                    @{
+                        ErpEntities db = new ErpEntities();
+                        Dictionary<double?, double?> dicTax = new Dictionary<double?, double?>();
+
+                        List<SaleInvoiceDetail> ooInvoiceDetails = null;
+                        List<int?> listTax = null;
+
+                        int ID = (int)objSale.ID;
+                        ooInvoiceDetails = objSale.SaleInvoiceDetails.OrderBy(i => i.TaxRateID).ToList();
+                        listTax = ooInvoiceDetails.Select(details => details.TaxRateID).Distinct().ToList();
+                        foreach (var taxRateID in listTax)
+                        {
+                            TaxRate tax = db.TaxRates.Find(taxRateID);
+                            double? rate = tax.Rate;
+                            double amount = 0;
+                            foreach (var item in ooInvoiceDetails)
+                            {
+                                if (item.TaxRateID == taxRateID)
+                                {
+                                    amount += Convert.ToDouble(item.Price * item.Quantity);
+                                }
+                            }
+                            dicTax.Add(rate, amount * rate / 100);
+                        }
+                    }
+                    <div class="right">
+                        <div class="labelleft">
+                            <label>@Resources.Resource.SaleInvoice_Await_SubTotal</label>
+                            <div class="cleardiv"></div>
+                            @foreach (var item in dicTax)
+                            {
+                                <label>
+                                    Total Tax @Html.Raw(item.Key)@Html.Raw("%")
+                                </label>
+                                <div class="cleardiv"></div>
+                            }
+                        </div>
+                        <div class="labelright">
+                            <label class="currency">@objSale.TotalMoney</label>
+                            <div class="cleardiv"></div>
+                            @foreach (var item in dicTax)
+                            {
+                                <label class="currency">
+                                    @Html.Raw(item.Value)
+                                </label>
+                                <div class="cleardiv"></div>
+                            }
+
+                        </div>
+                        <div class="cleardiv"></div>
+                        <hr style="margin: 5px !important;" />
+                        <div class="labelleft">
+                            <b>@Resources.Resource.SaleInvoice_Await_Total</b>
+                        </div>
+                        <div class="labelright">
+                            <b class="currency">@ViewBag.Total</b>
+                        </div>
+                        <hr style="margin: 5px !important;" />
+                        <div class="labelleft">
+                            <b>@Resources.Resource.SaleInvoice_Await_AmountDue</b>
+                        </div>
+                        <div class="labelright">
+                            <b class="currency" id="remainMoneySO">
+                                @{
+                                    var result = Convert.ToDouble(ViewBag.Total) - Convert.ToDouble(ViewBag.LessPayment);
+                                }
+                                @result
+                            </b>
+                        </div>
+                        <div class="cleardiv"></div>
+                        <hr />
+                        <div class="labelleft">
+                        </div>
+                        @foreach (var itemPayment in (ViewBag.PayList as List<Payment>))
+                        {
+                            <div class="labelleft">
+                                <label>Less</label>
+                                <div class="cleardiv"></div>
+                                <label>@TMT.ERP.Commons.Utility.DateFormat(Convert.ToDateTime(itemPayment.CreatedDate))</label>
+                            </div>
+                            <div class="labelright">
+                                <a href="javascript:void(0);" id="viewbill" title="@itemPayment.ID">
+                                    <label class="currency">@itemPayment.TotalMoney</label></a>
+                            </div>
+                        }
+                    </div>
+                </div>
+                <div class="cleardiv"></div>
+                @using (Html.BeginForm("AwaitingPayment", "SaleInvoice", FormMethod.Post, new { id = "frmPaymentSale" }))
+                {
+                    <div class="paymentdetail bovien" style="height: auto; display: inline-block;">
+                        <input type="hidden" value="@ViewBag.IDPayment" id="hdSaleInvoicesId" name="hdSaleInvoicesId"/>
+                        <div class="leftpayment">
+                            <label>@Resources.Resource.SaleInvoice_Await_AmountPaid</label>
+                            <div class="cleardiv"></div>
+                            <input type="text" id="txtsotienthanhtoan" value="@ViewBag.STCL" style="width: 150px;" class="currency required"/>
+                        </div>
+                        <div class="leftpayment">
+                            <label>@Resources.Resource.SaleInvoice_Await_DatePaid</label>
+                            <div class="cleardiv"></div>
+                            <input type="text" name="txtDatePaid" id="txtDatePaid" class="datepicker required" style="width: 150px;">
+                        </div>
+                        <div class="leftpayment">
+                            <label>@Resources.Resource.SaleInvoice_Await_PaidTo</label>
+                            <div class="cleardiv"></div>
+                            @{
+                    int[] groupID1 = new int[1] { 4 };
+                    List<AccountInfo> account1 = AccountManager.GetAccountByGroups(groupID1).ToList();
+                            }
+                            <select id="BankAccountID" style="width: 150px; height: 23px;" class="required">
+                                <option value=""></option>
+                                @foreach (var item in account1)
+                                {
+                                    var accountType = item.AccountID + "-" + item.AccountType;
+                                    <option value="@accountType">@item.AccountName</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="leftpayment">
+                            <label>
+                                @Resources.Resource.SaleInvoice_Await_Ref
+                            </label>
+                            <div class="cleardiv"></div>
+                            <input type="text" id="txtReference" name="txtReference" style="width: 150px;" />
+                        </div>
+                        <div class="leftpayment">
+                            <label></label>
+                            <div class="cleardiv"></div>
+                            <input type="submit" class="btn btn-defaultxero" value="@Resources.Resource.SaleInvoice_Await_AddPayment" id="AddPament" />
+                        </div>
+                    </div>
+                }
+                <div class="cleardiv"></div>
+
+            </div>
+            <div class="paymentdetail">
+                <h3>History & Notes</h3>
+                <div class="tablefooter">
+                    <div class="cleardiv"></div>
+                    <input type="submit" value="Show History" id="btnShow" class="showhistory" />
+                    <input type="submit" value="Add Note" id="btnAdd" class="addline" />
+                    <div class="cleardiv"></div>
+                    <div style="display: none;" id="noteAdd">
+                        @if (objSale.ContactName != null)
+                        {
+                            <label><a href="javascript:void(0);">@objSale.ContactName</a></label>
+                                
+                        }
+                        &nbsp;&nbsp;  
+                        <div style="width: 25%;">
+                            Notes:
+                            <textarea id="txtNotes" class="txt_box1" cols="40" rows="5"></textarea>
+                        </div>
+                        &nbsp;&nbsp;  
+                        <div style="width: 25%;">
+                            Expected Payment Date :
+                            <input type="text" id="txtExpectedPaymentDate" class="datepicker" />
+                        </div>
+                        &nbsp;&nbsp;  
+                        <div style="width: 25%;">
+                            <input type="submit" value="Save" id="btnSave" class="btn btn-defaultxero" />
+                            <input type="submit" value="Cancel" id="btnCancel" class="btn btn-defaultxero" />
+                        </div>
+                    </div>
+                    <div class="cleardiv"></div>
+                    <div style="display: none;" id="noteShow">
+                    </div>
+                </div>
+
+                <input type="hidden" id="hdfUserID" value="@AppContext.RequestVariables.CurrentUser.ID"/>
+            </div>
+        </div>
+    </div>
+</div>

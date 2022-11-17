@@ -1,0 +1,113 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.ProductiveMonitorDetail>
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#btnSave').click(function () {
+            alert('Save');
+        });
+        $('#btnSaveStock').click(function () {
+            alert('Save & Stock');
+        });
+        $('#btnApprove').click(function () {
+            alert('Approve');
+        });
+        $('#btnClose').click(function () {
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: "/Planning/",
+                    success: function () {
+                        window.location.href = "/Planning/";
+                    }
+                });
+        });
+    });
+</script>
+<div style="display: inline;">
+    <input type="submit" id="btnClose" value="Close" />
+</div>
+<div style="clear: both; height: 10px;">
+</div>
+<div style="display: inline;">
+    <div style="width: 50%; float: left;">
+        <p>
+            <label>MPS No:</label>@ViewBag.MpsNo
+        </p>
+        <p>
+            <label>WorkCenter No:</label>@ViewBag.WorkCenterNo
+        </p>
+        <p>
+            <label>
+                WorkOrder No:
+            </label>
+            <a href="/Planning/WorkOrderDetails?workOrderId=@ViewBag.WorkOrderID&machineId=@ViewBag.MachineID">@ViewBag.WorkOrderNo</a>
+        </p>
+    </div>
+    <div style="width: 50%; float: left;">
+        <p>
+            <label>Machine No:</label>@ViewBag.MachineNo
+        </p>
+        <p>
+            <label>Create Date:</label>@{
+                DateTime date = DateTime.Now;
+            }
+            @date.ToString("d")
+        </p>
+    </div>
+</div>
+<div style="clear: both;"></div>
+<h1>Producttive Details</h1>
+<table id="ProductMornitor" class="table">
+    <thead>
+        <tr>
+            <th>Good name</th>
+            <th>Earliest Start Date</th>
+            <th>Latest Start Date</th>
+            <th>Begin Date</th>
+            <th>End Date</th>
+            <th>Remain Order Quantity</th>
+            <th>Implement Quantity</th>
+            <th>Process Time(M)</th>
+            <th>Default Time(M) </th>
+            <th>Remain Time(M) </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@ViewBag.GoodName(item.GoodID)</td>
+                <td>@{
+            DateTime somnhat = ViewBag.Somnhat(item.MPSID, item.WorkOrderID, item.MachineID);
+                        
+                }
+                    @somnhat.ToString("d")
+                </td>
+                <td>
+                    @{
+            DateTime muonnhat = ViewBag.Muonnhat(item.MPSID, item.WorkOrderID, item.MachineID);
+                        
+                    }
+                    @muonnhat.ToString("d")
+                </td>
+                <td>
+                    <input type="text"  id="txtBeginDate+@item.ID" class="datepicker" value="@DateTime.Now.ToString("d")" name="txtBeginDate"/></td>
+                <td>
+                    <input type="text" id="txtEndDate+@item.ID" class="datepicker" value="@DateTime.Now.ToString("d")" name="txtEndDate"/></td>
+                <td>@item.OrderQuantity</td>
+                <td>
+                    <input type="text" id="txtImplementQuantity" value="@item.OrderQuantity"/></td>
+                <td>
+                    <input type="text" id="txtProcessTime" /></td>
+                <td>9</td>
+                <td>10</td>
+            </tr>
+        }
+    </tbody>
+</table>
+<div style="clear: both; height: 10px;"></div>
+<div style="display: inline-block;">
+    <input type="submit" id="btnSave" value="Save" class="btn" />
+    <input type="submit" id="btnSaveStock" value="Save & Stock" class="btn" />
+    <input type="submit" id="btnApprove" value="Approve" class="btn" />
+</div>

@@ -1,0 +1,229 @@
+﻿@model TMT.ERP.DataAccess.Model.BOM
+
+@{
+    Layout = null;
+    <script src="@Url.Content("~/Scripts/jquery.numeric.js")"></script>
+}
+<link href="@Url.Content("~/Content/jquery.treeview.css")" rel="stylesheet" />
+<script src="@Url.Content("~/Scripts/jquery.treeview.js")"></script>
+<script src="@Url.Content("~/Scripts/jquery.treeview.async.js")"></script>
+
+<script>
+    $(document).ready(function () {
+
+        $(".numeric").numeric();
+
+        $('#quantity').change(function (e) {
+            
+            var quanity = $('#quantity').asNumber();
+            if (quanity > 100) {
+                $('#quantity').val(0);
+                return false;
+            } else {
+                var quanitys = $('#quantity').val().replace(/[^0-9]/g, '');
+                if (quanitys == "") {
+                    quanitys = 0;
+                }
+                $('#quantity').val(quanitys);
+            }
+        });
+
+        $('#GoodID').change(function (e) {
+            
+            var value = $('#GoodID').val();
+            if (value != "" && value != null) {
+                $('#btnCreateNew').removeAttr("disabled", "disabled");
+            } else
+                $('#btnCreateNew').attr("disabled", "disabled");
+        });
+
+        
+        //$("#treeview").treeview({ collapsed: true });
+        $("#treeview").treeview({ expanded: true });
+
+        //
+        function viewAll() {
+            alert('ViewAll');
+
+        };
+        //Change Category
+        $("#Category").change(function () {
+            
+            $('#GoodID').removeAttr("disabled", "disabled");
+            ChangeItem();
+        });
+
+        function ChangeItem() {
+            
+            var id = $('#Category').val();
+            $.ajax(
+            {
+                type: 'POST',
+                url: '/BOM/ChangeCategory/',
+                traditional: true,
+                data: {
+                    'id': id
+                },
+                success: function (data) {
+                    
+                    $('div#itemList').empty();
+                    $('div#itemList').html(data);
+                    // $('#itemList').show();
+                    // $('div#BomLIST').hide();
+                    //  $('div#Choose').show();
+                }
+            });
+        }
+    });
+
+    $('#btnCreateNew').click(function () {
+        
+        //var BOM = {
+        //    BomID: parseInt($('#BomID').val()),
+        //    GoodID: parseInt($('#Good').val()),
+        //    ParentGoodID: parseInt($('#ParentGoodID').val()),
+        //    quantity: $('#quantity').val(),
+        //    BomDetailID: $('#BomDetailID').val(),
+        //    itemID: $('#ItemID').val()
+        //}
+        var BOM = {
+            BomID: parseInt($('#BOMID').val()),
+            GoodID: parseInt($('#GoodID').val()),
+            ParentGoodID: null,
+            quantity: $('#quantity').val(),
+            description: $('#description').val()
+        }
+        var Qty = $('#quantity').val();
+        if (Qty != "" && Qty != null) {
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/BOM/AddTreeView/',
+                    traditional: true,
+                    data: BOM,
+                    success: function (data) {
+                        //  window.location.href = '/BOM/ViewDetailBOM/';
+                        $('div#ViewTreeView').empty();
+                        $('div#ViewTreeView').html(data);
+                        $('#Category').val('');
+                        $('#GoodID').val('');
+                        $('#quantity').val(''); 
+                        $('#description').val('');
+                        $('#GoodID').attr("disabled", "disabled");
+                        $('#btnCreateNew').attr("disabled", "disabled");
+                        $('#Inform').empty();
+                        $('#Inform').append('<p style="width: 100%; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_CreateSuccess</p>');
+                        $("#Inform").dialog({
+                            modal: true,
+                            height: 120,
+                            width: 300,
+                            autoOpen: false,
+                            buttons: {
+                                'OK': function () {
+                                    $(this).dialog('close');
+                                }
+                            }
+                        });
+                        $('#Inform').dialog('open');
+                    }
+                });
+            } else {
+                $('#Inform').empty();
+                $('#Inform').append('<p style="width: 100%; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">Quantity must bigger than 0</p>');
+                $("#Inform").dialog({
+                    modal: true,
+                    height: 120,
+                    width: 300,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#Inform').dialog('open');
+                return false;
+            }
+    });
+
+</script>
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container">
+            <h3>@Resources.Resource.BOM_List</h3>
+            <div id="breadcrumbs">
+                <ul>
+                    <li><a href="/BOM/Index">@Resources.Resource.BOM_List</a></li>
+                    <li><a href="/BOM/SetBOM">@Resources.Resource.BOM_Set</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<input type="hidden" id="BOMID" value="@Model.ID" />
+<input type="hidden" id="ItemID" value="@ViewBag.GoodID" />
+
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div class="form_position1">
+                <div class="form_right">
+
+                    <label for="name">@Resources.Resource.BOM_Name_Column: @ViewBag.BOMName</label>
+
+                    <div class="form-group">
+                        <label for="name">@Resources.Resource.BOM_Finish_Good: @ViewBag.GoodName</label>
+
+                    </div>
+                </div>
+            </div>
+            <div class="form_position1">
+                <div class="form_left">
+                    <div class="form-group" id="ViewTreeView">
+                        <ul id="treeview" class="treeview">
+                            @Html.Partial("BOM/_itemControl", ViewData["BOM"])
+                        </ul>
+                    </div>
+                </div>
+                <div id="dialog"></div>
+                <div id="Inform" title="Inform" style="background: white"></div>
+                <div class="form_right">
+                    <div id="ViewDetail">
+                        @{ var bomsDetails = (List<TMT.ERP.DataAccess.Model.BomDetail>)ViewData["BOM"];}
+                        @if (bomsDetails.Count == 0)
+                        {                                                       
+                            <div class="form_position1">
+                                <div class="form_right">
+                                    <div class="form-group">
+                                        <label style="width: 100px;">Category : </label>
+                                        @Html.DropDownList("Category", new SelectList(ViewBag.CategoryID, "Value", "Text", ViewBag.Category), "", new { @class = "category form-control", style = " width: 150px;" })
+                                    </div>
+                                    <div id="itemList" class="form-group">
+                                        <label style="width: 100px;">Item :</label>
+                                        @Html.DropDownList("GoodID", new SelectList(ViewBag.Good, "Value", "Text"), new { @disabled = "disabled", @class = "good form-control", style = "width: 150px;" })
+
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="width: 100px;">Quantity : </label>
+                                        @Html.TextBox("quantity", "", new { @class = "form-control numeric", style = "width: 150px;", maxlength = "9" })
+                                    </div>
+                                    <div class="form-group">
+                                        <label style="width: 100px;">Description : </label>
+                                        @Html.TextBox("description", "", new { @class = "form-control", style = "width: 150px; " })
+                                    </div>
+                                    <div style="float: left; width: 50%; margin-bottom: 10px; margin-top: 10px;">
+                                        <input type="button" disabled id="btnCreateNew" class="btn-defaultxero" value="@Resources.Resource.ProductTypes_AddNew" />
+                                    </div>
+                                </div>
+
+                            </div>
+                        }
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,332 @@
+﻿@model TMT.ERP.DataAccess.Model.ExpenseClaim
+
+<script src="@Url.Content("~/Scripts/ERPScripts/ExpenseClaim/ExpenseClaim.js")"></script>
+@* <script src="@Url.Content("~/Scripts/jquery.numeric.js")"></script>
+ <script src="@Url.Content("~/Scripts/jquery.validate.min.js")"></script>*@
+
+<script>
+
+    $(document).ready(function () {
+        $(".numeric").numeric();
+        // $(".unitprice").mask("999-999-9999");
+
+        //$("#frmMain").validate({
+
+        //    ignore: "div:hidden *",
+        //    errorContainer: ".error",
+        //    errorLabelContainer: ".error",
+
+        //    highlight: function (element, errorClass) {
+        //        $("label[for=" + element.id + "] span.error").show();
+        //    },
+        //    unhighlight: function (element, errorClass) {
+        //        $("label[for=" + element.id + "] span.error").hide();
+        //    },
+        //    ignoreTitle: true
+        //}); 
+        //$.validator.messages.required = '';
+    });
+
+    var arrNoteID = [];
+
+    function RemoveRow(element) {
+        var tr = $(element).closest('tr');
+        tr.remove();
+        CalSubTotal();
+        CalTotal();
+    }
+
+    function SaveExclaim(status, type) {
+        
+
+        // $("#frmMain").validate().element($("#Reference"));
+
+        //var isValid = $("#frmMain").valid();
+        //if (!isValid) {
+        //    return false;
+        //}
+
+        arrNoteID = [];
+        $(".noteID").each(function () {
+            if ($(this).val() != "")
+                //  value += parseInt($(this).val());
+                arrNoteID.push($(this).val());
+        });
+        //END 
+
+        var receiptFrom = $('#ContactID').val();
+        var receiptDate = $('#ReceiptDate').val();
+        var reference = $('#Reference').val();
+        var totalMoney = $('#txtExpenseClaimTotal').text();
+        var includeTax = $('#chkIncludeTax').attr('checked') ? 1 : 0;
+        var amountAre = 0;
+        if ($('#TaxInclude').is(":checked")) {
+            var amountAre = 1;
+        }
+        var status = parseInt(status);
+        var totalTax = $('#txtTax').text();
+        var currentUserID = $('#hidCurrentUserID').val();
+        var expensiveDetail = BuildJSON();
+        $.ajax({
+            type: "POST",
+            url: "/Services/ExpenseClaimService.asmx/SaveExpenseClaim",
+            data: JSON.stringify({
+                expenseClaimID: 0,
+                reference: reference,
+                totalMoney: totalMoney,
+                includeTax: includeTax,
+                amountAre: amountAre,
+                receiptFrom: receiptFrom,
+                receiptDate: receiptDate,
+                status: status,
+                totalTax: totalTax,
+                currentUserID: currentUserID,
+                expensiveDetail: expensiveDetail,
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                var _url = "/ExpensiveClaim/CurrentClaim/";
+                var msg = '@Resources.Resource.Common_Msg_CreateSuccess';;
+                var retValue = JSON.parse(data.d);
+                if (!isNaN(retValue))
+                    retValue = parseInt(retValue);
+                $("#hidNoteType").val(9);
+                $("#hidNoteFromID").val(retValue);
+                AddNoteByNoteFromID(parseInt($("#hidNoteFromID").val()), parseInt($("#hidNoteType").val()));               
+                if (type == 1) {
+                    $('#ContactID').val("");
+                    $('#ReceiptDate').val("");
+                    $('#Reference').val("");
+                    $('#txtExpenseClaimTotal').text("");
+                    $('#txtTax').text("");
+                    $('#chkIncludeTax').removeAttr('checked')
+                    $('#Exclude').hide();
+                    $('#Include').hide();
+                    //Detail
+                    $("#txtDescription").val("");
+                    $("#ddlAccountID").val("");
+                    $("#ddlTaxRateID").val("");
+                    $("#txtQty").val("");
+                    $("#txtUnitPrice").val("");
+                    $("#txtAmount").val;
+                    $(".subtotal").text("");
+                } else {                    
+                     CreatePopupMessage('divMessage', msg, '@Resources.Resource.Common_Message', 120, 300, _url);
+                }
+            }
+        }).error(function (data) {           
+            var msg = '@Resources.Resource.Expensive_Claim_Error_Message';
+            CreatePopupMessage('divMessage', msg, '@Resources.Resource.Common_Message', 120, 300, _url);
+        });
+    }
+
+
+    function AddNoteByNoteFromID(id, noteType) {
+        var note = {
+            noteFromID: id,
+            noteType: noteType,
+            arrNoteID: arrNoteID,
+            change: "Created",
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/Note/AddNoteByNoteFromID/',
+            data: note,
+            traditional: true,
+            success: function () {
+            }
+
+        });
+    }
+
+
+    function BuildJSON() {
+        var arrayData = [];
+        $("#tblExpenseClaimDetail tr").each(function () {
+            var tr = $(this).closest('tr');
+
+            var item = {
+                "description": $("#txtDescription", tr).val(),
+                "accountID": $("#ddlAccountID", tr).val(),
+                "taxRateID": $("#ddlTaxRateID", tr).val(),
+                "quantity": $("#txtQty", tr).val(),
+                "unitPrice": $("#txtUnitPrice", tr).val(),
+                "totalMoney": $("#txtAmount", tr).val()
+            };
+            arrayData.push(item);
+        });
+        return JSON.stringify(arrayData);
+    }
+</script>
+
+
+<input type="hidden" id="hidNoteType" value="@ViewBag.NoteType" />
+<input type="hidden" id="hidNoteFromID" value="@ViewBag.NoteFromID" />
+<input type="hidden" id="hidCurrentUserID" value="@ViewBag.CurrentUserID" />
+
+
+@*@using (Html.BeginForm(null, null, FormMethod.Post, new { enctype = "multipart/form-data" })){*@
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    //@Html.ValidationSummary(true);
+
+
+    <div id="con_form">
+
+        <div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+            <div id="con_top">
+                <div class="c_container">
+                    <h3>@Resources.Resource.Expensive_Claim_List_Add_Receipt</h3>
+                    <div id="breadcrumbs">
+                        <ul>
+                            <li><a href="/ExpensiveClaim/CurrentClaim/"><span>@Resources.Resource.Expensive_Claim_List_Expensive_Claim</span></a></li>
+                            <li><a href="/ExpensiveClaim/CurrentClaim/">@Resources.Resource.Expensive_Claim_List_Current_Claim</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="container">
+            <div id="divMessage" style="background:white;"></div> 
+            <div class="c_container">
+
+                <br />
+                <br />
+
+                <div class="form_position1">
+
+                    <div style="display: inline-block; width: 100%">
+                        <div style="width: 15%; float: left">
+                            <label style="width: 100px !important;" for="to">@Resources.Resource.Expensive_Claim_Add_Receipt_from</label>
+                        </div>
+                        <div style="width: 50%; float: left">
+                            @Html.DropDownList("ContactID", (IEnumerable<SelectListItem>)ViewData["AccList"], new { @class = "form-control", @style = "width: 200px !important;" })
+                        </div>
+                    </div>
+                    <div style="display: inline-block; width: 100%">
+                        <div style="width: 15%; float: left">
+                            <label style="width: 100px !important;" for="">@Resources.Resource.Expensive_Claim_Add_Date</label>
+                        </div>
+                        <div style="width: 50%; float: left">
+                            @Html.TextBoxFor(model => model.ReceiptDate, new { @class = "datepicker", @style = "width: 200px !important;" })
+                        </div>
+                    </div>
+                    <div style="display: inline-block; width: 100%">
+                        <div style="width: 15%; float: left">
+                            <label style="width: 100px !important;" for="">@Resources.Resource.SaleInvoice_Create_Reference:</label>
+                        </div>
+                        <div style="width: 50%; float: left">
+                            @Html.TextBoxFor(model => model.Reference, new { @style = "width:200px !important;", @class = "required" })
+                        </div>
+                    </div>
+                    <div style="display: inline-block; width: 100%">
+                        <div style="width: 15%; float: left">
+                            <label style="width: 100px !important;">@Resources.Resource.BankAccount_SpendMoney_AmountAre</label>
+                        </div>
+                        <div style="width: 50%; float: left">
+                            @Html.CheckBox("checkVAT", true, new { @class = "checkbox" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="con_body">
+        <div class="container">
+            <div class="c_container">
+                <div id="myDiv">
+                    <table id="tblExpenseClaimDetail" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th><span>@Resources.Resource.Expensive_Claim_Add_Description</span></th>
+                                <th style="width: 30px;"><span>@Resources.Resource.Expensive_Claim_Add_Quantity</span></th>
+                                <th style="width: 100px;"><span>@Resources.Resource.Expensive_Claim_Add_Unit_Price</span></th>
+                                <th style="width: 100px;"><span>@Resources.Resource.Expensive_Claim_Add_Amount_THB</span></th>
+                                <th style="width: 200px;"><span>@Resources.Resource.Expensive_Claim_Add_Account</span></th>
+                                <th style="width: 200px;"><span>@Resources.Resource.Expensive_Claim_Add_Tax_rate</span></th>
+                                <th style="width: 30px;"><span></span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="insertRow">
+                            @for (int iIndex = 0; iIndex < 1; iIndex++)
+                            {	
+
+                                <tr>
+                                    <td>
+                                        <input type="text" id="txtDescription" class="txt1 description" />
+                                    </td>
+                                    <td>
+                                        <input type="text" class="numeric qty" id="txtQty" class="qty text-right" /></td>
+                                    <td>
+                                        <input type="text" class="numeric unitprice" id="txtUnitPrice" class="unitprice" />
+
+                                    </td>
+
+                                    <td>
+                                        <input type="text" class="numeric amount" id="txtAmount" /></td>
+                                    <td>
+                                        @Html.DropDownList("ddlAccountID", (IEnumerable<SelectListItem>)ViewData["AccountList"], new { @class = "accountChange" })
+                                    </td>
+                                    <td>
+                                        @Html.DropDownList("ddlTaxRateID", (IEnumerable<SelectListItem>)ViewData["TaxRateList"], new { @class = "taxrate" })
+                                        <input type="hidden" value="0" class="taxvalue" />
+                                    </td>
+                                    <td>
+                                        <div class="remove" id="delRow" onclick="RemoveRow(this);">X</div>
+                                    </td>
+                                </tr>							
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tablefooter" style="height: 70px;">
+                    <div class="pos1">
+                        <button class="btn btn-defaultxero" id="addNewLine">Add a new line</button>
+                    </div>
+                    <div class="pos2 posprice">
+                        <p>
+                            <span class="ta_label">@Resources.Resource.Purchase_Create_Subtotal</span>
+                            <span id="txtSubTotal" class="currency price subtotal">0.00</span>
+                        </p>
+                        <p>
+                            <span class="ta_label">@Resources.Resource.Purchase_Create_Tax</span>
+                            <span id="txtTax" class="currency price vat">0.00</span>
+                        </p>
+                    </div>
+                    <div class="pos3 posprice">
+                        <p>
+                            <span class="ta_label">@Resources.Resource.Purchase_Create_Total</span>
+                            <span id="txtExpenseClaimTotal" class="currency price total">0.00</span>
+                        </p>
+                    </div>
+                </div>
+                <div style="margin-top: 10px; margin-bottom: 10px; display: inline-block">
+                    <input style="margin-right: 10px; float: left;" type="button" class="btn btn-defaultxero" id="form_approve" value="Save" onclick="SaveExclaim(0, 0);">
+                    <input style="margin-right: 10px;" type="button" class="btn btn-defaultxero" id="btnCreate" value="Save And Add Another" onclick="SaveExclaim(0, 1);" />
+                    <input type="button" value="Cancel" id="form_cancel" onclick="javascript: location.href = '/ExpensiveClaim/CurrentClaim/';" class="btn btn-defaultxero" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    
+ 
+}
+@*@Html.Partial("Note/_ViewNote")*@
+
+@{Html.RenderAction("GetNotesList", "Note", new { noteType = @ViewBag.NoteType, noteFromID = @ViewBag.NoteFromID, Type = 9, dTotal = 0 });}
+
+<div>
+     
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

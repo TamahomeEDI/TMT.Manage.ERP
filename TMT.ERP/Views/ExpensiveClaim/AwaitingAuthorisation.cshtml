@@ -1,0 +1,190 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.ExpenseClaim>
+@{
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        $('.item3').attr('id', 'current');
+    });
+    function SetPageSize(pageSize) {
+        
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/ExpensiveClaim/SetPageSize/',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+</script>
+<div class="container">
+    <div class="c_container">
+        <div id="breadcrumb">
+            <div class="container">
+                <div id="con_top">
+                    <div class="c_container">
+                        <h3>@Resources.Resource.Expensive_Claim_List_Expensive_Claim</h3>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div id="con_body">
+            <div id="toolbar">
+                <ul>
+                      <li class="item2"><a href="/ExpensiveClaim/Create/"><span class="icon icon_new"></span><span>@Resources.Resource.Expensive_Claim_List_Add_Receipt</span></a></li>
+                    </ul>
+            </div>
+            @using (Html.BeginForm("CurrentClaim", "ExpensiveClaim", FormMethod.Get))
+            {
+                <div id="searchDraft" style="display: inline;">
+                    <div style="float: right; width: 40%;display: inline;">
+                        <span>@Resources.Resource.Expensive_Claim_List_Reference</span>
+                        @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
+                         <input type="submit" value="@Resources.Resource.SaleInvoice_DashboardCreate_Search" id="btnSearch" class="btn" />
+                    </div>
+                </div>
+            }
+            <div style="clear: both; height: 10px;"></div>
+            <div id="tabcontent">
+                <ul>
+                    @{           
+                        var db = new ErpEntities();
+                        var expenseClaims = db.ExpenseClaims.ToList();
+                    }
+                    <li class="item1"><a href="/ExpensiveClaim/CurrentClaim">Current Claim(@expenseClaims.Count(x => x.Status == 0))</a></li>
+                    <li class="item2"><a href="/ExpensiveClaim/PreviousClaim/">Previous Claims</a></li>
+                    <li class="item3"><a href="/ExpensiveClaim/AwaitingAuthorisation/">Awaiting Authorisation(@expenseClaims.Count(x => x.Status == 1))</a></li>
+                    <li class="item4"><a href="/ExpensiveClaim/AwaitingPayment/">Awaiting Payment(@expenseClaims.Count(x => x.Status == 2))</a></li>
+                    <li class="item5"><a href="/ExpensiveClaim/Achive/">Achive</a></li>
+                </ul>
+            </div>
+            <div id="tabbody">
+                <div id="tabs-1">
+                    @if (Model.ToList().Count > 0)
+                    {
+                        <table id="tblcurrentClaim">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th>
+                                        @Resources.Resource.Expense_Claims_Reference
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.Expense_Claims_Receipt_From
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.Expense_Claims_Receipt_Date
+                                    </th>
+                                    <th>
+                                       Date Submitted
+                                    </th>
+                                    <th>@Resources.Resource.Expense_Claims_Items
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.Expense_Claims_Status
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.Expense_Claims_Amount
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in Model)
+                                {
+                                    <tr>
+                                        <td>
+                                            <a href="/ExpensiveClaim/ApproveExpensiveClaim/@item.ID" title="@item.ID">@Html.DisplayFor(modelItem => item.Reference)</a>
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.ReceiptFrom)
+                                        </td>
+
+                                        <td>
+                                            @{
+                                    DateTime due = item.ReceiptDate != null ? Convert.ToDateTime(item.ReceiptDate) : DateTime.Now;
+                                            }
+                                            @due.ToString("d")
+                                        </td>
+                                        <td>
+                                                                                       @{
+                                    DateTime submitDate = item.SubmitDate != null ? Convert.ToDateTime(item.SubmitDate) : DateTime.Now;
+                                            }
+                                            @submitDate.ToString("d")
+                                        </td>
+                                        <td>
+                                            @{           
+                                   
+                                    var items = db.ExpenseClaimDetails.Where(ex => ex.ExpenseClaimID == item.ID).Count();
+                                            }
+
+                                            @items
+                                        </td>
+
+                                        <td>
+                                            @{int? sStr = 0;
+                                              sStr = item.Status;
+                                              string result = "";
+                                              switch (sStr)
+                                              {
+                                                  case 0:
+                                                      result = Resources.Resource.SaleInvoice_Create_SaveAsDraft;
+                                                      break;
+                                                  case 1:
+                                                      result = Resources.Resource.Expense_Claims_List_Pending;
+                                                      break;
+                                                  case 2:
+                                                      result = Resources.Resource.Expense_Claims_List_Approved;
+                                                      break;
+                                                  case 3:
+                                                      result = Resources.Resource.Expense_Claims_List_Paid;
+                                                      break;
+                                              }
+                                            }
+                                            @Html.Raw(result)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TotalMoney)
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+
+                    }
+                    else
+                    {
+                        <div class="pager">
+                            <h4>Contains no records </h4>
+                        </div>
+                    }
+                    <br />
+                    <div style="display: inline;">
+                        <div style="width: 70%; float: left;">
+                            @*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount*@
+                            @*@Html.PagedListPager(Model, page => Url.Action("CurrentClaim", new { page, currentFilter = ViewBag.CurrentFilter }))*@
+                            @Html.PagedListPager(Model, page => Url.Action("CurrentClaim", new { page, currentFilter = ViewBag.CurrentFilter, type = 0, createdate = ViewBag.CreateDate, duadate = ViewBag.DueDate }))
+                        </div>
+                        <div style="width: 25%; float: right; margin-top: 15px;">
+                            <div id="showpag" class="dropdown">
+                                <span class="dropdown-toggle" data-toggle="dropdown">Number #</span>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(3);">3</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(15);">15</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(20);">20</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

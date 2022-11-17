@@ -1,0 +1,35 @@
+﻿@using TMT.ERP.BusinessLogic.Managers
+@using TMT.ERP.DataAccess.Model
+@model IEnumerable<TMT.ERP.DataAccess.Model.AccountTran>
+<table>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.AccountID)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        if(item.SourceType==1)
+        {
+            var _manager = new GenericManager<PaymentForPayItem>();
+            var oPayment = _manager.Get(x => x.ID == item.SourceID).First();
+            <tr>
+                <td>
+                    <a href="/PayRun/ViewWagePayable?payrunId=@oPayment.PayRunID&payItemId=@oPayment.PayItemID">@item.Account.Name</a>
+                </td>
+            </tr>
+        }
+        if(item.SourceType==0)
+        {
+            var _managerPayRunEmployee = new GenericManager<PayRunEmployee>();
+            var oPayRunEmployee = _managerPayRunEmployee.Get(x => x.ID == item.SourceID).First();
+            <tr>
+                <td>
+                    <a href="/PayRun/ViewPaySlip?payrunId=@oPayRunEmployee.PayRunID&payrunEmployeeId=@oPayRunEmployee.ID">@item.Account.Name</a>
+                </td>
+            </tr>
+        }
+    }
+
+</table>

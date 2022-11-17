@@ -1,0 +1,52 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.StockMovement>
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+    <script src="@Url.Content("~/Scripts/ERPScripts/StockMovement/StockMovement.js")"></script>
+    
+</head>
+<body>
+    <div id="breadcrumb">
+	    <div class="container">		
+		    <div id="con_top">
+			    <div class="c_container">
+				    <h3>Stocks Transfer</h3>
+@*				    <div id="breadcrumbs">
+					    <ul>
+						    <li><span>@Resources.Resource.Common_Accounts</span></li>
+						    <li><a href="/OutgoingShipment/Index">@Resources.Resource.Common_TranferStock</a></li>
+					    </ul>		
+				    </div>*@
+			    </div>
+		    </div>
+		
+	    </div>
+    </div>
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+	<div id="con_body">
+		<div class="container">
+			<div class="c_container">
+                <div id="divCreateNew" style="padding-bottom:25px;">
+                     <button type="button"  onclick="javascript: location.href = '/StockMovement/Create/';" class="btn btn-defaultxero">Create New</button>    
+                   @* @Html.ActionLink("Create New", "Create")*@
+                    <input type="hidden" id="hidTabNum" value="@ViewBag.TabNum" />
+                </div>
+@*                <div id="tabcontent">*@
+                    <ul class="nav nav-tabs">
+                 <li class="active"><a href="/StockMovement/Draft">Draft <span>(@ViewBag.CountDraft)</span></a></li>
+                 <li><a href="/StockMovement/History/">History<span>(@ViewBag.CountHistory)</span></a></li>    
+                       @* <li class="active"><a id="aDraft" href="#tabs-1">Draft <span>(@ViewBag.CountDraft)</span></a></li>
+                        <li><a id="aDone" href="#tabs-2">History<span>(@ViewBag.CountHistory)</span></a></li>*@
+                    </ul>
+               @* </div>*@
+                <div id="tabs-1"></div>
+                <div id="tabs-2"></div>
+		    </div>
+	    </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,497 @@
+﻿@model TMT.ERP.Models.Cash_Summary
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnSearch').click(function () {
+            var createdate = $('#MonthID option:selected').text();
+            window.location.href = "/Report/CashSummary_Report?s_dtReport=" + createdate;
+        });
+    });
+</script>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Model.TitleDocument</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_body">
+    <div class="container">
+        <div id="Report_Search">    
+            <div >
+                <label>
+                    Date:
+                </label> 
+                <br />
+                @{Html.RenderAction("GetMonth_CashSummary", "Report");}
+            </div>    
+            <div>
+                <input type="submit" value="Update" id="btnSearch" class="btn btn-defaultxero" />
+            </div>    
+        </div>
+        <div id="Report_Css">    
+            <div class="MainTitle1">@Model.TitleDocument</div>
+            <div class="MainTitle2">@Model.CompanyName</div>
+            <div class="MainTitle2">@Model.ReportDate</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th >
+                        </th>
+                        @foreach (var item in Model.ColumnName)
+                        {
+                        <th>
+                            @item
+                        </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="SectionTitle2" colspan="16">
+                            @Model.Set_Income.Title
+                        </td>
+                    </tr>
+                    @foreach (var item in Model.Income)
+                    {
+                        <tr>
+                            <td class="Indent1">
+                                <label>@Html.DisplayFor(model => item.AccountName)</label>                        
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_01.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.IncomePer_CurrMonth.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_02.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_03.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_04.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_05.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_06.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_07.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_08.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_09.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_10.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_11.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_12.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.YTD.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.IncomePer_YTD.Name)
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td class="Indent1 Total1Indented">
+                            @Model.Set_Income.Title_Result
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_Income.Total_Month_01.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_Income.Total_IncomePer_CurrMonth.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_Income.Total_Month_02.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_Income.Total_Month_03.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_Income.Total_Month_04.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_Income.Total_Month_05.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_Income.Total_Month_06.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_Income.Total_Month_07.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_Income.Total_Month_08.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_Income.Total_Month_09.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_Income.Total_Month_10.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_Income.Total_Month_11.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_Income.Total_Month_12.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_Income.Total_YTD.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_Income.Total_IncomePer_YTD.Name
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="SectionTitle2" colspan="16">
+                            @Model.Set_OperatingExpenses.Title
+                        </td>
+                    </tr>
+                    @foreach (var item in Model.OperatingExpenses)
+                    {
+                        <tr>
+                            <td class="Indent1">
+                                <label>@Html.DisplayFor(model => item.AccountName)</label>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_01.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.IncomePer_CurrMonth.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_02.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_03.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_04.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_05.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_06.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_07.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_08.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_09.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_10.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_11.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_12.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.YTD.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.IncomePer_YTD.Name)
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td class="Indent1 Total1Indented">                    
+                            @Model.Set_OperatingExpenses.Title_Result
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_Month_01.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_IncomePer_CurrMonth.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_Month_02.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_Month_03.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_Month_04.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_Month_05.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_Month_06.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_Month_07.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_Month_08.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_Month_09.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_Month_10.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_Month_11.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_Month_12.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_YTD.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_IncomePer_YTD.Name
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="SectionTitle2 Total3">
+                            @Model.Set_OperatingSurPlus.Title_Result
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_OperatingSurPlus.Total_Month_01.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_OperatingSurPlus.Total_IncomePer_CurrMonth.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_OperatingSurPlus.Total_Month_02.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_OperatingSurPlus.Total_Month_03.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_OperatingSurPlus.Total_Month_04.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_OperatingSurPlus.Total_Month_05.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_OperatingSurPlus.Total_Month_06.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_OperatingSurPlus.Total_Month_07.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_OperatingSurPlus.Total_Month_08.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_OperatingSurPlus.Total_Month_09.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_OperatingSurPlus.Total_Month_10.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_OperatingSurPlus.Total_Month_11.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_OperatingSurPlus.Total_Month_12.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_OperatingSurPlus.Total_YTD.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_OperatingSurPlus.Total_IncomePer_YTD.Name
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td class="SectionTitle2" colspan="16">
+                            @Model.Set_TaxMovements.Title
+                        </td>
+                    </tr>
+                    @foreach (var item in Model.TaxMovements)
+                    {
+                        <tr>
+                            <td class="Indent1">
+                                <label>@Html.DisplayFor(model => item.AccountName)</label>                        
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_01.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.IncomePer_CurrMonth.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_02.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_03.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_04.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_05.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_06.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_07.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_08.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_09.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_10.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_11.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.Month_12.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.YTD.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.IncomePer_YTD.Name)
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td class="Indent1 Total1Indented">
+                            @Model.Set_TaxMovements.Title_Result
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_TaxMovements.Total_Month_01.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_TaxMovements.Total_IncomePer_CurrMonth.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_TaxMovements.Total_Month_02.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_TaxMovements.Total_Month_03.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_TaxMovements.Total_Month_04.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_TaxMovements.Total_Month_05.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_TaxMovements.Total_Month_06.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_TaxMovements.Total_Month_07.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_TaxMovements.Total_Month_08.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_TaxMovements.Total_Month_09.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_TaxMovements.Total_Month_10.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_OperatingExpenses.Total_Month_11.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_TaxMovements.Total_Month_12.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_TaxMovements.Total_YTD.Name
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.Set_TaxMovements.Total_IncomePer_YTD.Name
+                        </td>
+                    </tr>
+            
+                    <tr>
+                        <td class="SectionTitle2 Total3">
+                            @Model.Set_NetCashMovement.Title_Result
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_NetCashMovement.Total_Month_01.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_NetCashMovement.Total_IncomePer_CurrMonth.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_NetCashMovement.Total_Month_02.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_NetCashMovement.Total_Month_03.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_NetCashMovement.Total_Month_04.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_NetCashMovement.Total_Month_05.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_NetCashMovement.Total_Month_06.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_NetCashMovement.Total_Month_07.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_NetCashMovement.Total_Month_08.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_NetCashMovement.Total_Month_09.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_NetCashMovement.Total_Month_10.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_NetCashMovement.Total_Month_11.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_NetCashMovement.Total_Month_12.Name
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_NetCashMovement.Total_YTD.Name 
+                        </td>
+                        <td class="Total3">
+                            @Model.Set_NetCashMovement.Total_IncomePer_YTD.Name
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="Report_Button">
+            <div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Export <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="/Report/ExportReport?iType=3">Excel</a>
+                        </li>
+                    </ul>
+                </div>        
+            </div>    
+        </div>
+    </div>
+</div>

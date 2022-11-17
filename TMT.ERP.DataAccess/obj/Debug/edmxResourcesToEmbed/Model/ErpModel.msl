@@ -1,0 +1,1330 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="TMTERPDataAccessModelStoreContainer" CdmEntityContainer="ErpEntities">
+    <EntitySetMapping Name="AccountBudgetTrans">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.AccountBudgetTran">
+        <MappingFragment StoreEntitySet="AccountBudgetTrans">
+          <ScalarProperty Name="FormulaValueType" ColumnName="FormulaValueType" />
+          <ScalarProperty Name="FormulaValue" ColumnName="FormulaValue" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="BudgetID" ColumnName="BudgetID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AccountGoodTrans">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.AccountGoodTran">
+        <MappingFragment StoreEntitySet="AccountGoodTrans">
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Credit" ColumnName="Credit" />
+          <ScalarProperty Name="Debit" ColumnName="Debit" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="StockID" ColumnName="StockID" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AccountTranDetails">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.AccountTranDetail">
+        <MappingFragment StoreEntitySet="AccountTranDetails">
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="TaxRateID" ColumnName="TaxRateID" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AccountTypes">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.AccountType">
+        <MappingFragment StoreEntitySet="AccountTypes">
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Budgets">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Budget">
+        <MappingFragment StoreEntitySet="Budgets">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Businesses">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Business">
+        <MappingFragment StoreEntitySet="Business">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Companies">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Company">
+        <MappingFragment StoreEntitySet="Companies">
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="Website" ColumnName="Website" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Tel_Num" ColumnName="Tel_Num" />
+          <ScalarProperty Name="Tel_Area" ColumnName="Tel_Area" />
+          <ScalarProperty Name="Tel_Country" ColumnName="Tel_Country" />
+          <ScalarProperty Name="PhysCountry" ColumnName="PhysCountry" />
+          <ScalarProperty Name="PhysZipCode" ColumnName="PhysZipCode" />
+          <ScalarProperty Name="PhysState" ColumnName="PhysState" />
+          <ScalarProperty Name="PhysCity" ColumnName="PhysCity" />
+          <ScalarProperty Name="PhysAddress" ColumnName="PhysAddress" />
+          <ScalarProperty Name="PhysAttention" ColumnName="PhysAttention" />
+          <ScalarProperty Name="PostCountry" ColumnName="PostCountry" />
+          <ScalarProperty Name="PostZipCode" ColumnName="PostZipCode" />
+          <ScalarProperty Name="PostState" ColumnName="PostState" />
+          <ScalarProperty Name="PostCity" ColumnName="PostCity" />
+          <ScalarProperty Name="PostAddress" ColumnName="PostAddress" />
+          <ScalarProperty Name="PostAttention" ColumnName="PostAttention" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="OrgaType" ColumnName="OrgaType" />
+          <ScalarProperty Name="Business" ColumnName="Business" />
+          <ScalarProperty Name="Logo" ColumnName="Logo" />
+          <ScalarProperty Name="TradingName" ColumnName="TradingName" />
+          <ScalarProperty Name="DisplayName" ColumnName="DisplayName" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Currencies">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Currency">
+        <MappingFragment StoreEntitySet="Currencies">
+          <ScalarProperty Name="Descripttion" ColumnName="Descripttion" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="HomeExchange" ColumnName="HomeExchange" />
+          <ScalarProperty Name="ForeignExchange" ColumnName="ForeignExchange" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="DueDateTypes">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.DueDateType">
+        <MappingFragment StoreEntitySet="DueDateTypes">
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FinancialSettings">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.FinancialSetting">
+        <MappingFragment StoreEntitySet="FinancialSettings">
+          <ScalarProperty Name="TimeZone" ColumnName="TimeZone" />
+          <ScalarProperty Name="LockDate" ColumnName="LockDate" />
+          <ScalarProperty Name="TaxPeriod" ColumnName="TaxPeriod" />
+          <ScalarProperty Name="TaxIDDisplayName" ColumnName="TaxIDDisplayName" />
+          <ScalarProperty Name="TaxIDNumber" ColumnName="TaxIDNumber" />
+          <ScalarProperty Name="SaleTaxBasicID" ColumnName="SaleTaxBasicID" />
+          <ScalarProperty Name="FinancialYEMonth" ColumnName="FinancialYEMonth" />
+          <ScalarProperty Name="FinancialYEDay" ColumnName="FinancialYEDay" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FixedAssetDetails">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.FixedAssetDetail">
+        <MappingFragment StoreEntitySet="FixedAssetDetails">
+          <ScalarProperty Name="ApprovalEmployeeID" ColumnName="ApprovalEmployeeID" />
+          <ScalarProperty Name="CreatedEmployeeID" ColumnName="CreatedEmployeeID" />
+          <ScalarProperty Name="DepreciationAccountID" ColumnName="DepreciationAccountID" />
+          <ScalarProperty Name="DepreciationMethod" ColumnName="DepreciationMethod" />
+          <ScalarProperty Name="DepreciationRate" ColumnName="DepreciationRate" />
+          <ScalarProperty Name="AssetType" ColumnName="AssetType" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+          <ScalarProperty Name="PurchaseDate" ColumnName="PurchaseDate" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Item" ColumnName="Item" />
+          <ScalarProperty Name="FixedAssetID" ColumnName="FixedAssetID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="MachineHistories">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.MachineHistory">
+        <MappingFragment StoreEntitySet="MachineHistory">
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="Costs" ColumnName="Costs" />
+          <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="MaxDailyRuntime" ColumnName="MaxDailyRuntime" />
+          <ScalarProperty Name="WorkCenterID" ColumnName="WorkCenterID" />
+          <ScalarProperty Name="MachineID" ColumnName="MachineID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Machines">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Machine">
+        <MappingFragment StoreEntitySet="Machines">
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="CostPerMinute" ColumnName="CostPerMinute" />
+          <ScalarProperty Name="DefaultRunTime" ColumnName="DefaultRunTime" />
+          <ScalarProperty Name="DefaultSetupTime" ColumnName="DefaultSetupTime" />
+          <ScalarProperty Name="WorkCenterID" ColumnName="WorkCenterID" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Notes">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Note">
+        <MappingFragment StoreEntitySet="Notes">
+          <ScalarProperty Name="ExpectedPaymentDate" ColumnName="ExpectedPaymentDate" />
+          <ScalarProperty Name="Changes" ColumnName="Changes" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Note1" ColumnName="Note" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+          <ScalarProperty Name="NoteFromID" ColumnName="NoteFromID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProcessMachines">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.ProcessMachine">
+        <MappingFragment StoreEntitySet="ProcessMachines">
+          <ScalarProperty Name="CostPerMinute" ColumnName="CostPerMinute" />
+          <ScalarProperty Name="WorkingMinute" ColumnName="WorkingMinute" />
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="GoodProcessID" ColumnName="GoodProcessID" />
+          <ScalarProperty Name="MachineID" ColumnName="MachineID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PurchaseDetails">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.PurchaseDetail">
+        <MappingFragment StoreEntitySet="PurchaseDetails">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="TotalMoney" ColumnName="TotalMoney" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+          <ScalarProperty Name="TaxRateID" ColumnName="TaxRateID" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="PurchaseID" ColumnName="PurchaseID" />
+          <ScalarProperty Name="UOMID" ColumnName="UOMID" />
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SaleInvoiceDetails">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.SaleInvoiceDetail">
+        <MappingFragment StoreEntitySet="SaleInvoiceDetails">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="TotalMoney" ColumnName="TotalMoney" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="Subtotal" ColumnName="Subtotal" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+          <ScalarProperty Name="TaxRateID" ColumnName="TaxRateID" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="UOMID" ColumnName="UOMID" />
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="SaleInvoiceID" ColumnName="SaleInvoiceID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SaleInvoiceSettings">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.SaleInvoiceSetting">
+        <MappingFragment StoreEntitySet="SaleInvoiceSettings">
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="SaleInvoiceDefaultTypeID" ColumnName="SaleInvoiceDefaultTypeID" />
+          <ScalarProperty Name="BillDefaultTypeID" ColumnName="BillDefaultTypeID" />
+          <ScalarProperty Name="NextNumber" ColumnName="NextNumber" />
+          <ScalarProperty Name="CreditNotePrefix" ColumnName="CreditNotePrefix" />
+          <ScalarProperty Name="InvoicePrefix" ColumnName="InvoicePrefix" />
+          <ScalarProperty Name="SaleInvoiceDefaultDueDate" ColumnName="SaleInvoiceDefaultDueDate" />
+          <ScalarProperty Name="BillDefaultDueDate" ColumnName="BillDefaultDueDate" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="StockInCardsDetails">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.StockInCardsDetail">
+        <MappingFragment StoreEntitySet="StockInCardsDetails">
+          <ScalarProperty Name="TotalMoney" ColumnName="TotalMoney" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+          <ScalarProperty Name="QuantityReq" ColumnName="QuantityReq" />
+          <ScalarProperty Name="DateIn" ColumnName="DateIn" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="UOMID" ColumnName="UOMID" />
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="StockInCardID" ColumnName="StockInCardID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="StockMovementDetails">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.StockMovementDetail">
+        <MappingFragment StoreEntitySet="StockMovementDetails">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="UOMID" ColumnName="UOMID" />
+          <ScalarProperty Name="DateIn" ColumnName="DateIn" />
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="StockMovementID" ColumnName="StockMovementID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="StockOutCardsDetails">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.StockOutCardsDetail">
+        <MappingFragment StoreEntitySet="StockOutCardsDetails">
+          <ScalarProperty Name="RemainQuantity" ColumnName="RemainQuantity" />
+          <ScalarProperty Name="TotalMoney" ColumnName="TotalMoney" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+          <ScalarProperty Name="QuantityRef" ColumnName="QuantityRef" />
+          <ScalarProperty Name="DateOut" ColumnName="DateOut" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="UOMID" ColumnName="UOMID" />
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="StockOutCardID" ColumnName="StockOutCardID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TaxRates">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.TaxRate">
+        <MappingFragment StoreEntitySet="TaxRates">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Rate" ColumnName="Rate" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UOMs">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.UOM">
+        <MappingFragment StoreEntitySet="UOMs">
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.User">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="LastPasswordChangedDate" ColumnName="LastPasswordChangedDate" />
+          <ScalarProperty Name="LastLoginDate" ColumnName="LastLoginDate" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="GroupID" ColumnName="GroupID" />
+          <ScalarProperty Name="Avartar" ColumnName="Avartar" />
+          <ScalarProperty Name="Phone" ColumnName="Phone" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="FullName" ColumnName="FullName" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="WorkCenters">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.WorkCenter">
+        <MappingFragment StoreEntitySet="WorkCenters">
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="MaxDailyRuntime" ColumnName="MaxDailyRuntime" />
+          <ScalarProperty Name="DefaultSetupTime" ColumnName="DefaultSetupTime" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="StockOutCards">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.StockOutCard">
+        <MappingFragment StoreEntitySet="StockOutCards">
+          <ScalarProperty Name="ApprovalDate" ColumnName="ApprovalDate" />
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="Reason" ColumnName="Reason" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="TotalMoney" ColumnName="TotalMoney" />
+          <ScalarProperty Name="Tax" ColumnName="Tax" />
+          <ScalarProperty Name="Receiver" ColumnName="Receiver" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="TargetID" ColumnName="TargetID" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="StockID" ColumnName="StockID" />
+          <ScalarProperty Name="ApprovalUserID" ColumnName="ApprovalUserID" />
+          <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Purchases">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Purchase">
+        <MappingFragment StoreEntitySet="Purchases">
+          <ScalarProperty Name="RemainMoney" ColumnName="RemainMoney" />
+          <ScalarProperty Name="ApprovalDate" ColumnName="ApprovalDate" />
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="StockID" ColumnName="StockID" />
+          <ScalarProperty Name="UseVAT" ColumnName="UseVAT" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="VAT" ColumnName="VAT" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="TotalMoney" ColumnName="TotalMoney" />
+          <ScalarProperty Name="Tax" ColumnName="Tax" />
+          <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+          <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+          <ScalarProperty Name="ContactID" ColumnName="ContactID" />
+          <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+          <ScalarProperty Name="ApprovalUserID" ColumnName="ApprovalUserID" />
+          <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="Attactment" ColumnName="Attactment" />
+          <ScalarProperty Name="Reference" ColumnName="Reference" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SaleInvoices">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.SaleInvoice">
+        <MappingFragment StoreEntitySet="SaleInvoices">
+          <ScalarProperty Name="RemainMoney" ColumnName="RemainMoney" />
+          <ScalarProperty Name="ApprovalDate" ColumnName="ApprovalDate" />
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="StockID" ColumnName="StockID" />
+          <ScalarProperty Name="UseVAT" ColumnName="UseVAT" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="TotalMoney" ColumnName="TotalMoney" />
+          <ScalarProperty Name="TotalTax" ColumnName="TotalTax" />
+          <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
+          <ScalarProperty Name="TaxAmountType" ColumnName="TaxAmountType" />
+          <ScalarProperty Name="VAT" ColumnName="VAT" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="Reference" ColumnName="Reference" />
+          <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+          <ScalarProperty Name="ContactID" ColumnName="ContactID" />
+          <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+          <ScalarProperty Name="ApprovalUserID" ColumnName="ApprovalUserID" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ActualGoodInStocks">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.ActualGoodInStock">
+        <MappingFragment StoreEntitySet="ActualGoodInStocks">
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="InputPrice" ColumnName="InputPrice" />
+          <ScalarProperty Name="OutputQuantity" ColumnName="OutputQuantity" />
+          <ScalarProperty Name="RemainQuantity" ColumnName="RemainQuantity" />
+          <ScalarProperty Name="InputQuantity" ColumnName="InputQuantity" />
+          <ScalarProperty Name="UOMID" ColumnName="UOMID" />
+          <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+          <ScalarProperty Name="DateIn" ColumnName="DateIn" />
+          <ScalarProperty Name="ParentID" ColumnName="ParentID" />
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="StockID" ColumnName="StockID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SubGoods">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.SubGood">
+        <MappingFragment StoreEntitySet="SubGoods">
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="GoodParentID" ColumnName="GoodParentID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Roles">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Role">
+        <MappingFragment StoreEntitySet="Roles">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="RoleName" ColumnName="RoleName" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="StockMovementTemps">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.StockMovementTemp">
+        <MappingFragment StoreEntitySet="StockMovementTemps">
+          <ScalarProperty Name="InputPrice" ColumnName="InputPrice" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="UOMID" ColumnName="UOMID" />
+          <ScalarProperty Name="UpdatedDate" ColumnName="UpdatedDate" />
+          <ScalarProperty Name="DateIn" ColumnName="DateIn" />
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="FromStockID" ColumnName="FromStockID" />
+          <ScalarProperty Name="StockMovementID" ColumnName="StockMovementID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AccountFeatures">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.AccountFeature">
+        <MappingFragment StoreEntitySet="AccountFeatures">
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="FeatureName" ColumnName="FeatureName" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BankStatementDetails">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.BankStatementDetail">
+        <MappingFragment StoreEntitySet="BankStatementDetails">
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Spent" ColumnName="Spent" />
+          <ScalarProperty Name="Received" ColumnName="Received" />
+          <ScalarProperty Name="AnalysisCode" ColumnName="AnalysisCode" />
+          <ScalarProperty Name="Reference" ColumnName="Reference" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Particulars" ColumnName="Particulars" />
+          <ScalarProperty Name="Payee" ColumnName="Payee" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="BankStatementID" ColumnName="BankStatementID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BankStatements">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.BankStatement">
+        <MappingFragment StoreEntitySet="BankStatements">
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="EndBalance" ColumnName="EndBalance" />
+          <ScalarProperty Name="StartBalance" ColumnName="StartBalance" />
+          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+          <ScalarProperty Name="StartDate" ColumnName="StartDate" />
+          <ScalarProperty Name="ImportedDate" ColumnName="ImportedDate" />
+          <ScalarProperty Name="BankAccountID" ColumnName="BankAccountID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AccountBalances">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.AccountBalance">
+        <MappingFragment StoreEntitySet="AccountBalances">
+          <ScalarProperty Name="Credit" ColumnName="Credit" />
+          <ScalarProperty Name="Debit" ColumnName="Debit" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BankAccountDetails">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.BankAccountDetail">
+        <MappingFragment StoreEntitySet="BankAccountDetails">
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="TaxRateID" ColumnName="TaxRateID" />
+          <ScalarProperty Name="UnitPrice" ColumnName="UnitPrice" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="RelatedAccountID" ColumnName="RelatedAccountID" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="BankAccountBillID" ColumnName="BankAccountBillID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="UsersInRoles">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.UsersInRole">
+        <MappingFragment StoreEntitySet="UsersInRoles">
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+          <ScalarProperty Name="UserID" ColumnName="UserID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BankAccounts">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.BankAccount">
+        <MappingFragment StoreEntitySet="BankAccounts">
+          <ScalarProperty Name="ShowOnDashboard" ColumnName="ShowOnDashboard" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="AccoutNum" ColumnName="AccoutNum" />
+          <ScalarProperty Name="AccoutName" ColumnName="AccoutName" />
+          <ScalarProperty Name="BankName" ColumnName="BankName" />
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Functions">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Function">
+        <MappingFragment StoreEntitySet="Functions">
+          <ScalarProperty Name="FeatureID" ColumnName="FeatureID" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RoleFunctions">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.RoleFunction">
+        <MappingFragment StoreEntitySet="RoleFunctions">
+          <ScalarProperty Name="SubFunctionID" ColumnName="SubFunctionID" />
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="SubFunctions">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.SubFunction">
+        <MappingFragment StoreEntitySet="SubFunctions">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="FunctionID" ColumnName="FunctionID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AccountGenerals">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.AccountGeneral">
+        <MappingFragment StoreEntitySet="AccountGenerals">
+          <ScalarProperty Name="AccountType" ColumnName="AccountType" />
+          <ScalarProperty Name="AccountName" ColumnName="AccountName" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BankAccountBills">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.BankAccountBill">
+        <MappingFragment StoreEntitySet="BankAccountBills">
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="Tax" ColumnName="Tax" />
+          <ScalarProperty Name="Subtotal" ColumnName="Subtotal" />
+          <ScalarProperty Name="AmountAre" ColumnName="AmountAre" />
+          <ScalarProperty Name="Reference" ColumnName="Reference" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="BankAccountID" ColumnName="BankAccountID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AccountGroups">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.AccountGroup">
+        <MappingFragment StoreEntitySet="AccountGroups">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AccountInGroups">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.AccountInGroup">
+        <MappingFragment StoreEntitySet="AccountInGroups">
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="AccountGroupID" ColumnName="AccountGroupID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RolePermissions">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.RolePermission">
+        <MappingFragment StoreEntitySet="RolePermissions">
+          <ScalarProperty Name="FeatureID" ColumnName="FeatureID" />
+          <ScalarProperty Name="PlanningApproval" ColumnName="PlanningApproval" />
+          <ScalarProperty Name="PlanningUpdateProcess" ColumnName="PlanningUpdateProcess" />
+          <ScalarProperty Name="PlanningCreate" ColumnName="PlanningCreate" />
+          <ScalarProperty Name="MachinePlanningCreate" ColumnName="MachinePlanningCreate" />
+          <ScalarProperty Name="AllocateApproval" ColumnName="AllocateApproval" />
+          <ScalarProperty Name="AllocateCreate" ColumnName="AllocateCreate" />
+          <ScalarProperty Name="WorkOrderApproval" ColumnName="WorkOrderApproval" />
+          <ScalarProperty Name="RecordBillPayment" ColumnName="RecordBillPayment" />
+          <ScalarProperty Name="EditInvoicePrice" ColumnName="EditInvoicePrice" />
+          <ScalarProperty Name="RepeatingInvoice" ColumnName="RepeatingInvoice" />
+          <ScalarProperty Name="AddNoteToInvoice" ColumnName="AddNoteToInvoice" />
+          <ScalarProperty Name="SendInvoiceStatement" ColumnName="SendInvoiceStatement" />
+          <ScalarProperty Name="RecordtInvoicesPaymen" ColumnName="RecordtInvoicesPaymen" />
+          <ScalarProperty Name="ApproveInvoice" ColumnName="ApproveInvoice" />
+          <ScalarProperty Name="DeleteInvoiceCreatedByOther" ColumnName="DeleteInvoiceCreatedByOther" />
+          <ScalarProperty Name="DeleteInvoice" ColumnName="DeleteInvoice" />
+          <ScalarProperty Name="EditInvoiceCreatedByOther" ColumnName="EditInvoiceCreatedByOther" />
+          <ScalarProperty Name="ViewAndEditInvoice" ColumnName="ViewAndEditInvoice" />
+          <ScalarProperty Name="CreateInvoiceDraft" ColumnName="CreateInvoiceDraft" />
+          <ScalarProperty Name="RepeatingBill" ColumnName="RepeatingBill" />
+          <ScalarProperty Name="AddNoteToBill" ColumnName="AddNoteToBill" />
+          <ScalarProperty Name="DoBatchPayment" ColumnName="DoBatchPayment" />
+          <ScalarProperty Name="WorkOrderCreate" ColumnName="WorkOrderCreate" />
+          <ScalarProperty Name="ApproveBill" ColumnName="ApproveBill" />
+          <ScalarProperty Name="DeleteBillCreatedByOther" ColumnName="DeleteBillCreatedByOther" />
+          <ScalarProperty Name="DeleteBill" ColumnName="DeleteBill" />
+          <ScalarProperty Name="EditBillCreatedByOther" ColumnName="EditBillCreatedByOther" />
+          <ScalarProperty Name="ViewAndEditBill" ColumnName="ViewAndEditBill" />
+          <ScalarProperty Name="CreateBillDraft" ColumnName="CreateBillDraft" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="GoodTypes">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.GoodType">
+        <MappingFragment StoreEntitySet="GoodTypes">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductionMonitors">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.ProductionMonitor">
+        <MappingFragment StoreEntitySet="ProductionMonitors">
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="ImplementDate" ColumnName="ImplementDate" />
+          <ScalarProperty Name="RemainQuantity" ColumnName="RemainQuantity" />
+          <ScalarProperty Name="ImplementQuantity" ColumnName="ImplementQuantity" />
+          <ScalarProperty Name="OrderQuantity" ColumnName="OrderQuantity" />
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="ProcessTime" ColumnName="ProcessTime" />
+          <ScalarProperty Name="EndStartTime" ColumnName="EndStartTime" />
+          <ScalarProperty Name="RealStartTime" ColumnName="RealStartTime" />
+          <ScalarProperty Name="ScheduleEndTime" ColumnName="ScheduleEndTime" />
+          <ScalarProperty Name="ScheduleStartTime" ColumnName="ScheduleStartTime" />
+          <ScalarProperty Name="AllocWOID" ColumnName="AllocWOID" />
+          <ScalarProperty Name="MachineID" ColumnName="MachineID" />
+          <ScalarProperty Name="WorkCenterID" ColumnName="WorkCenterID" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ProductTypes">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.ProductType">
+        <MappingFragment StoreEntitySet="ProductType">
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="WorkOrderDetails">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.WorkOrderDetail">
+        <MappingFragment StoreEntitySet="WorkOrderDetails">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="RemainQuantity" ColumnName="RemainQuantity" />
+          <ScalarProperty Name="ImplementQuantity" ColumnName="ImplementQuantity" />
+          <ScalarProperty Name="OrderQuantity" ColumnName="OrderQuantity" />
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="WorkOrderID" ColumnName="WorkOrderID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="WorkOrders">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.WorkOrder">
+        <MappingFragment StoreEntitySet="WorkOrders">
+          <ScalarProperty Name="ApprovalDate" ColumnName="ApprovalDate" />
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="ManufacturingType" ColumnName="ManufacturingType" />
+          <ScalarProperty Name="CustomerJob" ColumnName="CustomerJob" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="RemainQuantity" ColumnName="RemainQuantity" />
+          <ScalarProperty Name="ImplementQuantity" ColumnName="ImplementQuantity" />
+          <ScalarProperty Name="OrderQuantity" ColumnName="OrderQuantity" />
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="StockID" ColumnName="StockID" />
+          <ScalarProperty Name="ApprovalUserID" ColumnName="ApprovalUserID" />
+          <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+          <ScalarProperty Name="CompletedDate" ColumnName="CompletedDate" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Repeatings">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Repeating">
+        <MappingFragment StoreEntitySet="Repeatings">
+          <ScalarProperty Name="PurchaseID" ColumnName="PurchaseID" />
+          <ScalarProperty Name="SaleInvoiceID" ColumnName="SaleInvoiceID" />
+          <ScalarProperty Name="RepeatType" ColumnName="RepeatType" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="EndDate" ColumnName="EndDate" />
+          <ScalarProperty Name="DueDateTypeID" ColumnName="DueDateTypeID" />
+          <ScalarProperty Name="DueDateNum" ColumnName="DueDateNum" />
+          <ScalarProperty Name="DateRun" ColumnName="DateRun" />
+          <ScalarProperty Name="RepeatTime" ColumnName="RepeatTime" />
+          <ScalarProperty Name="NumDayRepeat" ColumnName="NumDayRepeat" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Categories">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Category">
+        <MappingFragment StoreEntitySet="Categories">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BOMs">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.BOM">
+        <MappingFragment StoreEntitySet="BOMs">
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="EffectiveDate" ColumnName="EffectiveDate" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BomDetails">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.BomDetail">
+        <MappingFragment StoreEntitySet="BomDetails">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="ParentBomID" ColumnName="ParentBomID" />
+          <ScalarProperty Name="ParentGoodID" ColumnName="ParentGoodID" />
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="BomID" ColumnName="BomID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FixedAssetSettings">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.FixedAssetSetting">
+        <MappingFragment StoreEntitySet="FixedAssetSettings">
+          <ScalarProperty Name="Year" ColumnName="Year" />
+          <ScalarProperty Name="IsCurrent" ColumnName="IsCurrent" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PayItemTypes">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.PayItemType">
+        <MappingFragment StoreEntitySet="PayItemTypes">
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ExpenseClaims">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.ExpenseClaim">
+        <MappingFragment StoreEntitySet="ExpenseClaims">
+          <ScalarProperty Name="RemainMoney" ColumnName="RemainMoney" />
+          <ScalarProperty Name="AmountAre" ColumnName="AmountAre" />
+          <ScalarProperty Name="ReportingDate" ColumnName="ReportingDate" />
+          <ScalarProperty Name="SubmitDate" ColumnName="SubmitDate" />
+          <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+          <ScalarProperty Name="TotalTax" ColumnName="TotalTax" />
+          <ScalarProperty Name="ReceiptDate" ColumnName="ReceiptDate" />
+          <ScalarProperty Name="ReceiptFrom" ColumnName="ReceiptFrom" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="IncludeTax" ColumnName="IncludeTax" />
+          <ScalarProperty Name="TotalMoney" ColumnName="TotalMoney" />
+          <ScalarProperty Name="Reference" ColumnName="Reference" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="ApprovalUserID" ColumnName="ApprovalUserID" />
+          <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PayRuns">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.PayRun">
+        <MappingFragment StoreEntitySet="PayRuns">
+          <ScalarProperty Name="RemainMoney" ColumnName="RemainMoney" />
+          <ScalarProperty Name="ApprovalDate" ColumnName="ApprovalDate" />
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="PaymentDate" ColumnName="PaymentDate" />
+          <ScalarProperty Name="ToDate" ColumnName="ToDate" />
+          <ScalarProperty Name="FromDate" ColumnName="FromDate" />
+          <ScalarProperty Name="PayFrequency" ColumnName="PayFrequency" />
+          <ScalarProperty Name="ApprovalUserID" ColumnName="ApprovalUserID" />
+          <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="OtherPayment" ColumnName="OtherPayment" />
+          <ScalarProperty Name="EmployeePayment" ColumnName="EmployeePayment" />
+          <ScalarProperty Name="NumOfEmployee" ColumnName="NumOfEmployee" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FixedAssets">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.FixedAsset">
+        <MappingFragment StoreEntitySet="FixedAssets">
+          <ScalarProperty Name="ApprovedDate" ColumnName="ApprovedDate" />
+          <ScalarProperty Name="FixedAssetSettingID" ColumnName="FixedAssetSettingID" />
+          <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="AccumulatedDepreciationAccountID" ColumnName="AccumulatedDepreciationAccountID" />
+          <ScalarProperty Name="DepreciationAccountID" ColumnName="DepreciationAccountID" />
+          <ScalarProperty Name="DepreciationMethod" ColumnName="DepreciationMethod" />
+          <ScalarProperty Name="DepreciationRate" ColumnName="DepreciationRate" />
+          <ScalarProperty Name="AssetType" ColumnName="AssetType" />
+          <ScalarProperty Name="AccumulatedDepreciation" ColumnName="AccumulatedDepreciation" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="PurchasePrice" ColumnName="PurchasePrice" />
+          <ScalarProperty Name="PurchaseDate" ColumnName="PurchaseDate" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ExpenseClaimDetails">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.ExpenseClaimDetail">
+        <MappingFragment StoreEntitySet="ExpenseClaimDetails">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="TaxRateID" ColumnName="TaxRateID" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="TotalMoney" ColumnName="TotalMoney" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="ExpenseClaimID" ColumnName="ExpenseClaimID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Contacts">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Contact">
+        <MappingFragment StoreEntitySet="Contacts">
+          <ScalarProperty Name="BankAccountDetail" ColumnName="BankAccountDetail" />
+          <ScalarProperty Name="BankAccountName" ColumnName="BankAccountName" />
+          <ScalarProperty Name="BankAccoutNum" ColumnName="BankAccoutNum" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="Discount" ColumnName="Discount" />
+          <ScalarProperty Name="PurchasesTaxID" ColumnName="PurchasesTaxID" />
+          <ScalarProperty Name="SaleTaxID" ColumnName="SaleTaxID" />
+          <ScalarProperty Name="TaxNumber" ColumnName="TaxNumber" />
+          <ScalarProperty Name="Website" ColumnName="Website" />
+          <ScalarProperty Name="SkypeName" ColumnName="SkypeName" />
+          <ScalarProperty Name="Direct_Num" ColumnName="Direct_Num" />
+          <ScalarProperty Name="Direct_Area" ColumnName="Direct_Area" />
+          <ScalarProperty Name="Direct_Country" ColumnName="Direct_Country" />
+          <ScalarProperty Name="Mobi_Num" ColumnName="Mobi_Num" />
+          <ScalarProperty Name="Mobi_Area" ColumnName="Mobi_Area" />
+          <ScalarProperty Name="Mobi_Country" ColumnName="Mobi_Country" />
+          <ScalarProperty Name="Fax_Num" ColumnName="Fax_Num" />
+          <ScalarProperty Name="Fax_Area" ColumnName="Fax_Area" />
+          <ScalarProperty Name="Fax_Country" ColumnName="Fax_Country" />
+          <ScalarProperty Name="Tel_Num" ColumnName="Tel_Num" />
+          <ScalarProperty Name="Tel_Area" ColumnName="Tel_Area" />
+          <ScalarProperty Name="Tel_Country" ColumnName="Tel_Country" />
+          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+          <ScalarProperty Name="PhysCountry" ColumnName="PhysCountry" />
+          <ScalarProperty Name="PhysZipCode" ColumnName="PhysZipCode" />
+          <ScalarProperty Name="PhysState" ColumnName="PhysState" />
+          <ScalarProperty Name="PhysCity" ColumnName="PhysCity" />
+          <ScalarProperty Name="PhysAddress" ColumnName="PhysAddress" />
+          <ScalarProperty Name="PhysAttention" ColumnName="PhysAttention" />
+          <ScalarProperty Name="PostCountry" ColumnName="PostCountry" />
+          <ScalarProperty Name="PostZipCode" ColumnName="PostZipCode" />
+          <ScalarProperty Name="PostState" ColumnName="PostState" />
+          <ScalarProperty Name="PostCity" ColumnName="PostCity" />
+          <ScalarProperty Name="PostAddress" ColumnName="PostAddress" />
+          <ScalarProperty Name="PostAttention" ColumnName="PostAttention" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="ContactName" ColumnName="ContactName" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Goods">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Good">
+        <MappingFragment StoreEntitySet="Goods">
+          <ScalarProperty Name="CategoryID" ColumnName="CategoryID" />
+          <ScalarProperty Name="Lock" ColumnName="Lock" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="PurchaseTaxRateID" ColumnName="PurchaseTaxRateID" />
+          <ScalarProperty Name="PurchaseAccountID" ColumnName="PurchaseAccountID" />
+          <ScalarProperty Name="SaleTaxRateID" ColumnName="SaleTaxRateID" />
+          <ScalarProperty Name="SaleAccountID" ColumnName="SaleAccountID" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="PeriodDate" ColumnName="PeriodDate" />
+          <ScalarProperty Name="StartedDate" ColumnName="StartedDate" />
+          <ScalarProperty Name="DomesticPrice" ColumnName="DomesticPrice" />
+          <ScalarProperty Name="OutputPrice" ColumnName="OutputPrice" />
+          <ScalarProperty Name="InputPrice" ColumnName="InputPrice" />
+          <ScalarProperty Name="UOMID" ColumnName="UOMID" />
+          <ScalarProperty Name="ProductTypeID" ColumnName="ProductTypeID" />
+          <ScalarProperty Name="ContactID" ColumnName="ContactID" />
+          <ScalarProperty Name="Attachment" ColumnName="Attachment" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PayRunEmployees">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.PayRunEmployee">
+        <MappingFragment StoreEntitySet="PayRunEmployees">
+          <ScalarProperty Name="ShowEmployeeTax" ColumnName="ShowEmployeeTax" />
+          <ScalarProperty Name="PayslipNotes" ColumnName="PayslipNotes" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="RemainAmount" ColumnName="RemainAmount" />
+          <ScalarProperty Name="Payment" ColumnName="Payment" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="Active" ColumnName="Active" />
+          <ScalarProperty Name="EmployeeID" ColumnName="EmployeeID" />
+          <ScalarProperty Name="PayRunID" ColumnName="PayRunID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PaymentForPayItems">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.PaymentForPayItem">
+        <MappingFragment StoreEntitySet="PaymentForPayItems">
+          <ScalarProperty Name="DueDate" ColumnName="DueDate" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="RemainAmount" ColumnName="RemainAmount" />
+          <ScalarProperty Name="Payment" ColumnName="Payment" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="PayItemID" ColumnName="PayItemID" />
+          <ScalarProperty Name="PayRunID" ColumnName="PayRunID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Payments">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Payment">
+        <MappingFragment StoreEntitySet="Payments">
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Reference" ColumnName="Reference" />
+          <ScalarProperty Name="PayToAccount" ColumnName="PayToAccount" />
+          <ScalarProperty Name="DatePaid" ColumnName="DatePaid" />
+          <ScalarProperty Name="CurrencyID" ColumnName="CurrencyID" />
+          <ScalarProperty Name="TotalMoney" ColumnName="TotalMoney" />
+          <ScalarProperty Name="PaymetnTo" ColumnName="PaymetnTo" />
+          <ScalarProperty Name="PayRunEmployeeID" ColumnName="PayRunEmployeeID" />
+          <ScalarProperty Name="PaymentForPayItemID" ColumnName="PaymentForPayItemID" />
+          <ScalarProperty Name="ExpenseClaimID" ColumnName="ExpenseClaimID" />
+          <ScalarProperty Name="PurchaseID" ColumnName="PurchaseID" />
+          <ScalarProperty Name="SaleInvoiceID" ColumnName="SaleInvoiceID" />
+          <ScalarProperty Name="ApprovalUserID" ColumnName="ApprovalUserID" />
+          <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PayRunEmployeeDetails">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.PayRunEmployeeDetail">
+        <MappingFragment StoreEntitySet="PayRunEmployeeDetails">
+          <ScalarProperty Name="PayItemID" ColumnName="PayItemID" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="TotalPay" ColumnName="TotalPay" />
+          <ScalarProperty Name="Amount" ColumnName="Amount" />
+          <ScalarProperty Name="Rate" ColumnName="Rate" />
+          <ScalarProperty Name="Quantity" ColumnName="Quantity" />
+          <ScalarProperty Name="PayRunEmployeeID" ColumnName="PayRunEmployeeID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="JournalDetails">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.JournalDetail">
+        <MappingFragment StoreEntitySet="JournalDetails">
+          <ScalarProperty Name="Credit" ColumnName="Credit" />
+          <ScalarProperty Name="Debit" ColumnName="Debit" />
+          <ScalarProperty Name="TaxRateID" ColumnName="TaxRateID" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="JournalID" ColumnName="JournalID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Journals">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Journal">
+        <MappingFragment StoreEntitySet="Journals">
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="PostedDate" ColumnName="PostedDate" />
+          <ScalarProperty Name="PostedByUserID" ColumnName="PostedByUserID" />
+          <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Total" ColumnName="Total" />
+          <ScalarProperty Name="Tax" ColumnName="Tax" />
+          <ScalarProperty Name="SubTotal" ColumnName="SubTotal" />
+          <ScalarProperty Name="VAT" ColumnName="VAT" />
+          <ScalarProperty Name="ShowOnCashBasisReport" ColumnName="ShowOnCashBasisReport" />
+          <ScalarProperty Name="ToJournalLine" ColumnName="ToJournalLine" />
+          <ScalarProperty Name="AutoReversingDate" ColumnName="AutoReversingDate" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="JournalType" ColumnName="JournalType" />
+          <ScalarProperty Name="Narration" ColumnName="Narration" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="PayItems">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.PayItem">
+        <MappingFragment StoreEntitySet="PayItems">
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="IsShow" ColumnName="IsShow" />
+          <ScalarProperty Name="DefaultRate" ColumnName="DefaultRate" />
+          <ScalarProperty Name="PayItemTypeID" ColumnName="PayItemTypeID" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="PaidTo" ColumnName="PaidTo" />
+          <ScalarProperty Name="ShowOnSlip" ColumnName="ShowOnSlip" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Employees">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Employee">
+        <MappingFragment StoreEntitySet="Employees">
+          <ScalarProperty Name="PaymentDetails" ColumnName="PaymentDetails" />
+          <ScalarProperty Name="BankAccountName" ColumnName="BankAccountName" />
+          <ScalarProperty Name="BankAccountNumber" ColumnName="BankAccountNumber" />
+          <ScalarProperty Name="OrdinaryRate" ColumnName="OrdinaryRate" />
+          <ScalarProperty Name="TaxNumber" ColumnName="TaxNumber" />
+          <ScalarProperty Name="Google" ColumnName="Google" />
+          <ScalarProperty Name="LinkedIn" ColumnName="LinkedIn" />
+          <ScalarProperty Name="Twitter" ColumnName="Twitter" />
+          <ScalarProperty Name="Facebook" ColumnName="Facebook" />
+          <ScalarProperty Name="Direct_Num" ColumnName="Direct_Num" />
+          <ScalarProperty Name="Direct_Area" ColumnName="Direct_Area" />
+          <ScalarProperty Name="Direct_Country" ColumnName="Direct_Country" />
+          <ScalarProperty Name="Mobi_Num" ColumnName="Mobi_Num" />
+          <ScalarProperty Name="Mobi_Area" ColumnName="Mobi_Area" />
+          <ScalarProperty Name="Mobi_Country" ColumnName="Mobi_Country" />
+          <ScalarProperty Name="Fax_Num" ColumnName="Fax_Num" />
+          <ScalarProperty Name="Fax_Area" ColumnName="Fax_Area" />
+          <ScalarProperty Name="Fax_Country" ColumnName="Fax_Country" />
+          <ScalarProperty Name="Tel_Num" ColumnName="Tel_Num" />
+          <ScalarProperty Name="Tel_Area" ColumnName="Tel_Area" />
+          <ScalarProperty Name="Tel_Country" ColumnName="Tel_Country" />
+          <ScalarProperty Name="CountryName" ColumnName="CountryName" />
+          <ScalarProperty Name="PhysCountry" ColumnName="PhysCountry" />
+          <ScalarProperty Name="PhysZipCode" ColumnName="PhysZipCode" />
+          <ScalarProperty Name="PhysState" ColumnName="PhysState" />
+          <ScalarProperty Name="PhysCity" ColumnName="PhysCity" />
+          <ScalarProperty Name="PhysAddress" ColumnName="PhysAddress" />
+          <ScalarProperty Name="PhysAttention" ColumnName="PhysAttention" />
+          <ScalarProperty Name="PostCountry" ColumnName="PostCountry" />
+          <ScalarProperty Name="PostZipCode" ColumnName="PostZipCode" />
+          <ScalarProperty Name="PostState" ColumnName="PostState" />
+          <ScalarProperty Name="PostCity" ColumnName="PostCity" />
+          <ScalarProperty Name="PostAddress" ColumnName="PostAddress" />
+          <ScalarProperty Name="PostAttention" ColumnName="PostAttention" />
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="Password" ColumnName="Password" />
+          <ScalarProperty Name="Email" ColumnName="Email" />
+          <ScalarProperty Name="LastName" ColumnName="LastName" />
+          <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Features">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Feature">
+        <MappingFragment StoreEntitySet="Features">
+          <ScalarProperty Name="FeatureName" ColumnName="FeatureName" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AccountTrans">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.AccountTran">
+        <MappingFragment StoreEntitySet="AccountTrans">
+          <ScalarProperty Name="Method" ColumnName="Method" />
+          <ScalarProperty Name="TransactionName" ColumnName="TransactionName" />
+          <ScalarProperty Name="SourceType" ColumnName="SourceType" />
+          <ScalarProperty Name="SourceID" ColumnName="SourceID" />
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="BankAccountID" ColumnName="BankAccountID" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="AmountAre" ColumnName="AmountAre" />
+          <ScalarProperty Name="Received" ColumnName="Received" />
+          <ScalarProperty Name="Spent" ColumnName="Spent" />
+          <ScalarProperty Name="Reference" ColumnName="Reference" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="AccountType" ColumnName="AccountType" />
+          <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ControlInRoles">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.ControlInRole">
+        <MappingFragment StoreEntitySet="ControlInRoles">
+          <ScalarProperty Name="ViewType" ColumnName="ViewType" />
+          <ScalarProperty Name="ControlID" ColumnName="ControlID" />
+          <ScalarProperty Name="RoleID" ColumnName="RoleID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Controls">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Control">
+        <MappingFragment StoreEntitySet="Controls">
+          <ScalarProperty Name="ControlName" ColumnName="ControlName" />
+          <ScalarProperty Name="ControlID" ColumnName="ControlID" />
+          <ScalarProperty Name="FunctionID" ColumnName="FunctionID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="StockInCards">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.StockInCard">
+        <MappingFragment StoreEntitySet="StockInCards">
+          <ScalarProperty Name="RemainQuantity" ColumnName="RemainQuantity" />
+          <ScalarProperty Name="ApprovalDate" ColumnName="ApprovalDate" />
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="Reason" ColumnName="Reason" />
+          <ScalarProperty Name="Attachment" ColumnName="Attachment" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="TotalMoney" ColumnName="TotalMoney" />
+          <ScalarProperty Name="Tax" ColumnName="Tax" />
+          <ScalarProperty Name="Sender" ColumnName="Sender" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+          <ScalarProperty Name="SourceID" ColumnName="SourceID" />
+          <ScalarProperty Name="ReceiveDate" ColumnName="ReceiveDate" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="StockID" ColumnName="StockID" />
+          <ScalarProperty Name="ApprovalUserID" ColumnName="ApprovalUserID" />
+          <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Stocks">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Stock">
+        <MappingFragment StoreEntitySet="Stocks">
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="MaxQuatity" ColumnName="MaxQuatity" />
+          <ScalarProperty Name="CurrentCompanyID" ColumnName="CurrentCompanyID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Accounts">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.Account">
+        <MappingFragment StoreEntitySet="Accounts">
+          <ScalarProperty Name="EnablePayments" ColumnName="EnablePayments" />
+          <ScalarProperty Name="ShowInExpenseClaims" ColumnName="ShowInExpenseClaims" />
+          <ScalarProperty Name="ShowOnDashboard" ColumnName="ShowOnDashboard" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="ExpenseClaim" ColumnName="ExpenseClaim" />
+          <ScalarProperty Name="Payroll" ColumnName="Payroll" />
+          <ScalarProperty Name="Payment" ColumnName="Payment" />
+          <ScalarProperty Name="YTD" ColumnName="YTD" />
+          <ScalarProperty Name="TotalCredit" ColumnName="TotalCredit" />
+          <ScalarProperty Name="TotalDebit" ColumnName="TotalDebit" />
+          <ScalarProperty Name="TaxRateID" ColumnName="TaxRateID" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="AccountTypeID" ColumnName="AccountTypeID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="StockMovements">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.StockMovement">
+        <MappingFragment StoreEntitySet="StockMovements">
+          <ScalarProperty Name="ApprovalDate" ColumnName="ApprovalDate" />
+          <ScalarProperty Name="CompanyID" ColumnName="CompanyID" />
+          <ScalarProperty Name="ToAccountID" ColumnName="ToAccountID" />
+          <ScalarProperty Name="FromAccountID" ColumnName="FromAccountID" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="ToStockID" ColumnName="ToStockID" />
+          <ScalarProperty Name="FromStockID" ColumnName="FromStockID" />
+          <ScalarProperty Name="ApprovalUserID" ColumnName="ApprovalUserID" />
+          <ScalarProperty Name="CreatedUserID" ColumnName="CreatedUserID" />
+          <ScalarProperty Name="CreatedDate" ColumnName="CreatedDate" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AllocWOItemDetails">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.AllocWOItemDetail">
+        <MappingFragment StoreEntitySet="AllocWOItemDetails">
+          <ScalarProperty Name="UOMID" ColumnName="UOMID" />
+          <ScalarProperty Name="BalanceQuantity" ColumnName="BalanceQuantity" />
+          <ScalarProperty Name="RemainQuantity" ColumnName="RemainQuantity" />
+          <ScalarProperty Name="ImplementQuantity" ColumnName="ImplementQuantity" />
+          <ScalarProperty Name="AllocQty" ColumnName="AllocQty" />
+          <ScalarProperty Name="Price" ColumnName="Price" />
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="AllocWOID" ColumnName="AllocWOID" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="AllocWOes">
+      <EntityTypeMapping TypeName="TMT.ERP.DataAccess.Model.AllocWO">
+        <MappingFragment StoreEntitySet="AllocWO">
+          <ScalarProperty Name="StockOutCardID" ColumnName="StockOutCardID" />
+          <ScalarProperty Name="Status" ColumnName="Status" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="GoodID" ColumnName="GoodID" />
+          <ScalarProperty Name="ToStockID" ColumnName="ToStockID" />
+          <ScalarProperty Name="WorkCenterID" ColumnName="WorkCenterID" />
+          <ScalarProperty Name="WorkOrderID" ColumnName="WorkOrderID" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

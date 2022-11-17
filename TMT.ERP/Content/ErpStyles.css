@@ -1,0 +1,34 @@
+﻿#cssmenu {border: none;border: 0px;margin: 0px;padding: 0px;font: 67.5% 'Lucida Sans Unicode', 'Bitstream Vera Sans', 'Trebuchet Unicode MS', 'Lucida Grande', Verdana, Helvetica, sans-serif;font-size: 14px;font-weight: bold;width: auto;}
+#cssmenu ul {background: linear-gradient(#0e9dd2,#0990c3,#0e83ae);height: 35px;list-style: none;margin: 0;padding: 0;}
+#cssmenu li {float: left;padding: 0px;}
+#cssmenu li a {display: block;font-weight: normal;line-height: 35px;margin: 0px;padding: 0px 25px;text-align: center;text-decoration: none;background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAHCAYAAAAF1R1/AAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAJBJREFUeNpi/P//PwM1AAvjxKP/GV6/gXJBhjKCEYzJICzC8L/AmpGQQYwgFzH27vnP8OMXVCcDwiAONob/xc6MxLiICUQYS4sBWcyohjAzMZjIiBLtNbBBZyL0GI3lxSAmQL1kIifGcDpcj5Ekg8CGRRkyqksJg9kaQPo0kE9SaIPCCBmrzTvxH12MGAwQYACG2lT9fFlbKAAAAABJRU5ErkJggg==) no-repeat 100% center;}
+
+#cssmenu > ul > li > a {color: #fff;}
+#cssmenu ul ul a {color: #fff;}
+#cssmenu li > a:hover,
+#cssmenu ul li:hover > a {color: #FFFFFF;text-decoration: none;}
+#cssmenu li ul {background: linear-gradient(#0e9dd2,#0990c3,#0e83ae);display: none;height: auto;padding: 0px;margin: 0px;border: 0px;position: absolute;width: 225px;z-index: 200;}
+#cssmenu li:hover ul {display: block;}
+#cssmenu li li {display: block;float: none;margin: 0px;padding: 0px;width: 225px;}
+#cssmenu li:hover li a {background: none;}
+#cssmenu li ul a {display: block;height: 35px;font-size: 12px;font-style: normal;margin: 0px;padding: 0px 10px 0px 15px;text-align: left;}
+#cssmenu li ul a:hover,
+#cssmenu li ul li:hover > a {/*background: #2580a2 url('images/hover_sub.png') center left no-repeat;*/border: 0px;color: #ffffff;text-decoration: none;cursor:pointer;}
+#cssmenu p {clear: left;}
+#cssmenu ul > li.selected > a {color: #0590c3;background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAAHCAYAAAAF1R1/AAAAGXRFW…DhIHGiTQJ5DYbnXXj8n6Fl238QjSxODMYQIMcQEAYIMABcfYucr/VTLwAAAABJRU5ErkJggg==);text-shadow: 0 0 1px rgba(0,0,0,0.15);border-color: #fff;}
+.txt_box1 { border: medium none;height: 100%; outline: medium none; width: 100%;}
+
+.FullWidth.blue:after {clear: both; content: ""; display: block; float: none; height: 0; visibility: hidden; }
+.FullWidth.blue:after {clear: both; content: ""; display: block;float: none; height: 0; visibility: hidden; }
+.FullWidth {float: none; width: auto;}
+
+div.grid-total div span input { background-color: rgba(0, 0, 0, 0); display: inline;height: auto;margin: 0;padding: 0;width: 120px;}
+div#gstRows {padding: 0 !important;}
+div.grid-total div {float: left;font-size: 11px;padding: 5px 0;width: 340px;}
+div.grid-total div.total {border-bottom: 3px double black;border-top: 1px solid black;padding-top: 8px;}
+#totalCredit {position: relative;}
+
+.x-boxed {float: left;width: 100%;}
+.x-boxed label {float: left;font-weight: bold;width: 200px;}
+
+#apright, #apleft {float: left;width: 50%;}

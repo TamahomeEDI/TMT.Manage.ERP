@@ -1,0 +1,246 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.WorkOrder>
+@{
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sPageSize').html($('#hdfPageSize').val());
+        $('#btnAddNewWorkOrder').click(function () {
+            window.location.href = "/WorkOrder/Create";
+        });
+
+        //$('.item2').attr('id', 'current');
+        $('#cbCheckAllDraft').click(function () {
+            $("input[name=chkDraft]").prop('checked', $(this).prop('checked'));
+        });
+
+        $('#btnSubmitApp').click(function () {
+            UpdateWorkOrderStatus(1);
+        });
+
+        $('#btnApproved').click(function () {
+            UpdateWorkOrderStatus(2);
+        });
+
+        $('#btnDelete').click(function () {
+            UpdateWorkOrderStatus('-1');
+        });
+
+        function UpdateWorkOrderStatus(status) {
+            debugger;
+            var arrayData = [];
+            $("input[name=chkDraft]:checked").each(function () {
+                var item = {
+                    "WorkOrderID": this.id
+                };
+                arrayData.push(item);
+            });
+
+            if (arrayData.length > 0) {
+                if (status == '-1') {
+                    $('#confirmDel').empty();
+                    $('#confirmDel').append('<p style="height:0px !important;text-align:center;">@Resources.Resource.Common_ConfirmDelete</p>');
+                    $("#confirmDel").dialog({
+                        modal: true,
+                        height: 140,
+                        autoOpen: false,
+                        buttons: {
+                            'OK': function () {
+                                $(this).dialog('close');
+                                UpdateStatus(status, arrayData);
+                            },
+                            'Cancel': function () {
+                                $(this).dialog('close');
+                            }
+                        }
+                    });
+                    $('#confirmDel').dialog('open');
+                    return;
+                }
+                UpdateStatus(status, arrayData);
+            }
+            else {
+                $('#confirmDel').empty();
+                $('#confirmDel').append('<p style="width: 100%; font-weight: nonmal; font-size: 12px; height:0px !important; text-align: center;>">@Resources.Resource.Common_ConfirmDelete</p>');
+                $("#confirmDel").dialog({
+                    modal: true,
+                    height: 140,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#confirmDel').dialog('open');
+            }
+
+        }
+
+        function UpdateStatus(status, arrayData) {
+            var workOrders = JSON.stringify(arrayData);
+            $.ajax({
+                type: "POST",
+                url: "/Services/WorkOrderService.asmx/UpdateStatus",
+                data: JSON.stringify({
+                    workOrders: workOrders,
+                    status: status
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    var retValue = JSON.parse(data.d);
+                    if (retValue == "Success") {
+                        var retUrl = "/WorkOrder/Pending/";
+                        var messReturn = "Ok";
+                        //window.location.href = "/WorkOrder/Pending/";
+                        if (status == 2) {
+                            messReturn = '@Resources.Resource.Common_Msg_Approved';
+                        }
+                        else if (status == 1) {
+                            messReturn = '@Resources.Resource.Common_Msg_SubmitSuccess';
+                        }
+                        CreatePopupMessage('confirmDel', messReturn, '@Resources.Resource.Common_Message', 160, 400, retUrl);
+                    }
+                }
+            });
+        };
+    });
+
+
+    function SetPageSize(pageSize) {
+        debugger;
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/WorkOrder/SetPageSize',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+</script>
+<input type="hidden" value="@user.ID" id="hdfUserID"/>
+
+
+<div id="breadcrumb">
+    <input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+	<div class="container">		
+		<div id="con_top">
+			<div class="c_container">
+				<h3>@Resources.Resource.Common_WorkOrder</h3>
+				<div id="breadcrumbs">
+					<ul>
+						<li><span>@Resources.Resource.Common_Accounts</span></li>
+						<li><a href="#">@Resources.Resource.WorkOrder_List_NewWorkOrder</a></li>
+					</ul>		
+				</div>
+			</div>
+		</div>
+		
+	</div>
+</div>
+
+<div id="con_body">
+<div class="container">
+	<div class="c_container">
+        <div id="confirmDel" title="Confirm!"></div>
+        <div style="display: inline;">
+            <div style="float: left; width: 50%;">
+                <div style="clear: both; height: 10px;"></div>
+                <input type="submit" value="@Resources.Resource.Common_Add" id="btnAddNewWorkOrder" class="btn btn-defaultxero">
+            </div>
+            <div style="float: right; width: 50%;">
+                    @using (Html.BeginForm("Pending", "WorkOrder", FormMethod.Get, new { style = "margin:10px !important;" }))
+                    {
+                        @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "form-control", @style = "width: 300px;float:left;margin-right: 1px;", placeholder = "Please insert WorkOrder Code" })
+                        <button id="btnSearch" class="btn btn-defaultxero">@Resources.Resource.Common_Search</button>
+                    }
+            </div>
+        </div>
+
+        <div style="clear: both; height: 10px;"></div>
+        <ul class="nav nav-tabs">
+            @{           
+                var manager = new TMT.ERP.BusinessLogic.Managers.GenericManager<WorkOrder>();
+                var workOrder = manager.Get().ToList();
+            }
+
+            <li><a href="/WorkOrder/All">@Resources.Resource.Common_All (@workOrder.Count(x=>x.Status!=-1))</a></li>
+            <li class="active"><a href="/WorkOrder/Pending/">@Resources.Resource.Common_Pending (@workOrder.Count(x => x.Status == 0))</a></li>
+            <li><a href="/WorkOrder/AwaitingApproval/">@Resources.Resource.Common_AwaitingApproval (@workOrder.Count(x => x.Status == 1))</a></li>
+            <li><a href="/WorkOrder/AwaitingOutgoingShipment/">@Resources.Resource.Common_AwaitingOutgoingShipment (@workOrder.Count(x => x.Status == 2))</a></li>
+            <li><a href="/WorkOrder/Completed/">@Resources.Resource.Common_Completed (@workOrder.Count(x => x.Status == 3))</a></li>
+        </ul>
+        <div style="clear: both; height: 10px;"></div>
+        <div class="bovien">
+            <input type="submit" id="btnSubmitApp" value="@Resources.Resource.SaleInvoice_Dashboard_SubmitForApproved" class="btn btn-default" />
+            <input type="submit" id="btnApproved" value="@Resources.Resource.SaleInvoice_Dashboard_Approved" class="btn btn-default" />
+            <input type="submit" id="btnDelete" value="@Resources.Resource.SaleInvoice_Dashboard_Deleted" class="btn btn-default" />
+        </div>
+        <div id="tabbody">
+            <div id="tabs-1">
+                <table class="tableOver">
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" id="cbCheckAllDraft" /></th>
+                            <th>@Resources.Resource.Common_WorkOrder</th>
+                            <th>@Resources.Resource.WorkOrder_List_AssembledBy</th>
+                            <th>@Resources.Resource.Common_CreateDate</th>                
+                            <th>@Resources.Resource.Common_Stock</th>
+                            <th>@Resources.Resource.Common_Item</th>
+                            <th>@Resources.Resource.Common_Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@Html.CheckBox("chkDraft", false, new { id = item.ID })</td>
+                            <td><a href="/WorkOrder/Edit/@item.ID">@Html.DisplayFor(modelItem => item.Code)</a></td>
+                            <td>@Html.DisplayFor(modelItem => item.User.UserName)</td>
+                            <td>@item.CreatedDate.ToString("dd-MMM-yyyy")</td>
+                            <td>@Html.DisplayFor(modelItem => item.Stock.Name)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Good.Code)</td>
+                            <td>@Html.DisplayFor(modelItem => item.OrderQuantity)</td>
+                        </tr>            
+                    }
+                    </tbody>
+                </table>
+
+                @if (Model.Count>0)
+                {
+                    <div style="height: 50px; padding-top: 5px;">
+                        <div style="width: 70%; float: left;">
+                            @*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount*@
+                            @Html.PagedListPager(Model, page => Url.Action("Pending", new { page, currentFilter = ViewBag.CurrentFilter, type = 0, createdate = ViewBag.CreateDate, duadate = ViewBag.DueDate }))
+                        </div>
+                        <div style="width: 25%; float: right;">
+                            <label style="margin-left: 70px; margin-top: 10px;">Showing&nbsp;</label>
+                            <div id="showpag" class="dropdown" style="float: right;">
+                                <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div id="divNoRecord">@Resources.Resource.Common_Msg_CountDisplay</div>                
+                }
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,103 @@
+﻿@model TMT.ERP.DataAccess.Model.FixedAsset
+
+@{
+    ViewBag.Title = "ReviewJournal";
+    Layout = null;
+    <script src="@Url.Content("~/Scripts/1.10.2.jquery.min/jquery.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/1.10.3.jquery-ui.min/jquery-ui.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/ERPScripts/jquery.formatCurrency-1.4.0.js")"></script>
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $('.currency').formatCurrency();
+
+        $('.currency').blur(function () {
+            $('.currency').formatCurrency();
+        });
+
+
+    })
+</script>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <div id="popup-breadcrumb" style="margin-top: -6px; width: 102%">
+        <div class="error" style="display: none; margin-top: 5px; border: 2px solid red; height: 30px; border-radius: 6px; line-height: 2">
+            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+            <span style="font-size: 11px;"></span>.<br clear="all" />
+        </div>
+        <div style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;">
+            <div>
+                <label>Disposal Summary</label>
+                <div style="border-top: 3px double darkgrey; width: 98%">
+                    <div style="display: inline-block; width: 100%; border-bottom: 1px solid silver; margin-top: 5px;">
+                        <div style="width: 50%; float: left">Purchased @Model.PurchaseDate</div>
+                        <div style="width: 50%; float: right; text-align: right">
+                            <p class="currency">@Model.PurchasePrice</p>
+                        </div>
+                    </div>
+                    <div style="display: inline-block; width: 100%; border-bottom: 1px solid silver;">
+                        <div style="width: 50%; float: left">Current accumulated depreciation</div>
+                        <div style="width: 50%; float: right; text-align: right">
+                            <p class="currency">@Model.AccumulatedDepreciation</p>
+                        </div>
+                    </div>
+                    <div style="display: inline-block; width: 100%; border-bottom: 1px solid silver;">
+                        <div style="width: 50%; float: left">Depreciation to be posted (@ViewBag.DepreciationDate)</div>
+                        <div style="width: 50%; float: right; text-align: right">
+                            <p class="currency">@ViewBag.Depreciation</p>
+                        </div>
+                    </div>
+                    <div style="display: inline-block; width: 100%">
+                        <div style="width: 50%; float: left">Sold @ViewBag.DateSold</div>
+                        <div style="width: 50%; float: right; text-align: right">
+                            <p class="currency">@ViewBag.Price</p>
+                        </div>
+                    </div>
+                </div>
+                <label>Disposal Journal</label>
+                <div style="border-top: 3px double darkgrey; width: 98%">
+                    <div style="display: inline-block; width: 100%; border-bottom: 1px solid silver; margin-top: 5px;">
+                        <div style="width: 50%; float: left">@ViewBag.Acc</div>
+                        <div style="width: 25%; float: left; text-align: right">&nbsp;</div>
+                        <div style="width: 25%; float: left; text-align: right">
+                            <p class="currency">@Model.PurchasePrice</p>
+                        </div>
+                    </div>
+                    <div style="display: inline-block; width: 100%; border-bottom: 1px solid silver;">
+                        <div style="width: 50%; float: left">@ViewBag.DepreAcc</div>
+                        <div style="width: 25%; float: left; text-align: right">
+                            <p class="currency">@ViewBag.Depreciation</p>
+                        </div>
+                        <div style="width: 25%; float: left; text-align: right">&nbsp;</div>
+                    </div>
+                    <div style="display: inline-block; width: 100%; border-bottom: 1px solid silver;">
+                        <div style="width: 50%; float: left">@ViewBag.Account</div>
+                        <div style="width: 25%; float: left; text-align: right">
+                            <p class="currency">@ViewBag.Price</p>
+                        </div>
+                        <div style="width: 25%; float: left; text-align: right">&nbsp;</div>
+                    </div>
+                    <div style="display: inline-block; width: 100%">
+                        <div style="width: 50%; float: left">Total Capital Gain</div>
+                        <div style="width: 25%; float: left; text-align: right">&nbsp;</div>
+                        <div style="width: 25%; float: left; text-align: right">
+                            <p class="currency">@ViewBag.Income</p>
+                        </div>
+                    </div>
+                    <div style="display: inline-block; width: 100%">
+                        <div style="width: 50%; float: left">Gain on disposal</div>
+                        <div style="width: 25%; float: left; text-align: right">&nbsp;</div>
+                        <div style="width: 25%; float: left; text-align: right">
+                            <p class="currency">@ViewBag.Depreciation</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

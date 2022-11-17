@@ -1,0 +1,217 @@
+﻿<tr>
+    <td>@Html.DropDownList("ddlGoodID", new SelectList(ViewBag.GoodID, "Value", "Text", ""), "", new { @class = "goodchange colCheckValid" })</td>
+    <td>
+        <input type="text" id="txtDescription" class="txt1 description" /></td>
+    <td>
+        <input type="text" id="txtQty" class="txt1 qty numeric text-right checkvalid" /></td>
+    <td>
+        <input type="text" id="txtUnitPrice" class="txt1 unitprice numeric currency checkvalid" /></td>
+    <td>
+        <input type="text" id="txtDisc" class="txt1 disc" /></td>
+    <td>@Html.DropDownList("ddlAccountID", new SelectList(ViewBag.AccountID, "Value", "Text", ""), "", new { @class = "account checkvalid" })</td>
+    <td>@Html.DropDownList("ddlTaxRateID", new SelectList(ViewBag.TaxRateID, "Value", "Text", ""), "", new { @class = "taxrate checkvalid" })
+        <input type="hidden" value="0" class="taxvalue" />
+    </td>
+    <td>
+        <input type="text" id="txtAmount" class="txt1 amount currency numeric" /></td>
+    <td>
+        <div class="remove" id="delRow" onclick="RemoveRow(this);"></div>
+    </td>
+</tr>
+<script type="text/javascript">
+    function RemoveRow(element) {
+        var tr = $(element).closest('tr');
+        tr.remove();
+        CalSubTotal();
+        CalTotal();
+        
+    }
+    $(document).ready(function () {
+        $(".goodchange").change(function () {
+            ChangeGood(this);
+        });
+    });
+    $(document).ready(function () {
+        $(".taxrate").change(function () {
+            ChangeTax(this);
+        });
+    });
+    $(document).ready(function () {
+        $(".account").change(function () {
+            ChangeAccount(this);
+        });
+    });
+    function ChangeAccount(element) {
+        var tr = $(element).closest('tr');
+        var accountID = $("#ddlAccountID", tr).val();
+        if (accountID == 0) {
+            alert("Open add new account");
+        }
+    }
+    $(document).ready(function () {
+        $(".qty").change(function () {
+            CalAmount(this);
+            CalSubTotal();
+            CalTotal();
+        });
+    });
+    $(document).ready(function () {
+        $(".disc").change(function () {
+            CalAmount(this);
+            CalSubTotal();
+            CalTotal();
+        });
+    });
+    $(document).ready(function () {
+        $(".unitprice").change(function () {
+            CalAmount(this);
+            CalSubTotal();
+            CalTotal();
+        });
+    });
+    $(document).ready(function () {
+        $("#chkVAT").change(function () {
+            CalTotal();
+        });
+    });
+    function CalAmount(element) {
+        var tr = $(element).closest('tr');
+        $(".amount", tr).val(function () {
+            var qty = 0;
+            if ($('.qty', tr).val() != "")
+                qty = $('.qty', tr).asNumber();
+
+            var unitprice = 0;
+            if ($('.unitprice', tr).val() != "")
+                unitprice = $('.unitprice', tr).asNumber();
+
+            var disc = 0;
+            if ($('.disc', tr).val() != "")
+                disc = $('.disc', tr).asNumber();
+
+            var retValue = qty * unitprice;
+            if (disc > 0)
+                retValue = retValue - retValue * disc / 100;
+            return retValue;
+        }).formatCurrency();
+    }
+    function CalSubTotal() {
+        $(".subtotal").text(function () {
+            var value = 0;
+            $(".amount").each(function () {
+                if ($(this).val() != "")
+                    value += $(this).asNumber();
+            });
+            return value;
+        }).formatCurrency();
+    }
+    function CalTotal() {
+        $("#txtInvoiceTotal").text(function () {
+            var subtotal = 0;
+            if ($('.subtotal').text() != "")
+                subtotal = $('.subtotal').asNumber();
+            var tax = 0;
+            if ($('#txtTax').text() != "")
+                tax = $('#txtTax').asNumber();
+
+            if ($('#chkVAT').prop('checked')) //Inclusive
+                return subtotal;
+            else //Exclusive
+                return subtotal + tax;
+        }).formatCurrency();
+    }
+    function CalTax() {
+        $("#txtTax").text(function () {
+            var value = 0;
+            $("#tblSaleDetail tr").each(function () {
+                var tr = $(this).closest('tr');
+                var taxvalue = $(".taxvalue", tr).asNumber();
+                var amount = $(".amount", tr).asNumber();
+                if (taxvalue > 0 & amount > 0)
+                    value += taxvalue * amount / 100;
+            });
+            return value;
+        }).formatCurrency();
+    }
+    function ChangeGood(element) {
+        //
+        var good = $(element).val();
+        var tbody = $(element).closest('tr');
+        var goodID = $("#ddlGoodID", tbody).val();
+        if (goodID != "") {
+            if (goodID > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Services/GoodService.asmx/GetGoodByID",
+                    data: JSON.stringify({
+                        goodID: goodID
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        try {
+                            var good = JSON.parse(data.d);
+                            $('.description', tbody).val(good.Decription);
+                            $('.qty', tbody).val("1");
+                            $('.unitprice', tbody).val(good.UnitPrice).formatCurrency();
+                            $('.disc', tbody).val("");
+                            $('.account', tbody).val(good.Accounts);
+                            $('.taxrate', tbody).val(good.TaxRate);
+                            CalAmount(element);
+                            CalSubTotal();
+                            CalTotal();
+
+                        } catch (ex) { }
+                    }
+                }).error(function (event, jqXHR, ajaxSettings, thrownError) {
+                    alert('Error when loading data');
+                });
+            }
+            else if (goodID == 0) {
+                alert("Add new inventory");
+            }
+        }
+        else {
+            $('.description', tbody).val("");
+            $('.qty', tbody).val("");
+            $('.unitprice', tbody).val("");
+            $('.disc', tbody).val("");
+            CalAmount(element);
+            CalTax();
+            CalSubTotal();
+            CalTotal();
+        }
+    }
+    function ChangeTax(element) {
+        var tr = $(element).closest('tr');
+        var taxID = $("#ddlTaxRateID", tr).val();
+        if (taxID != "") {
+            if (taxID > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Services/GoodService.asmx/GetTaxByID",
+                    data: JSON.stringify({
+                        taxID: taxID
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        try {
+                            var tax = JSON.parse(data.d);
+                            $('.taxvalue', tr).val(tax.Rate);
+                            CalTax();
+                            CalTotal();
+                        } catch (ex) { }
+                    }
+                }).error(function (event, jqXHR, ajaxSettings, thrownError) {
+                    alert('Error when loading data');
+                });
+            }
+        }
+        else {
+            $('.taxvalue', tr).val("0");
+            CalTax();
+            CalTotal();
+        }
+    }
+</script>

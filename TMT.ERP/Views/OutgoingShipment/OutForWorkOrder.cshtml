@@ -1,0 +1,274 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model IEnumerable<TMT.ERP.DataAccess.Model.StockOutCardsDetail>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var enable = $('#hdfEnable').val();
+        if (enable == "1") {
+            $('#btnSubmit').css('display', 'inline-block');
+            $('#deliveryDate').css('display', 'none');
+        } else {
+            $('#btnSubmit').css('display', 'none');
+            $('#deliveryDate').css('display', 'block');
+        }
+        $('#btnClose').click(function () {
+            location.href = "/OutgoingShipment/";
+        });
+        $('#btnSubmit').click(function () {
+            
+            var stockOutCardId = $('#hdfStockOutCardId').val();
+            var quatity = [];
+            var id = [];
+
+            $('table#BankAccount1 > tbody > tr > td#qty').each(function () {
+                
+                var qty = $(this).html();
+                quatity.push(qty.toString());
+
+            });
+
+            $('table#BankAccount1 > tbody > tr > td#stDetail').each(function () {
+                
+                var valueId = $(this).find('#hdfStockInCardDetailID').val();
+                id.push(valueId.toString());
+            });
+
+            var packaged = {
+                quatity: quatity,
+                listid: id,
+                stockOutCardId: stockOutCardId
+            };
+
+
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/OutgoingShipment/UpdateStatus/',
+                    traditional: true,
+                    data: packaged,
+                    success: function (data) {
+                        
+                        if (data == "success") {
+                            var url = "/OutgoingShipment/";
+                            var msg = 'OutgoingShipment success';
+                            CreatePopupMessage('divMessage', msg, '@Resources.Resource.Common_Message', 160, 400, url);
+                            return false;
+                        } else {
+                            var url0 = "/OutgoingShipment/";
+                            var msg0 = 'OutgoingShipment fail';
+                            CreatePopupMessage('divMessage', msg0, '@Resources.Resource.Common_Message', 160, 400, url0);
+                            return false;
+                        }
+
+                    }
+                });
+        });
+    });
+</script>
+<input type="hidden"  id="hdfEnable" value="@ViewBag.EnableDone"/>
+<input type="hidden" id="hdfStockOutCardId" value="@ViewBag.ID"/>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.OutgoingShipment_List</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.OutgoingShipment_Inventory</span></li>
+                        <li><span>@Resources.Resource.OutgoingShipment_Stock</span></li>
+                        <li><a href="/OutgoingShipment/Index">@Resources.Resource.OutgoingShipment_List</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div class="cleardiv"></div>
+            <div id="divMessage" style="background: white;"></div>
+            <div class="cleardiv"></div>
+            <input type="submit" id="btnClose" value="Close" class="btn btn-defaultxero" />
+            <input type="submit" id="btnSubmit" value="Submit" class="btn btn-defaultxero" />
+            <div class="cleardiv"></div>
+            <div class="form_position1 bovien">
+                @{
+                    var oStockOutCard = ViewBag.StockOutCard as StockOutCard;
+                    var oWorkOrder = ViewBag.oWorkOrder as WorkOrder;
+                }
+                <div class="form_left">
+                    <div class="form-group">
+                        <label class="labelstock">@Resources.Resource.OutGoing_View_ShipmentNo : </label>
+                        <label class="labelright">
+                            @if (oStockOutCard != null && oStockOutCard.Code != null)
+                            {
+                                @oStockOutCard.Code
+                            }
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">
+                            @Resources.Resource.OutGoing_WorkOrder_CreateDate : 
+                        </label>
+                        <label>
+                            @if (oWorkOrder != null)
+                            {
+                                @TMT.ERP.Commons.Utility.DateFormat(oWorkOrder.CreatedDate)
+                            }
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">@Resources.Resource.OutGoing_WorkOrder_CreateBy : </label>
+                        <label class="labelright">
+                            @if (oStockOutCard != null && oStockOutCard.User.UserName != null)
+                            {
+                                @oStockOutCard.User.UserName      
+                            }
+                        </label>
+                    </div>
+                </div>
+                <div class="form_right">
+                    <div class="form-group">
+
+                        <label class="labelstock">@Resources.Resource.OutGoing_WorkOrder_WorkOrderNo : </label>
+                        <label class="labelright">
+                            @if (oWorkOrder != null && oWorkOrder.Code != null)
+                            {
+                                @oWorkOrder.Code
+                            }
+                        </label>
+
+
+                    </div>
+                    <div class="form-group">
+
+                        <label class="labelstock">@Resources.Resource.OutGoing_WorkOrder_OrderDate : </label>
+                        @{
+                            DateTime orderDateTime = Convert.ToDateTime(ViewBag.OrderDate);
+                        }
+                        <label class="labelright">
+
+                            @if (oStockOutCard != null)
+                            {
+                                @TMT.ERP.Commons.Utility.DateFormat(oStockOutCard.CreatedDate)
+                            }
+                        </label>
+
+                    </div>
+                    <div class="form-group" id="deliveryDate">
+                        <label class="labelstock">
+                            @Resources.Resource.OutGoing_WorkOrder_DeliveryDate : 
+                        </label>
+                        <label>
+                            @if (oStockOutCard != null && oStockOutCard.ApprovalDate != null)
+                            {
+                                @TMT.ERP.Commons.Utility.DateFormat(Convert.ToDateTime(oStockOutCard.ApprovalDate))
+                            }
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="cleardiv"></div>
+            <div>
+                <div style="width: 48%; float: left;">
+                    <h4>@Resources.Resource.OutGoing_WorkOrder_ProductTitle</h4>
+                    <div class="cleardiv"></div>
+                    <table id="BankAccount" class="tableOver" style="width: 100% !important;">
+                        <thead>
+                            <tr>
+                                <th>@*@Resources.Resource.OutGoing_WorkOrder_SKU*@
+                                    Item Code
+                                </th>
+                                <th>@Resources.Resource.SaleInvoice_Create_Description</th>
+                                <th>@Resources.Resource.OutGoing_WorkOrder_UOM</th>
+                                <th>@Resources.Resource.OutGoing_WorkOrder_QtyReq</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr>
+                                <td>
+                                    @if (oWorkOrder != null && oWorkOrder.Good.Code != null)
+                                    {
+                                        @oWorkOrder.Good.Code
+                                    }
+                                </td>
+                                <td>
+                                    @if (oWorkOrder != null && oWorkOrder.Good.Description != null)
+                                    {
+                                        @oWorkOrder.Good.Description
+                                    }
+                                </td>
+                                <td>
+                                    @if (oWorkOrder != null && oWorkOrder.Good.UOM.Name != null)
+                                    {
+                                        @oWorkOrder.Good.UOM.Name
+                                    }
+                                </td>
+                                <td>
+                                    @if (oWorkOrder != null && oWorkOrder.OrderQuantity != null)
+                                    {
+                                        @oWorkOrder.OrderQuantity
+                                    }
+                                </td>
+                            </tr>
+
+                        </tbody>
+                    </table>
+                </div>
+                <div style="width: 50%; float: right;">
+                    <h4>@Resources.Resource.OutGoing_WorkOrder_Item </h4>
+                    <div class="cleardiv"></div>
+                    <table id="BankAccount1" class="tableOver" style="width: 100% !important;">
+                        <thead>
+                            <tr>
+                                @*<th>@Resources.Resource.OutGoing_WorkOrder_SKU</th>*@
+                                <th>Item Code</th>
+                                <th>@Resources.Resource.SaleInvoice_Create_Description</th>
+                                <th>@Resources.Resource.OutGoing_WorkOrder_UOM</th>
+                                <th>@Resources.Resource.OutGoing_WorkOrder_QtyReq</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td id="stDetail" style="display: none;">
+                                        <input type="hidden" value="@item.ID" id="hdfStockInCardDetailID"/>
+                                    </td>
+                                    <td>
+                                        @if (item.Good.Code != null)
+                                        {
+                                            @item.Good.Code
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.Good.Description != null)
+                                        {
+                                            @item.Good.Description
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.UOM.Name != null)
+                                        {
+                                            @item.UOM.Name
+                                        }
+                                    </td>
+                                    <td id="qty">
+                                        @item.Quantity
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+

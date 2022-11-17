@@ -1,0 +1,65 @@
+﻿@using System.Web.Mvc.Html
+@model IEnumerable<TMT.ERP.DataAccess.Model.StockInCardsDetail>
+
+<div style="display: inline;">
+    <div style="float: left; width: 50%;">
+        <label>@Resources.Resource.OutGoing_View_ShipmentNo</label>
+        <label>
+            <b>
+                @ViewBag.ShipmentNo
+            </b>
+        </label>
+    </div>
+    <div style="float: right; width: 50%;">
+        <label>
+            @Resources.Resource.OutGoing_View_From
+        </label>
+        <label>
+            <b>
+                @ViewBag.From
+            </b>
+        </label>
+    </div>
+</div>
+<div style="clear: both; height: 10px;"></div>
+<div style="display: inline;">
+    <div style="float: left; width: 50%;">
+        <label>@Resources.Resource.OutGoing_View_PurchaseOrderNo </label>
+        <label>
+            <b>
+                @ViewBag.SMNo
+            </b>
+        </label>
+    </div>
+    <div style="float: right; width: 50%;">
+        <label>@Resources.Resource.OutGoing_View_ContactPerson</label>
+        <label>
+            <b>No Name
+            </b>
+        </label>
+    </div>
+</div>
+<div style="display: inline;">
+    <div style="float: left; width: 50%;">
+        <label>
+            @Resources.Resource.SaleInvoice_Create_Reference
+        </label>
+        <label>
+            <b></b>
+        </label>
+    </div>
+    <div style="float: right; width: 50%;">
+        <label>
+            @Resources.Resource.OutGoing_View_PODate
+        </label>
+        <label>
+            @{
+                DateTime dateTime = @ViewBag.StockMovementDate;
+                                 
+            }
+            <b>
+                @dateTime.ToString("d")
+            </b>
+        </label>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+﻿@model TMT.ERP.DataAccess.Model.Payment
+
+<div id="con_body">
+<div class="container">
+    <div class="c_container">
+     <div id="form_body">     
+<div>
+    <table>
+        <thead>
+            <tr>
+                <th>Payment Date</th>
+                <th>Reference</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@{
+                    DateTime dateCreate = Convert.ToDateTime(Model.CreatedDate);
+                        
+                }
+                    @dateCreate.ToString("d")
+                </td>
+                <td>
+                    @Model.Reference
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<table id="BankAccount">
+    <thead>
+        <tr>
+            <th>Contact</th>
+            <th>Inv#</th>
+            <th>Date</th>
+            <th>Dua Date</th>
+            <th>Total</th>
+            <th>Payment Amount</th>
+            <th>Payment Amout VND</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>@ViewBag.ContactName</td>
+            <td>@ViewBag.GoodCode</td>
+            <td>@{
+                    DateTime createDate = Convert.ToDateTime(ViewBag.Date);
+                }
+                @createDate.ToString("d")
+            </td>
+            <td>
+                @{
+                    DateTime dueDate = Convert.ToDateTime(ViewBag.DueDate);
+                }
+                @dueDate.ToString("d")
+            </td>
+            <td>@ViewBag.TongTien</td>
+            <td>
+                @Model.TotalMoney
+            </td>
+            <td>
+                <p style="color: red;">(*)</p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+<div style="float: right;display: inline;">
+    <b>Payment Total:<i style="color: red;">(*)</i></b>
+</div>
+<div style="clear: both;height: 10px;"></div>
+<div style="float: right;">
+    <input type="submit" class="btn" value="Cancel" id="btnCancel" />
+</div>
+         </div>
+            </div>
+        </div>
+    </div>

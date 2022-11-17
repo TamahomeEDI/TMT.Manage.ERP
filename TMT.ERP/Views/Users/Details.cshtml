@@ -1,0 +1,46 @@
+﻿@model TMT.ERP.DataAccess.Model.User
+
+@{
+    ViewBag.Title = "Details";
+    Layout = null;
+}
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+   
+
+    <fieldset>
+        <legend>UOM</legend>
+
+        <div class="display-label">
+             @Html.LabelFor(model => model.UserName)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.UserName)
+        </div>
+
+        <div class="display-label">
+             @Html.LabelFor(model => model.FullName)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.FullName)
+        </div>
+
+        <div class="display-label">
+             @Html.LabelFor(model => model.Password)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Password)
+        </div>
+        <br/>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+            @Html.ActionLink("Back to List", "Index")
+        </p>
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

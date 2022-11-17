@@ -1,0 +1,27 @@
+﻿<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnCancel').click(function () {
+            location.reload();
+        });
+        $('#btnOK').click(function () {
+            alert(ok);
+        });
+     });
+ </script>
+
+<fieldset>
+    <legend>
+        Overpayment
+    </legend>
+    <div class="cleardiv"></div>
+    <p>The payment you entered exceeds the amount owed by <b>@ViewBag.OverPayment</b>.Would you like to create an overpayment?</p>
+    <div class="cleardiv"></div>
+    <h2>Over payment</h2>
+    <div class="cleardiv"></div>
+    <div style="display: inline-block;">
+        
+    </div>
+    <div class="cleardiv"></div>
+    <input type="button" class="btn btn-defaultxero" value="OK" id="btnOK"/>
+    <input type="button" class="btn btn-defaultxero" value="Cancel" id="btnCancel"/>
+</fieldset>

@@ -1,0 +1,521 @@
+﻿@using TMT.ERP.DataAccess.Model
+@using TMT.ERP.BusinessLogic.Utils
+@model TMT.ERP.DataAccess.Model.Purchase
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".datepicker").datepicker({ dateFormat: 'dd-M-y' });
+        $('.datepicker').click(function () {
+            $(this).datepicker();
+        });
+        $(".numeric").numeric();
+        //Validate
+        jQuery.validator.messages.required = "";
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+            //debug: true
+        });
+    });
+    $(document).ready(function () {
+        $('#AddPament').click(function () {
+            debugger;
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            var id = $('#purchaseId').val();
+            var money = $('#txtsotienthanhtoan').val();
+            var datepaid = $('#txtDatePaid').val();
+            var AccountType = $('#AccountPaymentID').val();
+            var account = AccountType.split('-');
+            var paidTo = account[0];
+            var type = account[1];
+            var ref = $('#txtReference').val();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Purchase/CreatePaymentByPurchaseID/',
+                    async: false,
+                    data:
+                        {
+                            "id": id,
+                            "money": money,
+                            "datepaid": datepaid,
+                            "paidTo": paidTo,
+                            "type": type,
+                            "reference": ref
+                        }
+                    , success: function () {
+                        addPaymentNote();
+                        //location.reload();
+                        //$('div#paymentDiv').empty();
+                        //$('div#paymentDiv').html(data);
+                        window.location.href = "/Purchase/AwaitingPayment/";
+                    }
+                });
+        });
+
+        $('a#viewbill').click(function () {
+            debugger;
+            var giatri = $(this).attr('title');
+            var tongtien = $('#totalmoney').attr('title');
+            /*   $.ajax(
+                   {
+                       type: 'POST',
+                       url: '/Purchase/ViewBill/',
+                       data:
+                           {
+                               "id": giatri,
+                               "tongtien": tongtien
+                           },
+                       success: function (data) {
+                           $('#body').empty();
+                           $('#body').html(data);
+                       }
+                   }); */
+            window.location.href = encodeURI('/Purchase/ViewBill?id=' + giatri + '&tongtien=' + tongtien);
+        });
+        $('#btnAdd').click(function () {
+            var value = $('#noteAdd').css('display');
+            if (value == 'none') {
+                $('#noteAdd').css('display', 'block');
+            } else {
+                $('#noteAdd').css('display', 'none');
+            }
+        });
+        $('#btnCancel').click(function () {
+            $('#noteAdd').css('display', 'none');
+        });
+        $('#btnShow').click(function () {
+            debugger;
+            var purchaseId = $('#purchaseId').val();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Note/GetNotesAwaitingPaymentDetail/',
+                    data: { 'saleInvoidId': purchaseId },
+                    success: function (data) {
+                        $('#noteShow').html(data);
+                    }
+                });
+            var value = $('#noteShow').css('display');
+            if (value == 'none') {
+                $('#noteShow').css('display', 'block');
+            } else {
+                $('#noteShow').css('display', 'none');
+            }
+        });
+        $('#btnSave').click(function () {
+            debugger;
+            var noteFromId = $('#purchaseId').val();
+            var createDate = "";
+            var notes = $('#txtNotes').val();
+            var type = 4;
+            var expectedDate = $('#txtExpectedPaymentDate').val();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Note/Create/',
+                    data: {
+                        "noteFromId": noteFromId,
+                        "createDate": createDate,
+                        "notes": notes,
+                        "type": type,
+                        "status": 0,
+                        "changes": "Note",
+                        "expectedDate": expectedDate
+                    },
+                    success: function (data) {
+                    }
+                });
+            var value = $('#noteAdd').css('display');
+            if (value == 'none') {
+                $('#noteAdd').css('display', 'block');
+            } else {
+                $('#txtNotes').val('');
+                $('#txtExpectedPaymentDate').val('');
+                $('#noteAdd').css('display', 'none');
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/Note/GetNotesAwaitingPaymentDetail/',
+                        data: { 'saleInvoidId': noteFromId },
+                        success: function (data) {
+                            $('#noteShow').empty();
+                            $('#noteShow').html(data);
+                            var valueShow = $('#noteShow').css('display');
+                            if (valueShow == 'none') {
+                                $('#noteShow').css('display', 'block');
+                            }
+                        }
+                    });
+            }
+        });
+
+        function addPaymentNote() {
+            debugger;
+            var noteFromId = $('#purchaseId').val();
+            //var employeeId = "";
+            var createDate = "";
+            var amoutDue = $('#txtsotienthanhtoan').val();
+            var totalAmountDue = $('#hdfAmountDue').val();
+            var amoutEnd = totalAmountDue - amoutDue;
+            var toSupplier = $('#hdfTo').val();
+            var expectedDate = $('#txtExpectedPaymentDate').val();
+            var notes = "Payment received from " + toSupplier + " on " + expectedDate + " for " + amoutDue + ". There is " + amoutEnd + " due for this invoice. ";
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Note/Create/',
+                    data:
+                        {
+                            "noteFromId": noteFromId,
+                            //"employeeId": employeeId,
+                            "createDate": createDate,
+                            "notes": notes,
+                            "type": 4,
+                            "status": 0,
+                            "changes": "Partially Paid ",
+                            "expectedDate": expectedDate
+                        },
+                    success: function () {
+                    }
+                });
+        }
+    });
+</script>
+
+<div class="fu">
+    <div id="breadcrumb">
+        <div class="container">
+            <div id="con_top">
+                <div class="c_container">
+                    @*                @if (ViewBag.Type == "3")
+                {
+                    <h3>@ViewBag.Repeat</h3>
+                }
+                else if (ViewBag.Type == "1")
+                {
+                    <h3>@ViewBag.Purchase</h3>
+                }
+                else if (ViewBag.Type == "7")
+                {
+                    <h3>@ViewBag.CreditNote</h3>
+                }*@
+                    @if (Model.Type == 0)
+                    {
+                        <h3>@Resources.Resource.PaidPurchase_View_Title @Model.Code</h3>
+                    }
+                    else
+                    {
+                        <h3>@Resources.Resource.PaidCreditNote_View_Title @Model.Code</h3>
+                    }
+                    <div id="breadcrumbs">
+                        <ul>
+                            <li><a href="/Purchase/Dashboard/"><span>@Resources.Resource.Common_Purchases</span></a></li>
+                            <li><a href="/Purchase/AwaitingPayment/">@Resources.Resource.Common_Bills</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cleardiv"></div>
+    <div id="title">
+    </div>
+    <div class="error" style="display: none; border: 1px solid rgb(204, 204, 204); border-radius: 4px 4px 4px 4px; height: 38px; line-height: 33px;">
+        <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 4px 10px 0 0;" />
+        <span></span>.<br clear="all" />
+    </div>
+    <div class="cleardiv"></div>
+    <div id="AccountSetting">
+        <div>
+            <label>Awaiting Payment</label>
+        </div>
+        <div>
+            <div>
+                <div>
+                    <label>
+                        @Resources.Resource.Payment_Supplier
+                    </label>
+                    <br />
+                    <label>
+                        <a href="/Contacts/Edit/@ViewBag.ContactID">@ViewBag.To</a>
+                    </label>
+                    <br />
+                    <label>
+                        @if (!string.IsNullOrEmpty(ViewBag.Address))
+                        {
+                            @Html.Raw("No Addresss");
+                        }
+                        else
+                        {
+                            @Html.Raw(ViewBag.Address);
+                        }
+                    </label>
+                </div>
+                <div>
+                    <label>@Resources.Resource.PaidPurchase_Date</label>
+                    <br />
+                    <label>
+                        @TMT.ERP.Commons.Utility.DateFormat(Model.CreatedDate)
+                    </label>
+                </div>
+                <div>
+
+                    @if (Model.Type == 0)
+                    {
+                        <label>@Resources.Resource.Purchase_AWPayment_PO</label>
+                    }
+                    else
+                    {
+                        <label>@Resources.Resource.Purchase_AWPayment_CN</label>
+                    }
+
+                    <br />
+                    <label>
+                        @Model.Code
+                    </label>
+                </div>
+                <div>
+                    <label>@Resources.Resource.Payment_Reference</label>
+                    <br />
+                    <label>
+                        @ViewBag.Ref
+                    </label>
+                </div>
+                <div class="line">
+                </div>
+                <div class="gridview">
+                    @if (ViewBag.UseVAT == 1)
+                    {                     
+                        <label for="createdate">@Resources.Resource.SaleInvoice_Create_VAT:</label>
+                        @Html.CheckBox("chkVAT", true, new { @class = "checkbox", disabled = "disabled" })
+                      
+                    }
+                    else
+                    {                         
+                        <label for="createdate">@Resources.Resource.SaleInvoice_Create_VAT:</label>
+                        @Html.CheckBox("chkVAT", false, new { @class = "checkbox", disabled = "disabled" })
+                    }
+                    <table id="AwaitPayPurchase" class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @Resources.Resource.Payment_ItemCode
+                                </th>
+                                <th>
+                                    @Resources.Resource.Payment_Description
+                                </th>
+                                <th>
+                                    @Resources.Resource.Payment_Quantity
+                                </th>
+                                <th>
+                                    @Resources.Resource.Payment_Price
+                                </th>
+                                <th>
+                                    @Resources.Resource.Payment_Discount
+                                </th>
+                                <th>@Resources.Resource.Payment_Account
+                                </th>
+                                <th>@Resources.Resource.Payment_TaxRate
+                                </th>
+                                <th>Amount VND
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.PurchaseDetails)
+                            {
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Good.Code)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Description)
+                                    </td>
+                                    <td style="text-align: right">
+                                        @Html.DisplayFor(modelItem => item.Quantity)
+                                    </td>
+                                    <td style="text-align: right" class="currency">
+                                        @Html.DisplayFor(modelItem => item.Price)
+                                    </td>
+                                    <td style="text-align: right">
+                                        @Html.DisplayFor(modelItem => item.Discount)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Account.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TaxRate.Name)
+                                    </td>
+                                    <td style="text-align: right" class="currency">
+                                        @Html.DisplayFor(modelItem => item.TotalMoney)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div class="total">
+                        @{
+                            ErpEntities db = new ErpEntities();
+                            Dictionary<double?, double?> dicTax = new Dictionary<double?, double?>();
+
+                            List<PurchaseDetail> purchaseDetailList = null;
+                            List<int?> listTax = null;
+                            if (ViewBag.PurchaseID != null)
+                            {
+                                int ID = (int)ViewBag.PurchaseID;
+                                purchaseDetailList = db.PurchaseDetails.Where(i => i.PurchaseID == ID).ToList().OrderBy(i => i.TaxRateID).ToList();
+                                listTax = purchaseDetailList.Select(details => details.TaxRateID).Distinct().ToList();
+                                foreach (var taxRateID in listTax)
+                                {
+                                    TaxRate tax = db.TaxRates.Find(taxRateID);
+
+                                    double? rate = tax != null ? tax.Rate : 0;
+                                    double amount = 0;
+                                    foreach (var item in purchaseDetailList)
+                                    {
+                                        if (item.TaxRateID == taxRateID)
+                                        {
+                                            amount += item.Price * item.Quantity;
+                                        }
+                                    }
+                                    dicTax.Add(rate, amount * rate / 100);
+                                }
+                            }
+                        }
+                        <div>
+                            <label>@Resources.Resource.Purchase_AWPayment_Subtotal</label>
+                            <label class="currency">@Html.Raw(ViewBag.Sub)</label>
+                        </div>
+                        @foreach (var item in dicTax)
+                        {
+                             if(item.Value != 0){
+                            <div>
+                                <label>Tax @Html.Raw(item.Key)@Html.Raw("%")</label>
+                                <label class="currency">@Html.Raw(item.Value)</label>
+                            </div>
+                        }
+                        }
+                        <div class="subtotal">
+                            <label>@Resources.Resource.Purchase_AWPayment_Total_Credit</label>
+                            <label><span class="currency" id="totalmoney" title="@ViewBag.Total">@Html.Raw(ViewBag.Total)</span></label>
+                        </div>
+                        @foreach (var itemPayment in (ViewBag.PayList as List<Payment>))
+                        {
+                            DateTime datePaid = Convert.ToDateTime(itemPayment.DatePaid);
+                            <div>
+                                <label><a href="javascript:void(0);" id="viewbill" title="@itemPayment.ID">Less Cash Refund</a></label>
+                                <label class="currency">@itemPayment.TotalMoney</label>
+
+                            </div>
+                            <div>
+                                <label>@TMT.ERP.Commons.Utility.DateFormat(datePaid)</label>
+                            </div>
+                        }
+
+                        <div class="total">
+                            @{
+                                double total = Convert.ToDouble(ViewBag.Total);
+                                double lesspayment = Convert.ToDouble(ViewBag.PaidPaymentAmount);
+                                var result = total - lesspayment;
+
+                            }
+                            <label>@Resources.Resource.Purchase_AWPayment_Remaining_Credit</label>
+                            <label class="currency">@Html.Raw(result)</label><input type="hidden" id="hdfAmountDue" value="@result" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <br />
+    <div id="makePayment">
+        <div>
+            @using (Html.BeginForm("null", "null", FormMethod.Post, new { id = "frmMain" }))
+            {
+                <div id="paymentDiv" style="display: inline;">
+                    <div style="float: left; width: 12%;">
+                        <label>Amount Paid</label>
+                        <br />
+                        <input type="hidden" value="@ViewBag.IDPayment" id="purchaseId" name="purchaseId"/>
+                        <input type="text" id="txtsotienthanhtoan" class="numeric currency" value="@ViewBag.amountRemain" style = "height: 26px; width: 96px;"/>
+                    </div>
+                    <div style="float: left; width: 14%; margin-left: 13px;">
+                        <label>Date Paid</label>
+                        <br />
+                        <input style="height: 26px; width: 96px;" type="text" name="txtDatePaid" id="txtDatePaid" class="datepicker">
+                    </div>
+                    <div style="float: left; width: 15%; margin-left: -14px;">
+                        <label>Paid To</label>
+                        <br />
+                        @{
+                int[] groupID1 = new int[1] { 4 };
+                List<AccountInfo> account1 = AccountManager.GetAccountByGroups(groupID1).ToList();                                               
+                        }
+                        <select id="AccountPaymentID" style="width: 130px; height: 26px;" class="required form-control">
+                            <option value=""></option>
+                            @foreach (var item in account1)
+                            {
+                                var accountType = item.AccountID + "-" + item.AccountType;
+                                <option value="@accountType">@item.AccountName</option>
+                            }
+                        </select>
+                    </div>
+                    <div style="float: left; width: 15%; margin-left: 10px;">
+                        <label>Reference</label>
+                        <br />
+                        <input type="text" id="txtReference" name="txtReference" style="width: 130px; height: 26px;" class="txt_box1" />
+                    </div>
+                    <div style="float: left; width: 15%; text-align: right; margin-top: 3px;">
+                        @if (ViewBag.Status >= 3)
+                        {
+                            if (Model.Type == 0)
+                            {
+                            <input type="button" disabled="disabled" value="Add payment" id="AddPament" class="btn btn-defaultxero" style="margin-top: 15px; width: 110px" />
+                            }
+                            else
+                            {
+                            <input type="button" disabled="disabled" value="Add Refund" id="AddPament" class="btn btn-defaultxero" style="margin-top: 15px; width: 110px" />
+                            }
+
+                        }
+                        else
+                        {
+                            if (Model.Type == 0)
+                            {
+                            <input type="button" value="Add payment" id="AddPament" class="btn btn-defaultxero" style="margin-top: 15px;" />
+                            }
+                            else
+                            {
+                            <input type="button" value="Add Refund" id="AddPament" class="btn btn-defaultxero" style="margin-top: 15px;" />
+                            }
+
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="button-style">
+        <input type="submit" value="Show History" id="btnShow" class="btn btn-default" />
+        <input type="submit" value="Add Note" id="btnAdd" class="btn btn-default" />
+    </div>
+</div>

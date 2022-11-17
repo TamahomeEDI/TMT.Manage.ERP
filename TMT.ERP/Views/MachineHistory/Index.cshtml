@@ -1,0 +1,175 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.MachineHistory>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        /******************** Code area *************************/
+        /******************** Begin Add New Machine History ************************/
+        $("#btnAddNew").click(function (e) {
+            
+            $.ajax({
+                type: 'GET',
+                url: "/MachineHistory/Create/",
+                success: function () {
+                    
+                    custom.CreatePopup("#dialog", "Create New Product Type", 550, 460, "/MachineHistory/Create/", false);
+                    $("#dialog").dialog("open");
+                }
+            });
+
+        });
+
+        /******************** Begin Edit a Machine History ************************/
+        /*********************/
+        $("#proTypeEditID").unbind('click').click(function (e) {
+            e.preventDefault();
+            
+            var _url = "/MachineHistory/Edit/" + $(this).find('input').val()
+            $.ajax({
+                type: 'GET',
+                url: _url,
+                success: function () {
+                    custom.CreatePopup("#dialog", "Edit Machine History", 550, 460, _url, false);
+                    $("#dialog").dialog("open");
+                }
+            });
+
+        });
+
+        //Delete Machine History
+        $('#btnDelete').click(function () {
+            
+            var valueString = [];
+            $("input[name=cbCheck]:checked").each(
+            function () {
+                valueString.push(this.value);
+            });
+            if (valueString.length > 0) {
+                var DelConfirmed = {
+                    delConfirm: valueString,
+                }
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/MachineHistory/DeleteConfirmed/',
+                        traditional: true,
+                        data: DelConfirmed,
+                        success: function (data) {
+                            location.reload();
+                        }
+                    });
+            } else {
+                $('#confirmDel').empty();
+                $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Please select item !</p>');
+                $("#confirmDel").dialog({
+                    modal: true,
+                    height: 140,
+                    autoOpen: false,
+                    buttons: {
+                        'Agree': function () {
+                            $(this).dialog('close');
+                        },
+                        Cancel: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#confirmDel').dialog('open');
+            }
+        });
+
+        //Checked all or Uncheck all element is checkbox
+        $('#cbCheckAll').click(function () {
+            $(".cbCheck").prop('checked', $(this).prop('checked'));
+        });
+    })
+
+</script>
+<div class="container">
+    <div class="c_container">
+        <div id="breadcrumb">
+            <div class="container">
+                <div id="con_top">
+                    <div class="c_container">
+                        <h2>Index</h2><br/>
+                        <div style="float: left; width: 50%;">
+                                <button id="btnAddNew" class="btn">@Resources.Resource.MachineHistory_AddNew</button>
+                                <button id="btnDeleteProType" class="btn">@Resources.Resource.MachineHistory_Delete</button>
+                        </div>
+                        <div id="dialog" title="Basic modal dialog"></div>
+                        <div id="confirmDel" title="Confirm!"></div>
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="cbCheckAll"/>
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.MachineHistory_MachineID
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.MachineHistory_WorkCenterID
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.MachineHistory_MaxDailyRuntime
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.MachineHistory_UpdateTime
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.MachineHistory_Cost
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.MachineHistory_CurrencyID
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.MachineHistory_Description
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.MachineHistory_Status
+                                    </th>
+                                </tr>
+                            </thead>
+                        @foreach (var item in Model) {
+                            <tr>
+                                <td>
+                                    <input type="checkbox" id="cbCheck" name="cbCheck" class="cbCheck" value="@item.ID"/>
+                                </td>
+                                <td>
+                                    <a href="#" id="proTypeEditID">@Html.DisplayFor(modelItem => item.MachineID)@Html.HiddenFor(modelItem => item.ID)</a>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.WorkCenterID)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.MaxDailyRuntime)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.UpdatedDate)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Costs)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.CurrencyID)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                </td>
+                            </tr>
+                        }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,474 @@
+﻿<tr>
+    <td class="" tabindex="0" style="width: 200px;">
+        <input type="text" id="txtDescription" class="txt1 description" maxlength="100" />
+    </td>
+    <td class="" tabindex="0" style="width: 50px;">
+        <input type="text" id="txtQuantity" onpaste="return false" class="txt1 qty numeric" />
+    </td>
+    <td class="" tabindex="0" style="width: 150px;">
+        <input type="text" id="txtUnitPrice" onpaste="return false" class="txt1 unitprice currency numeric" />
+    </td>
+    <td style="width: 150px;">@Html.DropDownList("AccountID", new SelectList(ViewBag.AccountID, "Value", "Text", ""), "", new { @class = "account" })
+    </td>
+    <td style="width: 150px;">@Html.DropDownList("TaxRateID", new SelectList(ViewBag.TaxRateID, "Value", "Text", ""), "", new { @class = "taxrate" })
+        <input type="hidden" value="0" class="taxvalue" />
+    </td>
+    <td style="width: 150px;">
+        <input type="text" id="txtAmount" class="txt1 amount currency" readonly="" /></td>
+    <td>
+        <div class="remove" id="delRow" onclick="RemoveRow(this);"></div>
+    </td>
+</tr>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $(".numeric").numeric();
+
+        $("#addNewLine").click(function () {
+            
+            $.ajax(
+                 {
+                     type: "POST",
+                     url: "/BankAccounts/AddNewLine/",
+                     success: function (data) {
+                         $('#insertRow').append(data);
+
+                     }
+                 });
+            return false;
+        });
+    });
+
+    function addTableRow() {
+        var $tr = jQuery('table#tblSpendMoney').find("tbody tr:last").clone();
+        jQuery('table#tblSpendMoney').find("tbody tr:last").after($tr);
+    };
+
+    function addTableRow() {
+        var $tr = jQuery('table#tbReceiveMoney').find("tbody tr:last").clone();
+        jQuery('table#tbReceiveMoney').find("tbody tr:last").after($tr);
+    };
+
+
+    function RemoveRow(element) {
+        var tr = $(element).closest('tr');
+        tr.remove();
+        CalTax();
+        CalSubTotal();
+        CalTotal();
+    }
+
+    $(document).ready(function () {
+        $("#txtmoney").change(function () {
+            $('#txtmoney').val(function () {
+                var amount = $('#txtmoney').asNumber();
+                return amount;
+            }).formatCurrency();
+            
+            CalAmount(this);
+            CalSubTotal();
+            CalTotal();
+        });
+    });
+
+    $(document).ready(function () {
+        $(".taxrate").change(function () {
+            ChangeTax(this);
+            CalSubTotal();
+            CalTotal();
+        });
+    });
+
+    $(document).ready(function () {
+        $(".account").change(function () {
+            ChangeAccount(this);
+        });
+    });
+
+    function ChangeAccount(element) {
+        var tr = $(element).closest('tr');
+        var accountID = $("#AccountID", tr).val();
+        if (accountID == 0) {
+            alert("Open add new account");
+        }
+    }
+
+    $(document).ready(function () {
+        $(".qty").change(function () {
+            $(this).val(function () {
+                var qty = $(this).asNumber();
+                return qty;
+            }).formatCurrency();
+            
+            CalAmount(this);
+            CalTax();
+            CalSubTotal();
+            CalTotal();
+        });
+    });
+
+    // Change payment method
+    $(document).ready(function () {
+        $("#method").change(function () {
+            if ($('#method').val() == 0 || $('#method').val() == 1) {
+                
+                $('#currencyDirect').show();
+                $('#currencyOver').hide();
+                $('#thQuantity').show();
+                $('#thUnitPrice').show();
+                $('#thDel').show();
+                $('#divAmount').show();
+                $('#thAmount').hide();
+                $('#insertRow').show();
+                $('#addNewLine').show();
+                $('#overpayment').hide();
+                $('#Tax').show();
+                if ($('#amountare').is(":checked")) {
+                    $('#TaxAdd').hide();
+                } else {
+                    $('#TaxAdd').show();
+                }
+                CalSubTotal();
+                CalTotal();
+            } else if ($('#method').val() == 2) {
+                
+                $('#currencyDirect').hide();
+                $('#currencyOver').show();
+                $('#thQuantity').hide();
+                $('#thUnitPrice').hide();
+                $('#thDel').hide();
+                $('#TaxAdd').hide();
+                $('#Tax').hide();
+                $('#addNewLine').hide();
+                $('#insertRow').hide();
+                $('#divAmount').hide();
+                $('#thAmount').show();
+                $('#overpayment').show();
+            }
+        });
+    });
+
+    // Change Tax Method
+    $(document).ready(function () {
+        $("#amountare").change(function () {
+            if ($('#amountare').is(":checked")) {
+                
+                $('#Tax').show();
+                $('#TaxAdd').hide();
+                CalTax();
+            } else {
+                
+                $('#Tax').show();
+                $('#TaxAdd').show();
+                CalTax();
+            }
+            CalSubTotal();
+            CalTotal();
+        });
+    });
+
+    $(document).ready(function () {
+        $("#txtTaxAdd").change(function () {
+            CalTotal();
+        });
+    });
+
+    $(document).ready(function () {
+        jQuery('#txtTax').change(function () {
+            CalTotal();
+        });
+    });
+
+    $(document).ready(function () {
+        $(".unitprice").change(function () {
+            $(this).val(function () {
+                var unitprice = $(this).asNumber();
+                return unitprice;
+            }).formatCurrency();
+            
+            CalAmount(this);
+            CalTax();
+            CalSubTotal();
+            CalTotal();
+        });
+    });
+
+    function CalAmount(element) {
+        
+        if ($('#method').val() == 2) {
+            $("#txtAmountOver").val(function () {
+                var amount = $('#txtmoney').asNumber();
+                return amount;
+            }).formatCurrency();
+        }
+        else {
+            var tr = $(element).closest('tr');
+            $(".amount", tr).val(function () {
+                var qty = 0;
+                if ($('.qty', tr).val() != "")
+                    qty = $('.qty', tr).asNumber();
+
+                var unitprice = 0;
+                if ($('.unitprice', tr).val() != "")
+                    unitprice = $('.unitprice', tr).asNumber();
+
+                var retValue = qty * unitprice;
+                return retValue;
+            }).formatCurrency();
+        }
+    }
+
+    function CalSubTotal() {
+        $(".subtotal").text(function () {
+            
+            var value = 0;
+            if ($('#method').val() == 0 || $('#method').val() == 1) {
+                $(".amount").each(function () {
+                    if ($(this).val() != "")
+                        value += $(this).asNumber();
+                });
+            } else {
+                if ($('#txtmoney').val() != "") {
+                    value = $('#txtmoney').val();
+                }
+            }
+            return value;
+        }).formatCurrency();
+    }
+
+    function CalTotal() {
+        $("#txtTotal").text(function () {
+            
+            if ($('#method').val() == 0 || $('#method').val() == 1) {
+                var subtotal = 0;
+                if ($('.subtotal').text() != "")
+                    subtotal = $('.subtotal').asNumber();
+                var tax = 0;
+                if ($('#amountare').is(":checked")) {
+                    if (jQuery('#txtTax').text() != "") {
+                        tax = jQuery('#txtTax').asNumber();
+                    }
+                    return subtotal;
+                }
+                else {
+                    if ($('#txtTax').text() != "") {
+                        tax = $('#txtTax').asNumber() + $('#txtTaxAdd').asNumber();
+                    }
+                    return subtotal + tax;
+                }
+            } else {
+                var subtotal = 0;
+                if ($('.subtotal').text() != "")
+                    subtotal = $('.subtotal').asNumber();
+                return subtotal;
+            }
+        }).formatCurrency();
+    }
+
+    function CalTax() {
+        
+        if ($('#amountare').is(":checked")) {
+            jQuery('#txtTax').text(function () {
+                var value = 0;
+                $("#tblSpendMoney tr").each(function () {
+                    var tr = $(this).closest('tr');
+                    var taxvalue = $(".taxvalue", tr).asNumber();
+                    var amount = $(".amount", tr).asNumber();
+                    if (taxvalue > 0 & amount > 0)
+                        value += taxvalue * amount / 100;
+                });
+                return value;
+            }).formatCurrency();
+        } else {
+            jQuery('#txtTax').text(function () {
+                var value = 0;
+                $("#tblSpendMoney tr").each(function () {
+                    var tr = $(this).closest('tr');
+                    var taxvalue = $(".taxvalue", tr).asNumber();
+                    var amount = $(".amount", tr).asNumber();
+                    if (taxvalue > 0 & amount > 0)
+                        value += taxvalue * amount / 100;
+                });
+                return value;
+            }).formatCurrency();
+        }
+    }
+
+    function ChangeTax(element) {
+        var tr = $(element).closest('tr');
+        var taxID = $("#TaxRateID", tr).val();
+        
+        if (taxID > 0) {
+            $.ajax({
+                type: "POST",
+                url: "/Services/GoodService.asmx/GetTaxByID",
+                data: JSON.stringify({
+                    taxID: taxID
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    try {
+                        var tax = JSON.parse(data.d);
+                        $('.taxvalue', tr).val(tax.Rate);
+                        CalTax();
+                        CalTotal();
+                    } catch (ex) { }
+                }
+            }).error(function (event, jqXHR, ajaxSettings, thrownError) {
+                alert('Error when loading data');
+            });
+        }
+        else {
+            $('.taxvalue', tr).val("0");
+            CalTax();
+            CalTotal();
+        }
+    }
+
+    // Get Date
+    $(function () {
+        $("#txtDate").datepicker();
+    });
+
+    //Save spend money
+    $('#btnSave').click(function (e) {
+        e.preventDefault();
+        
+        var userID = $('#hdCurrentUserID').val();
+        var method = $('#method').val();
+        var invoice = 0;
+        var accID = $('#AccountIDOver').val();
+        var descriptionOver = $('#txtDes').val();
+        var amountover = $('#txtmoney').val();
+        var bankaccountID = $("#hidID").val();
+        var contactName = $("#txtTo").val();
+        var date = $("#txtDate").val();
+        var reference = $("#txtReference").val();
+        var subtotal = $("#txtSubTotal").asNumber();
+        var total = $("#txtTotal").asNumber();
+        var SpendMoneyDetail = BuildJSON();
+        if ($('#amountare').is(":checked")) {
+            var amountare = 1;
+            var tax = jQuery('#txtTax').asNumber();
+        } else {
+            var amountare = 0;
+            var tax = $('#txtTaxAdd').asNumber() + $('#txtTax').asNumber();
+        }
+
+        if (method == -1) {
+            $('#AlertMethod').show();
+            return false;
+        } else
+            $('#AlertMethod').hide();
+
+        checkFullInfor();
+        if (error > 0) {
+            error = 0;
+            $('#AlertInfor').show();
+            return false;
+        } else
+            $('#AlertInfor').hide();
+
+
+        if (date != null && contactName != null && date != "" && contactName != ""
+            && amountare != -1 && method == 0 || method == 1) {
+            jQuery.ajax(
+                {
+                    type: 'POST',
+                    traditional: true,
+                    url: '/BankAccounts/SpendBill/',
+                    data: {
+                        id: bankaccountID, contactName: contactName, date: date, method: method,
+                        reference: reference, subtotal: subtotal, invoice: invoice, amountare: amountare,
+                        total: total, tax: tax, SpendMoneyDetail: SpendMoneyDetail, userID: userID
+                    },
+                    dataType: 'json',
+                    success: function (data) {
+                        
+                        var retValue = JSON.parse(data.d);
+                        if (!isNaN(retValue))
+                            window.location.href = "/BankAccounts/Index/";
+                    }
+                });
+            window.location.href = "/BankAccounts/Index/";
+        } else if (date != null && contactName != null && date != "" && contactName != "" && method == 2) {
+            jQuery.ajax(
+                {
+                    type: 'POST',
+                    traditional: true,
+                    url: '/BankAccounts/SpendBillOver/',
+                    data: {
+                        'id': bankaccountID, 'contactName': contactName, 'date': date, 'total': total,
+                        'reference': reference, 'subtotal': subtotal, 'amountover': amountover, 'userID': userID,
+                        'accID': accID, 'description': descriptionOver, 'method': method, 'invoice': invoice
+                    },
+                    success: function (e) {
+                        window.location.href = "/BankAccounts/Index/";
+                    }
+                });
+        }
+        else {
+            $('#confirmDel').empty();
+            $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Paid to name or Date cannot empty </p>');
+            $("#confirmDel").dialog({
+                modal: true,
+                height: 140,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#confirmDel').dialog('open');
+        }
+    });
+
+    function checkFullInfor() {
+        
+        var arrayData = [];
+        $("#tblSpendMoney tr").each(function () {
+            
+            var tr = $(this).closest('tr');
+            var quantity = $("#txtQuantity", tr).val();
+            var unitprice = $("#txtUnitPrice", tr).val();
+            var accID = $("#AccountID", tr).val();
+            if (quantity > 0 && unitprice > 0 && accID > 0) {
+            }
+            else if (typeof quantity == "undefined" && typeof unitprice == "undefined" && typeof accID == "undefined") {
+            }
+            else if (quantity == null && unitprice == null && accID == null || quantity == "" && unitprice == "" && accID == "") {
+            }
+            else {
+                error++;
+            }
+        });
+    }
+
+    function BuildJSON() {
+        var arrayData = [];
+        $("#tblSpendMoney tr").each(function () {
+            
+            var tr = $(this).closest('tr');
+            var quantity = $("#txtQuantity", tr).val();
+            var unitprice = $("#txtUnitPrice", tr).val();
+            var description = $("#txtDescription", tr).val();
+            var accID = $("#AccountID", tr).val();
+            var taxrateID = $("#TaxRateID", tr).val();
+            if (quantity > 0 && unitprice > 0) {
+                var item = {
+                    "quantity": quantity,
+                    "unitprice": unitprice,
+                    "description": description,
+                    "taxrateID": taxrateID,
+                    "accID": accID,
+                    "amount": $("#txtAmount", tr).val(),
+                };
+                arrayData.push(item);
+            }
+        });
+        return JSON.stringify(arrayData);
+    }
+</script>

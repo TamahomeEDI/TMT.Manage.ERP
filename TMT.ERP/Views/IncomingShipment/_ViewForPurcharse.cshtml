@@ -1,0 +1,86 @@
+﻿@using System.Web.Mvc.Html
+@model IEnumerable<TMT.ERP.DataAccess.Model.StockInCardsDetail>
+@{
+    Layout = null;
+}
+
+<div class="form_position1">
+    <div class="form_left">
+        <div class="form-control">
+            <label>@Resources.Resource.IncomingShipment_Index_ShipmentNo</label>
+            <label>@ViewBag.ShipmentNo</label>
+        </div>
+        <div class="form-control">
+            <label>@Resources.Resource.IncomingShipment_Index_From</label>
+            <label>@ViewBag.From</label>
+        </div>
+        <div class="form-control">
+            <label>@Resources.Resource.IncomingShipment_Index_Currency</label>
+            @Html.DropDownList("CurrencyID", null, String.Empty, new { @class = "form-control", style = "width:200px;" })
+        </div>
+        <div class="form-control"></div>
+    </div>
+    <div class="form_right"></div>
+</div>
+
+
+
+<div style="display: inline;">
+    <div style="float: left; width: 40%">
+        <label>@Resources.Resource.IncomingShipment_Index_PoNo</label>
+        <label>
+            <b>
+                @ViewBag.PONo
+            </b>
+        </label>
+    </div>
+    <div style="float: left; width: 30%">
+        <label>@Resources.Resource.OutGoing_View_ContactPerson</label>
+        <label>
+            <b>No Name
+            </b>
+        </label>
+    </div>
+    <div style="float: right; width: 30%">
+        <label>VAT</label>
+        @{
+            var useVAT = ViewBag.VAT;
+            if (useVAT == 1)
+            {
+            <label>@Html.CheckBox("chkVAT", true)</label>
+            }
+            else
+            {
+            <label>
+                @Html.CheckBox("chkVAT", false)
+            </label>
+            }
+        }
+    </div>
+</div>
+
+
+<div style="display: inline;">
+    <div style="float: left; width: 40%;">
+        <label>@Resources.Resource.SaleInvoice_Create_Reference
+        </label>
+        <label>
+            <b>No data
+            </b>
+        </label>
+    </div>
+    <div style="float: left; width: 30%;">
+        <label>@Resources.Resource.OutGoing_View_PODate</label>
+        <label>
+            <b>
+                @{
+                    DateTime dateTime = @ViewBag.PurchaseDate;
+                                 
+                }
+                @dateTime.ToString("d")
+            </b>
+        </label>
+    </div>
+    <div style="float: right; width: 30%;">
+    </div>
+</div>

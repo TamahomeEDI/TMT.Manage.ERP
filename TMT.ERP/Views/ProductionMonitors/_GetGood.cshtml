@@ -1,0 +1,39 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.AllocWOItemDetail>
+<label class="labelstock">@Resources.Resource.Common_OrderProduct&nbsp;:&nbsp;</label>@ViewBag.GoodName
+<div class="cleardiv"></div>
+<label class="labelstock">@Resources.Resource.Common_Component</label>
+<table style="width: 940px; text-align: center;" class="tableOver">
+    <thead>
+        <tr>
+            <th>@Resources.Resource.Common_ItemCode</th>
+            <th>@Resources.Resource.Common_Order</th>
+            <th>@Resources.Resource.Common_UnitPrice</th>
+            <th>@Resources.Resource.Common_Total</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@ViewBag.Item(item.GoodID)</td>
+                <td>@Html.DisplayFor(modelItem => item.AllocQty)</td>
+                <td>
+                    <p class="price">
+                        @item.Price.ToString("0.00")
+                    </p>
+                </td>
+                <td>
+                    @{
+            var price = item.Price;
+            var qty = item.AllocQty;
+            var total = price * qty;
+                    }
+                    <p class="total">
+                    @total.ToString("0.00")    
+                    </p>
+                    
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

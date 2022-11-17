@@ -1,0 +1,676 @@
+﻿@model TMT.ERP.DataAccess.Model.WorkOrder
+@{
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+    ViewBag.Title = "Edit";
+    var pageTitle = Resources.Resource.Common_WorkOrder + " " + Model.Code;
+    if (Model.Status < 2)
+    {
+        pageTitle = Resources.Resource.Control_Edit + " " + pageTitle;
+    }
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#ManufacturingType').val($('#hdManufacturingTypeID').val());
+        $('#ManufacturingType').focus();
+        ChangeManufacturingType();
+        SetParentGood();
+
+        $("#txtCustomer").autocomplete({
+            source: function (request, response) {
+                var term = request.term;
+                $.ajax({
+                    type: "POST",
+                    url: "/Services/ContactService.asmx/GetCustomerStartWith",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        nameStartsWith: term
+                    }),
+
+                    success: function (data) {
+                        var contact = JSON.parse(data.d);
+                        if (contact == "") {
+                            $("#ContactIDValue").val(0);
+                        }
+                        var results = $.map(contact, function (item) {
+                            return { label: item.Name, value: item.ID };
+                        });
+                        response(results.slice(0, 10));
+                    }
+                });
+            },
+            minLength: 0,
+            focus: function (event, ui) {
+                return false;
+            },
+            select: function (event, ui) {
+                event.preventDefault();
+                $("#txtCustomer").val(ui.item.label);
+                $("#ContactIDValue").val(ui.item.value);
+            },
+            change: function (event, ui) {
+                event.preventDefault();
+                $("#txtCustomer").val(ui.item.label);
+                $("#ContactIDValue").val(ui.item.value);
+            }
+        });
+
+        jQuery.validator.messages.required = "";
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+            //debug: true
+        });
+
+        $('#btnSaveWorkOrder').click(function () {
+            var workOrderID = $('#hdWorkOrderID').val();
+            var status = 0;           
+            var createUserID = $('#hdCurrentUserID').val();
+            var approvalUserID = $('#hdCurrentUserID').val();
+            var companyID = $('#hdCompanyID').val();
+            SaveWorkOrder(workOrderID, status, createUserID, approvalUserID, companyID);
+        });
+
+        $('#btnApprovalWorkOrder').click(function () {
+            var workOrderID = $('#hdWorkOrderID').val();
+            var status = 2;
+            var createUserID = $('#hdCurrentUserID').val();
+            var approvalUserID = $('#hdCurrentUserID').val();
+            var companyID = $('#hdCompanyID').val();
+            SaveWorkOrder(workOrderID, status, createUserID, approvalUserID, companyID);
+        });
+
+        function SetParentGood() {
+            var bomID = $('#ddlBomID').val();
+            if (bomID > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Services/GoodService.asmx/GetParentGoodsByBomID",
+                    data: JSON.stringify({
+                        bomID: bomID
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        try {
+                            var good = JSON.parse(data.d);
+                            $('#lblParentGoodName').text(good.Code);
+                            $('#hdParentGoodID').val(good.GoodID);
+
+                        } catch (ex) { }
+                    }
+                })
+            }
+        }
+
+
+        $("#addline").click(function () {
+            addTableRow();
+        });
+
+        function addTableRow() {
+            var $tr = jQuery('div#form_body table#tbcontinue').find("tbody tr:last").clone(true);
+            $tr.find("input,select").val('');
+            jQuery('div#form_body table#tbcontinue').find("tbody tr:last").after($tr);
+        };
+
+        $("#ManufacturingType").change(function () {
+            ChangeManufacturingType();
+        });
+
+        $("#ddlBomID").change(function () {
+            ChangeBom();
+        });
+
+        $(".goodchange").change(function () {
+            ChangeGood(this);
+        });
+
+    });
+
+    function ChangeManufacturingType() {
+        debugger;
+        var type = $('#ManufacturingType').val();
+        if (type == 1) {//None continue - BOM
+            $("#divbynonecontinue").show();
+            $("#divbycontinue").hide();
+            $("#tbnonecontinue").show();
+            $("#tbcontinue").hide();
+            $("#tablefooter").hide();
+            $("#lblParentGoodName").show();
+            $("#lblFinishGood").show();
+        }
+        else {
+            $("#divbynonecontinue").hide();
+            $("#divbycontinue").show();
+            $("#tbnonecontinue").hide();
+            $("#tbcontinue").show();
+            $("#tablefooter").show();
+            $("#lblParentGoodName").hide();
+            $("#lblFinishGood").hide();
+        }
+    }
+
+    function ChangeFinishGood() {
+        var ddlGoodID = $('#ddlGoodID').val();
+        $("#tbcontinue tr #ddlSubGoodID").find('.display-none').removeClass('display-none');
+
+        $("#tbcontinue tr #ddlSubGoodID").each(function () {
+            $(this).val('');
+            $("#tbcontinue tr #txtDescription").text('');
+            $("#tbcontinue tr #txtSubQty").val('');
+            var find = $($(this).children("[value='" + ddlGoodID + "']"));
+            debugger;
+            if ((find.val() != undefined) && (ddlGoodID != '')) {
+                $(find).addClass("display-none");
+            }
+        });
+    }
+
+    function ChangeBom() {
+        var bomID = $('#ddlBomID').val();
+        if (bomID > 0) {
+            $.ajax({
+                type: "POST",
+                url: "/Services/GoodService.asmx/GetGoodsByBomID",
+                data: JSON.stringify({
+                    bomID: bomID,
+                    parentGoodID: null
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    try {
+                        var goodItems = JSON.parse(data.d);
+                        //$('#tbcomponents').empty();
+                        $('#tbnonecontinue tr:not(:first)').remove();
+                        if (goodItems instanceof Array) {
+                            $.each(goodItems, function () {
+                                $('#lblParentGoodName').text(this.ParentGoodName);
+                                $('#hdParentGoodID').val(this.ParentGoodID);
+
+                                var quantity = this.Quantity == null ? 0 : this.Quantity;
+                                var rowcontent =
+                                    "<tr><input type='hidden' id='hdGoodID' class='goodid' value=" + this.ID + " />" +
+                                        "<td style ='text-align:left'>" + this.Code + "</td>" +
+                                        "<td style ='text-align:left'>" + this.Description + "</td>" +
+                                        "<td style ='text-align:left'><input type=text id='txtSubQty' class='form-control numeric' maxlength='10' value='0' /></td>" +
+                                    "</tr>";
+                                add_new_row('#tbnonecontinue', rowcontent);
+                            });
+                        }
+
+                    } catch (ex) { }
+                }
+            })
+        }
+    }
+
+    function ChangeGood(element) {
+        //
+        var good = $(element).val();
+        var tbody = $(element).closest('tr');
+        var goodID = $("#ddlSubGoodID", tbody).val();
+        if (goodID != "") {
+            $.ajax({
+                type: "POST",
+                url: "/Services/GoodService.asmx/GetGoodByID",
+                data: JSON.stringify({
+                    goodID: goodID
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    try {
+                        var good = JSON.parse(data.d);
+                        $('.description', tbody).text(good.Decription);
+
+                    } catch (ex) { }
+                }
+            }).error(function (event, jqXHR, ajaxSettings, thrownError) {
+                alert('Error when loading data');
+            });
+        }
+        else {
+            $('.description', tbody).val("");
+        }
+    }
+
+    $(document).ready(function () {
+        $("#btnAdd").click(function () {
+            var goodID = $('#ddlGood').val();
+            var goodText = $('#ddlGood option:selected').text();
+            var childCount = 3;//$('#tbcomponents > tr').length;
+            var imgsrc = "<img src='/Images/TreeView/leaf.gif'>";
+            if (childCount > 0)
+                imgsrc = "<img src='/Images/TreeView/minus.gif'>";
+            var rowcontent =
+                "<tr> " +
+                    "<td><a onClick='toggle2(this, 'Folder 1')'>" + imgsrc + goodText + "</a>" +
+                        "<div style='display:block;'> ";
+            for (iIndex = 0; iIndex < childCount; iIndex++) {
+                rowcontent +=
+                    "<table border='0' cellspacing='0' cellpadding='0'>" +
+				    "   <tr> " +
+				    "       <td width='15'></td>" +
+				    "       <td><a class='leaf' onClick='selectLeaf()'><img src='/Images/TreeView/leaf.gif'>What is going on?</a></td>" +
+				    "   </tr>" +
+			        "</table>";
+            }
+            rowcontent += "</div>" +
+                        "</td>" +
+                    "</tr>";
+
+            add_new_row('#tbitemadded', rowcontent);
+        });
+    });
+
+
+    function SaveWorkOrder(workOrderID, status, createUserID, approvalUserID, companyID) {
+        var isValid = $("#frmMain").valid();
+        if (!isValid) {
+            return false;
+        }
+
+        var workOrderCode = $('#txtCode').val();
+        var createDate = $('#txtDate').val();
+        var stockID = $('#ddlStock').val();
+        var description = $('#txtDescription').val();
+        var manufacturingType = $('#ManufacturingType').val();
+        var customerJob = $('#txtCustomer').val();
+        var parentGoodID;
+        var parentQuantity;
+        if (parseInt(manufacturingType) == 1) { //BOM - None Continue
+            parentGoodID = $('#hdParentGoodID').val();
+            parentQuantity = $('#txtParentQuantity').val();
+        }
+        else {
+            parentGoodID = $('#ddlGoodID').val();
+            parentQuantity = 0;
+        }
+
+        var workOrderDetail = BuildJSON(manufacturingType);
+        $.ajax({
+            type: "POST",
+            url: "/Services/WorkOrderService.asmx/SaveWorkOrder",
+            data: JSON.stringify({
+                workOrderID: workOrderID,
+                workOrderCode: workOrderCode,
+                createDate: createDate,
+                createUserID: createUserID,
+                approvalUserID: approvalUserID,
+                stockID: stockID,
+                parentGoodID: parentGoodID,
+                parentQuantity: parentQuantity,
+                description: description,
+                workOrderDetail: workOrderDetail,
+                manufacturingType: manufacturingType,
+                customerJob: customerJob,
+                status: status,
+                companyID: companyID
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                var retValue = JSON.parse(data.d);
+                if (retValue.indexOf("ERROR") != -1) {
+                    alert(retValue);
+                    return;
+                }
+                else {
+                    if (status == 0) {
+                        CreatePopupMessage('divMessage', '@Resources.Resource.Common_Msg_EditSuccess', '@Resources.Resource.Common_Message', 160, 400, "/WorkOrder/All/");
+                    }
+                    else {
+                        $.ajax(
+                            {
+                                type: 'POST',
+                                url: '/Services/WOStockOutService.asmx/CreateInvoiceStockOutWO',
+                                traditional: true,
+                                dataType: "text",
+                                data: { "workOrderId": retValue, "userId": createUserID },
+                                success: function (data) {
+                                    debugger;
+                                    var msg = "";
+                                    var stringContent = $(data).text();
+                                    if (stringContent != "\n") {
+                                        var sStr = data.toString().substring(76, data.length);
+                                        msg = sStr.replace("</string>", "");
+                                    } else {
+                                        msg = "Doesn't exist in Stock. Can't create outgoing shipment";
+                                    }
+                                    CreatePopupMessage('divMessage', msg, '@Resources.Resource.Common_Message', 160, 400, "/WorkOrder/All/");
+                                }
+                            });
+                        }
+                    }
+            }
+        });
+    }
+
+    function BuildJSON(manufacturingType) {
+        var arrayData = [];
+        if (parseInt(manufacturingType) == 1) {
+            $("#tbnonecontinue tr").each(function () {
+                var tr = $(this).closest('tr');
+                var subGoodID = $("#hdGoodID", tr).val();
+                if (subGoodID != "-1" && parseInt(subGoodID) > 0) {
+                    var item = {
+                        "SubGoodId": subGoodID,
+                        "SubQuantity": $("#txtSubQty", tr).val(),
+                    };
+                    arrayData.push(item);
+                }
+            });
+        }
+        else {
+            $("#tbcontinue tr").each(function () {
+                var tr = $(this).closest('tr');
+                var subGoodID = $("#ddlSubGoodID", tr).val();
+                if (subGoodID != "-1" && parseInt(subGoodID) > 0) {
+                    var item = {
+                        "SubGoodId": subGoodID,
+                        "SubQuantity": $("#txtSubQty", tr).val(),
+                    };
+                    arrayData.push(item);
+                }
+            });
+        }
+
+        return JSON.stringify(arrayData);
+    }
+
+    function ChangeByGoodID(goodID) {
+        $('#txtParentQuantity').val("0");
+        if (goodID != "") {
+            $.ajax({
+                type: "POST",
+                url: "/Services/GoodService.asmx/GetByParentID",
+                data: JSON.stringify({
+                    parentID: goodID
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    try {
+                        var goodItems = JSON.parse(data.d);
+                        $('#tbcomponents tr:not(:first)').remove();
+                        if (goodItems instanceof Array) {
+                            $.each(goodItems, function () {
+                                var rowcontent =
+                                    "<tr><input type='hidden' id='hdGoodID' class='goodid' value=" + this.ID + " />" +
+                                        "<td style ='text-align:left'>" + this.Code + "</td>" +
+                                        "<td style ='text-align:left'>" + this.Description + "</td>" +
+                                        "<td style ='text-align:left'><input type=text id='txtSubQty' class='quantity' value='0' /></td>" +
+                                    "</tr>";
+                                add_new_row('#tbcomponents', rowcontent);
+                            });
+                        }
+
+                    } catch (ex) { }
+                }
+            })
+
+        }
+    }
+
+    function add_new_row(table, rowcontent) {
+        if ($(table).length > 0) {
+            if ($(table + ' > tbody').length == 0) $(table).append('<tbody />');
+            ($(table + ' > tr').length > 0) ? $(table).children('tbody:last').children('tr:last').append(rowcontent) : $(table).children('tbody:last').append(rowcontent);
+        }
+    }
+
+    function RemoveRow(element) {
+        var tr = $(element).closest('tr');
+        tr.remove();
+    }
+
+    function delete_row(tableID) {
+        var rowCount = $('#tbcomponents tbody tr').length
+        for (var i = 1; i < rowCount; i++) {
+            $('#tbcomponents').deleteRow(i);
+            rowCount--;
+            i--;
+        }
+    }
+</script>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+
+    <div id="breadcrumb">
+        <input type="hidden" id="hdCurrentUserID" value="@user.ID" />
+        <input type="hidden" id="hdCompanyID" value="@user.Company.ID" />
+        <input type="hidden" id="hdStatus" value="@Model.Status" />
+        <input type="hidden" id="hdManufacturingTypeID" value="@Model.ManufacturingType" />
+            <input type="hidden" id="hdWorkOrderID" value="@Model.ID" />
+	    <div class="container">
+		    <div id="con_top">
+			    <div class="c_container">
+				    <h3> @pageTitle</h3>
+				    <div id="breadcrumbs">
+					    <ul>
+						    <li><span>@Resources.Resource.Common_Inventory</span></li>
+                            <li><span>@Resources.Resource.ProductionMonitors_Index_Processing</span></li>
+                            <li><a href="/WorkOrder/All/">@Resources.Resource.Common_WorkOrder</a></li>
+					    </ul>		
+				    </div>
+			    </div>
+		    </div>
+		
+	    </div>
+    </div>
+
+    <div id="con_form">
+        <div class="error" style="display:none;">
+            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float:left; margin: -5px 10px 0px 0px; " />
+            <span></span>.<br clear="all"/>
+        </div>
+        <div id="divMessage"></div>
+
+	    <div class="container">
+		    <div class="c_container">
+		        <div class="form_position1">
+			        <div class="form_left">
+			            <div class="form-group">
+				            <label for="to">@Resources.Resource.Common_WorkOrder</label>
+                            @Html.TextBox("txtCode", Model.Code, new { @class = "form-control required" })
+				        </div>
+				        <div class="form-group">
+					        <label for="createdate">@Resources.Resource.Common_ManufacturingType</label>
+                            @Html.DropDownList("ManufacturingType", (IEnumerable<SelectListItem>)ViewData["ManufacturingType"], new { @class = "form-control" })
+				        </div>
+				        <div class="form-group">
+						    <label for="createdate">@Resources.Resource.Common_Customer/ @Resources.Resource.Common_Job</label>
+                            @Html.TextBox("txtCustomer", Model.CustomerJob, new { @class = "form-control" })
+                            @Html.Hidden("ContactIDValue")
+				        </div>
+		            </div>
+
+			        <div class="form_right">							
+				        <div class="form-group">
+                            <label for="createdate">@Resources.Resource.Common_CreateDate </label>
+                            @Html.TextBox("txtDate", Model.CreatedDate.ToString("dd-MMM-yyyy"), new { @class = "form-control datepicker " })
+				        </div>
+				        <div class="form-group">
+				            <label for="invoice">@Resources.Resource.WorkOrder_ReceiveStock</label>
+                            @Html.DropDownList("ddlStock", (IEnumerable<SelectListItem>)ViewData["Stock"], new { @class = "form-control" })
+					    </div>
+				        <div class="form-group">
+				            <label for="invoice">@Resources.Resource.Common_Description</label>
+                            @Html.TextArea("txtDescription", Model.Description, new { @class = "form-control", @maxlength = "1000", @style = "resize: none;", @rows = 3 })
+					    </div>
+
+			        </div>
+
+		        </div>
+
+                <div class="con_clear"></div>
+	                <div class="form_position2">
+
+                        <div id="divbynonecontinue">
+		                    <div class="form_left">
+			                    <div class="form-group">
+				                    <label for="schedule">@Resources.Resource.Common_Bom</label>
+                                    @Html.DropDownList("ddlBomID", (IEnumerable<SelectListItem>)ViewData["BOMID"], new { @class = "form-control" })
+                                    <input type="hidden" id="hdParentGoodID" />
+                                    @*@Html.DropDownList("BOMID",null,String.Empty, new { @class = "form-control" })*@
+			                    </div>
+                                <div class="form-group">                                
+                                    <label id="lblFinishGood">@Resources.Resource.Common_FinishedGood</label>
+                                    <label id="lblParentGoodName" class="form-control description" style="font-weight: normal;" />
+                                </div>
+
+		                    </div>
+		                    <div class="form_right" >
+			                    <div class="form-group inputdate" id="amounts">
+				                    <label for="createdate">@Resources.Resource.Common_Quantity</label>
+					                @Html.TextBox("txtParentQuantity", Model.OrderQuantity, new { @class = "form-control" })
+			                    </div>
+		                    </div>
+                        </div>
+
+                        <div id="divbycontinue">
+		                    <div class="form_left">
+			                    <div class="form-group">
+				                    <label for="schedule">@Resources.Resource.Common_FinishedGood</label>
+                                    @Html.DropDownList("ddlGoodID", (IEnumerable<SelectListItem>)ViewData["GoodItems"], new { @class = "form-control" })
+			                    </div>
+		                    </div>
+
+                        </div>
+	                </div>
+		        </div>
+	        </div>    
+    </div>
+
+    <div id="con_body">
+	    <div class="container">
+		    <div class="c_container">
+			    <div id="form_body">
+                    <!-- Detail for goods -->	
+                    @if (Model.ManufacturingType == 1)  //BOM
+                    {
+                    <table id="tbnonecontinue">
+                        <thead>
+                            <tr>
+	                            <th style ="text-align:left;"> <b> @Resources.Resource.Common_Item </b> </th>
+	                            <th style ="text-align:left;"> <b> @Resources.Resource.Common_Description </b></th>
+	                            <th style ="text-align:left;"> <b> @Resources.Resource.Common_Quantity </b></th>
+                            </tr>
+                        </thead> 
+                        <tbody>
+                            @foreach (var item in Model.WorkOrderDetails)
+                            {                    
+                            <tr><input type='hidden' id='hdGoodID' class='goodid' value='@item.GoodID' />
+	                            <td style ="text-align:left">@item.Good.Code</td>
+	                            <td style ="text-align:left;">@item.Good.Description</td>
+	                            <td style ="text-align:left;"><input type=text id='txtSubQty' class='form-control numeric' maxlength="10" value='@item.OrderQuantity' /></td>
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                    
+                    
+                    <table id="tbcontinue">
+                        <thead>
+                            <tr>
+	                            <th style ="text-align:left;"> <b> @Resources.Resource.Common_Item </b> </th>
+	                            <th style ="text-align:left;"> <b> @Resources.Resource.Common_Description </b></th>
+	                            <th style ="text-align:left;"> <b> @Resources.Resource.Common_Quantity </b></th>
+                                <th style="width: 20px;"><b> </b></th>
+                            </tr>
+                        </thead> 
+                        <tbody id="insertRow">
+                            @for (int iIndex = 0; iIndex < 5; iIndex++)
+                            {
+                            <tr>
+	                            <td style ="text-align:left">@Html.DropDownList("ddlSubGoodID", new SelectList(ViewBag.SubGoodID, "Value", "Text", ""), "", new { @class = "form-control goodchange" })</td>
+	                            <td style ="text-align:left;"><label id="txtDescription" class="form-control description" style="font-weight: normal;" /></td>
+	                            <td style ="text-align:left;"><input type="text" id="txtSubQty" class="form-control numeric numbersOnly" maxlength="10" /></td>
+                                <td><div class="remove" id="delRow" onclick="RemoveRow(this);"></div></td>
+
+                            </tr>
+                            }
+                        </tbody>
+                    </table>
+                    }
+                    else //continue - None BOM
+                    {
+                    <table id="tbnonecontinue" style="width:100%; vertical-align:top">
+                        <thead>
+                            <tr>
+	                            <th style ="text-align:left;"> <b> @Resources.Resource.Common_Item </b> </th>
+	                            <th style ="text-align:left;"> <b> @Resources.Resource.Common_Description </b></th>
+	                            <th style ="text-align:left;"> <b> @Resources.Resource.Common_Quantity </b></th>
+                            </tr>
+                        </thead> 
+                        <tbody>
+                            <tr>
+	                            <td style ="text-align:left">  </td>
+	                            <td style ="text-align:left;"> </td>
+	                            <td style ="text-align:left;">  </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <table id="tbcontinue" style="width:100%; vertical-align:top">
+                        <thead>
+                            <tr>
+	                            <th style ="text-align:left;"> <b> @Resources.Resource.Common_Item </b> </th>
+	                            <th style ="text-align:left;"> <b> @Resources.Resource.Common_Description </b></th>
+	                            <th style ="text-align:left;"> <b> @Resources.Resource.Common_Quantity </b></th>
+                                <th style="width: 20px;"><span></span></th>
+                            </tr>
+                        </thead> 
+                        <tbody id="insertRow">
+                            @foreach (var item in Model.WorkOrderDetails)
+                            {                    
+                            <tr>
+	                            <td style ="text-align:left">@Html.DropDownList("ddlSubGoodID", new SelectList(ViewBag.GoodID, "Value", "Text", item.GoodID), "", new { @class = "form-control goodchange" })</td>
+	                            <td style ="text-align:left;"><label id="txtDescription" class="form-control description"> @item.Good.Description </label></td>
+	                            <td style ="text-align:left;"><input type="text" id="txtSubQty" class="form-control numeric" maxlength="10" value='@item.OrderQuantity' /></td>
+                                <td><div class="remove" id="delRow" onclick="RemoveRow(this);"></div></td>
+
+                            </tr>
+                            }
+                        </tbody>
+                    </table>                
+                    }
+                </div>
+
+			    <div class="tablefooter" id="tablefooter">
+				    <div class="pos1">
+					    @*<button id="addline" class="addline">@Resources.Resource.Common_AddNewLine</button>*@
+                        <input type="button" id="addline" class="addline" value="@Resources.Resource.Common_AddNewLine" />
+				    </div>
+			    </div>
+
+			    <div class="form_button1">
+                    @if (Model.Status<2)
+                    {
+				        <input type="button" value="@Resources.Resource.Common_Save" id="btnSaveWorkOrder" class="btn btn-defaultxero"  />
+				        <input type="button" value="@Resources.Resource.Common_Approve" id="btnApprovalWorkOrder" class="btn btn-defaultxero" />
+                    }
+				    <input type="button" value="@Resources.Resource.Common_Cancel" id="btnCancelWorkOrder" onclick="javascript: location.href = '/WorkOrder/All';" class="btn btn-defaultxero" />
+			    </div>
+		    </div>
+	    </div>                                
+    </div>
+}

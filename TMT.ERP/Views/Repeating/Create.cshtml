@@ -1,0 +1,120 @@
+﻿@model TMT.ERP.DataAccess.Model.Repeating
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Create</title>
+</head>
+<body>
+    <script src="~/Scripts/jquery-1.7.1.min.js"></script>
+    <script src="~/Scripts/jquery.validate.min.js"></script>
+    <script src="~/Scripts/jquery.validate.unobtrusive.min.js"></script>
+    
+    @using (Html.BeginForm()) {
+        @Html.ValidationSummary(true)
+    
+        <fieldset>
+            <legend>Repeating</legend>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.NumDayRepeat)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.NumDayRepeat)
+                @Html.ValidationMessageFor(model => model.NumDayRepeat)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.RepeatTime)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.RepeatTime)
+                @Html.ValidationMessageFor(model => model.RepeatTime)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.DateRun)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.DateRun)
+                @Html.ValidationMessageFor(model => model.DateRun)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.DueDateNum)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.DueDateNum)
+                @Html.ValidationMessageFor(model => model.DueDateNum)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.DueDateTypeID)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.DueDateTypeID)
+                @Html.ValidationMessageFor(model => model.DueDateTypeID)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.EndDate)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.EndDate)
+                @Html.ValidationMessageFor(model => model.EndDate)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.Status)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.Status)
+                @Html.ValidationMessageFor(model => model.Status)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.RepeatType)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.RepeatType)
+                @Html.ValidationMessageFor(model => model.RepeatType)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.SaleInvoiceID)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.SaleInvoiceID)
+                @Html.ValidationMessageFor(model => model.SaleInvoiceID)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.PurchaseID)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.PurchaseID)
+                @Html.ValidationMessageFor(model => model.PurchaseID)
+            </div>
+    
+            <div class="editor-label">
+                @Html.LabelFor(model => model.IsTracked)
+            </div>
+            <div class="editor-field">
+                @Html.EditorFor(model => model.IsTracked)
+                @Html.ValidationMessageFor(model => model.IsTracked)
+            </div>
+    
+            <p>
+                <input type="submit" value="Create" />
+            </p>
+        </fieldset>
+    }
+    
+    <div>
+         
+    </div>
+</body>
+</html>

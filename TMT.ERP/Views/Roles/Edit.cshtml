@@ -1,0 +1,382 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.Role
+
+@{
+    Layout = null;
+}
+<script type="text/ecmascript">
+
+    $(document).ready(function () {
+        $('#RoleName').focus();
+        $('#ddlFeature').change(function () {
+            var featureId = $(this).val();
+            if (featureId == "" || featureId == undefined) {
+                featureId = 0;
+            }
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Control/GetFunction/",
+                    data:
+                        {
+                            "featureId": featureId
+                        },
+                    success: function (data) {
+                        $('#loadFunction').empty();
+                        $('#loadFunction').html(data);
+                        $('#ddlFunction').val("");
+                        $('#loadControl').empty();
+                    }
+                });
+        });
+        $('#ddlFunction').change(function () {
+            debugger;
+            var functionId = $(this).val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Control/GetControl/",
+                    data:
+                        {
+                            "functionId": functionId
+                        },
+                    success: function (data) {
+
+                        $('#loadControl').empty();
+                        $('#loadControl').html(data);
+                        $('#loadControl').css('display', 'block');
+
+                    }
+                });
+        });
+        $('#btnSave').click(function () {
+            debugger;
+
+            var isValid = $("#frmEditRole").valid();
+            if (!isValid) {
+                return;
+            }
+            
+           
+            var roleId = $('#hdfRoleId').val();
+            var roleName = $('#RoleName').val();
+            var description = $('#Description').val();
+            var controlInroles = BuildJSON();
+            var userInRoleNew = BuildJsonUserNew();
+            var userInRoleOld = BuildJsonUserOld();
+            var controlNew = BuildJSONControlNew();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Roles/Update/",
+                    data:
+                        {
+                            "roleId": roleId,
+                            "roleName": roleName,
+                            "description": description,
+                            "controlInroles": controlInroles,
+                            "userInRoleNew": userInRoleNew,
+                            "userInRoleOld": userInRoleOld,
+                            "controlNew": controlNew
+                        }
+                    , success: function () {
+                        location.href = "/Roles/";
+                    }
+                });
+            window.location.href = "/Roles/";
+
+        });
+        $('#btnClose').unbind('click').click(function (e) {
+            $('#dialog').dialog('close');
+            return false;
+        });
+
+        jQuery.validator.messages.required = "";
+        $("#frmEditRole").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+    });
+    $('#aRole').click(function () {
+        $(this).parent().addClass('active');
+        $('#aUser').parent().removeClass('active');
+        $('#aUser').parent().addClass('selected');
+        $('#divRole').css('display', 'block');
+        $('#divUser').css('display', 'none');
+    });
+    $('#aUser').click(function () {
+        $(this).parent().addClass('active');
+        $('#aRole').parent().removeClass('active');
+        $('#aRole').parent().addClass('selected');
+        $('#divRole').css('display', 'none');
+        $('#divUser').css('display', 'block');
+    });
+    function BuildJSON() {
+        debugger;
+        var arrayData = [];
+        $("#tableControl > tbody#bodyControl > tr").each(function () {
+            var tr = $(this).closest('tr');
+            var item = {
+                "id": $('#hdfControlInRoleId', tr).val(),
+                "viewtype": $('#ddlViewType', tr).val()
+            };
+            arrayData.push(item);
+        });
+        return JSON.stringify(arrayData);
+    }
+    function BuildJsonUserOld() {
+        debugger;
+        var user = [];
+        $("#tableUser > tbody#bodyUser > tr#oldCheck").each(function () {
+            var tr = $(this).closest('tr');
+            var isCheck = $("input[name=cbCheck]", tr).prop('checked');
+            var id = $("input[name=cbCheck]", tr).val();
+            var item = {
+                "id": id,
+                "status": isCheck
+            };
+            user.push(item);
+        });
+        return JSON.stringify(user);
+    }
+    function BuildJsonUserNew() {
+        debugger;
+        var user = [];
+        $("input[name=cbNoCheck]:checked").each(
+            function () {
+                var item = {
+                    "id": $(this).val()
+                };
+                user.push(item);
+            });
+        return JSON.stringify(user);
+    }
+    function BuildJSONControlNew()
+    {
+        debugger;
+        var arrayData = [];
+        $("#tableControlNew > tbody#bodyControlNew > tr").each(function ()
+        {
+            debugger;
+            var tr = $(this).closest('tr');
+            if ($('input[name=cbControlNew]', tr).is(":checked"))
+            {
+                debugger;
+                var item = {
+                    "id": $('input[name=cbControlNew]', tr).val(),
+                    "viewtype": $('#ddlViewTypeControl', tr).val()
+                };
+                arrayData.push(item);
+            }
+        });
+        return JSON.stringify(arrayData);
+    }
+</script>
+@{
+    var userCheck = ViewBag.UserCheck as List<int>;
+    var userTotal = ViewBag.UserTotal as List<User>;
+    var feature = ViewBag.FeatureID as List<Feature>;
+    var function = ViewBag.FunctionID as List<Function>;
+    var controlInRoles = ViewBag.ControlInRoles as List<ControlInRole>;
+}
+<div class="cleardiv"></div>
+<div class="error" style="display: none;">
+    <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: -5px 10px 0px 0px;" />
+    <span></span>.<br clear="all" />
+</div>
+<div id="divMessage"></div>
+<div class="cleardiv"></div>
+<input type="hidden" value="@Model.ID" id="hdfRoleId"/>
+<ul style="margin: 0px;" class="group nav nav-tabs">
+    <li class="active">
+        <a href="javascript:void(0);" title="Role" id="aRole">Role
+        </a></li>
+    <li class="selected">
+        <a href="javascript:void(0);" title="User" id="aUser">User
+        </a></li>
+</ul>
+@using (Html.BeginForm("", "Roles", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmEditRole" }))
+{
+    <div style="display: block; padding-top: 20px;" id="divRole">
+        <div style="width: 46%; float: left;">
+            <h4>@Resources.Resource.Role_Edit_Title</h4>
+            <hr />
+            <div class="bovien" style="margin-right: 10px;">
+                <label>
+                    @Resources.Resource.Role_Index_RoleName
+                </label>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.RoleName, new { @class = "required", style = "width:200px;" })
+                </div>
+                <div class="cleardiv"></div>
+                <label>
+                    @Resources.Resource.Role_Index_Description
+                </label>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.Description, new { @class = "required", style = "width:200px;" })
+                </div>
+            </div>
+        </div>
+        <div style="width: 52%; float: left;">
+
+            <div class="editor-field">
+                <div class="bovien">
+                    <h4>New Control</h4>
+                    <hr />
+                    <table class="table tableOver" id="tableControlNew" style="width: 99%; margin-bottom: 0px;">
+                        <thead style="display: none;">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                                <th></th>                                
+                            </tr>
+                        </thead>
+                        <tbody id="bodyControlNew">
+                            @{
+    var ooNewControl = ViewBag.NewControl as List<TMT.ERP.DataAccess.Model.Control>;
+                            }
+                            @if (ooNewControl != null && ooNewControl.Count > 0)
+                            {
+                                foreach (var control in ooNewControl)
+                                {
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" id="cbControlNew" name="cbControlNew" value="@control.ID"/>                                        
+                                    </td>
+                                    
+                                    <td>
+                                        @control.ControlName
+                                    </td>
+                                    <td>
+                                        <select id="ddlViewTypeControl" name="ddlViewTypeControl" style="width: 80px !important; height: 25px !important;">
+                                            <option value="0">Hidden</option>
+                                            <option value="1">Disabled</option>
+                                            <option value="2" selected="selected">Show</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                }
+
+                            }
+                        </tbody>
+                    </table>
+                    <div class="cleardiv"></div>
+                    <h4>Controls In Roles</h4>
+                    <hr />
+
+
+                    <table class="table tableOver" id="tableControl" style="width: 99%; margin-bottom: 0px;">
+                        <thead style="display: none;">
+                            <tr>
+                                <th></th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody id="bodyControl">
+                            @if (controlInRoles != null)
+                            {
+                                foreach (var item in controlInRoles)
+                                {
+                                <tr>
+                                    <td style="display: none;">
+                                        <input type="hidden" id="hdfControlInRoleId" value="@item.ID"/></td>
+                                    <td>
+                                        @item.Control.ControlName
+                                    </td>
+                                    <td>
+                                        @{
+                                    var viewType = item.ViewType;
+                                        }
+                                        <select id="ddlViewType" name="ddlViewType" style="width: 80px !important; height: 25px !important;">
+                                            @switch (viewType)
+                                            {
+                                                case 0:
+                                                <option value="0" selected="selected">Hidden</option>
+                                                <option value="1">Disabled</option>
+                                                <option value="2">Show</option>
+                                                    break;
+                                                case 1:
+                                                <option value="0">Hidden</option>
+                                                <option value="1" selected="selected">Disabled</option>
+                                                <option value="2">Show</option>
+                                                    break;
+                                                case 2:
+                                                <option value="0">Hidden</option>
+                                                <option value="1">Disabled</option>
+                                                <option value="2" selected="selected">Show</option>
+                                                    break;
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                                }
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cleardiv"></div>
+    <div style="display: none;" id="divUser">
+        <table id="tableUser" class="table">
+            <thead style="display: none;">
+                <tr>
+                </tr>
+                <tr>
+                </tr>
+            </thead>
+            <tbody id="bodyUser">
+                @if (userCheck != null && userTotal != null)
+                {
+                    foreach (var user in userTotal)
+                    {
+                        if (userCheck.Contains(user.ID))
+                        {
+                    <tr id="oldCheck">
+                        <td>
+                            <input type="checkbox" name="cbCheck" value ="@user.ID" id="cbOldCheck" checked="checked"/>
+                        </td>
+                        <td>
+                            @user.UserName
+                        </td>
+                    </tr>
+                        }
+                        else
+                        {
+                    <tr id="NoCheck">
+                        <td>
+                            <input type="checkbox" name="cbNoCheck" value ="@user.ID" id="cbNoCheck"/>
+                        </td>
+                        <td>
+                            @user.UserName
+                        </td>
+                    </tr>   
+                        }
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="cleardiv"></div>
+    <div style="display: inline;">
+        <input type="submit" value="@Resources.Resource.Role_Edit_Save" class="btn btn-defaultxero" id="btnSave" />
+        <input type="submit" value="@Resources.Resource.Role_Edit_Close" class="btn btn-defaultxero" id="btnClose" />
+    </div>
+}

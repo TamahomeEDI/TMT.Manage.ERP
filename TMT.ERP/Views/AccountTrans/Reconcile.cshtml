@@ -1,0 +1,262 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.BankStatementDetail>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var status = 0;//Transfer or Create (0 - Create 1 Transfer) 
+        $('.aCreate').click(function () {
+            
+            status = 0;
+            var tr = $(this).closest('tr');
+            $('#reCreate', tr).css('display', 'block');
+            $('#reTransfer', tr).css('display', 'none');
+            $('.divCreate').show();
+            $('.divTransfer').hide();
+        });
+        $('.aTransfer').click(function () {
+            
+            status = 1;
+            var tr = $(this).closest('tr');
+            $('#reCreate', tr).css('display', 'none');
+            $('#reTransfer', tr).css('display', 'block');
+            $('.divCreate').hide();
+            $('.divTransfer').show();
+        });
+        $('#btnOk').click(function () {
+            
+            var tr = $(this).closest('tr');
+            var name = $('#txtName', tr).val();
+            var desc = $('#txtDescription', tr).val();
+            var account = $('#AccountID', tr).val();
+            var taxrate = $('#TaxRateID', tr).val();
+            var received = $('#hdfReceived', tr).val();
+            var accountBank = $('#AccountBankID').val();
+            var bankStatementDetailId = $('#hdfBankStatementDetails', tr).val();
+
+            if (status == 0) {
+                if (name == '' || desc == '' || account == '') {
+                    alert('Please input all name,desc,account');
+                    return false;
+                } else {
+                    $.ajax(
+                        {
+                            typ: 'POST',
+                            url: '/AccountTrans/Create/',
+                            data:
+                                {
+                                    'name': name,
+                                    'desc': desc,
+                                    'account': account,
+                                    'taxrate': taxrate,
+                                    'id': bankStatementDetailId
+                                },
+                            success: function () {
+                                location.reload();
+                            }
+                        });
+                    location.reload();
+                }
+            } else {
+                if (accountBank == '' || accountBank == 0) {
+                    alert('Please select account Bank');
+                    return false;
+                } else {
+                    $.ajax(
+                        {
+                            type: 'POST',
+                            url: '/AccountTrans/Transfer/',
+                            data:
+                                {
+                                    "accountBankId": accountBank,
+                                    "received": received,
+                                    "bankStatementDetailsId": bankStatementDetailId
+                                },
+                            success: function () {
+                                location.reload();
+                            }
+                        });
+                    location.reload();
+                }
+            }
+        });
+    })
+</script>
+
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container" style="display: inline-block">
+            <h3>@ViewBag.Name &nbsp;&nbsp;&nbsp; @ViewBag.Num</h3>
+        </div>
+    </div>
+</div>
+
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <input type="hidden" id="hidID" value="@ViewBag.ID"/>
+            <div style="padding: 2px 0px">
+                <div style="display: inline-block">
+                    <p style="display: inline-block; border-style: none solid none none; border-right-width: 2px; border-right-color: darkgrey;">
+                        <label style="font-weight: normal; color: darkgray">@Resources.Resource.BankAccounts_Index_StatementBalance</label>
+                        <br />
+                        <label style="font-size: 25px;">@ViewBag.Balance</label>
+                    </p>
+                    <p style="display: inline-block; margin-left: 20px;">
+                        <label style="font-weight: normal; color: darkgray">@Resources.Resource.BankAccounts_Index_TMTBalance</label>
+                        <br />
+                        <label style="font-size: 25px;">@ViewBag.TMTBalance</label>
+                    </p>
+                </div>
+                <div class="bank" style="float: right; width: 65%; margin-top: -55px; margin-right: 20px;">
+
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-defaultxero dropdown-toggle" data-toggle="dropdown">
+                            @Resources.Resource.BankAccount_ManageAccount_Label<span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu" role="menu" style="margin-left: -100px; width: 300px;">
+                            <li>
+                                <ul>
+                                    <li>
+                                        <div>
+                                            <h3>@Resources.Resource.BankAccounts_Index_Find</h3>
+                                            <ul>
+                                                <li>
+                                                    <a href="/AccountTrans/Index/@ViewBag.ID" >@Resources.Resource.BankAccounts_Index_Transaction</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/AccountTrans/BankStatement/@ViewBag.ID">@Resources.Resource.BankAccounts_Index_BankStatement</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div>
+                                            <h3>@Resources.Resource.BankAccounts_Index_New</h3>
+                                            <ul>
+                                                <li>
+                                                    <a href="/BankAccounts/SpendMoney/@ViewBag.ID">@Resources.Resource.BankAccounts_Index_Spend</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/BankAccounts/ReceiveMoney/@ViewBag.ID">@Resources.Resource.BankAccounts_Index_Receive</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/BankAccounts/TransferMoney/@ViewBag.ID">@Resources.Resource.BankAccounts_Index_Transfer</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div>
+                                            <h3>@Resources.Resource.BankAccounts_Index_Reconcile</h3>
+                                            <ul>
+                                                <li>
+                                                    <a href="#" class="ReconcileAcc">@Resources.Resource.BankAccounts_Index_ReconcileAcc</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Reconciliation Report</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#" class="ImportID">@Resources.Resource.BankAccounts_Index_Import</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <ul>
+                                    <li class="li-bottom">
+                                        <div>
+                                            <ul>
+                                                <li>
+                                                    <a href="#" id="BankAccountEditID">@Resources.Resource.BankAccounts_Index_Edit</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <ul style="margin-bottom: 10px;" class="group nav nav-tabs">
+                    <li class="active">
+                        <a href="/AccountTrans/Reconcile/@ViewBag.ID">Reconcile</a></li>
+                    <li class="selected">
+                        <a href="/AccountTrans/BankStatement/@ViewBag.ID" id="BankStm">Bank Statement</a></li>
+                    <li class="selected">
+                        <a href="/AccountTrans/Index/@ViewBag.ID" id="AccTrans">Account Transaction</a></li>
+                </ul>
+                <div id="allTrans" style="display: block">
+                    <table class="table" style="width: 100%">
+                        <thead>
+                            <tr>
+                                <th>Review your bank statement lines...</th>
+                                <th></th>
+                                <th>...then match with your transactions in TMT</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td style="text-align: left;">
+                                        <label style="width: 100%">Date : @item.Date</label><br />
+                                        <label style="width: 100%">Payee : @item.Payee</label><br />
+                                        <label style="width: 100%">Reference : @item.Reference</label><br />
+                                        <label style="width: 100%">Received : @item.Received</label>
+                                        <input type="hidden" value="@item.Received" id="hdfReceived"/>
+                                    </td>
+                                    <td>
+                                        <input type="hidden" value="@item.ID" id="hdfBankStatementDetails"/>
+                                        <input type="button" id="btnOk" value="OK" />
+                                    </td>
+                                    <td>
+                                        <div style="display: inline-block; width: 100%; text-align: left; margin-top: 5px; margin-bottom: 10px;">
+                                            @*<ul style="margin-bottom: 10px;" class="group nav nav-tabs">
+                                                <li class="active">
+                                                    <a href="javascript:void(0);" class="aCreate">Create</a></li>
+                                                <li class="selected">
+                                                    <a href="javascript:void(0);" class="aTransfer">Transfer</a></li>
+                                            </ul>*@
+                                            <input type="button" class="aCreate btn-defaultxero" value="Create" />
+                                            <input type="button" class="aTransfer btn-defaultxero" value="Transfer" />
+                                        </div>
+                                        <div id="reCreate" style="width: 100%">
+                                            <div>
+                                                <p style="display: inline-block; width: 48%; float: left;">
+                                                    <label style="text-align: left; width: 80px;">Name:</label>
+                                                    <input type="text" id="txtName" name="txtName" style="width: 200px !important;" />
+                                                </p>
+                                                <p style="display: inline-block; width: 48%; float: left;">
+                                                    <label style="text-align: left; width: 80px;">Acct:</label>
+                                                    @Html.DropDownList("AccountID", null, string.Empty, new { style = "width:200px !important;" })
+                                                </p>
+                                            </div>
+                                            <div>
+                                                <p style="display: inline-block; width: 48%; float: left;">
+                                                    <label style="text-align: left; width: 80px;">Desc:</label>
+                                                    <textarea id="txtDescription" name="txtDescription" style="width: 200px !important; resize: none" maxlength="1000" rows="3"></textarea>
+                                                </p>
+                                                <p style="display: inline-block; width: 48%; float: left;">
+                                                    <label style="text-align: left; width: 80px;">Tax Rate:</label>
+                                                    @Html.DropDownList("TaxRateID", null, string.Empty, new { style = "width:200px !important;" })
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div id="reTransfer" style="display: none; margin-top: 30px;">
+                                            <p style="display: inline-block; width: 96%; float: left;">
+                                                <label style="text-align: left;">Transfer to account : </label>
+                                                @Html.DropDownList("AccountBankID", null, string.Empty, new { style = "width:200px !important;" })
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

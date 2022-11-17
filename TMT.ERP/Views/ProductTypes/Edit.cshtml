@@ -1,0 +1,135 @@
+﻿@model TMT.ERP.DataAccess.Model.ProductType
+
+@{
+    Layout = null;  
+}
+<script type="text/ecmascript">
+    var result = 0;
+    $(document).ready(function () {
+
+        $('#btnClose').click(function (e) {
+            $("#dialog").dialog("close");
+            return false;
+        });
+
+        $('#Name').focus();
+
+        jQuery.validator.messages.required = "";
+
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                    $('#AlertDuplicate').hide();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+        //Press enter
+        $('.noEnterSubmit').keypress(function (e) {
+            debugger;
+            if (e.which == 13) return false;
+            //or...
+            if (e.which == 13) e.preventDefault();
+        });
+
+        function ExistsName(name) {
+            var id = $('#hidID').val();
+            $.ajax({
+                type: 'POST',
+                url: '/ProductTypes/ExistsName/',
+                data: { "name": name, "id": id },
+                success: function (data) {
+                    debugger;
+                    if (data == 1) {
+                        result = 1;
+                    }
+                    if (data == 0)
+                        result = 0;
+                },
+                async: false
+            });
+        }
+
+
+        $('#btnSave').click(function (e) {
+            debugger;
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            var name = $('#Name').val();
+            var description = $('#Description').val();
+            var id = $('#hidID').val();
+            ExistsName(name);
+            if (result == 1) {
+                $('#AlertDuplicate').show();
+                $('.error').hide();
+                return false;
+            } else {
+                $('#AlertDuplicate').hide();
+                $.ajax(
+                {
+                    type: 'POST',
+                    traditional: true,
+                    url: '/ProductTypes/Edit/',
+                    data: { "name": name, "description": description, "id": id },
+                    success: function (e) {
+                        location.href = "/ProductTypes/Index/";
+                    },
+                    async: false
+                });
+            }
+        });
+    });
+</script>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <input type="hidden" id="hidID" value="@Model.ID">
+    <div id="popup-breadcrumb" style="margin-top: -6px;">
+        <div class="error" style="display: none; margin-top: 5px; border: 2px solid red; height: 30px; border-radius: 6px; line-height: 2">
+            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+            <span style="font-size: 11px;"></span>.<br clear="all" />
+        </div>
+        <div id="AlertDuplicate" style="display: none; margin-top: 5px; border: 2px solid red; height: 30px; border-radius: 6px; line-height: 2">
+            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+            <label style="color: red; font-weight: normal; font-size: 12px;">@Resources.Resource.Common_Msg_NameUnique</label>
+        </div>
+        <div style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;">
+            <div style="height: 30px; width: 100%; margin-top: 5px;">
+                <div style="float: left; width: 35%">
+                    <label>@Resources.Resource.ProductTypes_Name </label>
+                </div>
+                <div style="float: left; width: 60%">
+                    <input id="Name" name="Name" type="text" style="width: 200px;" class="required noEnterSubmit" maxlength="100" value="@Model.Name"/>
+                </div>
+            </div>
+            <div style="height: 80px; width: 100%">
+                <div style="float: left; width: 35%">
+                    <label>@Resources.Resource.ProductTypes_Description </label>
+                </div>
+                <div style="float: left; width: 60%">
+                    <textarea id="Description" maxlength="1000" style="width: 200px; resize: none" rows="3">@Model.Description</textarea>
+                </div>
+            </div>
+            <div style="margin-left: 183px; margin-bottom: 10px; float: left; margin-top: 5px;">
+                <input type="button" class="btn btn-defaultxero" id="btnSave" value="@Resources.Resource.ProductTypes_Save"/>
+                <input style="margin-left: 6px;" type="button" class="btn btn-defaultxero" id="btnClose" value="@Resources.Resource.ProductTypes_Cancel"/>
+            </div>
+        </div>
+    </div>
+}

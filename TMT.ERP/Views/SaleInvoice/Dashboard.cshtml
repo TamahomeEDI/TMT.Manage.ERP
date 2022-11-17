@@ -1,0 +1,218 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.SaleInvoice>
+@{
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#CreatedDate').val('');
+        $('#DueDate').val('');
+        //$.ajax(
+        //  {
+        //      type: "POST",
+        //      url: "/SaleInvoice/SetTypeSearch/",
+        //      data:
+        //          {
+        //              "typeSearch": 2
+        //          },
+        //      success: function () {
+
+        //      }
+        //  });
+        $('#aClear').click(function() {
+            $('#txtTextSearch').val('');
+            $('#ddlTypeDate').val(0);
+            $('#CreatedDate').val('');
+            $('#DueDate').val('');
+        });
+        $('#btnSearchInvoice').click(function () {
+            var searchString = $('#txtTextSearch').val();
+            var type = $('#ddlTypeDate').val();
+            var createdate = $('#CreatedDate').val();
+            var duedate = $('#DueDate').val();
+            window.location.href = "/SaleInvoice/All?searchString=" + searchString + "&type=" + type + "&createdate=" + createdate + "&duadate=" + duedate;
+        });
+
+        
+    });
+    function show() {
+        $('#searchDraft').css('display', 'block');
+    }
+    function showHideDivSearch() {
+        var value = $('#searchDraft').css('display');
+        if (value == 'none') {
+            $('#searchDraft').css('display', 'block');
+        } else {
+            $('#searchDraft').css('display', 'none');
+        }
+    }
+</script>
+
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.SaleInvoic_Dashboard_Title</h3>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_body">
+    <div class="container">
+        <div class="c_container">
+            <div id="toolbar" class="toolbar">
+
+                <div class="btn-group">
+                    <button type="button" onclick="NewSalePurchase(0);" class="btn btn-defaultxero">@Resources.Resource.SaleInvoice_DashboardCreate_Invoice</button>
+                    <button type="button" style="margin-left: -10px;" class="btn btn-defaultxero dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="/SaleInvoice/CreateCreditNote/">
+                                @Resources.Resource.SaleInvoice_DashboardCreate_CreateCreditNote
+                            </a>
+                        </li>
+                        <li>
+                            <a href="/SaleInvoice/CreateRepeatingInvoice/">
+                                @Resources.Resource.SaleInvoice_DashboardCreate_RepeatingInvoice
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+
+                <input type="submit" id="btnSearchTotal" class="btn btn-defaultxero" onclick="show();" value="@Resources.Resource.SaleInvoice_DashboardCreate_Search" style="float: right;"/>
+            </div>
+            <div id="searchDraft" style="display: none;">
+                <div class="divitemleft">
+                    <label>@Resources.Resource.SaleInvoice_Dashboard_RefOrContact</label>
+                    <input class="textbox" type="text" name="txtTextSearch" id="txtTextSearch">
+                </div>
+                <div class="divitemleft">
+                    <label>@Resources.Resource.SaleInvoice_Dashboard_SearchWith</label>
+                    <select id="ddlTypeDate" name="ddlTypeDate" class="ddl">
+                        <option value="0">@Resources.Resource.Invoice_AnyDate</option>
+                        <option value="1">@Resources.Resource.Invoice_StartDate</option>
+                        <option value="2">@Resources.Resource.Invoice_EndDate</option>
+                    </select>
+                </div>
+                <div class="divitemleft">
+                    <label>@Resources.Resource.Invoice_StartDate</label>
+                    <input type="text" name="CreatedDate" id="CreatedDate" class="textboxdate dtFrom">
+                </div>
+                <div class="divitemleft">
+                    <label>@Resources.Resource.Invoice_EndDate</label>
+                    <input type="text" name="DueDate" id="DueDate" class="textboxdate dtTo">
+                </div>
+                <div class="divitemright">
+                    <a id="aClear" href="javascript:void(0);">@Resources.Resource.Common_Clear</a>&nbsp;
+                    <input type="submit" value="@Resources.Resource.SaleInvoice_DashboardCreate_Search" id="btnSearchInvoice" class="btn btn-defaultxero" />
+                    <input type="submit" value="@Resources.Resource.SaleInvoice_DashboardCreate_Cancel" id="btnCancelInvoice" class="btn btn-defaultxero" onclick="showHideDivSearch();">
+
+                </div>
+            </div>
+            <div class="cleardiv"></div>
+            <div style="display: inline; width: 100%;">
+                <a class="title invoicedb" href="javascript:void(0);">Invoices&nbsp;</a>
+                <a class="title" href="/SaleInvoice/Paid/">@Resources.Resource.SaleInvoice_List_Paid | </a>
+                <a class="title" href="/SaleInvoice/Repeating/">@Resources.Resource.SaleInvoice_List_Repeating | </a>
+                <a class="title" href="/SaleInvoice/All/">@Resources.Resource.SaleInvoice_Dashboard_SeeAll | </a>
+            </div>
+            <div class="cleardiv"></div>
+            <div class="btn-group btn-group-justified">
+                <a href="/SaleInvoice/Draft/" class="btn btn-default" role="button">
+                    <label>@Resources.Resource.SaleInvoice_List_Draft (@ViewBag.Draft)</label>
+                    <h2>
+                        @{
+                            var valueDraft = ViewBag.MDraft;
+                        }
+                        @if (valueDraft < 0)
+                        {
+                            <p class="draft">
+                                (<span class="currency">@valueDraft.ToString().Replace("-", "")</span>)
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="draft">
+                                <span class="currency">@valueDraft</span>
+                            </p>
+                        }
+                    </h2>
+                </a>
+                <a href="/SaleInvoice/Awaiting/" class="btn btn-default" role="button">
+                    <label>@Resources.Resource.SaleInvoice_List_AwaitingApproval (@ViewBag.Awaiting)</label>
+                    <h2>
+                        @{
+                            var valueAwait = ViewBag.MAwaiting;
+                        }
+                        @if (valueAwait < 0)
+                        {
+                            <p class="await">
+                                (<span class="currency">@valueAwait.ToString().Replace("-", "")</span>)
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="await">
+                                <span class="currency">@valueAwait</span>
+                            </p>
+                        }
+
+                    </h2>
+                </a>
+                <a href="/SaleInvoice/AwaitingPayment/" class="btn btn-default" role="button">
+                    <label>@Resources.Resource.SaleInvoice_List_AwaitingPayment (@ViewBag.AwaitingPay)</label>
+                    <h2>
+                        @{
+                            var valueAwaitPay = ViewBag.MAwaitingPay;
+                        }
+                        @if (valueAwaitPay < 0)
+                        {
+                            <p class="draft">
+                                (<span class="currency">@valueAwaitPay.ToString().Replace("-", "")</span>)
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="draft">
+                                <span class="currency">@valueAwaitPay</span>
+                            </p>
+                        }
+                    </h2>
+                </a>
+                <a href="/SaleInvoice/AwaitingPayment?duadate=@TMT.ERP.Commons.Utility.DateFormat(DateTime.Now)" class="btn btn-default" role="button" id="aOverDue">
+                    <label>@Resources.Resource.SaleInvoice_Dashboard_Overdue (@ViewBag.OverDue)</label>
+                    <h2>
+                        @{
+                            var valueOverDue = ViewBag.MOverDue;
+                        }
+                        @if (valueOverDue < 0)
+                        {
+                            <p class="awaitpayment">
+                                (<span class="currency">@valueOverDue.ToString().Replace("-", "")</span>)
+                            </p>
+                        }
+                        else
+                        {
+                            <p class="awaitpayment">
+                                <span class="currency">@valueOverDue</span>
+                            </p>
+                        }
+
+
+
+
+                    </h2>
+                </a>
+            </div>
+            <div class="cleardiv"></div>
+            <div class="chartPurchase">
+                <label>@Resources.Resource.SaleInvoice_MoneyComingIn</label>
+                @{Html.RenderAction("StackedColumn", "Chart", new { iType = 2, chartname = "SaleInvoiceComingIn" });}
+            </div>
+            <div class="cleardiv"></div>
+        </div>
+    </div>
+</div>
+

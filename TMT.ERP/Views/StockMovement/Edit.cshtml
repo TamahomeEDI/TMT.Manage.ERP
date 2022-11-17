@@ -1,0 +1,459 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.StockMovement
+
+@{
+    ViewBag.Title = (@Model.Status == 0) ? Resources.Resource.StockMovement_Edit : @Resources.Resource.StockMovement_History;
+}
+<script src="@Url.Content("~/Scripts/ERPScripts/StockMovement/StockMovement.js")"></script>
+<script>
+    $(document).ready(function () {
+        $("#btnSaveStockMovement").unbind("click").click(function () {
+            
+            SaveStockMovement(0);
+        });
+        $("#btnApproveStockMovement").unbind("click").click(function () {
+            
+            SaveStockMovement(1);
+        });
+        $("#btnCancelStockMovement").unbind("click").click(function () {
+            location.href = ($('#dm').val() == 0) ? '/StockMovement/Draft' : '/StockMovement/History';
+
+            //Validate
+           jQuery.validator.messages.required = "";
+            $("#frmMain").validate({
+                invalidHandler: function (e, validator) {
+                    debugger;
+                    var errors = validator.numberOfInvalids();
+                    if (errors) {
+                        var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },           
+            });
+        });
+    });
+
+    function SaveStockMovement(status) {
+        var isValid = $("#frmMain").valid();
+        if (!isValid) {
+            return false;
+        }
+
+        var code = $('#Code').val();
+        var StockMovementID = $('#StockMovementID').val();
+        var createDate = $('#CreatedDate123').val();
+        var stockID = $('#ddlStockID').val();
+        var stockIDDes = $('#ddlStockIDDes').val();
+        var createdEmployeeID = 1;
+        var totalMoney = $('#txtStockMovementTotal').text();
+        var status = parseInt(status);
+        var type = 0;
+        //var accountIDFrom = $('#ddlAccountIDFrom').val();
+        //var accountIDTo = $('#ddlAccountIDTo').val();
+        var stockMovementDetail = BuildJSON();
+        $.ajax({
+            type: "POST",
+            url: "/Services/StockMovementService.asmx/SaveStockMovement",
+            data: JSON.stringify({
+                stockMovementID: StockMovementID,
+                code: code,
+                createDate: createDate,
+                stockID: stockID,
+                createdEmployeeID: createdEmployeeID,
+                stockIDDes: stockIDDes,
+                totalMoney: totalMoney,
+                status: status,
+                type: type,  
+                stockMovementDetail: stockMovementDetail
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async:false,
+            success: function (data) {
+                
+                var retValue = JSON.parse(data.d);
+                if (!isNaN(retValue)) {
+                    var _url = "/StockMovement/Draft/";
+                    var msg = status == 0 ? '@Resources.Resource.Common_Msg_EditSuccess' : '@Resources.Resource.Common_Msg_ApproveSuccess';
+                    CreatePopupMessage('divMessage', msg, '@Resources.Resource.Common_Message', 120, 300, _url);
+                }
+            }
+        }).error(function (data) {
+            alert('Error in save purchase\n' + data);
+        });
+    }
+
+    function BuildJSON() {
+        var arrayData = [];
+        $("#tblStockMovementDetails tr").each(function () {
+            var tr = $(this).closest('tr');
+            var goodID = $("#ddlGoodID", tr).val();
+            if (goodID != "-1" && parseInt(goodID) > 0) {
+                var item = {
+                    "goodId": goodID,
+                    "description": $("#txtDescription", tr).val(),
+                    "umo": $("#hidUmoId", tr).val(),
+                    "qty": $("#txtQty", tr).val()
+                };
+                arrayData.push(item);
+            }
+        });
+        return JSON.stringify(arrayData);
+    }
+
+</script>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    // @Html.ValidationSummary(true)
+    <input type="hidden" id="dm" value="@Model.Status" />
+    <div id="breadcrumb">
+        <div class="container">
+            <div id="con_top">
+                <div class="c_container">
+                    <h3>@if (@Model.Status == 0)
+                        {
+                           @Resources.Resource.StockMovement_Edit 
+                        }
+                        else
+                        {
+                            @Resources.Resource.StockMovement_History
+                        }
+                        
+                           @Model.Code</h3>
+                    <div id="breadcrumbs">
+                        <ul>
+                       @*     <li><span>@Resources.Resource.Common_Accounts</span></li>
+                            <li><a href="/StockMovement/Index">@Resources.Resource.Common_TranferStock</a></li>*@
+                               <li><span>Inventory</span></li>
+                            <li><a href="/StockMovement/Index">Stocks</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+    <input type="hidden" id="StockMovementID" value="@Model.ID" />
+    <div id="con_form">
+        <div class="container">
+            <div id="divMessage" style="background: white;"></div>
+               <div class="error" style="display: none; border: 1px solid rgb(204, 204, 204); border-radius: 4px 4px 4px 4px; height: 38px; line-height: 33px;">
+                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 4px 10px 0 0;" />
+                <span></span>.<br clear="all" />
+            </div>
+            <div class="c_container">
+                <div class="form_position1">
+                    <div class="form_left">
+                        <div class="form-group">
+                            @*<label for="to">@Resources.Resource.Common_Code:</label>*@
+                             <label for="to">Transfer#</label>
+                            @if (@Model.Status == 0)
+                            {
+                               @Html.TextBox("Code", Model.Code, new { @class = "form-control" })
+                            }
+                            else
+                            {
+                                @Html.TextBox("Code", Model.Code, new { @class = "form-control", @disabled=true })
+                            }
+                            
+                        </div>
+                        <div class="form-group">
+                            @*<label for="invoice">@Resources.Resource.StockMovement_Source_Stock</label>*@
+                            <label for="invoice">From Stock</label>
+                            @if (@Model.Status == 0)
+                            {
+                               @Html.DropDownList("ddlStockID", new SelectList(ViewBag.ddlStockID, "Value", "Text"), new { @class = "required form-control stockchange" })
+                             }
+                            else
+                            {
+                                @Html.DropDownList("ddlStockID", new SelectList(ViewBag.ddlStockID, "Value", "Text"), new { @class = "form-control stockchange", @disabled = true })
+                            }
+                            
+                        </div>
+@*                        <div class="form-group">
+                            <label for="invoice">From Account</label>
+                            @Html.DropDownList("ddlAccountIDFrom", (IEnumerable<SelectListItem>)ViewBag.AccountIDFrom, new { @class = "form-control account" })
+                        </div>*@
+                    </div>
+
+                    <div class="form_right">
+                        <div class="form-group">
+                           @* <label for="createdate">@Resources.Resource.StockMovement_RecieveDate</label>*@
+                              <label for="createdate">Transfer date</label>
+                            @if (@Model.Status == 0)
+                            {
+                             <input id="CreatedDate123" value="@Model.CreatedDate.ToShortDateString()" type ="text" class="datepicker"/>
+                            }
+                            else
+                            {
+                                <input id="CreatedDate123" value="@Model.CreatedDate.ToShortDateString()" type ="text" class="datepicker" disabled="disabled"/>
+                            }
+                            @*@Html.TextBox("CreatedDate", Model.CreatedDate.ToShortDateString(), new { @class = "form-control datepicker" })*@
+                        </div>
+                        <div class="form-group form_input">
+                           @* <label for="createdate">@Resources.Resource.StockMovement_Des_Stock</label>*@
+                             <label for="createdate">To Stock</label>
+                            @if (@Model.Status == 0)
+                            {
+                                @Html.DropDownList("ddlStockIDDes", null, new { @class = "required form-control" })
+                             }
+                            else
+                            {
+                                @Html.DropDownList("ddlStockIDDes", null, new { @class = "form-control", @disabled = true })
+                            }
+                        </div>
+@*                        <div class="form-group form_input">
+                            <label for="createdate">To Account</label>
+                            @Html.DropDownList("ddlAccountIDTo", (IEnumerable<SelectListItem>)ViewBag.AccountIDTo, new { @class = "form-control account" })
+                        </div>*@
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div id="divMessage" style="background:white;"></div> 
+    <div id="con_body">
+        <div class="container">
+            <div class="c_container">
+                <div id="form_body">
+                    <div id="myDiv">
+                        <div id="tblStockMovement">
+                            <table id="tblStockMovementDetails">
+                                <thead>
+                                    <tr>
+                                        @*<th colspan="2">@Resources.Resource.StockMovement_SKU</th>*@
+                                        <th colspan="2">Item Code</th>
+                                        <th>@Resources.Resource.StockMovement_Description</th>
+                                        <th>@Resources.Resource.StockMovement_UOM</th>
+                                        <th>@Resources.Resource.StockMovement_QTY</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="insertRow">
+                                    @foreach (var item in Model.StockMovementDetails)
+                            {
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                @if (@Model.Status == 0)
+                                                {
+                                                    @Html.DropDownList("ddlGoodID", new SelectList(ViewBag.GoodID, "Value", "Text", item.GoodID), new { @class = "form-control ddlgoodchange" })
+                                                }
+                                                else
+                                                {
+                                                    @Html.DropDownList("ddlGoodID", new SelectList(ViewBag.GoodID, "Value", "Text", item.GoodID), new { @class = "form-control ddlgoodchange", @disabled = true })
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (@Model.Status == 0)
+                                                {
+                                                    <input type="text" id="txtDescription" class="form-control description" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" id="txtDescription" class="form-control description" disabled="disabled" />
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (@Model.Status == 0)
+                                                {
+                                                    <input type="text" id="txtUOM" value="@item.UOM.Code" class="form-control uom" /><input type="hidden" value="@item.UOM.ID" id="hidUmoId" class="txt1 umoID" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" id="txtUOM" value="@item.UOM.Code" class="form-control uom" disabled="disabled" /><input type="hidden" value="@item.UOM.ID" id="hidUmoId" class="txt1 umoID" disabled="disabled" />
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (@Model.Status == 0)
+                                                {
+                                                    <input type="text" id="txtQty" value="@item.Quantity" class="form-control qty numeric text-right" />
+                                                }
+                                                else
+                                                {
+                                                    <input type="text" id="txtQty" value="@item.Quantity" class="form-control qty numeric text-right" disabled="disabled" />
+                                                }
+                                            </td>
+                                            <td>
+                                                @if (@Model.Status == 0)
+                                                {
+                                                    <a id="delRow" class="remove"></a>
+                                                }
+                                                else
+                                                {
+                                                    <a id="delRow" class="remove" style="display:none"></a>
+                                                }
+                                            </td>
+                                        </tr>
+                            }
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="tablefooter">
+                            <div class="pos1">
+                                @*<button id="addNewLine" class="addline">@Resources.Resource.Common_AddNewLine</button>*@
+                                @if (@Model.Status == 0)
+                                {
+                                    <input type="button" id="addNewLineEdit_TS" class="addline" value="@Resources.Resource.Common_AddNewLine" />
+                                }
+                                else
+                                {
+                                    <input type="button" id="addNewLineEdit_TS" class="addline" disabled="disabled" value="@Resources.Resource.Common_AddNewLine" />
+                                }
+                                 
+                            </div>
+                            @{ ErpEntities db = new ErpEntities();
+                               int qty = 0;
+                               var lstStockMoveDetails = db.StockMovementDetails.Where(details => details.StockMovementID == Model.ID).ToList();
+                               if (lstStockMoveDetails != null)
+                               {
+                                   qty = lstStockMoveDetails.Sum(de => de.Quantity);
+                               }
+                                
+                                 }
+                            <div class="pos3 posprice">
+                                <p>
+                                    @*<span class="ta_label">@Resources.Resource.Common_Total</span>*@                                     
+                                     <span class="ta_label">Total Qty</span>
+                                     <span id="txtStockMovementTotal" class="price total ">@qty</span>  
+                                </p>
+                            </div>
+                        </div>
+                            @if (@Model.Status == 0)
+                            {
+                                <input type="button" value="Save" id="btnSaveStockMovement"  class="btn btn-defaultxero" />
+                            }
+                            else
+                            {
+                                <input type="button" value="Save" id="btnSaveStockMovement" style="display: none;" class="btn btn-defaultxero" />
+                            }
+                            @if (@Model.Status == 0)
+                            {
+                                <input type="button" value="Approve"  id="btnApproveStockMovement" class="btn btn-defaultxero" />
+                            }
+                            else
+                            {
+                                <input type="button" value="Approve"  id="btnApproveStockMovement" style="display: none;" class="btn btn-defaultxero" />
+                            }
+                            
+                            <input type="button" value="Cancel" id="btnCancelStockMovement" class="btn btn-defaultxero" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+}
+
+    
+
+
+
+    
+    
+    @*        <div class="invoicing-details">
+                <table border="0" cellspacing="0" style="width: 100%">
+                    <tr>
+                        <td>@Resources.Resource.StockMovement_Stock_Card_Code</td>
+                        <td> @Html.TextBox("Code", Model.Code, new { @class = "txt_box1" }) </td>
+                                         <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td align="right">@Resources.Resource.StockMovement_RecieveDate</td>
+                        <td> @Html.TextBox("CreatedDate", Model.CreatedDate.ToShortDateString(), new { @class = "datepicker" })</td>
+                    </tr>
+                    <tr>
+                        <td>@Resources.Resource.StockMovement_Source_Stock</td>
+                        <td>@Html.DropDownList("ddlStockID", new SelectList(ViewBag.ddlStockID, "Value", "Text"), new { @class = "stockchange" }) </td>
+                        <td>From Account</td>
+                        <td> @Html.DropDownList("ddlAccountIDFrom", (IEnumerable<SelectListItem>)ViewBag.AccountIDFrom, new { @class = "account" })</td>
+                        <td align="right">@Resources.Resource.StockMovement_Des_Stock</td>
+                        <td>@Html.DropDownList("ddlStockIDDes", String.Empty) </td>
+                        <td>To Account</td>
+                        <td> @Html.DropDownList("ddlAccountIDTo", (IEnumerable<SelectListItem>)ViewBag.AccountIDTo, new { @class = "account" })</td>
+                    </tr>
+                </table>
+            </div>
+
+        <div id="myDiv">
+                <table class="table table-striped" style="width: 100%" id ="tblStockMovementDetails">
+                    <thead>
+                        <tr bgcolor="#e2efff">
+                            <th></th>
+                            <th>@Resources.Resource.StockMovement_SKU</th>
+                            <th>@Resources.Resource.StockMovement_Description</th>
+                            <th>@Resources.Resource.StockMovement_UOM</th>
+                            <th>@Resources.Resource.StockMovement_QTY</th>
+                                <th></th>  
+                        </tr>
+                    </thead>   
+                    <tbody id="insertRow">
+                @foreach (var item in Model.StockMovementDetails)
+                {
+                        <tr>
+                            <td></td>
+                            <td class="" tabindex="0" style="width: 89px;">
+                                 @Html.DropDownList("ddlGoodID", new SelectList(ViewBag.GoodID, "Value", "Text", item.GoodID), new { @class = "goodchange" })
+                            </td>
+                            <td style="width: 206px;"><input type="text" id="txtDescription" class="txt1 description" /></td>
+                            <td style="width: 206px;"><input type="text" id="txtUOM" value="@item.UOM.Code" class="txt1 uom" /><input type="hidden" value="@item.UOM.ID" id="hidUmoId" class="txt1 umoID" /></td>
+                            <td style="width: 206px;"><input type="text" id="txtQty" value="@item.Quantity" class="txt1 qty" /></td>  
+                            <td style="width: 206px;"><a id="delRow">Del</a></td>
+                        </tr>
+                }
+                    </tbody>
+
+                </table>
+
+            <div id="tableFooter">
+                <table border="0" cellspacing="0" style="width: 100%">
+                    <tr>
+                        <td width="600px">
+                            <input type="button" id="addNewLine" value="Add a new line" />
+                        </td>
+                        <td>
+                            <div class="grid-total">
+                                <div id="adjustmentRow" style="display: none;"></div>
+                                <div id="roundingRow" style="display:none;"></div>
+                                <div class="total">
+                                    <label> TOTAL </label>
+                                    <span id="totalQuantity">
+                                        <em id="currency_exchangeTotal" style="display: none;"></em>
+                                        <input id="txtStockMovementTotal" class="totalField total" type="text" value="0.00" readonly="" style="color: rgb(0, 0, 0);">
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                
+                <div id="total">
+
+                </div>
+            </div>
+
+        </div>
+            <p>
+            <input type="button" id="btnCreate" value="Create" onclick="SaveStockMovement();" />
+        </p>
+
+}
+
+<div>
+     
+</div>*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

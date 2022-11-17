@@ -1,0 +1,113 @@
+﻿@model TMT.ERP.DataAccess.Model.SaleInvoice
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>SaleInvoice</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Code)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Code)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Employee.Code)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Employee.Code)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Employee1.Code)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Employee1.Code)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Contact.Code)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Contact.Code)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.CreatedDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.CreatedDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.DueDate)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.DueDate)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Reference)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Reference)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Currency.Code)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Currency.Code)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.TotalTax)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.TotalTax)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.VAT)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.VAT)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.TotalMoney)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.TotalMoney)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.TotalMoneyStatus)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.TotalMoneyStatus)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Status)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Status)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Description)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Description)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+     
+</p>

@@ -1,0 +1,48 @@
+﻿@model TMT.ERP.DataAccess.Model.Control
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Delete</title>
+</head>
+<body>
+    <h3>Are you sure you want to delete this?</h3>
+    <fieldset>
+        <legend>Control</legend>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.FunctionID)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.FunctionID)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.ControlName)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.ControlName)
+        </div>
+    
+        <div class="display-label">
+             @Html.DisplayNameFor(model => model.IsTracked)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.IsTracked)
+        </div>
+    </fieldset>
+    @using (Html.BeginForm()) {
+        <p>
+            <input type="submit" value="Delete" /> |
+             
+        </p>
+    }
+
+</body>
+</html>

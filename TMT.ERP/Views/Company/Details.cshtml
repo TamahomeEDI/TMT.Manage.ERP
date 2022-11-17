@@ -1,0 +1,228 @@
+﻿@model TMT.ERP.DataAccess.Model.Company
+
+@{
+    ViewBag.Title = "Details";
+    Layout = null;
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>Company</legend>
+    <table style="width: 100%">
+        <tr>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.DisplayName)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.DisplayName)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.TradingName)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.TradingName)
+                </div></td>
+        </tr>
+        <tr>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.Logo)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.Logo)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.Business)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.Business)
+                </div></td>
+        </tr>
+        <tr>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.OrgaType)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.OrgaType)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.Description)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.Description)
+                </div></td>
+        </tr>
+        <tr>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.PostAttention)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.PostAttention)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.PostAddress)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.PostAddress)
+                </div></td>
+        </tr>
+        <tr>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.PostCity)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.PostCity)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.PostState)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.PostState)
+                </div></td>
+        </tr>
+        <tr>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.PostZipCode)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.PostZipCode)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.PostCountry)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.PostCountry)
+                </div></td>
+        </tr>
+        <tr>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.PhysAttention)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.PhysAttention)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.PhysAddress)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.PhysAddress)
+                </div></td>
+        </tr>
+        <tr>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.PhysCity)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.PhysCity)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.PhysState)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.PhysState)
+                </div></td>
+        </tr>
+        <tr>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.PhysZipCode)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.PhysZipCode)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.PhysCountry)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.PhysCountry)
+                </div></td>
+        </tr>
+        <tr>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.Tel_Country)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.Tel_Country)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.Tel_Area)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.Tel_Area)
+                </div></td>
+        </tr>
+        <tr>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.Tel_Num)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.Tel_Num)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.Email)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.Email)
+                </div></td>
+        </tr>
+        <tr>
+            <td style="width: 25%">
+                <div class="display-label">
+                     @Html.DisplayNameFor(model => model.Website)
+                </div></td>
+            <td style="width: 25%">
+                <div class="display-field">
+                    @Html.DisplayFor(model => model.Website)
+                </div></td>
+            <td></td>
+            <td></td>
+        </tr>
+    </table><br/>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+     
+</p>

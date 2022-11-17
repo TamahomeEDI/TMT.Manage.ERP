@@ -1,0 +1,5 @@
+E:\TMT.ERP\erpproject\TMT.ERP\CommonLib\bin\Debug\CommonLib.dll
+E:\TMT.ERP\erpproject\TMT.ERP\CommonLib\bin\Debug\CommonLib.pdb
+E:\TMT.ERP\erpproject\TMT.ERP\CommonLib\bin\Debug\Microsoft.QualityTools.Testing.Fakes.dll
+E:\TMT.ERP\erpproject\TMT.ERP\CommonLib\obj\Debug\CommonLib.dll
+E:\TMT.ERP\erpproject\TMT.ERP\CommonLib\obj\Debug\CommonLib.pdb

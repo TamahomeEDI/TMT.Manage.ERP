@@ -1,0 +1,132 @@
+﻿@model TMT.ERP.DataAccess.Model.User
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - TMT ERP</title>
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width" />
+    <link href="@Url.Content("~/Content/Site.css")" rel="stylesheet" type="text/css" />
+    <link href="@Url.Content("~/Content/bootstrap.css")" rel="stylesheet" />
+    <link href="@Url.Content("~/Content/main.css")" rel="stylesheet" type="text/css" />
+    <link href="~/Content/redmond/jquery-ui-1.10.3.custom.css" rel="stylesheet" />
+
+    <script src="@Url.Content("~/Scripts/1.10.2.jquery.min/jquery.min.js")"></script>
+    <script src="@Url.Content("~/Scripts/1.10.3.jquery-ui.min/jquery-ui.min.js")"></script>
+
+    <script src="@Url.Content("~/Scripts/custom.js")"></script>
+    
+
+@*    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")*@
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#txtUserName').focus();
+            $('#btnLogin').click(function () {
+                var username = $('#txtUserName').val();
+                var password = $('#txtPassword').val();
+
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "/Login/CheckLogin/",
+                        data:
+                            {
+                                "username": username,
+                                "password": password
+                            },
+                        success: function (data) {
+                            if (data == "success") {
+                                window.location.href = "/Home/";                                
+                            } else {
+                                CreatePopupMessage('divMessage', data, '@Resources.Resource.Common_Message', 120, 400, "#");
+                                //$('#err').html(data);
+                                //$('#err').css('display', 'block');
+                                //return false;
+                            }
+                        }
+                    });
+            });
+
+        });
+
+        function checkCapsLock(e, divAlert) {
+            var key = e.keyCode ? e.keyCode : e.which;
+            var shift = e.shiftKey ? e.shiftKey : ((key == 16) ? true : false);
+
+            if (((key >= 65 && key <= 90) && !shift) || ((key >= 97 && key <= 122) && shift)) {
+                document.getElementById(divAlert).innerHTML = 'Caps Lock is ON.';
+                document.getElementById(divAlert).style.visibility = 'visible';
+            }
+            else
+                document.getElementById(divAlert).style.visibility = 'hidden';
+        }
+
+        function checkWhiteSpace(e) {
+            var key = e.keyCode ? e.keyCode : e.which;
+            if (key == 32) return false;
+            return true;
+        }
+
+        function processWhiteSpace(e, divAlert) {
+            if (e.value.indexOf(" ") >= 0) {
+                document.getElementById(divAlert).innerHTML = 'User Name don\'t allow spaces';
+                document.getElementById(divAlert).style.visibility = 'visible';
+            }
+            else
+                document.getElementById(divAlert).style.visibility = 'hidden';
+        }
+
+    </script>
+</head>
+<body>
+    <header>
+        <div class="content-wrapper">
+            <section id="login">
+                @Html.Partial("_LoginPartial")
+            </section>
+            <div class="Login">
+                <p class="site-title">@Html.ActionLink("TMT Company", "Index", "Home")</p>
+            </div>
+        </div>
+    </header>
+    <div id="body">        
+        <section class="content-wrapper main-content clear-fix">
+            <fieldset class="Login">
+                <legend>@Resources.Resource.User_Index_LoginForm</legend>
+                <ol>
+                    <li>
+                        <label>@Resources.Resource.User_Index_UserName</label>
+                        <input type="text" placeholder="UserName" id="txtUserName" style="width: 200px;" onkeypress="return checkWhiteSpace(event);" onchange="processWhiteSpace(this,'divCapsLock');" value="admin" />
+                    </li>
+                    <li>
+                        <label>@Resources.Resource.User_Index_Password</label>
+                        <input type="password" placeholder="Password" id="txtPassword" style="width: 200px;" onkeypress="checkCapsLock(event, 'divCapsLock');" value="admin" />
+                    </li>
+
+                </ol>
+                <div>
+                    <input type="submit" value="@Resources.Resource.User_Index_Login" id="btnLogin" />
+                </div>
+                <br />
+                <div style="margin-left: 25px;">
+                    <div id="divCapsLock" style="color: Red; visibility: hidden;">Caps Lock is ON.</div>
+                    <label style="display: none; color: red;" id="err"></label>
+                </div>
+                <div id="divMessage"></div>
+            </fieldset>
+        </section>
+    </div>
+    <footer>
+        <div class="content-wrapper">
+            <div>
+                <p>&copy; @DateTime.Now.Year - CMC MVC Application</p>
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>

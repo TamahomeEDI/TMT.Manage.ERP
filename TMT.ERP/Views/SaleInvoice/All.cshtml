@@ -1,0 +1,332 @@
+﻿@using System.Globalization
+@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.SaleInvoice>
+@{
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        debugger;
+        SetTypeSearch("0");
+        $('#searchString').val('');
+        $('#createdate').val('');
+        $('#duadate').val('');
+        $('#sPageSize').html($('#hdfPageSize').val());
+        var countModel = $('#hdfCountList').val();
+        if (countModel == 0) {
+            $('#error').css('display', 'block');
+            $('#tabs-1').css('display', 'none');
+            $('#function').css('display', 'none');
+        } else {
+            $('#error').css('display', 'none');
+        }
+        $('#type').change(function () {
+            var x = $(this).val();
+            SetTypeSearch(x);
+        });
+        $('#aClearAll').click(function () {
+            debugger;
+            $('#searchString').val('');
+            $('#type').val(0);
+            $('#createdate').val('');
+            $('#duadate').val('');
+        });
+    });
+    function SetPageSize(pageSize) {
+        debugger;
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/SaleInvoice/SetPageSize',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+    function SetTypeSearch(typeSearch) {
+        $.ajax(
+            {
+                type: "POST",
+                url: "/SaleInvoice/SetTypeSearch/",
+                data:
+                    {
+                        "typeSearch": typeSearch
+                    },
+                success: function () {
+
+                }
+            });
+    }
+    function SortDate(value) {
+        debugger;
+        $.ajax(
+            {
+                type: "POST",
+                url: "/SaleInvoice/SetDateAsc/",
+                data:
+                    {
+                        "value": value
+                    },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+</script>
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<input type="hidden" value="@Model.Count" id="hdfCountList"/>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.Sale_SaleInvoices</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.Sale_Sales</span></li>
+                        <li>
+                            <a href="/SaleInvoice/Dashboard/">
+                                @Resources.Resource.Sale_SaleInvoices
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_body">
+    <div class="container">
+        <div class="c_container">
+            <div id="toolbar" class="toolbar">
+                <div class="btn-group">
+                    <button type="button" onclick="NewSalePurchase(0);" class="btn btn-defaultxero">@Resources.Resource.SaleInvoice_DashboardCreate_Invoice</button>
+                    <button type="button" style="margin-left: -10px;" class="btn btn-defaultxero dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="/SaleInvoice/CreateRepeatingInvoice/">
+                                @Resources.Resource.SaleInvoice_DashboardCreate_RepeatingInvoice
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="btn-group" style="margin-left: 10px;">
+                        <button type="button" onclick="NewSalePurchase(4);" class="btn btn-defaultxero">@Resources.Resource.SaleInvoice_DashboardCreate_CreateditNote</button>
+                    </div>
+                </div>
+            </div>
+            @using (Html.BeginForm("All", "SaleInvoice", FormMethod.Get))
+            {
+                <div id="searchDraft" style="display: inline;">
+                    <div class="divitemleft">
+                        <label>@Resources.Resource.SaleInvoice_Dashboard_RefOrContact</label>
+                        @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "textbox" })
+                    </div>
+                    <div class="divitemleft">
+                        <label>@Resources.Resource.SaleInvoice_Dashboard_SearchWith</label>
+                        <select id="type" name="type" class="ddl">
+                            <option value="0">@Resources.Resource.Common_AnyDate</option>
+                            <option value="1">@Resources.Resource.Common_TransactionDate</option>
+                            <option value="2">@Resources.Resource.Common_DueDate</option>
+                        </select>
+                    </div>
+                    <div class="divitemleft">
+                        <label>@Resources.Resource.Invoice_StartDate</label>
+                        @Html.TextBox("createdate", ViewBag.CreateDate as string, new { @class = "dtFrom textboxdate" })
+                    </div>
+                    <div class="divitemleft">
+                        <label>@Resources.Resource.Invoice_EndDate</label>
+                        @Html.TextBox("duadate", ViewBag.DueDate as string, new { @class = "dtTo textboxdate" })
+                    </div>
+                    <div class="divitemright">
+                        <a href="javascript:void(0);" id="aClearAll">@Resources.Resource.Common_Clear</a>&nbsp;
+                        <input type="submit" value="@Resources.Resource.SaleInvoice_DashboardCreate_Search" id="btnSearch" class="btn btn-defaultxero" />
+                    </div>
+                </div>
+            }
+            <div class="cleardiv"></div>
+            <ul class="nav nav-tabs">
+                @{           
+                    var db = new ErpEntities();
+                    var invoice = db.SaleInvoices.ToList();
+                }
+
+                <li class="active"><a href="/SaleInvoice/All">All&nbsp;(@invoice.Count(x => x.Status >= 0))</a></li>
+                <li><a href="/SaleInvoice/Draft/">Draft&nbsp;(@invoice.Count(x => x.Status == 0 | x.Status == 5))</a></li>
+                <li><a href="/SaleInvoice/Awaiting/">Awaiting Approval&nbsp;(@invoice.Count(x => x.Status == 1))</a></li>
+                <li><a href="/SaleInvoice/AwaitingPayment/">Awaiting Payment&nbsp;(@invoice.Count(x => x.Status == 2))</a></li>
+                <li><a href="/SaleInvoice/Paid/">Paid&nbsp;(@invoice.Count(x => x.Status == 3))</a></li>
+                <li><a href="/SaleInvoice/Repeating/">Repeating&nbsp;(@invoice.Count(x => x.Status == 4))</a></li>
+            </ul>
+            <div class="cleardiv"></div>
+            <div id="tabbody">
+                <div id="tabs-1">
+                    <table class="tableOver">
+                        <thead>
+                            <tr>
+                                <th><span>
+                                    @Resources.Resource.SaleInvoice_List_Number
+                                </span>
+                                </th>
+                                <th>@Resources.Resource.SaleInvoice_Create_Reference
+                                </th>
+                                <th>@Resources.Resource.SaleInvoice_Create_To
+                                </th>
+                                <th>
+                                    @Resources.Resource.Common_Sale_Date
+                                    <span style="float: right;">
+                                        <a href="javascript:void(0);" onclick="SortDate('desc');">
+                                            <img src="~/Images/sort_asc.png" />
+                                        </a>
+                                        <a href="javascript:void(0);" onclick="SortDate('asc');">
+                                            <img src="~/Images/sort_desc.png" />
+                                        </a>
+                                    </span>
+                                </th>
+                                <th>@Resources.Resource.Common_Sale_DueDate
+                                </th>
+                                <th>@Resources.Resource.SaleInvoice_List_Paid
+                                </th>
+                                <th>@Resources.Resource.SaleInvoice_List_Due
+                                </th>
+                                <th>@Resources.Resource.SaleInvoice_List_Status
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @{
+                                var type = item.Status;
+                                        }
+                                        @if (type == 1 | type == 0 | type == 5)
+                                        {                                            
+                                            <a href="/SaleInvoice/Edit/@item.ID">@item.Code</a>                                            
+                                        }
+                                        else if (type == 2)
+                                        {                                          
+                                            <a href="/SaleInvoice/AwaitingPaymentDetails?id=@item.ID">@item.Code</a>                                            
+                                        }
+                                        else if (type == 3)
+                                        {                                           
+                                            <a href="/SaleInvoice/PaidDetails?id=@item.ID">@item.Code</a>                                            
+                                        }
+                                        else if(type==4)
+                                        {
+                                            <a href="/SaleInvoice/EditRepeating?id=@item.ID">@item.Code</a>                                            
+                                        }
+                                        else
+                                        {                                            
+                                            <a href="javascript:void(0);">@item.Code</a>                                           
+                                        }
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Reference)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.ContactName)
+                                    </td>
+                                    <td>
+                                        @{
+                                        DateTime creaDateTime = item.CreatedDate;
+                                        }
+                                        @TMT.ERP.Commons.Utility.DateFormat(creaDateTime)
+                                    </td>
+                                    <td>
+                                        @{
+                                        DateTime duaDate = item.DueDate ?? DateTime.Now;
+                                        }
+                                        @TMT.ERP.Commons.Utility.DateFormat(duaDate)
+
+                                    </td>
+                                    <td class="currency">@{
+                                        float totalPaid = ViewBag.TotalMoney(item.ID);
+                                    }
+                                        @totalPaid
+                                    </td>
+                                    
+                                    @if (item.Type == 1)
+                                    {
+                                        <td>(<span class="currency">@item.TotalMoney</span>)
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        
+                                        <td>
+                                            <span class="currency">@item.TotalMoney</span>
+                                        </td>
+                                    }
+                                    <td>
+                                        @{
+                                    int? sStr = 0;
+                                    sStr = item.Status;
+                                    string result = "";
+                                    switch (sStr)
+                                    {
+                                        case 5:
+                                            result = "Rejected";
+                                            break;
+                                        case 0:
+                                            result = Resources.Resource.SaleInvoice_List_Draft;
+                                            break;
+                                        case 1:
+                                            result = Resources.Resource.SaleInvoice_List_AwaitingApproval;
+                                            break;
+                                        case 2:
+                                            result = Resources.Resource.SaleInvoice_List_AwaitingPayment;
+                                            break;
+                                        case 3:
+                                            result = Resources.Resource.SaleInvoice_List_Paid;
+                                            break;
+                                        case 4:
+                                            result = Resources.Resource.SaleInvoice_List_Repeating;
+                                            break;
+                                        case -1:
+                                            result = Resources.Resource.SaleInvoice_List_Delete;
+                                            break;
+                                    }
+                                        }
+                                        @Html.Raw(result)
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div style="height: 50px; padding-top: 5px;">
+                        <div style="float: left;">
+                            @Html.PagedListPager(Model, page => Url.Action("All", new { page, currentFilter = ViewBag.CurrentFilter, type = 0, createdate = ViewBag.CreateDate, duadate = ViewBag.DueDate }))
+                        </div>
+                        <div style="width: 25%; float: right;">
+                            <label style="margin-left: 70px; margin-top: 10px;">Showing&nbsp;</label>
+                            <div id="showpag" class="dropdown" style="float: right;">
+                                <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cleardiv"></div>
+                <div id="error">
+                    <label>
+                        @Resources.Resource.SaleInvoices_Error
+                    </label>
+                </div>
+                <div class="cleardiv"></div>
+            </div>
+
+        </div>
+    </div>
+</div>

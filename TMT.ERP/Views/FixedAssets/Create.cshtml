@@ -1,0 +1,397 @@
+﻿@model TMT.ERP.DataAccess.Model.FixedAsset
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+}
+<script type="text/ecmascript">
+
+    $(document).ready(function () {
+
+        $(".numeric").numeric();
+
+        $('.currency').blur(function () {
+            $('.currency').formatCurrency();
+        });
+
+        jQuery.validator.messages.required = "";
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                    $('#AlertDuplicate').hide();
+                    $('#AlertBigger').hide();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+        $("#Rate").change(function () {
+            
+            var rate = $('#Rate').asNumber();
+            if (rate > 100) {
+                $('#Rate').val(0.00);
+                return false;
+            } else if (rate == 0) {
+                $('#Rate').val(0.00);
+            } else {
+                var rates = $('#Rate').val().replace(/[^0-9.]/g, '');
+                $('#Rate').val(rates);
+                var value = $('#Rate').asNumber();
+                if (value > 100) {
+                }
+                if (rates == "") {
+                    rates = 0.00;
+                }
+                $('#Rate').val(rates).formatCurrency();
+            }
+        });
+    });
+
+    $(document).ready(function () {
+
+        $('#Price').change(function () {
+            $("#Price").val(function () {
+                var price = $('#Price').asNumber();
+                return price;
+            }).formatCurrency();
+        });
+
+        $('#Accummulate').change(function () {
+            $("#Accummulate").val(function () {
+                var accum = $('#Accummulate').asNumber();
+                return accum;
+            }).formatCurrency();
+        });
+    });
+
+
+    $(document).ready(function () {
+
+        $('#btnClose').click(function (e) {
+            location.href = '/FixedAssets/Index/';
+        });
+
+        $('#Name').focus();
+
+        $('#Date').change(function () {
+            
+            var year = $('#Date').val();
+            $.ajax(
+            {
+                type: 'POST',
+                traditional: true,
+                url: '/FixedAssets/CheckYear/',
+                data: {
+                    "year": year
+                },
+                success: function (data) {
+                    if (data == 1) {
+                        $('#Depreciation').show();
+                    }
+                    if (data == 0) {
+                        $('#Depreciation').hide();
+                    }
+                }
+            });
+        });
+
+
+        //Save
+        $('#btnSave').click(function (e) {
+            
+            var name = $('#Name').val();
+            var code = $('#Code').val();
+            var accountID = $('#AccountID').val();
+            var date = $('#Date').val();
+            var price = $('#Price').asNumber();
+            var description = $('#Description').val();
+            var type = $('#Type').val();
+            var rate = $('#Rate').val();
+            var method = $('#Method').val();
+            var depreciationID = $('#DepreciationAccountID').val();
+            var accummulate = $('#Accummulate').asNumber();
+            var accumAccID = $('#AccumDepreAccountID').val();
+            var save = 0;
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            $.ajax(
+            {
+                type: 'POST',
+                traditional: true,
+                url: '/FixedAssets/Create/',
+                data: {
+                    "name": name, "code": code, "accountID": accountID, "date": date, "accummulate": accummulate,
+                    "price": price, "description": description, "type": type, "rate": rate, "accumAccID": accumAccID,
+                    "method": method, "depreciationID": depreciationID, "save": save
+                },
+                success: function (data) {
+                    if (data == "Create") {
+                        $('#Inform').empty();
+                        $('#Inform').append('<p style="width: 100%;  font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_CreateSuccess</p>');
+                        $("#Inform").dialog({
+                            modal: true,
+                            height: 'auto',
+                            width: 300,
+                            autoOpen: false,
+                            buttons: {
+                                'OK': function () {
+                                    $(this).dialog('close');
+                                    window.location.href = "/FixedAssets/Index/";
+                                }
+                            }
+                        });
+                        $('#Inform').dialog('open');
+                    } else {
+                        $('#Inform').empty();
+                        $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Error</p>');
+                        $("#Inform").dialog({
+                            modal: true,
+                            height: 120,
+                            width: 'auto',
+                            autoOpen: false,
+                            buttons: {
+                                'OK': function () {
+                                    $(this).dialog('close');
+                                    window.location.href = "/FixedAssets/Index/";
+                                }
+                            }
+                        });
+                        $('#Inform').dialog('open');
+                    }
+                }
+            });
+        });
+
+        //Register
+        $('#Register').click(function (e) {
+            
+            var name = $('#Name').val();
+            var code = $('#Code').val();
+            var accountID = $('#AccountID').val();
+            var date = $('#Date').val();
+            var price = $('#Price').asNumber();
+            var description = $('#Description').val();
+            var type = $('#Type').val();
+            var rate = $('#Rate').val();
+            var method = $('#Method').val();
+            var depreciationID = $('#DepreciationAccountID').val();
+            var accummulate = $('#Accummulate').asNumber();
+            var accumAccID = $('#AccumDepreAccountID').val();
+            var error = 0;
+            var save = 1;
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            if (accumAccID == accountID) {
+                $('#AlertDuplicate').show();
+                $("div.error").hide();
+                $('#AlertBigger').hide();
+                error++;
+            } else
+                $('#AlertDuplicate').hide();
+
+            if (accummulate > price) {
+                $('#AlertDuplicate').hide();
+                $("div.error").hide();
+                $('#AlertBigger').show();
+                error++;
+            } else
+                $('#AlertBigger').hide();
+            if (error > 0) {
+                return false;
+            }
+            $.ajax(
+            {
+                type: 'POST',
+                traditional: true,
+                url: '/FixedAssets/Create/',
+                data: {
+                    "name": name, "code": code, "accountID": accountID, "date": date, "accummulate": accummulate,
+                    "price": price, "description": description, "type": type, "rate": rate, "accumAccID": accumAccID,
+                    "method": method, "depreciationID": depreciationID, "save": save
+                },
+                success: function (data) {
+                    if (data == "Create") {
+                        $('#Inform').empty();
+                        $('#Inform').append('<p style="width: 100%;  font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_CreateSuccess</p>');
+                        $("#Inform").dialog({
+                            modal: true,
+                            height: 'auto',
+                            width: 300,
+                            autoOpen: false,
+                            buttons: {
+                                'OK': function () {
+                                    $(this).dialog('close');
+                                    window.location.href = "/FixedAssets/Register/";
+                                }
+                            }
+                        });
+                        $('#Inform').dialog('open');
+                    } else {
+                        $('#Inform').empty();
+                        $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Error</p>');
+                        $("#Inform").dialog({
+                            modal: true,
+                            height: 120,
+                            width: 'auto',
+                            autoOpen: false,
+                            buttons: {
+                                'OK': function () {
+                                    $(this).dialog('close');
+                                    window.location.href = "/FixedAssets/Register/";
+                                }
+                            }
+                        });
+                        $('#Inform').dialog('open');
+                    }
+                }
+            });
+        });
+    });
+</script>
+
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container">
+            <h3>@Resources.Resource.FixedAsset_Title</h3>
+            <div id="breadcrumbs">
+                <ul>
+                    <li><a href="/FixedAssets/Index/">@Resources.Resource.FixedAsset_Title</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <div class="container">
+        <div id="popup-breadcrumb" style="width: 100%; margin-left: 0px; margin-top: 10px; margin-bottom: 10px;">
+            <div class="container">
+                <div id="con_top">
+                    <div class="c_container">
+                        <div id="dialog" title="Basic modal dialog"></div>
+                        <div id="confirmDel" title="Confirm" style="background: white"></div>
+                        <div id="Inform" title="Inform" style="background: white"></div>
+                        <div class="error" style="display: none; margin-bottom: 5px; line-height: 2">
+                            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                            <span></span>.<br clear="all" />
+                        </div>
+                        <div id="AlertBigger" style="display: none">
+                            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                            <label style="color: red; font-weight: normal; font-weight: normal">Purchase Price cannot be less than the Accumulated Depreciation amount.</label>
+                        </div>
+                        <div id="AlertDuplicate" style="display: none">
+                            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                            <label style="color: red; font-weight: normal; font-weight: normal">Account & Accumulated Depreciation Account cannot be same account.</label>
+                        </div>
+                        <div>
+                            <p class="x-boxed" style="margin-bottom: 10px;">
+                                <label style="font-size: 15px;">Asset Details</label>
+                            </p>
+                            <hr style="margin-top: 10px; margin-bottom: 10px;" />
+                            <p style="display: inline-block">
+                                @Resources.Resource.FixedAsset_ItemName
+                                <br />
+                                <input id="Name" name="Name" class="required" type="text" size="20" />
+                            </p>
+                            <p style="display: inline-block;">
+                                @Resources.Resource.FixedAsset_ItemCode
+                                <br />
+                                <input id="Code" name="Code" readonly="" type="text" size="20" value="@ViewBag.AssetCode" />
+                            </p>
+                            <p style="display: inline-block;">
+                                @Resources.Resource.FixedAsset_Account
+                                <br />
+                                @Html.DropDownList("AccountID", null, string.Empty, new { @class = "required", style = "width: 150px; height: 26px;" })
+                            </p>
+                            <p style="display: inline-block">
+                                @Resources.Resource.FixedAsset_PurchaseDate
+                                <br />
+                                <input id="Date" name="Date" class="required datepicker" type="text" size="20" />
+                            </p>
+                            <p style="display: inline-block;">
+                                @Resources.Resource.FixedAsset_PurchasePrice
+                                <br />
+                                <input class="currency numeric" id="Price" type="text" size="20" value="0.00" />
+                            </p>
+                        </div>
+                        <div>
+                            <p>@Resources.Resource.FixedAsset_Description</p>
+                            <textarea id="Description" rows="3" style="width: 80%; resize: none;" maxlength="1000"></textarea>
+                        </div>
+                        <br />
+                        <div style="width: 100%">
+                            <p class="x-boxed" style="margin-bottom: 10px;">
+                                <label style="font-size: 15px;">Depreciation </label>
+                            </p>
+                            <hr style="margin-top: 10px; margin-bottom: 10px;" />
+                            <p style="display: inline-block; width: 20%;">
+                                @Resources.Resource.FixedAsset_AssetType
+                                <br />
+                                <input id="Type" name="Type" class="required" type="text" size="20" />
+                            </p>
+                            <p style="display: inline-block; width: 20%;">
+                                @Resources.Resource.FixedAsset_DepreciationRate
+                                <br />
+                                <input id="Rate" name="Rate" type="text" size="10" class="numeric currency required" maxlength="6" />
+                                %
+                            </p>
+                            <p style="display: inline-block; width: 20%;">
+                                @Resources.Resource.FixedAsset_DepreciationMethod
+                                <br />
+                                <select id="Method">
+                                    <option value="0">@Resources.Resource.FixedAsset_Straight</option>
+                                    <option value="1">@Resources.Resource.FixedAsset_Declining</option>
+                                </select>
+                            </p>
+                            <p style="display: inline-block; width: 20%;">
+                                @Resources.Resource.FixedAsset_DepreciationAccount
+                                <br />
+                                @Html.DropDownList("DepreciationAccountID", null, string.Empty, new { @class = "required", style = "width: 150px; height: 26px;" })
+                            </p>
+                        </div>
+                        <div id="Depreciation" style="display: none">
+                            <hr style="margin-bottom: 10px; margin-top: 10px;" />
+                            <label>
+                                The purchase date is prior to the Fixed Assets start date (1 Jan @ViewBag.Year) so please enter:
+                            </label>
+                            <p>The depreciation before start date</p>
+                            <input type="text" id="Accummulate" value="0.00" class="currency numeric" />
+                        </div>
+                        <div>
+                            <hr style="margin-bottom: 10px; margin-top: 10px;" />
+                            <label>
+                                The asset account you have selected needs a linked accumulated depreciation account
+                            </label>
+                            <p>Accumulated Depreciation Account</p>
+                            @Html.DropDownList("AccumDepreAccountID", null, string.Empty, new {@class = "required", style = "width: 300px; height: 26px;" })
+                        </div>
+                        <br>
+                        <div>
+                            <input type="button" class="btn btn-defaultxero" value="@Resources.Resource.FixedAsset_Save" id="btnSave"/>
+                            <input id="Register" type="button" class="btn btn-defaultxero" value="@Resources.Resource.FixedAsset_Create" />
+                            <input type="button" class="btn btn-defaultxero" value="@Resources.Resource.FixedAsset_Cancel" id="btnClose"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

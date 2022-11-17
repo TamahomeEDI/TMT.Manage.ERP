@@ -1,0 +1,247 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.Purchase>
+@{    
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+<div>
+    <br />
+    @Html.Partial("Purchase/_Search")
+
+    <div class="buttontab">
+        @if (user.UsersInRoles.ToList().Exists(x => x.Role.RolePermission.ApproveBill == true))
+        {
+            <a class="btn" href="javascript:void(0);" id="aWaitingApproved">Submit for Approval</a>
+            <a class="btn" href="javascript:void(0);" id="aApproved">Approve</a>
+        }
+        @if (((ViewBag.IsDelete == true) && (user.UsersInRoles.ToList().Exists(x => x.Role.RolePermission.DeleteBill == true)))
+                             || (user.UsersInRoles.ToList().Exists(x => x.Role.RolePermission.DeleteBillCreatedByOther == true)))
+        {
+            <a class="btn" href="javascript:void(0);" id="aDelete">Delete</a>
+        }
+        <a class="btn" href="javascript:void(0);" id="aPrint">Print</a>
+        <a class="btn" href="javascript:void(0);" id="aSearch">Search</a>
+    </div>
+    <br />
+    <script>
+        var tabNum = '0';
+        $('#aWaitingApproved').click(function () {
+            
+            var valueString = [];
+            $("input[name=chkPurchase]:checked").each(
+            function () {
+                valueString.push(this.id);
+            }
+            );
+            var purchase = {
+                purchaseID: valueString,
+                status: '1',
+                tabNum: tabNum
+            }
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Purchase/Approved/',
+                    traditional: true,
+                    data: purchase,
+                    success: function (data) {
+                        window.location.href = encodeURI('/Purchase/Index?tabNum=' + tabNum);
+                    }
+                });
+
+        });
+
+        $('#aApproved').click(function () {
+            
+            var valueString = [];
+            $("input[name=chkPurchase]:checked").each(
+            function () {
+                valueString.push(this.id);
+            }
+            );
+            var purchase = {
+                purchaseID: valueString,
+                status: '2',
+                tabNum: tabNum
+            }
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Purchase/Approved/',
+                    traditional: true,
+                    data: purchase,
+                    success: function (data) {
+                        window.location.href = encodeURI('/Purchase/Index?tabNum=' + tabNum);
+                    }
+                });
+
+        });
+
+        $('#aDelete').click(function () {
+            
+            var valueString = [];
+            $("input[name=chkPurchase]:checked").each(
+            function () {
+                valueString.push(this.id);
+            }
+            );
+            if (valueString.length > 0) {
+                var purchase = {
+                    purchaseID: valueString,
+                    tabNum: tabNum
+                }
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/Purchase/DelPurchase/',
+                        traditional: true,
+                        data: purchase,
+                        success: function (data) {
+                            window.location.href = encodeURI('/Purchase/Index?tabNum=' + tabNum);
+                        }
+                    });
+            } else {
+                $('#confirmDel').empty();
+                $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Please select item !</p>');
+                $("#confirmDel").dialog({
+                    modal: true,
+                    height: 140,
+                    autoOpen: false,
+                    buttons: {
+                        'Agree': function () {
+                            $(this).dialog('close');
+                        },
+                        Cancel: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#confirmDel').dialog('open');
+            }
+
+        });
+
+        $("#aSearch").click(function () {
+            $("#searchPurchase").show();
+        });
+    </script>
+    @if (Model.ToList().Count > 0)
+    {
+
+        <div id="confirmDel" title="Confirm!"></div>
+        <table id="draftPurchase" class="table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th>@Resources.Resource.Purchase_List_Number
+                    </th>
+                    <th>
+                        @Resources.Resource.Purchase_List_Reference
+                    </th>
+                    <th>
+                        @Resources.Resource.Purchase_List_ContactName
+                    </th>
+                    <th>
+                        @Resources.Resource.Purchase_List_Date
+                    </th>
+                    <th>
+                        @Resources.Resource.Purchase_List_DueDate
+                    </th>
+                    <th>
+                        @Resources.Resource.Purchase_List_TotalMoney
+                    </th>
+                    <th>
+                        @Resources.Resource.Purchase_List_Status
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        @if (((user.ID == item.CreatedUserID) && (user.UsersInRoles.ToList().Exists(x => x.Role.RolePermission.DeleteBill == true)))
+                             || (user.UsersInRoles.ToList().Exists(x => x.Role.RolePermission.DeleteBillCreatedByOther == true)))
+                        {
+                            <td>@Html.CheckBox("chkPurchase", false, new { id = item.ID })</td>
+                        }
+                        else
+                        {
+                            <td>@Html.CheckBox("chkPurchase", false, new { @disabled = true })</td>
+                        }
+
+                        @if (((user.ID == item.CreatedUserID) && (user.UsersInRoles.ToList().Exists(x => x.Role.RolePermission.ViewAndEditBill == true)))
+                             || (user.UsersInRoles.ToList().Exists(x => x.Role.RolePermission.EditBillCreatedByOther == true)))
+                        {
+                            <td>
+                                <a href="/Purchase/Edit/@item.ID" title="@item.ID">@Html.DisplayFor(modelItem => item.Code)</a>
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Code)
+                            </td>
+                        }
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Reference)
+                        </td>
+                        <td>
+                            <span class="email">@Html.DisplayFor(modelItem => item.Contact.ContactName)</span>
+                        </td>
+                        <td>
+                            @item.CreatedDate.ToString("d")
+                        </td>
+                        <td>
+                            @{
+                        DateTime due = item.DueDate != null ? Convert.ToDateTime(item.DueDate) : DateTime.Now;
+                            }
+                            @due.ToString("d")
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TotalMoney)
+                            @Html.DisplayFor(modelItem => item.Currency.Code)
+                        </td>
+                        <td>
+                            @{int? sStr = 0;
+                              sStr = item.Status;
+                              string result = "";
+                              switch (sStr)
+                              {
+                                  case 0:
+                                      result = Resources.Resource.SaleInvoice_Create_SaveAsDraft;
+                                      break;
+                                  case 1:
+                                      result = Resources.Resource.SaleInvoice_List_Draft;
+                                      break;
+                                  case 2:
+                                      result = Resources.Resource.SaleInvoice_List_AwaitingApproval;
+                                      break;
+                                  case 3:
+                                      result = Resources.Resource.SaleInvoice_List_AwaitingPayment;
+                                      break;
+                                  case 4:
+                                      result = Resources.Resource.SaleInvoice_List_Paid;
+                                      break;
+                                  case 5:
+                                      result = Resources.Resource.SaleInvoice_List_Repeating;
+                                      break;
+                                  case -1:
+                                      result = Resources.Resource.SaleInvoice_List_Delete;
+                                      break;
+                              }
+                            }
+                            @Html.Raw(result)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <div class="pager">
+            <h4>Contains no records </h4>
+        </div>
+    }
+
+
+</div>
+

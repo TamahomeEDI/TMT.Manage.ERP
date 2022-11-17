@@ -1,0 +1,62 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.Purchase>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        $(".datepicker").datepicker();
+
+        $('#btnCancel').click(function () {
+            $('#searchPurchase').css('display', 'none');
+        });
+
+        $("#btnSearchPurchase").click(function () {
+            var data2Send = { 'tab': tab, 'referenceName': $("#referenceName").val(), 'CreatedDate': $("#CreatedDate").val(), 'DueDate': $("#DueDate").val() };
+            var referenceName = $("#referenceName").val();
+            var createdDate = $("#CreatedDate").val();
+            var dueDate = $("#DueDate").val();
+            data2Send = JSON.stringify(data2Send);
+            jQuery.ajax({
+                type: 'POST',
+                url: '/Purchase/SearchPurchase',
+                data: data2Send,
+                contentType: 'application/json; charset=utf-8',
+
+                success: function (response) {
+                    alert(response);
+                    // result = $($.parseHTML(response)).filter("#allpurchase");
+                    $(tab).html(response);
+                    $("#referenceName").val(referenceName);
+                    $("#CreatedDate").val(createdDate);
+                    $("#DueDate").val(dueDate);
+                }
+            });
+        });
+    });
+</script>
+<table class="table" id="searchPurchase">
+    <thead>
+    <tr>
+        <th>Enter the Reference or Contact name</th>
+         <th>Search Within</th>
+         <th>Start Date </th>
+         <th>End Date</th>
+         <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>  <input style="width: 150px" type="text" name="referenceName" id="referenceName">  </td>
+        <td>@Html.DropDownList("SearchWithinList")</td>
+        <td> <input style="width: 150px" type="text" name="CreatedDate" id="CreatedDate" class = "dtFrom"></td>
+        <td>  <input style="width: 150px" type="text" name="DueDate" id="DueDate" class = "dtTo"></td>
+        <td>
+@*             @using (Html.BeginForm("SearchPurchase", "Purchase", FormMethod.Post, new { referenceName = $("#referenceName").val(),  CreatedDate = $("#CreatedDate").val(), DueDate = $("#DueDate").val()}))
+            {
+            *@<input type="button" value="Search" id="btnSearchPurchase" class="btn"/>
+             <input type="button" value="Cancel" id="btnCancel" class="btn" />
+            @* }*@
+        </td>
+    </tr>
+    </tbody>
+</table>
+

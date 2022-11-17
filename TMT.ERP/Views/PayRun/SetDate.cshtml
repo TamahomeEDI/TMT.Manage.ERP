@@ -1,0 +1,187 @@
+﻿@{
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+    
+}
+<script type="text/javascript">
+    $(document).ready(function () {        
+        var status = 0;
+        $('#btnSave').click(function () {
+            
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return;
+            }
+
+            var date = $('#txtFrom').datepicker('getDate');
+            var to = $('#txtTo').datepicker('getDate');
+            var value = Math.floor((to - date) / (1000 * 60 * 60 * 24));
+            if (value < 0) {
+                var message = "From date cannot be greater than to date";
+                $("div.error span").html(message);
+                $("div.error").show();
+                $("#txtFrom").focus();
+                return false;
+            } else {
+                status = 0;
+                AddPayRunSchedule(status);
+            }          
+        });
+        $('#btnBack').click(function () {
+            location.href = "/PayRun/";
+        });
+        $('#btnNext').click(function () {
+            
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return;
+            }
+
+            var date = $('#txtFrom').datepicker('getDate');
+            var to = $('#txtTo').datepicker('getDate');
+            var value = Math.floor((to - date) / (1000 * 60 * 60 * 24));
+            if (value < 0) {
+                var message = "From date cannot be greater than to date";
+                $('#txtFrom').addClass('error');                
+                $("div.error span").html(message);
+                $("div.error").show();                
+                return false;
+            } else {
+                status = 1;
+                AddPayRunSchedule(status);
+            }            
+        });
+
+
+        jQuery.validator.messages.required = "";
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+            //debug: true
+        });
+    });
+
+    function AddPayRunSchedule(status) {
+        var userId = $('#hdfUserID').val();
+        var payFrequence = $('#ddlPayFrquency').val();
+        var fromDate = $('#txtFrom').val();
+        var toDate = $('#txtTo').val();
+        var paymentDate = $('#txtPaymentDate').val();
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/PayRun/SavePayRun/',
+                data:
+                    {
+                        "payRunID": 0,
+                        "userId": userId,
+                        "payFrequence": payFrequence,
+                        "fromDate": fromDate,
+                        "toDate": toDate,
+                        "paymentDate": paymentDate,
+                        "status": status
+                    },
+                success: function (data) {
+                    if (status == 0) {
+                        location.href = "/PayRun/";
+                    }
+                    if (status == 1) {
+                        location.href = "/PayRun/EnterEmployee?payrunId=" + data + "&payRunEmployeeID=0";
+                    }
+                }
+            });
+    }
+</script>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <input type="hidden" value="@user.ID" id="hdfUserID"/>
+    <div id="breadcrumb">
+        <div class="container">
+            <div id="con_top">
+                <div class="c_container">
+                    <h3>@Resources.Resource.PayRun_AddNew</h3>
+                    <div id="breadcrumbs">
+                        <ul>
+                            <li><span>@Resources.Resource.PayRun_Index</span></li>
+                            <li><a href="/PayRun/">@Resources.Resource.PayRun_IndexList</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="con_body">
+        <div class="cleardiv"></div>
+        <div class="error" style="display: none;">
+            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: -5px 10px 0px 0px;" />
+            <span></span>.<br clear="all" />
+        </div>
+        <div id="divMessage"></div>
+        <div class="container">
+            <div class="c_container">
+                <div id="tabbody">
+                    <div class="cleardiv"></div>
+                    <h4>@Resources.Resource.PayRun_IndexTitle</h4>
+                    <hr />
+                    @*<div class="cleardiv"></div>
+                    <div class="cleardiv"></div>*@
+                    <label>@Resources.Resource.PayRun_Frequency</label>
+                    <div class="cleardiv"></div>
+                    <select id="ddlPayFrquency" style="width: 300px; height: 25px;">
+                        <option value="@Convert.ToInt32(TMT.ERP.Models.Lookups.PayFrequency.Weekly)">@TMT.ERP.Models.Lookups.PayFrequency.Weekly</option>
+                        <option value="@Convert.ToInt32(TMT.ERP.Models.Lookups.PayFrequency.Every2Weeks)">@TMT.ERP.Models.Lookups.PayFrequency.Every2Weeks</option>
+                        <option value="@Convert.ToInt32(TMT.ERP.Models.Lookups.PayFrequency.Monthly)">@TMT.ERP.Models.Lookups.PayFrequency.Monthly</option>
+                        <option value="@Convert.ToInt32(TMT.ERP.Models.Lookups.PayFrequency.Custom)">@TMT.ERP.Models.Lookups.PayFrequency.Custom</option>
+                    </select>
+                    <div class="cleardiv"></div>
+                    @*<div class="cleardiv"></div>
+                    <div class="cleardiv"></div>*@
+
+                    <div style="display: inline;">
+                        <div style="float: left; width: 50%; float: left;">
+                            <label>@Resources.Resource.PayRun_From</label>
+                            <div class="cleardiv"></div>
+                            <input type="text" class="datepicker required" id="txtFrom" name="txtFrom" style="width: 300px; height: 25px;" />
+                        </div>
+                        <div style="float: left; width: 48%; float: right;">
+                            <label>@Resources.Resource.PayRun_To</label>
+                            <div class="cleardiv"></div>
+                            <input type="text" class="datepicker required" id="txtTo" name="txtTo" style="width: 300px; height: 25px;" />
+                        </div>
+                    </div>
+                    <div class="cleardiv"></div>
+                    @*<div class="cleardiv"></div>
+                    <div class="cleardiv"></div>*@
+                    <h4>@Resources.Resource.PayRun_PaymentDate</h4>
+                    <hr />
+                    <label>@Resources.Resource.PayRun_PaymentDate</label>
+                    <div class="cleardiv"></div>
+                    <input type="text" class="datepicker required" id="txtPaymentDate" name="txtPaymentDate" style="width: 300px; height: 25px;" />
+                    @*<div class="cleardiv"></div>
+                    <div class="cleardiv"></div>*@
+                    <div class="cleardiv"></div>
+                    <input type="submit" value="@Resources.Resource.PayRun_Save" id="btnSave" class="btn btn-defaultxero" />
+                    <input type="submit" value="@Resources.Resource.PayRun_Back" id="btnBack" class="btn btn-defaultxero" />
+                    <input type="submit" value="@Resources.Resource.PayRun_Next" id="btnNext" class="btn btn-defaultxero" />
+                    <div class="cleardiv"></div>
+                    <div class="cleardiv"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+}

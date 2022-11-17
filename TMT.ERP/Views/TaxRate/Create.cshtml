@@ -1,0 +1,199 @@
+﻿@model TMT.ERP.DataAccess.Model.TaxRate
+
+@{
+    Layout = null;
+    <script src="@Url.Content("~/Scripts/jquery.numeric.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+}
+<script type="text/ecmascript">
+
+    $(document).ready(function () {
+        $('#btnClose').click(function (e) {
+            $("#dialog").dialog("close");
+            return false;
+        });
+
+        //Press enter
+        $('.noEnterSubmit').keypress(function (e) {
+            debugger;
+            if (e.which == 13) return false;
+            //or...
+            if (e.which == 13) e.preventDefault();
+        });
+
+        $('#Code').focus();
+
+        $(".numeric").numeric();
+
+        $('.currency').blur(function () {
+            $('.currency').formatCurrency();
+        });
+
+        $("#Rate").change(function () {
+            debugger;
+            var rate = $('#Rate').asNumber();
+            if (rate > 100) {
+                $('#Rate').val(0.00);
+                $('#AlertOver').show();
+                $('.error').hide();
+                $('#AlertDuplicate').hide();
+                return false;
+            } else {
+                var count = $('#Rate').val().replace(/[^0-9.]/g, '');
+                $('#Rate').val(count);
+                var value = $('#Rate').asNumber();
+                if (value > 100) {
+                    $('#AlertOver').show();
+                    $('.error').hide();
+                    $('#AlertDuplicate').hide();
+                    return false;
+                }
+                if (count == "") {
+                    count = 0.00;
+                }
+                $('#Rate').val(count).formatCurrency();
+            }
+        });
+
+        jQuery.validator.messages.required = "";
+
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                    $('#AlertDuplicate').hide();
+                    $('#AlertOver').hide();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+        // Check Exists Name
+        function ExistsName(name) {
+            var id = 0;
+            $.ajax({
+                type: 'POST',
+                url: '/TaxRate/ExistsName/',
+                data: { "name": name, "id": id },
+                success: function (data) {
+                    debugger;
+                    if (data == 1) {
+                        result = 1;
+                    }
+                    if (data == 0)
+                        result = 0;
+                },
+                async: false
+            });
+        }
+
+
+        // Create Tax Rate
+        $('#btnSave').click(function (e) {
+            debugger;
+            var code = $('#Code').val();
+            var name = $('#Name').val();
+            var rate = $('#Rate').val();
+            var description = $('#Description').val();
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            ExistsName(name);
+            if (result == 1) {
+                $('#AlertDuplicate').show();
+                $('.error').hide();
+                $('#AlertOver').hide();
+                return false;
+            } else {
+                $('#AlertDuplicate').hide();
+                $.ajax(
+                {
+                    type: 'POST',
+                    traditional: true,
+                    url: '/TaxRate/Create/',
+                    data: {
+                        "code": code, "name": name, "rate": rate, "description": description
+                    },
+                    success: function (e) {
+                        location.href = "/TaxRate/Index/";
+                    },
+                    async: false
+                });
+            }
+        });
+
+    });
+</script>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    
+    <div id="popup-breadcrumb" style="margin-top: -6px;">
+        <div class="error" style="display: none; margin-top: 5px; border: 2px solid red; height: 30px; border-radius: 6px; line-height: 2">
+            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+            <span style="font-size: 11px;"></span>.<br clear="all" />
+        </div>
+        <div id="AlertDuplicate" style="display: none; margin-top: 5px; border: 2px solid red; height: 30px; border-radius: 6px; line-height: 2">
+            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+            <label style="color: red; font-weight: normal; font-size: 12px;">@Resources.Resource.Common_Msg_NameUnique</label>
+        </div>
+        <div id="AlertOver" style="display: none; margin-top: 5px; border: 2px solid red; height: 30px; border-radius: 6px; line-height: 2">
+            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+            <label style="color: red; font-weight: normal; font-size: 12px;">Rate cannot bigger than 100%</label>
+        </div>
+        <div style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;">
+            <div style="height: 30px; width: 100%; margin-top: 5px;">
+                <div style="float: left; width: 35%">
+                    <label>@Resources.Resource.TaxRate_Code</label>
+                </div>
+                <div style="float: right; width: 60%; margin-right: 12px;">
+                    <input id="Code" type="text" name="Code" class="required noEnterSubmit" style="width: 200px;" maxlength="20" />
+                </div>
+            </div>
+
+            <div style="height: 30px; width: 100%; margin-top: 5px;">
+                <div style="float: left; width: 35%">
+                    <label>@Resources.Resource.TaxRate_Name</label>
+                </div>
+                <div style="float: right; width: 60%; margin-right: 12px;">
+                    <input id="Name" type="text" name="Name" class="required noEnterSubmit" style="width: 200px;" maxlength="40" />
+                </div>
+            </div>
+
+            <div style="height: 30px; width: 100%; margin-top: 5px;">
+                <div style="float: left; width: 35%">
+                    <label>@Resources.Resource.TaxRate_Rate (%)</label>
+                </div>
+                <div style="float: right; width: 60%; margin-right: 12px;">
+                    <input id="Rate" name="Rate" class="numeric currency required" type="text" style="width: 200px;" value="0.00" maxlength="6" />
+                </div>
+            </div>
+            <div style="height: 80px; width: 100%">
+                <div style="float: left; width: 35%">
+                    <label>@Resources.Resource.TaxRate_Description</label>
+                </div>
+                <div style="float: right; width: 60%; margin-right: 12px;">
+                    <textarea id="Description" maxlength="200" style="width: 200px; resize: none;" rows="3"></textarea>
+                </div>
+            </div>
+            <div style="margin-bottom: 10px; margin-left: 188px; float: left; margin-top: 5px;">
+                <input type="button" class="btn btn-defaultxero" value="@Resources.Resource.TaxRate_Save" id="btnSave"/>
+                <input style="margin-left: 6px;" type="button" class="btn btn-defaultxero" value="@Resources.Resource.TaxRate_Cancel" id="btnClose"/>
+            </div>
+        </div>
+    </div>
+}
+

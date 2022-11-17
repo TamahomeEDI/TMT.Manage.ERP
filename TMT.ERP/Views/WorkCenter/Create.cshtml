@@ -1,0 +1,258 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.Machine>
+@{
+    ViewBag.Title = "Create";
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+<script type="text/javascript">
+    var result = 0;
+    $(document).ready(function () {
+        var userId = $('#hdfUserID').val();
+        debugger;
+        setControlShowHide(userId, 'frmWorkCenter_Create');
+
+        $('#txtName').focus();
+
+        $('#sPageSize').html($('#hdfPageSize').val());
+        var countModel = $('#hdfCountList').val();
+        if (countModel == 0) {
+            $('#error').css('display', 'block');
+            $('#tabs-1').css('display', 'none');
+            $('#function').css('display', 'none');
+        } else {
+            $('#error').css('display', 'none');
+        }
+        $('#btnClose').click(function () {
+            location.href = "/WorkCenter/";
+        });
+        $('#btnSave').click(function () {
+            debugger;
+            var companyID = $('#hdfCompany').val();
+            var code = $('#txtName').val();
+            var desc = $('#txtDesc').val();
+            var isValid = $("#frmWorkCenter_Create").valid();
+            if (!isValid) {
+                return;
+            }
+            ExistsCode(code);
+            if (result == 1) {
+                $('#AlertDuplicate').show();
+                $('.error').hide();
+                return false;
+            } else {
+                $('#AlertDuplicate').hide();
+                var valueString = [];
+                $('#tableItem > tbody#bodyItem > tr').each(
+                    function () {
+                        debugger;
+                        var tr = $(this).closest('tr');
+                        var machineId = $('input[name=chkMachine]', tr).attr('id');
+                        valueString.push(machineId);
+                    }
+
+                );
+                var machine = {
+                    machineID: valueString
+                };
+                $.ajax({
+                    type: "POST",
+                    url: "/WorkCenter/Save/",
+                    traditional: true,
+                    dataType: "text",
+                    data:
+                        {
+                            "workCenterId": 0,
+                            "code": code,
+                            "companyID": companyID,
+                            "description": desc,
+                            "machineID": valueString
+                        }, success: function (data) {
+                            if (data == "success") {
+                                var _url = "/WorkCenter/Index/";
+                                var msg = '@Resources.Resource.Common_Msg_CreateSuccess';
+                                    CreatePopupMessage('Inform', msg, '@Resources.Resource.Common_Message', 120, 300, _url);
+                                } else {
+                                    var _url = "/WorkCenter/Index/";
+                                    var msg = '@Resources.Resource.Common_Msg_Error';
+                                    CreatePopupMessage('Inform', msg, '@Resources.Resource.Common_Message', 120, 'auto', _url);
+                                }
+                            }
+                });
+            }
+        });
+        $('#btnAddNew').click(function () {
+            $.ajax({
+                type: 'GET',
+                url: "/WorkCenter/GetPaging?page=1&search=None",
+                success: function () {
+                    Create_Popup("#dialog", "Select Machine", 500, 'auto', "/WorkCenter/GetPaging?page=1&search=None", false);
+                    $("#dialog").dialog("open");
+                }
+            });
+        });
+
+        jQuery.validator.messages.required = "";
+        $("#frmWorkCenter_Create").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                    $('#AlertDuplicate').hide();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+    });
+
+
+    function Create_Popup(_dialog, _title, _width, _height, _url, _openStatus) {
+        $(_dialog).dialog({
+            title: _title,
+            modal: true,
+            autoOpen: _openStatus,
+            open: function () {
+                $(this).load(_url);
+            },
+            width: _width,
+            height: _height,
+            minWidth: _width,
+            minHeight: _height,
+            resizable: false,
+            overlay: true
+        });
+    }
+
+    function ExistsCode(code) {
+        var id = 0;
+        $.ajax({
+            type: 'POST',
+            url: '/WorkCenter/ExistsCode/',
+            data: { "code": code, "id": id },
+            success: function (data) {
+                debugger;
+                if (data == 1) {
+                    result = 1;
+                }
+                if (data == 0)
+                    result = 0;
+            },
+            async: false
+        });
+    }
+
+    function SetPageSize(pageSize) {
+
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/WorkCenter/SetPageSize',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+
+</script>
+<input type="hidden" value="@user.ID" id="hdfUserID"/>
+<input type="hidden" value="@user.CompanyID" id="hdfCompany"/>
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<input type="hidden" value="@Model.Count" id="hdfCountList"/>
+<div id="dialog" title="Basic modal dialog"></div>
+<div id="confirmDel" title="Confirm!"></div>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.WorkCenter_Title</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>Settings</span></li>
+                        <li><a href="/WorkCenter/Index/">@Resources.Resource.WorkCenter_Title</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_body">
+    <div class="container">
+        <div class="c_container">
+            <div class="cleardiv"></div>
+            <div class="error" style="display: none; line-height: 2">
+                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: -5px 10px 0px 0px;" />
+                <span></span>.
+            </div>
+            <div id="AlertDuplicate" style="display: none; line-height: 2">
+                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                <label style="color: red; font-weight: normal; font-size: 12px;">@Resources.Resource.Common_Msg_CodeUnique</label>
+            </div>
+            <div id="divMessage"></div>
+            <div id="Inform" title="Inform" style="background: white"></div>
+            <div class="cleardiv"></div>
+
+            <input type="submit" id="btnClose" value="Close" class="btn btn-defaultxero" />
+            <input type="submit" id="btnSave" value="Save" class="btn btn-defaultxero" />
+            @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmWorkCenter_Create" }))
+            { 
+                <div class="cleardiv"></div>
+                <div style="height: 40px; width: 60%; margin-top: 5px; float: left;">
+                    <div style="float: left; line-height: 2.5; width: 20%;">
+                        <label>@Resources.Resource.WorkCenter_Code</label>
+                    </div>
+                    <div>
+                        @Html.TextBox("txtName", String.Empty, new { @class = "form-control required", style = "width: 200px;", maxlength = "40" })
+                    </div>
+                </div>
+                <br />
+                <div style="height: 40px; width: 60%; margin-top: 5px; float: left;">
+                    <div style="float: left; line-height: 2.5; width: 20%;">
+                        <label>@Resources.Resource.WorkCenter_Description</label>
+                    </div>
+                    <div>
+                        @Html.TextBox("txtDesc", String.Empty, new { @class = "form-control", style = "width: 200px;", maxlength = "250" })
+                    </div>
+                </div>
+@*<label>Work Center:</label>                                
+                @Html.TextBox("txtName", String.Empty, new { @class = "form-control required", style = "width: 200px;" })
+                <label>Description:</label>                
+                @Html.TextBox("txtDesc", String.Empty, new { @class = "form-control required", style = "width: 200px;" })
+                *@<div class="cleardiv"></div>
+            }
+            <h4>List Of Machine</h4>
+            <div class="cleardiv"></div>
+            <div id="tabbody">
+                <div id="tabs-1">
+                    <div id="itemSelect" style="display: none;">
+                        <table id="tableItem">
+                            <thead>
+                                <tr>
+                                    <th>Machine Code</th>
+                                    <th>Description</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bodyItem">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <div class="cleardiv"></div>
+            <input type="submit" id="btnAddNew" value="Select Machine" class="btn btn-defaultxero" />
+            <div class="cleardiv"></div>
+        </div>
+    </div>
+</div>

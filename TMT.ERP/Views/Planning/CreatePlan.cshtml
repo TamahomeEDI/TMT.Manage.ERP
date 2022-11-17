@@ -1,0 +1,193 @@
+﻿@model TMT.ERP.DataAccess.Model.ProductivePlanList
+@{
+    ViewBag.Title = "Create";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var iIndex = 5;
+        $("#addNewLine").click(function () {
+            
+            var index = parseInt(iIndex) + 1;
+            var workcenter = $('#WorkCenterID').val();
+            if (workcenter == 0 || workcenter == null) {
+                alert("Select workcenter ,Please");
+            } else {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "/Planning/AddNewLine/",
+                        data: { "iIndex": index, "workcenterId": workcenter },
+                        success: function (data) {
+                            $('#insertRow').append(data);
+                        }
+                    });
+            }
+            return false;
+        });
+        $("#WorkCenterID").change(function () {
+            var workcenterId = $(this).val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Planning/GetMachineByWorkCenter/",
+                    data: { 'workcenterId': workcenterId },
+                    success: function (data) {
+                        $('#tblSaleDetail > tbody#insertRow > tr > td#machine').each(function () {
+                            $(this).empty();
+                            $(this).html(data);
+                        });
+                    }
+                });
+        });
+        $('#btnBackPlan').click(function () {
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Planning/",
+                    success: function () {
+                        window.location.href = "/Planning/";
+                    }
+                });
+
+        });
+        $('#MachineID').change(function () {
+            alert('1234567890');
+        });
+
+    });
+    function addRow() {
+        var $tr = jQuery('div#myDiv table#tblSaleDetail').find("tbody tr:last").clone();
+        jQuery('div#myDiv table#tblSaleDetail').find("tbody tr:last").after($tr);
+    };
+    function RemoveRow(element) {
+
+        var tr = $(element).closest('tr');
+        tr.remove();
+    }
+    function SaveProductivePlanLists(status) {
+        
+        var _status = status;
+        var mpsNo = $('#txtMPSNo').val();
+        var createDate = $('#txtCreateDate').val();
+        var workcenterId = $('#WorkCenterID').val();
+        var productivePlanDetail = BuildJSON(_status);
+        $.ajax(
+            {
+                type: "POST",
+                url: "/Planning/SaveProductivePlanLists/",
+                data:
+                    {
+                        "mpsNo": mpsNo,
+                        "createDate": createDate,
+                        "workcenterId": workcenterId,
+                        "productivePlanDetail": productivePlanDetail
+                    },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+    function BuildJSON(value) {
+        var arrayData = [];
+        $('#tblSaleDetail > tbody#insertRow > tr').each(function () {
+            var tr = $(this).closest('tr');
+            var machineId = $('#MachineID', tr).val();
+            
+            if (parseInt(machineId) > 0) {
+                var item =
+                    {
+                        "machineId": machineId,
+                        "workorderId": $('#WorkOrderID', tr).val(),
+                        "earliestStartDate": $('input[name=txtEStartDate]', tr).val(),
+                        "latestStartDate": $('input[name=txtLStartDate]', tr).val(),
+                        "setupDateTime": $('input[name=txtSetupTime]', tr).val(),
+                        "processTime": $('#txtProcessTime', tr).val(),
+                        "scheduleStartTime": $('input[name=txtSStartTime]', tr).val(),
+                        "scheduleEndTime": $('input[name=txtSEndTime]', tr).val(),
+                        "status": value
+                    };
+                arrayData.push(item);
+            }
+
+        });
+        return JSON.stringify(arrayData);
+    }
+
+
+</script>
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    <fieldset>
+        <h1>New Machine Capacity Planning</h1>
+        <div style="display: inline-block;">
+            <p>
+                <label>MPS No:</label><span><input type="text" id="txtMPSNo" class="txt_box1" value="@ViewBag.PlanCode" readonly="readonly" /></span>
+            </p>
+        </div>
+        <div style="clear: both;"></div>
+        <div style="display: inline-block;">
+            <p>
+                <label>Created Date:</label><span><input type="text" id="txtCreateDate" class="datepicker" /></span>
+            </p>
+        </div>
+        <div style="clear: both;"></div>
+        <div style="display: inline-block;">
+            <p>
+                <label>Work Center:</label><span>@Html.DropDownList("WorkCenterID", null, String.Empty, new { style = "width:200px;" })</span>
+            </p>
+        </div>
+        <h1>Item Details</h1>
+        <div id="myDiv">
+            <table class="table table-striped" width="927" id="tblSaleDetail" border="0">
+                <thead>
+                    <tr bgcolor="#e2efff">
+                        <th>Machine No</th>
+                        <th>WorkOrder No</th>
+                        <th>Earliest Start Date</th>
+                        <th>Latest Start Date</th>
+                        <th>Setup Time</th>
+                        <th>Process Time</th>
+                        <th>Schedule Start Time</th>
+                        <th>Schedule End Time</th>
+                    </tr>
+                </thead>
+                <tbody id="insertRow">
+                    @for (int iIndex = 0; iIndex < 5; iIndex++)
+                    {
+                        <tr>
+                            <td class="" tabindex="0" style="width: 150px;" id="machine">@Html.DropDownList("MachineID", null, String.Empty, new { style = "width:100%;" })</td>
+                            <td class="" tabindex="0" style="width: 150px;">@Html.DropDownList("WorkOrderID", null, String.Empty, new { style = "width:100%;" })</td>
+                            <td style="width: 190px;">
+                                <input type="text" id="txtEStartDate+@iIndex" class="datepicker" name="txtEStartDate"/></td>
+                            <td style="width: 190px;">
+                                <input type="text" id="txtLStartDate+@iIndex" class="datepicker" name="txtLStartDate"/></td>
+                            <td style="width: 190px;">
+                                <input type="text" id="txtSetupTime+@iIndex" class="datepicker" name="txtSetupTime"/></td>
+                            <td style="width: 190px;">
+                                <input type="text" id="txtProcessTime" /></td>
+                            <td style="width: 190px;">
+                                <input type="text" id="txtSStartTime+@iIndex" class="datepicker" name="txtSStartTime"/>
+                            </td>
+                            <td style="width: 190px;">
+                                <input type="text" id="txtSEndTime+@iIndex" class="datepicker" name="txtSEndTime"/></td>
+                            <td style="width: 190px;"><a id="delRow" onclick="RemoveRow(this);">Del</a></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div style="clear: both;">
+                <input type="button" id="addNewLine" value="Add a new line" />
+            </div>
+        </div>
+
+    </fieldset>
+}
+<div style="display: inline-block;">
+    <input type="submit" id="btnSavePlan" value="Save" onclick="return SaveProductivePlanLists(0);" />
+    <input type="submit" id="btnApprovePlan" value="Approve" onclick="return SaveProductivePlanLists(1);" />
+    <input type="submit" id="btnBackPlan" value="Back" />
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

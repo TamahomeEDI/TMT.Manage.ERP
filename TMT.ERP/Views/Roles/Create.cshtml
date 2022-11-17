@@ -1,0 +1,272 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.Role
+
+@{
+    Layout = null;
+}
+<script type="text/ecmascript">
+    $(document).ready(function () {
+        
+        $('#RoleName').focus();
+        $('#loadControl').css('display', 'none');        
+        $('#ddlFeature').change(function () {
+            var featureId = $(this).val();
+            if (featureId == "" || featureId == undefined)
+            {
+                featureId = 0;
+            }
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Control/GetFunction/",
+                    data:
+                        {
+                            "featureId": featureId
+                        },
+                    success: function (data) {
+                        $('#loadFunction').empty();
+                        $('#loadFunction').html(data);
+                        $('#ddlFunction').val("");                        
+                        $('#loadControl').empty();
+                    }
+                });
+        });
+        $('#ddlFunction').change(function () {
+            
+            var functionId = $(this).val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Control/GetControl/",
+                    data:
+                        {
+                            "functionId": functionId
+                        },
+                    success: function (data) {
+
+                        $('#loadControl').empty();
+                        $('#loadControl').html(data);
+                        $('#loadControl').css('display', 'block');
+
+                    }
+                });
+        });
+        $('#btnClose').unbind('click').click(function (e) {
+            $('#dialog').dialog('close');
+            return false;
+        });
+        $('#btnCreate').unbind('click').click(function () {
+
+            var isValid = $("#frmCreateRole").valid();
+            if (!isValid) {
+                return;
+            }
+
+            var roleId = 0;
+            var roleName = $('#RoleName').val();
+            var description = $('#Description').val();
+            var controls = BuildJSON();
+            var userId = GetUser();            
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Roles/Save/",
+                    data:
+                        {
+                            "roleId": roleId,
+                            "roleName": roleName,
+                            "description": description,
+                            "controls": controls,
+                            "userId": userId
+                        },
+                    success: function () {
+                        location.reload();
+                    }
+                });
+
+
+        });
+        function GetUser() {
+            
+            var user = [];
+            $("input[name=cbUser]:checked").each(
+                function () {
+                    var item = {
+                        "id": $(this).val()
+                    };
+                    user.push(item);
+                });
+            return JSON.stringify(user);
+        }
+
+        jQuery.validator.messages.required = "";
+        $("#frmCreateRole").validate({
+            invalidHandler: function (e, validator) {
+                
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+    });
+    $('#aRole').unbind('click').click(function () {
+        $(this).parent().addClass('active');
+        $('#aUser').parent().removeClass('active');
+        $('#aUser').parent().addClass('selected');
+        $('#divRole').css('display', 'block');
+        $('#divUser').css('display', 'none');
+    });
+    $('#aUser').unbind('click').click(function () {
+        $(this).parent().addClass('active');
+        $('#aRole').parent().removeClass('active');
+        $('#aRole').parent().addClass('selected');
+        $('#divRole').css('display', 'none');
+        $('#divUser').css('display', 'block');
+    });
+    function BuildJSON() {
+        
+        var arrayData = [];
+        $("#tableControl > tbody#bodyControl > tr").each(function () {
+            var tr = $(this).closest('tr');
+            var item = {
+                "id": $('#hdfControlId', tr).val(),
+                "viewtype": $('#ddlViewType', tr).val()
+            };
+            arrayData.push(item);
+        });
+        return JSON.stringify(arrayData);
+    }
+</script>
+@{
+    var feature = ViewBag.FeatureID as List<Feature>;
+    var function = ViewBag.FunctionID as List<Function>;    
+}
+<div class="cleardiv"></div>
+<div class="error" style="display: none;">
+    <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: -5px 10px 0px 0px;" />
+    <span></span>.<br clear="all" />
+</div>
+<div id="divMessage"></div>
+<div class="cleardiv"></div>
+
+<ul style="margin: 0px;" class="group nav nav-tabs">
+    <li class="active">
+        <a href="javascript:void(0);" title="Role" id="aRole">Role
+        </a></li>
+    <li class="selected">
+        <a href="javascript:void(0);" title="User" id="aUser">User
+        </a></li>
+</ul>
+@using (Html.BeginForm("", "Roles", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmCreateRole" }))
+{
+    <div style="display: block; padding-top: 20px;" id="divRole">
+        <div style="width: 46%; float: left; margin-right: 10px;">
+
+            <h4>@Resources.Resource.Role_Create_Title</h4>
+            <hr />
+            <div class="bovien">
+                <div class="editor-label">
+                    <b>@Resources.Resource.Role_Index_RoleName</b>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.RoleName, new { @class = "required", style = "width:200px;" })
+                </div>
+                <div class="cleardiv"></div>
+                <div class="editor-label">
+                    <b>@Resources.Resource.Role_Index_Description</b>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.Description, new { @class = "required", style = "width:200px;" })
+                </div>
+            </div>
+        </div>
+        <div style="width: 49%; float: left;">
+            <h4>Controls
+            </h4>
+            <hr />
+            <div class="bovien">
+                <label>
+                    @Resources.Resource.Control_Feature
+                </label>
+                <div class="editor-field">
+                    <select id="ddlFeature" name="ddlFeature" style="width: 200px; height: 25px;" class="required">
+                        @if (feature != null && feature.Count > 0)
+                        {
+                            <option value="">@Resources.Resource.Common_SelectItem</option>
+                            foreach (var item in feature)
+                            {
+                            <option value="@item.ID">@item.FeatureName</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="cleardiv"></div>
+                <label>
+                    @Resources.Resource.Control_Function
+                </label>
+                <div class="editor-field" id="loadFunction">
+                    <select id="ddlFunction" name="ddlFunction" style="width: 200px; height: 25px;" class="required">
+                         <option value="">@Resources.Resource.Common_SelectItem</option>
+                        @*@if (function != null && function.Count > 0)
+                        {
+                            foreach (var item in function)
+                            {
+                            <option value="@item.ID">@item.Name</option>
+                            }
+                        }*@
+                    </select>
+                </div>
+                <div class="cleardiv"></div>
+                <div class="editor-field" id="loadControl">
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cleardiv"></div>
+    <div style="display: none;" id="divUser">
+        @{
+                        var listUser = ViewBag.ListUser as List<User>;
+        }
+        <table class="table" id="tableUser">
+            <thead style="display: none;">
+                <tr>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="">
+                @if (listUser != null)
+                {
+                    foreach (var user in listUser)
+                    {
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="cbUser" id="cbUser" value="@user.ID"/>
+                        </td>
+                        <td>
+                            <b><i>@user.UserName</i></b><br />
+                        </td>
+                    </tr>                
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="cleardiv"></div>
+    <div style="display: inline;">
+        <input type="submit" value="@Resources.Resource.Role_Edit_Save" class="btn btn-defaultxero" id="btnCreate" />
+        <input type="submit" value="@Resources.Resource.Role_Edit_Close" class="btn btn-defaultxero" id="btnClose" />
+    </div>
+}

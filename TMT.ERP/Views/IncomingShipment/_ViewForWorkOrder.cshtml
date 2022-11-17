@@ -1,0 +1,37 @@
+﻿@using System.Web.Mvc.Html
+@model IEnumerable<TMT.ERP.DataAccess.Model.StockInCardsDetail>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker();
+    })
+</script>
+<div style="clear: both; height: 10px;"></div>
+<div style="display: inline;">
+    <div style="width: 50%; float: left;">
+        <p>@Resources.Resource.OutGoing_View_ShipmentNo:&nbsp;<b>@ViewBag.ShipmentNo</b></p>
+        <p>@Resources.Resource.ProductionMonitors_Create_MPSNo:&nbsp;<b>@ViewBag.MPSNo</b></p>
+        <p>@Resources.Resource.ProductionMonitors_Create_WorkCenter:&nbsp;<b>@ViewBag.WorkCenterNo</b></p>
+    </div>
+    <div style="width: 48%; float: left;">
+        <p>@Resources.Resource.ProductionMonitors_Create_WorkOrderNo:&nbsp;<b>@ViewBag.WorkOrderNo</b></p>
+        <p>@Resources.Resource.ProductionMonitors_Index_MachineNo&nbsp;<b>@ViewBag.MachineNo</b></p>
+        <p>@Resources.Resource.Incom_View_CreateBy:&nbsp;<b>@ViewBag.CreatedBy</b></p>
+    </div>
+</div>
+<div style="clear: both; height: 10px;"></div>
+<h1>@Resources.Resource.Incom_View_StockInDetails</h1>
+<div style="display: inline;">
+    <div style="width: 20%; float: left;"><p>@Resources.Resource.Incom_View_ToStock</p>&nbsp;@Html.DropDownList("StockID",null, String.Empty,new{style="width:150px;"})</div>
+    <div style="width: 20%; float: left;">
+        <p>@Resources.Resource.SaleInvoice_Create_Date</p>@{
+            DateTime createDate = ViewBag.CreaDate;
+        }
+        <input type="text" class="datepicker" id="txtCreateDate" value="@createDate.ToString("d")" style="width:150px"/>
+    </div>
+    <div style="width: 20%; float: left;">
+        <p>@Resources.Resource.Incom_View_ReceivedDate</p>@{
+            DateTime receiveDate = ViewBag.ReceivedDate;                                                            
+        }
+        <input type="text" class="datepicker" id="txtReceiveDate" value="@receiveDate.ToString("d")" style="width:150px"/>
+    </div>
+</div>

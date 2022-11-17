@@ -1,0 +1,244 @@
+﻿@model TMT.ERP.Models.BankResultCollection
+@{    
+    Layout = null;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var d = new Date();
+        var textCurrDate = d.toString("dd-MMM-yyyy");
+
+        $("#SaleOverDue").attr("href", "/SaleInvoice/AwaitingPayment?searchString=&type=0&createdate=&duadate=" + textCurrDate);
+
+        $("#PurchaseOverDue").attr("href", "/Purchase/AwaitingPayment?searchString=&type=0&createdate=&duadate=" + textCurrDate);
+
+        $(".btReconcile").unbind('click').click(function () {
+            if ($(this).attr("id") != '') {
+                var id = $(this).attr("id");
+                window.location.href = "/AccountTrans/Reconcile?id=" + id;
+            }
+        });
+
+        $("#btSaleInvoiceNew").unbind('click').click(function () {
+            window.location.href = "/SaleInvoice/Create/";
+        });
+
+        $("#btPurchaseNew").unbind('click').click(function () {
+            window.location.href = "/Purchase/Create/";
+        });
+
+        $("#btReceiptNew").unbind('click').click(function () {
+            window.location.href = "/ExpensiveClaim/Create/";
+        });
+
+        /******************** Begin Edit a Bank Account ************************/
+        /*********************/
+        $(".BankAccountEditID").unbind('click').click(function (e) {
+            e.preventDefault();
+            if ($('#Reconcilehidden').text() != '') {
+                var id = $('#Reconcilehidden').text();
+                var _url = "/BankAccounts/Edit/" + id;
+                $.ajax({
+                    type: 'GET',
+                    url: _url,
+                    success: function () {
+                        custom.CreatePopup("#dialog", "Edit Bank Acount", 400, 525, _url, false);
+                        $("#dialog").dialog("open");
+                    }
+                });
+            }
+        });
+    })
+</script>
+<div style="margin: 0 auto; width: 978px;">
+    <div class="summary">
+        <div class="col">
+            <div class="div-left">
+                <a href="/BankAccounts/Index">@Resources.Resource.BankAccounts_Index_Title</a>
+                @*<label id="BankingAccountQuestion" class="icons icon-question">&nbsp;</label>*@
+                <a href="/BankAccounts/Index">@Resources.Resource.BankAccounts_Index_Link</a>
+            </div>
+            @foreach (var item in Model.BankResults)
+            {
+                <div class="bank">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                            @Resources.Resource.BankAccount_ManageAccount_Label <span class="caret"></span>
+                        </button>
+
+                        <ul class="dropdown-menu" role="menu">
+                            <li>
+                                <ul>
+                                    <li>
+                                        <div>
+                                            <h3>@Resources.Resource.BankAccounts_Index_Find</h3>
+                                            <ul>
+                                                <li>
+                                                    <a href="/AccountTrans/Index/@item.BankID">@Resources.Resource.BankAccounts_Index_Transaction</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/AccountTrans/BankStatement/@item.BankID">@Resources.Resource.BankAccounts_Index_BankStatement</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div>
+                                            <h3>@Resources.Resource.BankAccounts_Index_New</h3>
+                                            <ul>
+                                                <li>
+                                                    <a href="/BankAccounts/SpendMoney/@item.BankID">@Resources.Resource.BankAccounts_Index_Spend</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/BankAccounts/ReceiveMoney/@item.BankID">@Resources.Resource.BankAccounts_Index_Receive</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/BankAccounts/TransferMoney/@item.BankID">@Resources.Resource.BankAccounts_Index_Transfer</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    <li>
+                                        <div>
+                                            <h3>@Resources.Resource.BankAccounts_Index_Reconcile</h3>
+                                            <ul>
+                                                <li>
+                                                    <a href="#">@Resources.Resource.BankAccounts_Index_ReconcileAcc</a>
+                                                </li>
+                                                <li>
+                                                    <a href="#">Reconciliation Report</a>
+                                                </li>
+                                                <li>
+                                                    <a href="/BankAccounts/ImportStatement/@item.BankID">@Resources.Resource.BankAccounts_Index_Import</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>
+                                <ul>
+                                    <li class="li-bottom" style="">
+                                        <div>
+                                            <ul>
+                                                <li>
+                                                    <a class="BankAccountEditID">@Resources.Resource.BankAccounts_Index_Edit</a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </div>
+                    <a class="bankname" href="/AccountTrans/Index?id=@item.BankID">
+                        @Html.DisplayFor(modelItem => item.AccoutName)
+                        <span>@Html.DisplayFor(modelItem => item.AccoutNum)</span>
+                    </a>
+
+                    <div class="content">
+                        <div class="balance">
+                            <div class="statement-balance">
+                                <label>@Resources.Resource.BankAccounts_Index_StatementBalance</label>
+                                <span>@Html.DisplayFor(modelItem => item.Total)</span>
+                            </div>
+                            <div class="date-imported">
+                                @Html.DisplayFor(modelItem => item.MaxDate)
+                            </div>
+                            <div class="no-padding-top">
+                                <button id="@item.BankID" class="btn btn-info btReconcile">Reconcile @Html.DisplayFor(modelItem => item.ReconcileCount) item </button>
+                            </div>
+                            <div class="bank-balance">
+                                <label>@Resources.Resource.BankAccounts_Index_TMTBalance</label>
+                                <span>@Html.DisplayFor(modelItem => item.TotalBalance)</span>
+                            </div>
+                        </div>
+                        <div class="flash">
+                            @{Html.RenderAction("BasicLine", "Chart", new { ID = item.BankID, iType = 1, chartname = "chart" + item.BankID });}
+                        </div>
+                    </div>
+
+                </div>     
+            }
+        </div>
+    </div>
+    <div id="dialog" title="Basic modal dialog"></div>
+    <div class="summary" style="margin-left: 5px;">
+        <div class="col">
+            <div class="div-left">
+                <a href="/SaleInvoice/Dashboard">Money Coming In</a>
+                @*<label id="MoneyComingInQuestion" class="icons icon-question">&nbsp;</label>*@
+                <a href="/SaleInvoice/Dashboard">Go to Sales ></a>
+            </div>
+            <div>
+                <button id="btSaleInvoiceNew" class="btn btn-default icon_new"><span>Add Sales Invoice</span></button>
+                <div class="invoice-summary">
+                    <div>
+                        <a href="/SaleInvoice/Draft/">Draft invoices (@Html.DisplayFor(m => m.DraftComingInCount))</a>
+                        <label>@Html.DisplayFor(m => m.TotalDraftComingIn)</label>
+                    </div>
+                    <div>
+                        <a id="SaleOverDue" href="#">Overdue invoices (@Html.DisplayFor(m => m.OverdueComingInCount))</a>
+                        <label>@Html.DisplayFor(m => m.TotalOverdueComingIn)</label>
+                    </div>
+                </div>
+            </div>
+            <div class="flash">
+                @{Html.RenderAction("BasicColumn", "Chart", new { iType = 1, chartname = "ComingIn" });}
+            </div>
+        </div>
+        <div class="col">
+            <div class="div-left">
+                <a href="/Purchase/Dashboard">Money Going Out</a>
+                @*<label id="MoneyGoingOutQuestion" class="icons icon-question">&nbsp;</label>*@
+                <a href="/Purchase/Dashboard">Go to Purchases ></a>
+            </div>
+            <div>
+                <button id="btPurchaseNew" class="btn btn-default icon_new"><span>Add Bill</span></button>
+                <div class="invoice-summary">
+                    <div>
+                        <a href="/Purchase/Draft/">Draft invoices (@Html.DisplayFor(m => m.DraftGoingOutCount))</a>
+                        <label>@Html.DisplayFor(m => m.TotalDraftGoingOut)</label>
+                    </div>
+                    <div>
+                        <a id="PurchaseOverDue" href="#">Overdue invoices (@Html.DisplayFor(m => m.OverdueGoingOutCount))</a>
+                        <label>@Html.DisplayFor(m => m.TotalOverdueGoingOut)</label>
+                    </div>
+                </div>
+            </div>
+            <div class="flash">
+                @{Html.RenderAction("StackedColumn", "Chart", new { iType = 1, chartname = "GoingOut" });}
+            </div>
+        </div>
+        <div class="col">
+            <div class="div-left">
+                <a href="/ExpensiveClaim/CurrentClaim/">@Resources.Resource.Expensive_Claim_List_Expensive_Claim</a>
+                @*<label id="ExpenseClaimsQuestion" class="icons icon-question">&nbsp;</label>*@
+                <a href="/ExpensiveClaim/CurrentClaim/">Go to Expense Claims ></a>
+            </div>
+            <div>
+                <button id="btReceiptNew" class="btn btn-default icon_new"><span>Add Receipt</span></button>
+            </div>
+            <div class="flash">
+                <div class="expense-summary">
+                    <div>
+                        <a href="/ExpensiveClaim/CurrentClaim/">@Resources.Resource.Expensive_Claim_YourClaim</a>
+                        <label>@Html.DisplayFor(m => m.Your_CurrentClaim_Total)</label>
+                    </div>
+                    <div>
+                        <a href="#" class="none">@Resources.Resource.Expensive_Claim_AllClaim (@Html.DisplayFor(m => m.All_CurrentClaim))</a>
+                        <label>@Html.DisplayFor(m => m.All_CurrentClaim_Total)</label>
+                    </div>
+                    <div>
+                        <a href="/ExpensiveClaim/AwaitingAuthorisation/">@Resources.Resource.Expensive_Claim_AwaitingAuthor (@Html.DisplayFor(m => m.AuthorisationClaim))</a>
+                        <label>@Html.DisplayFor(m => m.AuthorisationClaim_Total)</label>
+                    </div>
+                    <div>
+                        <a href="/ExpensiveClaim/AwaitingPayment/">@Resources.Resource.Expensive_Claim_Awaiting (@Html.DisplayFor(m => m.AwaitingPaymentClaim))</a>
+                        <label>@Html.DisplayFor(m => m.AwaitingPaymentClaim_Total)</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

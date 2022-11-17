@@ -1,0 +1,447 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      
+      <Diagram DiagramId="a2fd8657f6424fa0b4ac85d752d284ef" Name="Diagram1" ZoomLevel="73">
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.AccountType" Width="1.5" PointX="7.375" PointY="17.75" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Company" Width="1.5" PointX="11.125" PointY="13.75" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Currency" Width="1.5" PointX="8.125" PointY="24.375" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.DueDateType" Width="1.5" PointX="11.75" PointY="17" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.FinancialSetting" Width="1.5" PointX="10.75" PointY="30.25" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.FixedAssetDetail" Width="1.5" PointX="3" PointY="20.875" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Good" Width="1.5" PointX="2.25" PointY="14.375" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.MachineHistory" Width="1.5" PointX="9.125" PointY="10.75" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Machine" Width="1.5" PointX="4.5" PointY="11.875" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Note" Width="1.5" PointX="12.375" PointY="5.375" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.ProcessMachine" Width="1.5" PointX="4.5" PointY="24.375" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.ProductiveMonitorDetail" Width="1.5" PointX="5.0799893741868392" PointY="24.933500837969362" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.ProductivePlanList" Width="1.5" PointX="8.5779306164839912" PointY="7.2780347798383023" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.PurchaseDetail" Width="1.5" PointX="10.875" PointY="2.375" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Repeating" Width="1.5" PointX="2.375" PointY="24.5" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.SaleInvoiceDetail" Width="1.5" PointX="14.875" PointY="7.25" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.SaleInvoiceSetting" Width="1.875" PointX="7.375" PointY="31.125" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.StockInCardsDetail" Width="1.5" PointX="9.25" PointY="5.375" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.StockMovementDetail" Width="1.875" PointX="7.125" PointY="26.5" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.StockOutCardsDetail" Width="1.5" PointX="12.75" PointY="11.5" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.TaxRate" Width="1.5" PointX="6.25" PointY="5.875" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.UOM" Width="1.5" PointX="14.75" PointY="26.375" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.User" Width="1.5" PointX="14" PointY="21.875" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.WorkCenter" Width="1.5" PointX="11.875" PointY="0.5" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__SaleInvoi__BillD__54CB950F" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__SaleInvoi__SaleI__55BFB948" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Goods_Goods" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Goods_TaxRates" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Goods_TaxRates1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Purchase_Details_Goods" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_SaleInvoice_Details_Goods" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockInCards_Details_Goods" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockOutCards_Details_Goods" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Notes_Users" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Purchase_Details_TaxRate" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Purchase_Details_UOM" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_SaleInvoice_Details_TaxRates" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_SaleInvoice_Details_UOM" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockInCards_Details_UOM" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockOutCards_Details_UOM" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.ProductivePlanDetail" Width="1.5" PointX="6.0548785357060275" PointY="0.88153985183757722"
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockMovementDetails_Goods" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockMovementDetails_UOMs" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Goods_UOMs" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Goods_UOMs1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Machines_WorkCenters" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.BudgetInUse" Width="1.5" PointX="11.675353986991269" PointY="18.74115526058765" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Budget" Width="1.5" PointX="2.125" PointY="21.75" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Business" Width="1.5" PointX="5.25" PointY="16.75" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.AccountBudgetTran" Width="1.5" PointX="4.25" PointY="6.375" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.AccountGoodTran" Width="1.5" PointX="10.875" PointY="1.5" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.AccountTranDetail" Width="1.5" PointX="7.875" PointY="19.625" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.StockOutCard" Width="1.5" PointX="12.75" PointY="12.875" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockOutCards_Users" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockOutCards_Users1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockOutCardsDetails_StockOutCards" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Purchase" Width="1.5" PointX="12.25" PointY="5.125" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Purchases_Currencies" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_PurchaseDetails_Purchases" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Purchases_Users" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Purchases_Users1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Purchases_Users2" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Purchases_Users3" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.SaleInvoice" Width="1.5" PointX="3.5" PointY="22.625" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_SaleInvoices_Currencies" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_SaleInvoiceDetails_SaleInvoices" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_SaleInvoices_Users" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_SaleInvoices_Users1" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.ActualGoodInStock" Width="1.5" PointX="12.5" PointY="18.5" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_ActualGoodInStocks_Goods" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.SubGood" Width="1.5" PointX="9.5" PointY="5.625" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_SubGoods_Goods" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_SubGoods_Goods1" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Role" Width="1.5" PointX="16.125" PointY="15.25" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.StockMovementTemp" Width="1.5" PointX="2.375" PointY="10.875" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.AccountFeature" Width="1.5" PointX="11.625" PointY="15.125" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.BankStatementDetail" Width="1.5" PointX="13.5" PointY="17.625" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.BankStatement" Width="1.5" PointX="2.5" PointY="1.125" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_BankStatementDetails_BankStatements" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.AccountBalance" Width="1.5" PointX="2.125" PointY="2.125" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.BankAccountDetail" Width="1.625" PointX="0.625" PointY="28.625" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_BankAccountDetails_TaxRates" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.UsersInRole" Width="1.5" PointX="9.3548957693180519" PointY="6.1774116038239617" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_UsersInRoles_Roles" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_UsersInRoles_Users" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.BankAccount" Width="1.5" PointX="8.0236303471138832" PointY="18.722158992067985" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Function" Width="1.5" PointX="1.2955995077712459" PointY="2.9840898229666473" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.RoleFunction" Width="1.5" PointX="8.8153662461859028" PointY="0.43967840095966981" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.SubFunction" Width="1.5" PointX="11.97950688934862" PointY="5.8205535438938778" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_BankAccounts_Companies" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_BankStatements_BankAccounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_SubFunctions_Functions" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_RoleFunctions_Functions" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_RoleFunctions_Roles" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.AccountGeneral" Width="1.5" PointX="3.2283103145790797" PointY="13.566562345980929" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.BankAccountBill" Width="1.5" PointX="4.3416715675693336" PointY="18.127424263454706" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_BankAccountBills_BankAccounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_BankAccountDetails_BankAccountBills" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.AccountGroup" Width="1.5" PointX="0.57802154709492881" PointY="6.0896568326697018" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.AccountInGroup" Width="1.5" PointX="9.1357968100978972" PointY="2.5696522307440883" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.RolePermission" Width="1.5" PointX="9.0118930754307165" PointY="31.179373487448029" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AccountInGroups_AccountGroups" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_RolePermissions_Roles" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Repeatings_Purchases" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Repeatings_SaleInvoices" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.GoodType" Width="1.5" PointX="6.3603573936784441" PointY="27.175027338403755" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.ProductionMonitor" Width="1.5" PointX="9.426492734545139" PointY="22.711419727053222" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.ProductType" Width="1.5" PointX="10.544980616562526" PointY="29.189603848936784" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.WorkOrderDetail" Width="1.5" PointX="7.39605178097079" PointY="19.65920516273901" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AllocWO_Goods" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_WorkOrderDetails_Goods" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_ProductionMonitors_Machines" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_ProductionMonitors_WorkCenters" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.WorkOrder" Width="1.5" PointX="1.1243171156962948" PointY="28.544986350715618" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_WorkOrders_Goods" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_WorkOrders_Users" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_WorkOrders_Users1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_WorkOrderDetails_WorkOrders" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Category" Width="1.5" PointX="3.4030460339985074" PointY="0.86300039331568423" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.BOM" Width="1.5" PointX="8.0292560793595644" PointY="10.901549076149962" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Goods_Categories" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.BomDetail" Width="1.5" PointX="2.9373424756048907" PointY="6.6710616828273341" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_BomDetails_BomDetails" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_BomDetails_BOMs1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_BomDetails_Goods1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_BomDetails_Goods2" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_BOMs_Goods" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.FixedAssetSetting" Width="1.5" PointX="10.220744204810236" PointY="11.890913357907401" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.PayItemType" Width="1.5" PointX="10.625" PointY="4" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.ExpenseClaim" Width="1.5" PointX="1.465530764993993" PointY="7.4872374271448878" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_ExpenseClaims_Users" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_ExpenseClaims_Users1" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.PayRun" Width="1.5" PointX="2.0454847207504718" PointY="30.314924433042727" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.FixedAsset" Width="1.5" PointX="11" PointY="12.125" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_FixedAssetDetails_FixedAssets" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_FixedAssets_FixedAssetSettings" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_FixedAssets_Users" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.ExpenseClaimDetail" Width="2.5" PointX="9.375" PointY="9" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_ExpenseClaimDetails_ExpenseClaims" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_ExpenseClaimDetails_TaxRate" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_ExpenseClaimDetails_TaxRates" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Contact" Width="1.5" PointX="4.0298789963265325" PointY="19.924411097506251" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Contacts_Currencies" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Contacts_TaxRates" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Contacts_TaxRates1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Purchases_Contacts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_SaleInvoices_Contacts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_BankAccounts_Currencies" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Goods_ProductType" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.PayRunEmployee" Width="1.5" PointX="8.00881286338382" PointY="21.882381985840567" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_PayRunEmployees_PayRuns" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_PayRuns_Users" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_PayRuns_Users1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_ExpenseClaims_Contacts" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.PaymentForPayItem" Width="1.5" PointX="2.4307751387501018" PointY="6.82202692647559" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_PaymentForPayItems_PayRuns" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Payment" Width="1.5" PointX="10.642703292259341" PointY="21.5757647406197" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Payments_Currencies" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Payments_ExpenseClaims1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Payments_PaymentForPayItems" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Payments_PayRunEmployees" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Payments_Purchases1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Payments_SaleInvoices1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Payments_Users" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Payments_Users1" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.PayRunEmployeeDetail" Width="1.5" PointX="9.9992997208606926" PointY="28.839776857215806" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_PayRunEmployeeDetails_PayRunEmployees" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Companies_Companies" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_SaleInvoices_Companies" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.JournalDetail" Width="1.5" PointX="4.8410073224646073" PointY="11.997577210887139" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Journal" Width="1.5" PointX="11.430351499202825" PointY="25.941997927586549" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__PayRuns__Company__7BF04F28" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__Purchases__Compa__7A0806B6" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__StockOutC__Compa__7DD8979A" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__Users__CompanyID__7FC0E00C" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__WorkOrder__Compa__00B50445" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Journals_Companies" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_JournalDetails_Journals" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_JournalDetails_TaxRates" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Journals_Users" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Journals_Users1" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.PayItem" Width="1.5" PointX="3.406281280986164" PointY="5.6877181258461054" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_PayItems_PayItemTypes" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_PaymentForPayItems_PayItems1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_PayRunEmployeeDetails_PayItems" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Employee" Width="1.5" PointX="1.2121021511089531" PointY="19.887902805529489" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Employees_Companies" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_PayRunEmployees_Employees" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Feature" Width="1.5" PointX="10.429372848211497" PointY="14.349151200777456" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_RolePermissions_Features" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.AccountTran" Width="1.5" PointX="8.2918040697890358" PointY="22.778877447721957" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__AccountTr__Compa__7AFC2AEF" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AccountTrans_BankAccounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__Functions__Featu__4282C7A2" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.ControlInRole" Width="1.5" PointX="10.154654870813086" PointY="8.3521849253923559" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Control" Width="1.5" PointX="4.9820934836669331" PointY="28.791134802992985" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__ControlIn__Contr__418EA369" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__ControlIn__RoleI__409A7F30" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__Controls__Functi__361CF0BD" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.StockInCard" Width="1.5" PointX="5.1815871713597268" PointY="19.136188843816608" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Stock" Width="1.5" PointX="0.0883052330875328" PointY="27.914209140424713" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__StockInCa__Compa__7CE47361" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockInCards_Stocks" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockInCards_Users" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockInCards_Users1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockInCards_Users2" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockInCardsDetails_StockInCards" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockOutCards_Stocks" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_WorkOrders_Stocks" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__ActualGoo__Compa__1486F2C8" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__Productio__Compa__157B1701" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__WorkCente__Compa__166F3B3A" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.Account" Width="1.5" PointX="9.3311440541088313" PointY="15.367253832224408" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.StockMovement" Width="1.5" PointX="5.3038165538123883" PointY="26.569767114971658" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AccountBalances_Accounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AccountBudgetTrans_Accounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AccountFeatures_Accounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AccountTrans_Accounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AccountInGroups_Accounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Accounts_AccountTypes" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Accounts_TaxRates" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AccountTranDetails_Accounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AccountTrans_Accounts1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_BankAccountDetails_Accounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_ExpenseClaimDetails_Accounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_FixedAssets_Accounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_FixedAssets_Accounts1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_FixedAssets_Accounts2" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Goods_Accounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Goods_Accounts1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_JournalDetails_Accounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_PayItems_Accounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_Purchase_Details_Accounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_SaleInvoice_Details_Accounts" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_SaleInvoice_Details_Accounts1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK__StockMove__Compa__7ECCBBD3" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockMovementDetails_StockMovements" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockMovements_Stocks" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockMovements_Stocks1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockMovements_Users" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockMovements_Users1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_StockMovementTemps_StockMovements" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.AllocWOItemDetail" Width="1.5" PointX="8.6628079138057341" PointY="30.659038453669769" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AllocWOItemDetails_Goods" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AllocWOItemDetails_UOMs" />
+        <EntityTypeShape EntityType="TMT.ERP.DataAccess.Model.AllocWO" Width="1.5" PointX="7.9730150122069823" PointY="21.926428700763" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AllocWO_Goods1" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AllocWO_StockOutCards" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AllocWO_Stocks" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AllocWO_WorkCenters" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AllocWO_WorkOrders" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_AllocWOItemDetails_AllocWO" />
+        <AssociationConnector Association="TMT.ERP.DataAccess.Model.FK_ProductionMonitors_AllocWO" />
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+         /&gt;
+      &gt;
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

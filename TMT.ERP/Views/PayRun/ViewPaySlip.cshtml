@@ -1,0 +1,308 @@
+﻿@using System.Diagnostics
+@using TMT.ERP.BusinessLogic.Utils
+@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.PayRun
+@{
+    var fromDate = Convert.ToDateTime(Model.FromDate);
+    var toDate = Convert.ToDateTime(Model.ToDate);
+    var paymentDate = Convert.ToDateTime(Model.PaymentDate);
+    var oPayRunEmployee = ViewBag.PayRunEmployee as PayRunEmployee;
+    var fullName = "";
+    if (oPayRunEmployee != null && oPayRunEmployee.Employee.FirstName != null)
+    {
+        fullName += oPayRunEmployee.Employee.FirstName;
+    }
+    if (oPayRunEmployee != null && oPayRunEmployee.Employee.LastName != null)
+    {
+        fullName += " " + oPayRunEmployee.Employee.LastName;
+    }
+
+    var ooPayRunEmployeeDetails = oPayRunEmployee.PayRunEmployeeDetails.ToList();
+    var ooEarn = new List<PayRunEmployeeDetail>();
+    var ooDeduction = new List<PayRunEmployeeDetail>();
+    double totalEarn = 0;
+    double totalDeduction = 0;
+    foreach (var item in ooPayRunEmployeeDetails)
+    {
+        if (item.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Wages) || item.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Allowances) || item.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.NonTaxableAllowances))
+        {
+            ooEarn.Add(item);
+            totalEarn += Convert.ToDouble(item.TotalPay);
+        }
+        if (item.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Deductions) || item.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Taxes) || item.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.PostTaxDeductions))
+        {
+            ooDeduction.Add(item);
+            totalDeduction += Convert.ToDouble(item.TotalPay);
+        }
+    }
+
+    var list = ViewBag.AccountID as List<AccountInfo>;
+    var takeHome = totalEarn - totalDeduction;
+    var ooPayment = oPayRunEmployee.Payments.ToList();
+    var totalPayment = ooPayment.Sum(x => x.TotalMoney);
+
+    var amoutDue = takeHome - totalPayment;//So con phai tra = so tien duoc nhan - so tien da tra
+
+    var em = ooPayRunEmployeeDetails.Select(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.EmployerContributions));
+    double totalEmp = Convert.ToDouble(ooPayRunEmployeeDetails.Sum(x => x.TotalPay));                                                      
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var amountDue = $('#hdfAmoutDue').val();
+        if (parseInt(amountDue) == 0) {
+            $('#makePayment').css('display', 'none');
+        }
+        $('#btnAddPayment').click(function () {
+            
+            var payrunEmployeeId = $('#hdfPayRunEmployeeId').val();
+            var paymentTo = $('#bFullName').val();
+            var money = $('#txtAmountPaid').val();
+            var datePaid = $('#txtDatePaid').val();
+            var paidTo = $('#ddlAccount').val();
+            var reference = $('#txtReference').val();
+            var totalMoney = $('#amountTakehomePay').html();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Payment/Create/',
+                    data: {
+                        "paymentId": payrunEmployeeId,
+                        "paymentTo": paymentTo,
+                        "totalMoney": money,
+                        "currentId": "",
+                        "datePaid": datePaid,
+                        "paytoAccount": paidTo,
+                        "reference": reference,
+                        "status": 0,
+                        "type": 4
+                    }, success: function () {
+                        updateStatusPayment(payrunEmployeeId, totalMoney, 1);
+                        location.href = "/PayRun/ViewPayRun?payrunId=" + $('#hdfPayRunId').val();
+                    }
+                });
+        });
+
+        function updateStatusPayment(paymentId, totalMoney, type) {
+            
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/PayRun/UpdateStatusPayment/",
+                    data:
+                        {
+                            "paymentId": paymentId,
+                            "totalMoney": totalMoney,
+                            "type": type
+                        }
+                });
+        }
+    });
+</script>
+<input type="hidden" value="@amoutDue" id="hdfAmoutDue"/>
+<input type="hidden" value="@Model.ID" id="hdfPayRunId"/>
+<input type="hidden" value="@oPayRunEmployee.ID" id="hdfPayRunEmployeeId"/>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.PayRun_PaySlipFor @fullName</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.PayRun_Index</span></li>
+                        <li><a href="/PayRun/ViewPayRun?payrunId=@Model.ID">&nbsp;PayRun&nbsp;(@TMT.ERP.Commons.Utility.DateFormat(fromDate) &nbsp;-&nbsp;@TMT.ERP.Commons.Utility.DateFormat(toDate))</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div id="tabbody">
+                <div class="cleardiv"></div>
+                <div style="float: left; width: 50%;">
+                    @if (oPayRunEmployee.Status == 0)
+                    {
+                        <b style="color: #349400;">@Resources.Resource.PayRun_Awaiting</b>
+                    }
+                    @if (oPayRunEmployee.Status == 1)
+                    {
+                        <b style="color: red;">@Resources.Resource.PayRun_Paid</b>
+                    }
+                </div>
+                <div style="width: 50%; float: right;">
+                </div>
+                <div class="cleardiv"></div>
+
+                <div style="width: 20%; float: left;">
+                    <b>@Resources.Resource.PayRun_To</b>
+                    <div style="clear: both; height: 10px;"></div>
+                    <b id="bFullName">@fullName</b>
+                </div>
+                <div style="width: 20%; float: left;">
+                    <b>@Resources.Resource.PayRun_Date</b>
+                    <div class="cleardiv"></div>                    
+                    @TMT.ERP.Commons.Utility.DateFormat(fromDate)
+                </div>
+                <div style="width: 20%; float: left;">
+                    <b>@Resources.Resource.PayRun_DueDate</b>
+                    <div class="cleardiv"></div>                    
+                    @TMT.ERP.Commons.Utility.DateFormat(paymentDate)
+                </div>
+                <div style="width: 20%; float: left;">
+                    <b>@Resources.Resource.PayRun_Reference</b>
+                    <div class="cleardiv"></div>
+                    @Model.Code
+                </div>
+
+                <div class="cleardiv"></div>
+                <h4><b>@Resources.Resource.PayRun_Earnings</b></h4>
+                <div class="cleardiv"></div>
+                <table id="earn">
+                    <thead>
+                        <tr>
+                            <th>@Resources.Resource.PayRun_PayItem</th>
+                            <th>@Resources.Resource.PayRun_Quanlity</th>
+                            <th>@Resources.Resource.PayRun_Rate</th>
+                            <th>@Resources.Resource.PayRun_Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var x in ooEarn)
+                        {
+                            <tr>
+                                <td>
+                                    @x.PayItem.Name
+                                </td>
+                                <td>
+                                    <b>@x.Quantity</b>
+                                </td>
+                                <td>
+                                    <b class="currency">@x.Rate</b>
+                                </td>
+                                <td>
+                                    <b class="currency">@x.TotalPay</b>
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="cleardiv"></div>
+                <div style="text-align: right;">
+                    <h4><b>@Resources.Resource.PayRun_Index_Total&nbsp;@Resources.Resource.PayRun_Earnings:</b>&nbsp;<b class="currency">@totalEarn</b></h4>
+                </div>
+                <div class="cleardiv"></div>
+                <h4><b>@Resources.Resource.PayRun_Detail_Deductions</b></h4>
+                <div class="cleardiv"></div>
+                <table id="deduction">
+                    <thead>
+                        <tr>
+                            <th>@Resources.Resource.PayRun_PayItem</th>
+                            <th>@Resources.Resource.PayRun_Quanlity</th>
+                            <th>@Resources.Resource.PayRun_Rate</th>
+                            <th>@Resources.Resource.PayRun_Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var x in ooDeduction)
+                        {
+                            <tr>
+                                <td>
+                                    @x.PayItem.Name
+                                </td>
+                                <td>
+                                    <b>@x.Quantity</b>
+                                </td>
+                                <td>
+                                    <b class="currency">@x.Rate</b>
+                                </td>
+                                <td>
+                                    <b class="currency">@x.TotalPay</b>
+                                </td>
+
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="cleardiv"></div>
+                <div style="text-align: right;">
+                    <h4><b>@Resources.Resource.PayRun_Index_Total&nbsp;@Resources.Resource.PayRun_Detail_Deductions:</b>&nbsp;<b class="currency">@totalDeduction</b></h4>
+                </div>
+                <div class="cleardiv"></div>
+                <div style="width: 50%; float: right; text-align: right;">
+                    <hr />
+                    <h4><b style="text-transform: uppercase;">@Resources.Resource.PayRun_TakeHomPay:</b>&nbsp;<b class="currency" id="amountTakehomePay">
+                        @takeHome
+                    </b></h4>
+                    <hr />
+                    <div>
+
+                        @foreach (var item in ooPayment)
+                        {
+                            <div style="display: inline;">
+                                <b>@Resources.Resource.PayRun_Less</b>&nbsp;<a href="javascript:void(0);" style="color: #048fc2;">@Resources.Resource.PayRun_Payment</a>&nbsp;
+                                <b class="currency">@item.TotalMoney</b>
+                            </div>
+                            <br />
+                            <div style="display: inline;">
+                                @{
+                            var datePaid = item.DatePaid;
+                                }
+                                @*@datePaid.ToString("d")*@
+                                @TMT.ERP.Commons.Utility.DateFormat(datePaid)
+                            </div>
+                            <hr />
+                        }
+                    </div>
+                    <h4 id="amountDueStart"><b style="text-transform: uppercase;">@Resources.Resource.PayRun_AmoutDue:</b>&nbsp;<b class="currency" id="amountDue">@amoutDue
+                    </b></h4>
+                    <hr />
+                    <hr />
+                    <h4>
+                        <b>@Resources.Resource.PayRun_EmployerContributions:&nbsp;</b>
+                        <b class="currency">
+                            @totalEmp
+                        </b>
+                    </h4>
+                </div>
+                <div class="cleardiv"></div>
+                <div id="makePayment">
+                    <h4><b>@Resources.Resource.PayRun_MakeAPayment</b></h4>
+                    <div class="cleardiv"></div>
+                    <div style="width: 20%; float: left;">
+                        <b>@Resources.Resource.PayRun_AmountPaid</b>
+                        <div class="cleardiv"></div>
+                        <input type="text" id="txtAmountPaid" class="form-control currency" style="width: 150px !important;" value="@amoutDue"/>
+                    </div>
+                    <div style="width: 20%; float: left;">
+                        <b>@Resources.Resource.PayRun_DatePaid</b>
+                        <div class="cleardiv"></div>
+                        <input type="text" class="form-control datepicker" id="txtDatePaid" style="width: 150px !important;" />
+                    </div>
+                    <div style="width: 20%; float: left;">
+                        <b>@Resources.Resource.PayRun_PaidFrom</b>
+                        <div class="cleardiv"></div>
+                        <select id="ddlAccount" class="form-control" style="width: 150px !important;">
+                            @foreach (var item in list)
+                            {
+                                <option value="@item.AccountID">@item.AccountName</option>
+                            }
+                        </select>
+                    </div>
+                    <div style="width: 20%; float: left;">
+                        <b>@Resources.Resource.PayRun_Reference</b>
+                        <div class="cleardiv"></div>
+                        <input type="text" id="txtReference" class="form-control" style="width: 150px !important;" />
+                    </div>
+                    <div style="width: 20%; float: right;">
+                        <b></b>
+                        <div style="clear: both; height: 25px;"></div>
+                        <input type="submit" class="btn btn-defaultxero" id="btnAddPayment" value="@Resources.Resource.PayRun_AddPayment" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+﻿@using TMT.ERP.DataAccess.Model
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#AllocID').change(function () {
+            var id = $(this).val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/ProductionMonitors/GetGood/",
+                    data: { "allocId": id },
+                    success: function (data) {
+                        $('#goodorder').empty();
+                        $('#goodorder').html(data);
+                    }
+                });
+        });
+    });
+</script>
+@{
+    var ooAllocs = ViewBag.AllocID as List<AllocWO>;
+}
+<b>Allocate:</b>
+<select id="AllocID" name="AllocID" style="width: 200px !important;" class="form-control required">
+    <option value="">@Resources.Resource.Common_SelectItem</option>
+    @if (ooAllocs != null && ooAllocs.Count > 0)
+    {
+        foreach (var item in ooAllocs)
+        {
+        <option value="@item.ID">@item.Code</option>
+        }
+    }
+</select>

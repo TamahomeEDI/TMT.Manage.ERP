@@ -1,0 +1,232 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.BOM>
+
+@{
+    Layout = null;
+}
+
+<script type="text/ecmascript">
+
+    /******************** Add a new BOM ************************/
+    $('#btnAddNew').click(function (e) {
+        e.preventDefault();
+        debugger;
+        $.ajax(
+            {
+                type: 'GET',
+                url: '/BOM/Create/',
+                success: function () {
+                    debugger;
+                    Create_Popup("#dialog", "Add New BOM", 400, 'auto', "/BOM/Create/", false);
+                    $("#dialog").dialog("open");
+                }
+            });
+    });
+
+    function Create_Popup(_dialog, _title, _width, _height, _url, _openStatus) {
+        $(_dialog).dialog({
+            title: _title,
+            modal: true,
+            autoOpen: _openStatus,
+            open: function () {
+                $(this).load(_url);
+            },
+            width: _width,
+            height: _height,
+            minWidth: _width,
+            minHeight: _height,
+            resizable: false,
+            overlay: true
+        });
+    }
+
+
+    /******************** Edit BOM ************************/
+    $(document).ready(function () {
+        $('table#BOM > tbody#BOMList > tr > td > a.EditBOMId').click(function (e) {
+            debugger;
+            var _url = "/BOM/Edit/" + $(this).find('input').val()
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: _url,
+                    success: function () {
+                        debugger;
+                        Create_Popup("#dialog", "Edit BOM", 400, 'auto', _url, false);
+                        $("#dialog").dialog("open");
+                    }
+                });
+        });
+    });
+
+    window.onload = function () {
+        $("#cbCheckAll").prop('checked', false);
+        $(".cbCheck").prop('checked', false);
+    }
+
+    $(document).ready(function () {
+        //Checked all or Uncheck all element is checkbox
+        $('#cbCheckAll').click(function () {
+            $(".cbCheck").prop('checked', $(this).prop('checked'));
+        });
+
+        var itemID = $('#GoodID').val();
+        $('.aAddComponent').click(function () {
+            debugger;
+            var tr = $(this).closest('tr');
+            var BOMID = $(this).find('input').val();
+
+            var component = {
+                BOMID: BOMID,
+                itemID: itemID
+            }
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/BOM/AddComponent/',
+                    traditional: true,
+                    data: component,
+                    success: function (data) {
+                        $('#contentdiv').empty();
+                        $('#contentdiv').html(data);
+                    }
+                });
+        });
+
+        $('.aDelete').unbind('click').click(function (e) {
+            debugger;
+            var id = $(this).find('input').val();
+            $('#confirmDel').empty();
+            $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Delete the selected item ?</p>');
+            $("#confirmDel").dialog({
+                modal: true,
+                height: 120,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        DeleteObject(id);
+                        $('#confirmDel').dialog('close');
+                    },
+                    'Cancel': function () {
+                        $('#confirmDel').dialog('close');
+                    }
+                }
+            });
+            $('#confirmDel').dialog('open');
+        });
+    });
+
+    function DeleteObject(valueString) {
+        $.ajax(
+        {
+            type: "POST",
+            url: "/BOM/Delete/",
+            traditional: true,
+            dataType: "text",
+            data:
+            {
+                "BOMid": valueString
+            }, success: function (data) {
+                if (data == "Success") {
+                    $('#Inform').empty();
+                    $('#Inform').append('<p style="width: 100%; height:0px !important; font-weight: bold; font-size: 12px; text-align:center;">@Resources.Resource.Common_Msg_DeleteSuccess</p>');
+                    $("#Inform").dialog({
+                        modal: true,
+                        height: 120,
+                        autoOpen: false,
+                        buttons: {
+                            'OK': function () {
+                                debugger;
+                                ChangeBOM();
+                                $('#Inform').dialog('close');
+                            }
+                        }
+                    });
+                    $('#Inform').dialog('open');
+                } else {
+                    $('#Inform').empty();
+                    $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_DeleteFail</p>');
+                    $("#Inform").dialog({
+                        modal: true,
+                        height: 120,
+                        width: 'auto',
+                        autoOpen: false,
+                        buttons: {
+                            'OK': function () {
+                                $('#Inform').dialog('close');
+                            }
+                        }
+                    });
+                    $('#Inform').dialog('open');
+                }
+            }
+        });
+        }
+
+        function ChangeBOM() {
+            debugger;
+            var id = $('#GoodID').val();
+            $.ajax(
+            {
+                type: 'POST',
+                url: '/BOM/ChangeItem/',
+                traditional: true,
+                data: {
+                    'id': id
+                },
+                success: function (data) {
+                    debugger;
+                    $('div#BomLIST').empty();
+                    $('div#BomLIST').html(data);
+                    $('div#BomLIST').show();
+                    $('div#Choose').hide();
+                }
+            });
+        }
+</script>
+<div style="margin-bottom: 10px;">
+    <input type="button" id="btnAddNew" class="btn btn-defaultxero" style="margin-top: 10px;" value="@Resources.Resource.Good_Index_Create" />
+</div>
+<table class="table" width="100%" id="BOM">
+    <thead>
+        <tr>
+            <th>
+                @Resources.Resource.BOM_Name_Column
+            </th>
+            <th>
+                @Resources.Resource.BOM_Good_Description
+            </th>
+            <th>
+                @Resources.Resource.BOM_Set
+            </th>
+            <th>
+                @Resources.Resource.BOM_Delete
+            </th>
+        </tr>
+    </thead>
+    <tbody id="BOMList">
+        @if (Model.Count > 0)
+        {
+            foreach (var item in Model)
+            {
+        
+            <tr>
+                <td style="word-break: break-all; width: 150px;">
+                    <a href="javascript:void(0);" class="EditBOMId">@Html.DisplayFor(modelItem => item.Name)@Html.HiddenFor(modelItem => item.ID)</a>
+                </td>
+                <td style="word-break: break-all; width: 400px;">
+                    @Html.DisplayFor(modelItem => item.Description)
+                </td>
+                <td>
+                    <a href="javascript:void(0);" class="aAddComponent">Add Component @Html.HiddenFor(modelItem => item.ID)</a>
+                </td>
+                <td>
+                    <a href="javascript:void(0);" class="aDelete">@Html.HiddenFor(modelItem => item.ID) @Resources.Resource.Category_Delete</a>
+                </td>
+            </tr>
+        
+            }
+        }
+    </tbody>
+</table>

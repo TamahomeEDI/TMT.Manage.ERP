@@ -1,0 +1,415 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model IEnumerable<TMT.ERP.DataAccess.Model.PayRunEmployeeDetail>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.divEmp').click(function () {
+            
+            var payrunId = $('#hdfPayRunId').val();
+            var payrunEmployeeIdOld = $('#hdfEmployeeId').val();
+            var payrunEmployeeIdNew = $(this).find('#hdfPayRunEmployeeId').val();
+            var payrunEmployeeDetails = BuildJSON;
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/PayRun/Update/",
+                    data:
+                        {
+                            "payrunEmployeeId": payrunEmployeeIdOld,
+                            "payrunEmployeeDetails": payrunEmployeeDetails,
+                            "payrunId": payrunId,
+                            "status": 1
+                        },
+                    success: function () {
+                        location.href = "/PayRun/EnterEmployee?payrunId=" + payrunId + "&payRunEmployeeID=" + payrunEmployeeIdNew;
+                    }
+                });
+        });
+        $('input[name=txtQty]').change(function () {
+            calculator();
+        });
+        $('input[name=txtRate]').change(function () {
+            calculator();
+        });
+        $('.ddlPayItem').change(function () {
+            var tr = $(this).closest('tr');
+            var payItemOld = $('input[id=hdfPayitemType]', tr).val();
+            var payItemNew = $('#PayItem', tr).val();
+            var payRunEmployeeId = $('#hdfEmployeeId').val();
+            //alert(payItemOld + "&nbsp;" + payItemNew + "&nbsp;" + payRunEmployeeId);
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/PayRun/AddRemove/",
+                    data:
+                        {
+                            "payItemOld": payItemOld,
+                            "payItemNew": payItemNew,
+                            "payRunEmployeeId": payRunEmployeeId
+                        },
+                    success: function () {
+
+                    }
+                });
+
+            $('input[id=hdfPayitemType]', tr).val(payItemNew);
+            $('input[name=txtQty]', tr).val(0);
+            $('input[name=txtRate]', tr).val(0);
+            $('input[name=txtAmount]', tr).val(0);
+            calculator();
+        });
+        $('input[name=cbEmploye]').click(function () {
+            var id = $(this).attr('value');
+            if ($(this).is(':checked')) {
+                flag = "true";
+            } else {
+                flag = "false";
+            }
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/PayRun/UpdatePayRunEmployee/',
+                    data:
+                        {
+                            "id": id,
+                            "flag": flag
+                        },
+                    success: function () {
+
+                    }
+                });
+        });
+        $('#btnSave').click(function () {
+            var x = $('#hdfEmployeeId').val();
+            var y = BuildJSON;
+            var payrunId = $('#hdfPayRunId').val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/PayRun/Update/",
+                    data:
+                        {
+                            "payrunEmployeeId": x,
+                            "payrunEmployeeDetails": y,
+                            "payrunId": payrunId,
+                            "status": 1
+
+                        },
+                    success: function () {
+                        location.href = "/PayRun/";
+                    }
+                });
+        });
+        $('#btnBack').click(function () {
+            location.href = "/PayRun/";
+        });
+        $('#btnNext').click(function () {
+            var x = $('#hdfEmployeeId').val();
+            var y = BuildJSON;
+            var payrunId = $('#hdfPayRunId').val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/PayRun/Update/",
+                    data:
+                        {
+                            "payrunEmployeeId": x,
+                            "payrunEmployeeDetails": y,
+                            "payrunId": payrunId,
+                            "status": 2
+                        },
+                    success: function () {
+                        ReturnUpdatePayRunEmployee(payrunId);
+                    }
+                });
+        });
+        $('.aDelete').click(function () {
+            var tr = $(this).closest('tr');
+            var id = $('input[name=txtID]', tr).val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/PayRun/RemoveRow/",
+                    data: {
+                        "id": id
+                    }, success: function () {
+                        tr.remove();
+                        calculator();
+                    }
+                });
+        });
+        $('#btnAddNewLine').click(function () {
+            var x = $("#hdfEmployeeId").val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/PayRun/AddNewLine/",
+                    data:
+                        {
+                            "payrunEmployeeId": x
+                        },
+                    success: function () {
+                        location.reload();
+                    }
+                });
+        });
+    });
+
+    function ReturnUpdatePayRunEmployee(payrunId) {
+        $.ajax(
+                      {
+                          type: "POST",
+                          url: "/PayRun/ReturnUpdatePayRunEmployee/",
+                          data: { "payrunId": payrunId },
+                          success: function (data) {
+                              location.href = data;
+                          }
+                      });
+    }
+
+    function BuildJSON() {
+        var arrayData = [];
+        $("#tablePayItem > tbody#loadContent > tr").each(function () {
+            var tr = $(this).closest('tr');
+            var item = {
+                "id": $('input[name=txtID]', tr).val(),
+                "payitem": $('.ddlPayItem', tr).val(),
+                "quanlity": $('input[name=txtQty]', tr).val(),
+                "rate": $('input[name=txtRate]', tr).val(),
+                "amount": $('input[name=txtAmount]', tr).val()
+            };
+            arrayData.push(item);
+        });
+        return JSON.stringify(arrayData);
+    }
+    function calculator() {
+        
+        var deductions = 0;
+        var wages = 0;
+        var allowances = 0;
+        var taxes = 0;
+        var nonallowances = 0;
+        var postdeductions = 0;
+        var employercontributions = 0;
+
+        $("#loadContent > tr").each(function () {
+            var tr = $(this).closest('tr');
+            var qty = $('input[name=txtQty]', tr).val();
+            var rate = $('input[name=txtRate]', tr).val();
+            var payItemType = $('input[name=PayItemType]', tr).val();
+            var amount = parseInt(qty) * parseInt(rate);
+            $('input[name=txtAmount]', tr).val(amount);
+            if (payItemType == 3) {
+                deductions += amount;
+            }
+            if (payItemType == 1) {
+                wages += amount;
+            }
+            if (payItemType == 2) {
+                allowances += amount;
+            }
+            if (payItemType == 4) {
+                taxes += amount;
+            }
+            if (payItemType == 5) {
+                nonallowances += amount;
+            }
+            if (payItemType == 6) {
+                postdeductions += amount;
+            }
+            if (payItemType == 7) {
+                employercontributions += amount;
+            }
+        });
+        var netpay = wages + allowances + nonallowances - deductions - taxes - postdeductions;
+        $('#bDeductions').html(deductions);
+        $('#bWages').html(wages);
+        $('#bAllowances').html(allowances);
+        $('#bTaxes').html(taxes);
+        $('#bNontaxableAllowances').html(nonallowances);
+        $('#bPosttaxDeductions').html(postdeductions);
+        $('#bEmployerContributions').html(employercontributions);
+        $('#bNetpay').html(netpay);
+    }
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+</script>
+<input type="hidden" value="@ViewBag.PayRunID" id="hdfPayRunId"/>
+<input type="hidden" value="@ViewBag.PayRunEmployeeID" id="hdfEmployeeId"/>
+@{
+    var listPayRunEmployee = ViewBag.Employee as List<PayRunEmployee>;
+}
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.PayRun_Index</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.PayRun_EnterEmployee</span></li>
+                        <li><a href="/PayRun/">@Resources.Resource.PayRun_IndexList</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div id="tabbody">
+                <div class="cleardiv"></div>
+                <div style="float: left; width: 20%;">
+                    <h4>@Resources.Resource.PayRun_NumberEmployee<label id="numberEmp"></label></h4>
+                    <div style="clear: both; height: 10px;"></div>
+                    @if (listPayRunEmployee != null && listPayRunEmployee.Count > 0)
+                    {
+                        foreach (var x in listPayRunEmployee)
+                        {
+                            if (x.Active == true)
+                            {
+                        <input type="checkbox" value="@x.ID" name="cbEmploye" checked="checked"/>
+                            }
+                            else
+                            {
+                        <input type="checkbox" value="@x.ID" name="cbEmploye"/>
+                            }
+                        <div style="display: inline;" id="divEmp" class="divEmp" onclick="ActiveDiv(this);">
+                            <input type="hidden" value="@x.ID" id="hdfPayRunEmployeeId"/>
+                            @x.Employee.FirstName &nbsp;@x.Employee.LastName
+                            <br />
+                        </div>
+                        }
+                    }
+                    <div class="cleardiv"></div>
+                    <input type="button" class="btn btn-defaultxero" value="@Resources.Resource.PayRun_AddEmployee" id="btnAddEmp" />
+                </div>
+                <div style="float: left; width: 45%;">
+                    <div style="display: inline; height: 50px;"></div>
+                    <div class="cleardiv"></div>
+                    <h4>@Resources.Resource.PayRun_PayItem</h4>
+                    <div class="cleardiv"></div>
+                    <table id="tablePayItem">
+                        <thead>
+                            <tr>
+                                <th>@Resources.Resource.PayRun_Item</th>
+                                <th>@Resources.Resource.PayRun_Quanlity</th>
+                                <th>@Resources.Resource.PayRun_Rate</th>
+                                <th>@Resources.Resource.PayRun_Amount</th>
+                                <th>@Resources.Resource.Common_Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="loadContent">
+                            @foreach (var x in Model)
+                            {
+                                <tr id="trPayItem">
+                                    <td style="display: none;">
+                                        <input type="text" value="@x.ID" id="txtID" name="txtID" style="display: none;" />
+                                    </td>
+                                    <td>
+                                        <input type="text" value="@x.PayItem.PayItemType.ID" id="PayItemType" name="PayItemType" style="display: none;" />
+                                        @Html.DropDownList("PayItem", new SelectList(ViewBag.PayItemList, "Value", "Text", x.PayItemID), "", new { @class = "form-control ddlPayItem", style = "width:200px !important;" })
+                                    </td>
+                                    <td>
+                                        <input type="text" value="@x.Quantity" id="txtQty" name="txtQty" style="border: 0px !important;" onkeypress="return isNumber(event)" maxlength="4"/>
+                                    </td>
+                                    <td>
+                                        <input type="text" value="@x.Rate" id="txtRate" name="txtRate" style="border: 0px !important;" onkeypress="return isNumber(event)" maxlength="10" class="currency" />
+                                    </td>
+                                    <td>
+                                        <input type="hidden" value="@x.PayItemID" id="hdfPayitemType" />
+                                        <input type="text" value="@x.Amount" id="txtAmount" name="txtAmount" readonly="readonly" style="border: 0px !important;" class="currency"/>
+                                    </td>
+                                    <td><a href="javascript:void(0);" id="aDelete" class="aDelete">Del</a></td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div style="clear: both; height: 10px;"></div>
+                    <input type="submit" value="@Resources.Resource.PayRun_AddNewLine" id="btnAddNewLine" class="btn btn-defaultxero" />
+                </div>
+                <div style="float: right; width: 30%;">
+                    <div style="display: inline; height: 50px;"></div>
+                    <div class="cleardiv"></div>
+                    <h4>@Resources.Resource.PayRun_PayCal</h4>
+                    @{
+                        var oo = ViewBag.ooPayRunEmployeeDetail as IList<PayRunEmployeeDetail>;
+                    }
+                    <hr />
+                    @if (oo != null)
+                    {
+                        <div>
+                            <b>@Resources.Resource.PayRun_Wages&nbsp;:&nbsp;</b>
+                            <b id="bWages" class="currency">
+                                @oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Wages)).Sum(x => Convert.ToDouble(x.TotalPay))
+                            </b>
+                        </div>
+                        <div>
+                            <b>@Resources.Resource.PayRun_PlusAllowances&nbsp;:&nbsp;</b>
+                            <b id="bAllowances" class="currency">
+                                @oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Allowances)).Sum(x => Convert.ToDouble(x.TotalPay))
+                            </b>
+                        </div>
+                        <div>
+                            <b>@Resources.Resource.PayRun_LessDeduction&nbsp;:&nbsp;</b>
+                            <b id="bDeductions" class="currency">
+                                @oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Deductions)).Sum(x => Convert.ToDouble(x.TotalPay))
+                            </b>
+                        </div>
+                        <hr />
+                        <div>
+                            <b>@Resources.Resource.PayRun_Taxes&nbsp;:&nbsp;</b>
+                            <b id="bTaxes" class="currency">
+                                @oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Taxes)).Sum(x => Convert.ToDouble(x.TotalPay))
+                            </b>
+                        </div>
+                        <div>
+                            <b>@Resources.Resource.PayRun_PlusNontaxableAllowances&nbsp;:&nbsp;</b>
+                            <b id="bNontaxableAllowances" class="currency">
+                                @oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.NonTaxableAllowances)).Sum(x => Convert.ToDouble(x.TotalPay))
+                            </b>
+                        </div>
+                        <div>
+                            <b>@Resources.Resource.PayRun_LessPosttaxDeductions&nbsp;:&nbsp;</b>
+                            <b id="bPosttaxDeductions" class="currency">
+                                @oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.PostTaxDeductions)).Sum(x => Convert.ToDouble(x.TotalPay))
+                            </b>
+                        </div>
+                        <hr />
+                        <div>
+                            <b>@Resources.Resource.PayRun_NetPay&nbsp;:&nbsp;</b>
+                            <b id="bNetpay" class="currency">
+                                @{
+                        var netPay = oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Wages)).Sum(x => Convert.ToDouble(x.TotalPay))
+                                     + oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Allowances)).Sum(x => Convert.ToDouble(x.TotalPay))
+                                     + oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.NonTaxableAllowances)).Sum(x => Convert.ToDouble(x.TotalPay))
+                                     - oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Deductions)).Sum(x => Convert.ToDouble(x.TotalPay))
+                                     - oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Taxes)).Sum(x => Convert.ToDouble(x.TotalPay))
+                                     - oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.PostTaxDeductions)).Sum(x => Convert.ToDouble(x.TotalPay));
+                                }
+                                @netPay
+                            </b>
+                        </div>
+                        <hr />
+                        <div>
+                            <b>@Resources.Resource.PayRun_EmployerContributions&nbsp;:&nbsp;</b>
+                            <b id="bEmployerContributions" class="currency">
+                                @oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.EmployerContributions)).Sum(x => Convert.ToDouble(x.TotalPay))
+                            </b>
+                        </div>
+                        <hr />
+                    }
+                </div>
+                <div class="cleardiv"></div>
+                <input type="submit" id="btnSave" value="@Resources.Resource.PayRun_Save" class="btn btn-defaultxero" />
+                <input type="submit" id="btnBack" value="@Resources.Resource.PayRun_Back" class="btn btn-defaultxero" />
+                <input type="submit" id="btnNext" value="@Resources.Resource.PayRun_Next" class="btn btn-defaultxero" />
+            </div>
+        </div>
+    </div>
+</div>

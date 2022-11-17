@@ -1,0 +1,115 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model IEnumerable<TMT.ERP.DataAccess.Model.WorkOrderDetail>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnClose').click(function () {
+
+            window.location.href = "/ProductionMonitors/";
+        });
+        $('#btnReturnWorkOrder').click(function () {
+            
+            var workOrderId = $('#hdfWOrderID').val();
+            var pId = $('#hdfProductId').val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/ProductionMonitors/CreateReturn/",
+                    data: {
+                        "workOrderId": workOrderId,
+                        "pId": pId
+                    },
+                    success: function (data) {
+                        window.location.href = "/ProductionMonitors/Index/";
+                    }
+                });
+        });
+    });
+</script>
+<input type="hidden" id="hdfProductId" value="@ViewBag.ProductionMonitorsId"/>
+<div style="display: inline-block;">
+    <input type="button" id="btnReturnWorkOrder" value="@Resources.Resource.ProductionMonitors_Return_Create" />
+    <input type="button" id="btnClose" value="@Resources.Resource.ProductionMonitors_Return_Close" />
+</div>
+<div style="clear: both; height: 10px;"></div>
+<div style="display: inline;">
+    <p>
+        <label>@Resources.Resource.ProductionMonitors_Create_WorkOrderNo:</label><span>@ViewBag.WorkOrderNo</span></p>
+    <p>
+        <label>@Resources.Resource.ProductionMonitors_Return_StockName:</label><span>@ViewBag.Stock</span></p>
+    <p>
+        <label>@Resources.Resource.ProductionMonitors_Create_MachineName:</label><span>@ViewBag.Machine</span></p>
+    <p>
+        <label>@Resources.Resource.ProductionMonitors_Create_ScheduleStartTime:</label><span>@{
+            DateTime date = Convert.ToDateTime(ViewBag.sStartTime);
+        }
+            @date.ToString("d")
+        </span>
+    </p>
+    <p>
+        <label>@Resources.Resource.ProductionMonitors_Create_ScheduleEndTime:</label><span>@{
+            DateTime date2 = Convert.ToDateTime(ViewBag.sEndTime);
+        }
+            @date2.ToString("d")</span>
+    </p>
+</div>
+<div style="clear: both; height: 10px;"></div>
+<h1>@Resources.Resource.ProductionMonitors_Return_GoodDetails</h1>
+@{
+    var objWorkOrder = @ViewBag.ObjWorkOrder as WorkOrder;
+}
+<input type="hidden" id="hdfWOrderID" value="@objWorkOrder.ID"/>
+<table id="tableGood" class="table">
+    <thead>
+        <tr>
+            <th>@Resources.Resource.ProductionMonitors_Return_GoodName</th>
+            <th>@Resources.Resource.ProductionMonitors_Return_OrderQty</th>
+            <th>@Resources.Resource.ProductionMonitors_Return_UsedQty</th>
+            <th>@Resources.Resource.ProductionMonitors_Return_ReturnQty</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>
+                <label id="lblworkGood">@ViewBag.GoodName(Convert.ToInt32(objWorkOrder.GoodID))</label></td>
+            <td>
+                <label id="lblworkOrder">@objWorkOrder.OrderQuantity</label></td>
+            <td>
+                <label id="lblworkUsed">@objWorkOrder.ImplementQuantity</label></td>
+            <td>
+                <label id="lblworkRemain">@objWorkOrder.RemainQuantity</label></td>
+        </tr>
+    </tbody>
+</table>
+<h1>@Resources.Resource.ProductionMonitors_Return_MaterialName</h1>
+<table id="tableWorkOrderDetail" class="table">
+    <thead>
+        <tr>
+           <th>@Resources.Resource.ProductionMonitors_Return_GoodName</th>
+            <th>@Resources.Resource.ProductionMonitors_Return_OrderQty</th>
+            <th>@Resources.Resource.ProductionMonitors_Return_UsedQty</th>
+            <th>@Resources.Resource.ProductionMonitors_Return_ReturnQty</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    <label id="lblGoodName">
+                        @ViewBag.GoodName(Convert.ToInt32(item.GoodID))</label>
+                </td>
+                <td>
+                    <label id="lblOrderQty">@item.OrderQuantity</label>
+                </td>
+                <td>
+                    <label id="lblImplementQty">
+                        @item.ImplementQuantity</label>
+                </td>
+                <td>
+                    <label id="lblRemainQty">
+                        @item.RemainQuantity</label>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

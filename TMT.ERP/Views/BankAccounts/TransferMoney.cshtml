@@ -1,0 +1,198 @@
+﻿@model TMT.ERP.DataAccess.Model.BankAccount
+
+@{
+    ViewBag.Title = "Transfer Money";
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        jQuery.validator.messages.required = "";
+
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+        $('#btnClose').click(function (e) {
+            e.preventDefault();
+            location.reload();
+        });
+
+        $('.currency').blur(function () {
+            $('.currency').formatCurrency();
+        });
+
+        $('#Amount').change(function () {
+            $("#Amount").val(function () {
+                var amount = $('#Amount').asNumber();
+                return amount;
+            }).formatCurrency();
+        });
+
+        //Transfer money from account to other account
+        $('#btnTransfer').click(function (e) {
+            
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            } else
+                $("div.error").hide();
+            var id = $('#hidID').val();
+            var AccountID1 = $('#hidID').val();
+            if (AccountID1 == 0) {
+                AccountID1 = parseInt($("#BankAccountID1").val());
+            }
+            var AccountID2 = parseInt($("#BankAccountID2").val());
+            var vDate = $("#Date").val();
+            var vAmount = $("#Amount").val();
+            var transactionName = "Transfer Money from " + $('#BankAccountID1').find('option:selected').text() + " to " + $('#BankAccountID2').find('option:selected').text();
+            if (AccountID1 != AccountID2) {
+                $.ajax(
+                    {
+                        type: 'POST',
+                        traditional: true,
+                        url: '/BankAccounts/TransferMoneyConfirmed/',
+                        data: { "_idsp": AccountID1, "idre": AccountID2, "date": vDate, "amount": vAmount, "transactionName": transactionName },
+                        success: function (data) {
+                            if (data == "Trans") {
+                                $('#Inform').empty();
+                                $('#Inform').append('<p style="width: 100%; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Transaction !</p>');
+                                $("#Inform").dialog({
+                                    modal: true,
+                                    height: 120,
+                                    width: 300,
+                                    autoOpen: false,
+                                    buttons: {
+                                        'OK': function () {
+                                            $(this).dialog('close');
+                                            if (id != 0) {
+                                                location.href = '/AccountTrans/Index/' + id;
+                                            } else
+                                                location.href = '/BankAccounts/Index/';
+                                        }
+                                    }
+                                });
+                                $('#Inform').dialog('open');
+                            } else {
+                                $('#confirmDel').empty();
+                                $('#confirmDel').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Error</p>');
+                                $("#confirmDel").dialog({
+                                    modal: true,
+                                    height: 120,
+                                    width: 'auto',
+                                    autoOpen: false,
+                                    buttons: {
+                                        'OK': function () {
+                                            $(this).dialog('close');
+                                            location.href = '/BankAccounts/Index/';
+                                        }
+                                    }
+                                });
+                                $('#confirmDel').dialog('open');
+                            }
+                        }
+                    });
+                } else {
+                    $('#confirmDel').empty();
+                    $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Please select diffrent account !</p>');
+                    $("#confirmDel").dialog({
+                        modal: true,
+                        height: 120,
+                        autoOpen: false,
+                        buttons: {
+                            'OK': function () {
+                                $(this).dialog('close');
+                            }
+                        }
+                    });
+                    $('#confirmDel').dialog('open');
+                }
+        });
+    })
+</script>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <input type="hidden" id="hidID" value="@ViewBag.ID"/>
+    <div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.BankAccounts_Index_Title</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>Account</span></li>
+                        <li><a href="/BankAccounts/Index/">@Resources.Resource.BankAccounts_Index_Title</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="con_form">
+        <div class="container">
+            <div class="c_container">
+                <div id="dialog"></div>
+                <div id="confirmDel" title="Confirm" style="background: white"></div>
+                <div id="Inform" title="Inform" style="background: white"></div>
+                <div id="popup-breadcrumb" style="width: 70%; margin-top: 20px; border-radius: 6px;">
+                    <div class="error" style="display: none; line-height: 2;">
+                        <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                        <span></span>.<br clear="all" />
+                    </div>
+                    <div style="height: 50px; margin-left: 10px; margin-top: 16px;">
+                        @if (ViewBag.ID == 0)
+                        {
+                            <div style="float: left; width: 48%;">
+                                <label style="width: 125px; font-weight: bold;">@Resources.Resource.BankAccount_TransferMoney_From</label>
+                                @Html.DropDownList("BankAccountID1", null, "-----Select Account-----", new { @class = "required", style = "width: 175px;" })
+                            </div>
+                        }
+                        else
+                        {
+                            <div style="float: left; width: 48%;">
+                                <label style="width: 125px; font-weight: bold;">@Resources.Resource.BankAccount_TransferMoney_From</label>
+                                <label style="width: 175px;">@ViewBag.Name</label>
+                            </div> 
+                        }
+                        <div style="float: left; width: 48%;">
+                            <label style="width: 125px; font-weight: bold;">@Resources.Resource.BankAccount_TransferMoney_To</label>
+                            @Html.DropDownList("BankAccountID2", null, "-----Select Account-----", new { @class = "required", style = "width: 175px;" })
+                        </div>
+                    </div>
+                    <div style="height: 50px; margin-left: 10px; margin-top: 10px;">
+                        <div style="float: left; width: 48%;">
+                            <label style="width: 125px; font-weight: bold;">@Resources.Resource.BankAccount_TransferMoney_Date</label>
+                            <input type="text" id="Date" style="width: 175px;" class="datepicker required" readonly="" />
+                        </div>
+                        <div style="float: left; width: 48%;">
+                            <label style="width: 125px; font-weight: bold;">@Resources.Resource.BankAccount_TransferMoney_Amount</label>
+                            <input type="text" id="Amount" style="width: 175px;" value="0.00" class="currency" />
+                        </div>
+                    </div>
+                    <div style="margin-left: 10px; margin-bottom: 10px;">
+                        <input type="button" id="btnTransfer" class="btn btn-defaultxero" style="margin-top: 10px;" value="@Resources.Resource.BankAccounts_Index_Transfer" />
+                        <input type="button" id="btnClose" class="btn btn-defaultxero" style="margin-top: 10px;" value="@Resources.Resource.BankAccount_Create_Close"/>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

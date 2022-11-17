@@ -1,0 +1,135 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.Budget>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        /******************** Code area *************************/
+        /******************** Begin Add New Budget ************************/
+        $("#btnAddNew").click(function (e) {
+            
+            $.ajax({
+                type: 'GET',
+                url: "/Budgets/Create/",
+                success: function () {
+                    
+                    custom.CreatePopup("#dialog", "Create New Budget", 250, 250, "/Budgets/Create/", false);
+                    $("#dialog").dialog("open");
+                }
+            });
+
+        });
+
+        /******************** Begin Edit a Budget ************************/
+        /*********************/
+        $("table > tbody > tr > td > a#BudgetEditID").unbind('click').click(function (e) {
+            e.preventDefault();
+            
+            var _url = "/Budgets/Edit/" + $(this).find('input').val()
+            $.ajax({
+                type: 'GET',
+                url: _url,
+                success: function () {
+                    custom.CreatePopup("#dialog", "Edit Budget", 250, 250, _url, false);
+                    $("#dialog").dialog("open");
+                }
+            });
+
+        });
+
+        //Delete Budget
+        $('#btnDelete').click(function () {
+            
+            var valueString = [];
+            $("input[name=cbCheck]:checked").each(
+            function () {
+                valueString.push(this.value);
+            });
+            if (valueString.length > 0) {
+                var DelConfirmed = {
+                    delConfirm: valueString,
+                }
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/Budgets/DeleteConfirmed/',
+                        traditional: true,
+                        data: DelConfirmed,
+                        success: function (data) {
+                            location.reload();
+                        }
+                    });
+            } else {
+                $('#confirmDel').empty();
+                $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Please select item !</p>');
+                $("#confirmDel").dialog({
+                    modal: true,
+                    height: 140,
+                    autoOpen: false,
+                    buttons: {
+                        'Agree': function () {
+                            $(this).dialog('close');
+                        },
+                        Cancel: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#confirmDel').dialog('open');
+            }
+        });
+
+        //Checked all or Uncheck all element is checkbox
+        $('#cbCheckAll').click(function () {
+            $(".cbCheck").prop('checked', $(this).prop('checked'));
+        });
+        /******************** End Confirm Delete *************************/
+    })
+
+</script>
+<div class="container">
+    <div class="c_container">
+        <div id="breadcrumb">
+            <div class="container">
+                <div id="con_top">
+                    <div class="c_container">
+                        <h2>Index</h2>
+                        <div style="float: left; width: 50%;">
+                                <button id="btnAddNew" class="btn">@Resources.Resource.UOM_Index_AddNew</button>
+                                <button id="btnDelete" class="btn">@Resources.Resource.UOM_Index_Delete</button>
+                        </div>
+                        <div id="dialog" title="Basic modal dialog"></div>
+                        <div id="confirmDel" title="Confirm!"></div> 
+                        <table class="table" style="width: 400px;" id="Budget">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="cbCheckAll"/>
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.Budget_Name
+                                    </th>
+                                </tr>
+                            </thead>
+                        @foreach (var item in Model) {
+                            <tr>
+                                <td>
+                                    <input type="checkbox" id="cbCheck" name="cbCheck" class="cbCheck" value="@item.ID"/>
+                                </td>
+                                <td>
+                                    <a id="BudgetEditID" href="#" title="@item.Name">@Html.DisplayFor(modelItem => item.Name)@Html.HiddenFor(modelItem => item.ID)</a>
+                                </td>
+                            </tr>
+                        }
+
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

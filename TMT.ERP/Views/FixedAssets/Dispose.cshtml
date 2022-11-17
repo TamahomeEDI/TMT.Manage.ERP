@@ -1,0 +1,208 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.FixedAsset>
+
+@{
+    ViewBag.Title = "Sold & Dispose";
+}
+
+<script type="text/javascript">
+
+    window.onload = function () {
+        $("#cbCheckAll").prop('checked', false);
+        $(".cbCheck").prop('checked', false);
+    }
+
+    $(document).ready(function () {
+        
+
+        $('.currency').blur(function () {
+            $('.currency').formatCurrency();
+        });
+
+        $('#sPageSize').html($('#hdfPageSize').val());
+
+        if ($('#hidError').val() == "Error") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Error</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 160,
+                width: 400,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() == "Sold") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Sold</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 160,
+                width: 400,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        }
+
+    });
+
+    $(document).ready(function () {
+
+        /******************** Code area *************************/
+        /******************** Begin Add New FixedAsset ************************/
+        /******************** Begin Add New FixedAsset ************************/
+        $("#btnAddNew").click(function (e) {
+            
+            location.href = "/FixedAssets/Create/";
+        });
+
+        /******************** Begin Edit a FixedAsset ************************/
+        /*********************/
+        $("table > tbody > tr > td > a#AssetEditID").unbind('click').click(function (e) {
+            
+            location.href = "/FixedAssets/Details/" + $(this).find('input').val();
+        });
+
+    });
+
+    function SetPageSize(pageSize) {
+        
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/FixedAssets/SetPageSize',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+
+</script>
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container">
+            <h3>@Resources.Resource.FixedAsset_Title</h3>
+            <div id="breadcrumbs">
+                <ul>
+                    <li><span>Accounting</span></li>
+                    <li><a href="/Contacts/Index/">@Resources.Resource.FixedAsset_Title</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="hidError" value="@ViewBag.Error">
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div class="Error"></div>
+            <div id="dialog"></div>
+            <div id="Inform" title="Inform" style="background: white"></div>
+            <div style="margin-top: 10px;">
+                <input style="margin-top: 10px;" type="button" id="btnAddNew" class="btn btn-defaultxero" value="@Resources.Resource.FixedAsset_AddNew"/>
+            </div>
+            @{
+                var db = new ErpEntities();
+                List<FixedAsset> asset = db.FixedAssets.ToList();
+            }
+            <ul style="margin-bottom: 20px; margin-top: 10px; width: 100%;" class="group nav nav-tabs">
+                <li class="selected">
+                    <a href="/FixedAssets/Index/">Pending Items ( @asset.Count(a => a.Status == 0) )</a></li>
+                <li class="selected">
+                    <a href="/FixedAssets/Register/">Registered Items ( @asset.Count(a => a.Status == 1) )</a></li>
+                <li class="active">
+                    <a href="/FixedAssets/Dispose/">Sold & Disposed Items ( @asset.Count(a => a.Status == 2) )</a></li>
+            </ul>
+
+            <div class="bovien" style="margin-bottom: 10px; height: 45px;">
+                    <div style="float: right;">
+                        @using (Html.BeginForm("Dispose", "FixedAssets", FormMethod.Get, new { style = "margin:0px !important;" }))
+                        {
+                            @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "form-control", placeholder = "Input Item Name", style = "margin-top: 2px; margin-right: 10px;" })
+                            <input type="submit" id="btnSearch" style="margin-right: 2px;" value="@Resources.Resource.Category_Search" class="btn btn-defaultxero" />
+                        }
+                    </div>
+                </div>
+            @if (Model.Count > 0)
+            {
+                
+                <table id="FixedAsset" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th>
+                                @Resources.Resource.FixedAsset_ItemName
+                            </th>
+                            <th>
+                                @Resources.Resource.FixedAsset_ItemCode
+                            </th>
+                            <th>
+                                @Resources.Resource.FixedAsset_Account
+                            </th>
+                            <th>
+                                @Resources.Resource.FixedAsset_PurchaseDate
+                            </th>
+                            <th>
+                                @Resources.Resource.FixedAsset_PurchasePrice
+                            </th>
+                        </tr>
+                    </thead>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                <a id="AssetEditID" href="#">@Html.DisplayFor(modelItem => item.Code)@Html.HiddenFor(modelItem => item.ID)</a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Account.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.PurchaseDate)
+                            </td>
+                            <td>
+                               <p class="currency">@Html.DisplayFor(modelItem => item.PurchasePrice)</p>
+                            </td>
+                        </tr>
+                    }
+                </table>
+                <div style="display: inline;">
+                    <div style="width: 60%; float: left; margin-top: 10px;">
+                        @Html.PagedListPager(Model, page => Url.Action("Dispose", new { page, currentFilter = ViewBag.CurrentFilter }))
+                    </div>
+                    <div style="float: left; margin-top: 10px; margin-left: 225px;">
+                        <label style="width: 70px; margin-top: 10px; font-size: 12px; font-weight: bold">@Resources.Resource.Common_PageSize</label>
+                        <div id="showpag" class="dropdown" style="float: right;">
+                            <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @Html.Raw("<div id='divNoRecord'>"+ @Resources.Resource.Common_Msg_CountDisplay+ "</div>")
+            }
+        </div>
+    </div>
+</div>

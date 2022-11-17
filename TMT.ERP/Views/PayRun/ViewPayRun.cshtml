@@ -1,0 +1,278 @@
+﻿@model TMT.ERP.DataAccess.Model.PayRun
+@{
+    var fromDate = Convert.ToDateTime(Model.FromDate);
+    var toDate = Convert.ToDateTime(Model.ToDate);
+    var paymentDate = Convert.ToDateTime(Model.PaymentDate);
+    var ooPaymentEmployee = Model.PayRunEmployees.Where(x => x.Active == true).ToList();
+
+    double totalWages = ooPaymentEmployee.Select(x => x.PayRunEmployeeDetails.ToList()).Select(ooDetail => ooDetail.Where(xx => xx.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Wages)).Sum(xx => Convert.ToDouble(xx.TotalPay))).Sum();
+    double totalAllowances = ooPaymentEmployee.Select(x => x.PayRunEmployeeDetails.ToList()).Select(ooDetail => ooDetail.Where(xx => xx.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Allowances)).Sum(xx => Convert.ToDouble(xx.TotalPay))).Sum();
+    double totalDeductions = ooPaymentEmployee.Select(x => x.PayRunEmployeeDetails.ToList()).Select(ooDetail => ooDetail.Where(xx => xx.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Deductions)).Sum(xx => Convert.ToDouble(xx.TotalPay))).Sum();
+    double totalTaxes = ooPaymentEmployee.Select(x => x.PayRunEmployeeDetails.ToList()).Select(ooDetail => ooDetail.Where(xx => xx.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Taxes)).Sum(xx => Convert.ToDouble(xx.TotalPay))).Sum();
+    double totalNTAllowances = ooPaymentEmployee.Select(x => x.PayRunEmployeeDetails.ToList()).Select(ooDetail => ooDetail.Where(xx => xx.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.NonTaxableAllowances)).Sum(xx => Convert.ToDouble(xx.TotalPay))).Sum();
+    double totalPtDeduction = ooPaymentEmployee.Select(x => x.PayRunEmployeeDetails.ToList()).Select(ooDetail => ooDetail.Where(xx => xx.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.PostTaxDeductions)).Sum(xx => Convert.ToDouble(xx.TotalPay))).Sum();
+    double totalNetPay = totalWages + totalAllowances + totalNTAllowances - totalDeductions - totalTaxes - totalPtDeduction;
+    double totalEmployer = ooPaymentEmployee.Select(x => x.PayRunEmployeeDetails.ToList()).Select(ooDetail => ooDetail.Where(xx => xx.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.EmployerContributions)).Sum(xx => Convert.ToDouble(xx.TotalPay))).Sum();
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var payrunId = $('#hdfPayRunId').val();
+        $('#btnVoid').click(function () {
+            
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/PayRun/VoidPayRun/",
+                    data: { "payrunId": payrunId },
+                    success: function () {
+                        location.href = "/PayRun/";
+                    }
+
+                });
+        });
+        $('#btnSentPay').click(function () {
+            location.href = "/PayRun/SendPayslips?payrunId=" + payrunId;
+        });
+        $('#btnBatch').click(function () {
+            location.href = "/PayRun/BatchPayEmployees?payrunId=" + payrunId;
+        });
+    });
+</script>
+<input type="hidden" value="@ViewBag.ID" id="hdfPayRunId"/>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.PayRun_Index</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>&nbsp;PayRun&nbsp;(@TMT.ERP.Commons.Utility.DateFormat(fromDate) &nbsp;-&nbsp;@TMT.ERP.Commons.Utility.DateFormat(toDate))</span></li>
+                        <li><a href="/PayRun/">@Resources.Resource.PayRun_IndexList</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div id="tabbody">
+                <div class="cleardiv"></div>
+                <div style="float: left; width: 50%; text-align: left;">
+                    <h4><b>@Resources.Resource.PayRun_Index_Approved</b></h4>
+                </div>
+                <div style="float: right; width: 50%; text-align: right;">
+                    <input type="submit" id="btnBatch" value="@Resources.Resource.PayRun_BatchPay" class="btn btn-defaultxero" />
+                    <input type="submit" id="btnSentPay" value="@Resources.Resource.PayRun_SentPaySlip" class="btn btn-defaultxero" />
+                    <input type="submit" id="btnVoid" value="@Resources.Resource.PayRun_Void" class="btn btn-defaultxero" />
+                </div>
+                <div class="cleardiv"></div>
+                <hr style="border: 1px dotted #C1C1C1;" />
+                <div style="float: left; width: 50%; text-align: left;">
+                    <h4><b>@Resources.Resource.PayRun_Summary</b></h4>
+                </div>
+                <div style="float: right; width: 50%; text-align: right;">
+                    <a href="javascript:void(0);">@Resources.Resource.PayRun_ViewSummary</a>
+                </div>
+                <div class="cleardiv"></div>
+                <hr style="border: 1px solid #C1C1C1;" />
+                <table id="payrun">
+                    <thead>
+                        <tr>
+                            <th>@Resources.Resource.PayRun_Index_PayPeriod</th>
+                            <th>@Resources.Resource.PayRun_Index_PayDate</th>
+                            <th>@Resources.Resource.PayRun_Index_EmployeePayment</th>
+                            <th>@Resources.Resource.PayRun_Index_OrtherPayment</th>
+                            <th style="text-align: right;">@Resources.Resource.PayRun_Index_Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                
+                                @TMT.ERP.Commons.Utility.DateFormat(fromDate)&nbsp;---&nbsp;@TMT.ERP.Commons.Utility.DateFormat(toDate)
+                            </td>
+                            <td>                                
+                                @TMT.ERP.Commons.Utility.DateFormat(paymentDate)
+                            </td>
+                            <td>
+                                <label class="currency">@Model.EmployeePayment</label>
+                            </td>
+                            <td>
+                                <label class="currency">@Model.OtherPayment</label>
+                            </td>
+                            <td style="text-align: right !important;">
+                                <b class="currency">@Model.Total</b>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="cleardiv"></div>
+                <div>
+                    <h4><b>@Resources.Resource.PayRun_Index_EmployeePayment</b></h4>
+                </div>
+                <div class="cleardiv"></div>
+                <table id="employeePayment">
+                    <thead>
+                        <tr>
+                            <th>@Resources.Resource.PayRun_Detail_Name</th>
+                            <th>@Resources.Resource.PayRun_Detail_GrossWages</th>
+                            <th>@Resources.Resource.PayRun_Detail_Allowances</th>
+                            <th>@Resources.Resource.PayRun_Detail_Deductions</th>
+                            <th>@Resources.Resource.PayRun_Detail_Taxes</th>
+                            <th>@Resources.Resource.PayRun_Detail_NonTaxableAllowances</th>
+                            <th>@Resources.Resource.PayRun_Detail_PostTaxDeductions</th>
+                            <th>@Resources.Resource.PayRun_Index_Status</th>
+                            <th style="text-align: right;">@Resources.Resource.PayRun_Detail_NetPay</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var employee in ooPaymentEmployee)
+                        {
+
+                            var oo = employee.PayRunEmployeeDetails.ToList();
+                            var wages = @oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Wages)).Sum(x => Convert.ToDouble(x.TotalPay));
+                            var allowances = @oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Allowances)).Sum(x => Convert.ToDouble(x.TotalPay));
+                            var deductions = @oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Deductions)).Sum(x => Convert.ToDouble(x.TotalPay));
+                            var taxes = @oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.Taxes)).Sum(x => Convert.ToDouble(x.TotalPay));
+                            var noneAllowances = @oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.NonTaxableAllowances)).Sum(x => Convert.ToDouble(x.TotalPay));
+                            var posttaxDeductions = @oo.Where(x => x.PayItem.PayItemTypeID == Convert.ToInt32(TMT.ERP.Models.Lookups.PayItemTypeValue.PostTaxDeductions)).Sum(x => Convert.ToDouble(x.TotalPay));
+                            var total = wages + allowances + noneAllowances - deductions - taxes - posttaxDeductions;
+                            <tr>
+                                <td>
+                                    <b>@employee.Employee.FirstName&nbsp;@employee.Employee.LastName</b>
+                                </td>
+                                <td>
+                                    <b class="currency">@wages</b>
+                                </td>
+                                <td>
+                                    <b class="currency">@allowances</b>
+                                </td>
+                                <td>
+                                    <b class="currency">@deductions</b>
+                                </td>
+                                <td>
+                                    <b class="currency">@taxes</b>
+                                </td>
+                                <td>
+                                    <b class="currency">@noneAllowances</b>
+                                </td>
+                                <td>
+                                    <b class="currency">@posttaxDeductions</b>
+                                </td>
+                                <td>
+                                    @if (employee.Status == 0)
+                                    {
+                                        <b>@Resources.Resource.PayRun_Awaiting</b>
+                                    }
+                                    else
+                                    {
+                                        <b>@Resources.Resource.PayRun_Paid</b>
+                                    }
+                                </td>
+                                <td style="text-align: right;">
+                                    <a href="/PayRun/ViewPaySlip?payrunId=@employee.PayRunID&payrunEmployeeId=@employee.ID"><b class="currency" style="color: #048fc2;">@employee.Amount</b></a>
+                                </td>
+                            </tr>
+                        }
+                        <tr>
+                            <td><b>@Resources.Resource.PayRun_Index_Total</b></td>
+                            <td>
+                                <b class="currency">@totalWages</b>
+                            </td>
+                            <td>
+                                <b class="currency">@totalAllowances</b>
+                            </td>
+                            <td>
+                                <b class="currency">@totalDeductions</b>
+                            </td>
+                            <td>
+                                <b class="currency">@totalTaxes</b>
+                            </td>
+                            <td>
+                                <b class="currency">@totalNTAllowances</b>
+                            </td>
+                            <td>
+                                <b class="currency">
+                                    @totalPtDeduction
+                                </b>
+                            </td>
+                            <td></td>
+                            <td style="text-align: right;">
+                                <b class="currency">@totalNetPay</b>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="cleardiv"></div>
+                <div>
+                    <h4><b>@Resources.Resource.PayRun_Index_OrtherPayment</b></h4>
+                </div>
+                <div class="cleardiv"></div>
+                <table id="otherPayment">
+                    <thead>
+                        <tr>
+                            <th>@Resources.Resource.PayRun_Contact</th>
+                            <th>@Resources.Resource.PayRun_DueDate</th>
+                            <th>@Resources.Resource.PayRun_Index_Status</th>
+                            <th style="text-align: right;">@Resources.Resource.PayRun_Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            var ooPaymentForPayItem = Model.PaymentForPayItems.ToList();
+                            
+                        }
+                        @foreach (var x in ooPaymentForPayItem)
+                        {
+                            <tr>
+                                <td>
+                                    @x.PayItem.PaidTo&nbsp;(@x.PayItem.Name)
+                                </td>
+                                <td>
+                                    @{
+                            var dueDate = Convert.ToDateTime(x.DueDate);
+                                    }
+                                    @TMT.ERP.Commons.Utility.DateFormat(dueDate)
+                                </td>
+                                <td>
+                                    @if (x.Status == 0)
+                                    {
+                                        <b>@Resources.Resource.PayRun_Awaiting</b>
+                                    }
+                                    else
+                                    {
+                                        <b>@Resources.Resource.PayRun_Paid</b>
+                                    }
+                                </td>
+                                <td style="text-align: right;">
+                                    <a href="/PayRun/ViewWagePayable?payrunId=@x.PayRunID&payItemId=@x.PayItemID"><b class="currency" style="color: #048fc2;">@x.Amount</b></a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="cleardiv"></div>
+                <div style="float: left; width: 50%; text-align: left;">
+                    <h4><b style="text-transform: uppercase;">@Resources.Resource.PayRun_Index_Total</b></h4>
+                </div>
+                <div style="float: right; width: 50%; text-align: right;">
+                    <a href="javascript:void(0);"><b id="bTotal" class="currency" style="color: black;">@Model.OtherPayment</b></a>
+                </div>
+                <hr />
+                <div class="cleardiv"></div>
+                <div style="float: left; width: 50%;">
+                    <h1><b>@Resources.Resource.PayRun_Index_Total</b></h1>
+                </div>
+                <div style="float: right; text-align: right;">
+                    <h1><b class="currency">@Model.Total</b></h1>
+                </div>
+                <div class="cleardiv"></div>
+                <hr />
+                <hr />
+                <input type="checkbox" id="cbPayRun" checked="checked" />&nbsp;@Resources.Resource.PayRun_ShowTaxes
+            </div>
+        </div>
+    </div>
+</div>

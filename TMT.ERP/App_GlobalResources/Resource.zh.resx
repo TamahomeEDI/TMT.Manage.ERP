@@ -1,0 +1,3663 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="AboutTitle" xml:space="preserve">
+    <value>About</value>
+  </data>
+  <data name="AccountGroup_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="AccountGroup_SetGroup" xml:space="preserve">
+    <value>設置組</value>
+  </data>
+  <data name="AccountTrans_BankSTM_EndBalance" xml:space="preserve">
+    <value>年末餘額</value>
+  </data>
+  <data name="AccountTrans_BankSTM_EndDate" xml:space="preserve">
+    <value>結束日期</value>
+  </data>
+  <data name="AccountTrans_BankSTM_ImpDate" xml:space="preserve">
+    <value>進口日期</value>
+  </data>
+  <data name="AccountTrans_BankSTM_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="AccountTrans_BankSTM_StBalance" xml:space="preserve">
+    <value>開始平衡</value>
+  </data>
+  <data name="AccountTrans_BankSTM_StDate" xml:space="preserve">
+    <value>開始日期</value>
+  </data>
+  <data name="AccountTrans_Index_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="AccountTrans_Index_Received" xml:space="preserve">
+    <value>收到</value>
+  </data>
+  <data name="AccountTrans_Index_Reference" xml:space="preserve">
+    <value>參考</value>
+  </data>
+  <data name="AccountTrans_Index_Spent" xml:space="preserve">
+    <value>花費</value>
+  </data>
+  <data name="AccountTrans_Index_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="AccountType_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="AccountType_Close" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="AccountType_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="AccountType_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="AccountType_ParentID" xml:space="preserve">
+    <value> ParentID</value>
+  </data>
+  <data name="AccountType_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="AccountType_Title" xml:space="preserve">
+    <value>賬戶類型</value>
+  </data>
+  <data name="AccountType_Type" xml:space="preserve">
+    <value>類型</value>
+  </data>
+  <data name="Account_Create_AccTypeID" xml:space="preserve">
+    <value>賬戶類型標識</value>
+  </data>
+  <data name="Account_Create_Code" xml:space="preserve">
+    <value>碼</value>
+  </data>
+  <data name="Account_Create_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Account_Create_ExpenseClaim" xml:space="preserve">
+    <value>報銷</value>
+  </data>
+  <data name="Account_Create_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="Account_Create_Payment" xml:space="preserve">
+    <value>付款</value>
+  </data>
+  <data name="Account_Create_PayRoll" xml:space="preserve">
+    <value>薪酬卷</value>
+  </data>
+  <data name="Account_Create_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="Account_Create_TaxRate" xml:space="preserve">
+    <value>稅率</value>
+  </data>
+  <data name="Account_Create_TtCredit" xml:space="preserve">
+    <value>總積分</value>
+  </data>
+  <data name="Account_Create_TtDebit" xml:space="preserve">
+    <value>總借記</value>
+  </data>
+  <data name="Account_Create_YTD" xml:space="preserve">
+    <value>年初至今</value>
+  </data>
+  <data name="Account_DashBroad" xml:space="preserve">
+    <value>顯示在儀表板</value>
+  </data>
+  <data name="Account_ExpenseClaim" xml:space="preserve">
+    <value>顯示的費用索賠</value>
+  </data>
+  <data name="Account_Index_AddBank" xml:space="preserve">
+    <value>添加銀行賬戶</value>
+  </data>
+  <data name="Account_Index_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="Account_Index_ChangeTax" xml:space="preserve">
+    <value>改變稅率</value>
+  </data>
+  <data name="Account_Index_Close" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="Account_Index_Code" xml:space="preserve">
+    <value>碼</value>
+  </data>
+  <data name="Account_Index_Create" xml:space="preserve">
+    <value>創建</value>
+  </data>
+  <data name="Account_Index_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Account_Index_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Account_Index_Detail" xml:space="preserve">
+    <value>詳細信息</value>
+  </data>
+  <data name="Account_Index_Edit" xml:space="preserve">
+    <value>編輯</value>
+  </data>
+  <data name="Account_Index_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="Account_Index_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Account_Index_Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="Account_Index_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="Account_Index_TaxRate" xml:space="preserve">
+    <value>稅率</value>
+  </data>
+  <data name="Account_Index_TextSearch" xml:space="preserve">
+    <value>關鍵詞</value>
+  </data>
+  <data name="Account_Index_Title" xml:space="preserve">
+    <value>帳戶列表</value>
+  </data>
+  <data name="Account_Index_TypeID" xml:space="preserve">
+    <value>類型</value>
+  </data>
+  <data name="Account_Index_Update" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Account_Payment" xml:space="preserve">
+    <value>啟用支付</value>
+  </data>
+  <data name="Account_Title" xml:space="preserve">
+    <value>會計科目</value>
+  </data>
+  <data name="AddressCountry" xml:space="preserve">
+    <value>Country</value>
+  </data>
+  <data name="AddressFax" xml:space="preserve">
+    <value>傳真</value>
+  </data>
+  <data name="AddressFirstName" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="AddressLastName" xml:space="preserve">
+    <value>姓</value>
+  </data>
+  <data name="AddressPhone" xml:space="preserve">
+    <value>電話</value>
+  </data>
+  <data name="AddressTown" xml:space="preserve">
+    <value>鎮</value>
+  </data>
+  <data name="AddressZipCode" xml:space="preserve">
+    <value>郵政編碼</value>
+  </data>
+  <data name="Allocate_List_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Allocate_List_Inventory_Allocation" xml:space="preserve">
+    <value>庫存分配</value>
+  </data>
+  <data name="Allocate_List_Product_Order" xml:space="preserve">
+    <value>產品訂購</value>
+  </data>
+  <data name="Allocate_List_Qty" xml:space="preserve">
+    <value>數量</value>
+  </data>
+  <data name="AlloCate_List_Search" xml:space="preserve">
+    <value>WorkOrder No | Good Code</value>
+  </data>
+  <data name="Allocate_List_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="Allocate_List_Stock" xml:space="preserve">
+    <value>庫存</value>
+  </data>
+  <data name="Allocate_List_Type" xml:space="preserve">
+    <value>類型</value>
+  </data>
+  <data name="Allocate_List_Type_Custom" xml:space="preserve">
+    <value>習俗</value>
+  </data>
+  <data name="Allocate_List_Type_Standard" xml:space="preserve">
+    <value>標準</value>
+  </data>
+  <data name="Allocate_List_Work_Order_No" xml:space="preserve">
+    <value>工作訂單號</value>
+  </data>
+  <data name="AllocWO_Edit_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="AllocWO_Edit_Good" xml:space="preserve">
+    <value>項目</value>
+  </data>
+  <data name="AllocWO_Edit_Inventory_Allocation" xml:space="preserve">
+    <value>庫存分配</value>
+  </data>
+  <data name="AllocWO_Edit_QuantityAlloc" xml:space="preserve">
+    <value>量分配</value>
+  </data>
+  <data name="AllocWO_Edit_ReqQty" xml:space="preserve">
+    <value>所需數量</value>
+  </data>
+  <data name="AllocWO_Edit_Stock" xml:space="preserve">
+    <value>庫存</value>
+  </data>
+  <data name="AllocWO_Edit_UOM" xml:space="preserve">
+    <value>計量單位</value>
+  </data>
+  <data name="AllocWO_Edit_Work_Center" xml:space="preserve">
+    <value>工作中心</value>
+  </data>
+  <data name="AlloWO_Edit_Balance" xml:space="preserve">
+    <value>餘額數量</value>
+  </data>
+  <data name="Alocate_List_Approval" xml:space="preserve">
+    <value>贊同</value>
+  </data>
+  <data name="Alocate_List_Create" xml:space="preserve">
+    <value>創建</value>
+  </data>
+  <data name="Alocate_List_Finish" xml:space="preserve">
+    <value>已分配完畢</value>
+  </data>
+  <data name="Alocate_List_Not_Finish" xml:space="preserve">
+    <value>還沒有分配完</value>
+  </data>
+  <data name="AssetDetail_AccountID" xml:space="preserve">
+    <value>帳戶ID</value>
+  </data>
+  <data name="AssetDetail_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="AssetDetail_Code" xml:space="preserve">
+    <value>碼</value>
+  </data>
+  <data name="AssetDetail_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="AssetDetail_Item" xml:space="preserve">
+    <value>項目</value>
+  </data>
+  <data name="AssetDetail_PurchaseDate" xml:space="preserve">
+    <value>購買日期</value>
+  </data>
+  <data name="AssetDetail_PurchasePrice" xml:space="preserve">
+    <value>Purchase Price</value>
+  </data>
+  <data name="AwaitingPayment_CreditNote" xml:space="preserve">
+    <value>Credit Note</value>
+  </data>
+  <data name="AwaitingPayment_Purchase" xml:space="preserve">
+    <value>Purchase</value>
+  </data>
+  <data name="AwaitingPayment_Repeating" xml:space="preserve">
+    <value>Repeating</value>
+  </data>
+  <data name="BankAccounts_Index_AccountName" xml:space="preserve">
+    <value>帳戶名稱</value>
+  </data>
+  <data name="BankAccounts_Index_AccountNum" xml:space="preserve">
+    <value>帳號</value>
+  </data>
+  <data name="BankAccounts_Index_AddNew" xml:space="preserve">
+    <value>添加銀行賬戶</value>
+  </data>
+  <data name="BankAccounts_Index_BankName" xml:space="preserve">
+    <value>銀行名稱</value>
+  </data>
+  <data name="BankAccounts_Index_BankStatement" xml:space="preserve">
+    <value>銀行對賬單</value>
+  </data>
+  <data name="BankAccounts_Index_Currency" xml:space="preserve">
+    <value>貨幣</value>
+  </data>
+  <data name="BankAccounts_Index_DisplayName" xml:space="preserve">
+    <value>顯示名稱</value>
+  </data>
+  <data name="BankAccounts_Index_Edit" xml:space="preserve">
+    <value>編輯帳戶資料</value>
+  </data>
+  <data name="BankAccounts_Index_Find" xml:space="preserve">
+    <value>發現</value>
+  </data>
+  <data name="BankAccounts_Index_Import" xml:space="preserve">
+    <value>import語句</value>
+  </data>
+  <data name="BankAccounts_Index_Link" xml:space="preserve">
+    <value>Go to Banking ›</value>
+  </data>
+  <data name="BankAccounts_Index_New" xml:space="preserve">
+    <value>新</value>
+  </data>
+  <data name="BankAccounts_Index_Receive" xml:space="preserve">
+    <value>收到錢</value>
+  </data>
+  <data name="BankAccounts_Index_Reconcile" xml:space="preserve">
+    <value>調和</value>
+  </data>
+  <data name="BankAccounts_Index_ReconcileAcc" xml:space="preserve">
+    <value>調和帳戶</value>
+  </data>
+  <data name="BankAccounts_Index_Spend" xml:space="preserve">
+    <value>用錢</value>
+  </data>
+  <data name="BankAccounts_Index_StatementBalance" xml:space="preserve">
+    <value>資產負債表</value>
+  </data>
+  <data name="BankAccounts_Index_Title" xml:space="preserve">
+    <value>銀行賬戶</value>
+  </data>
+  <data name="BankAccounts_Index_TMTBalance" xml:space="preserve">
+    <value>在公司資產負債</value>
+  </data>
+  <data name="BankAccounts_Index_Transaction" xml:space="preserve">
+    <value>交易</value>
+  </data>
+  <data name="BankAccounts_Index_Transfer" xml:space="preserve">
+    <value>劃款</value>
+  </data>
+  <data name="BankAccount_Create_AccountName" xml:space="preserve">
+    <value>帳戶名稱</value>
+  </data>
+  <data name="BankAccount_Create_AccountNumber" xml:space="preserve">
+    <value>帳號</value>
+  </data>
+  <data name="BankAccount_Create_BankName" xml:space="preserve">
+    <value>銀行名稱</value>
+  </data>
+  <data name="BankAccount_Create_Close" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="BankAccount_Create_Company" xml:space="preserve">
+    <value>公司</value>
+  </data>
+  <data name="BankAccount_Create_Create" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="BankAccount_Create_Currentcy" xml:space="preserve">
+    <value>貨幣</value>
+  </data>
+  <data name="BankAccount_Create_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="BankAccount_Create_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="BankAccount_Create_Detail" xml:space="preserve">
+    <value>細節</value>
+  </data>
+  <data name="BankAccount_ManageAccount_Label" xml:space="preserve">
+    <value>Manage Account</value>
+  </data>
+  <data name="BankAccount_ReceiveMoney_Invoice" xml:space="preserve">
+    <value>發票號碼</value>
+  </data>
+  <data name="BankAccount_ReceiveMoney_Method" xml:space="preserve">
+    <value>接收為</value>
+  </data>
+  <data name="BankAccount_ReceiveMoney_Title" xml:space="preserve">
+    <value>New Receive Money</value>
+  </data>
+  <data name="BankAccount_SaleInvoice_List_To" xml:space="preserve">
+    <value>至</value>
+  </data>
+  <data name="BankAccount_SpendMoney_Account" xml:space="preserve">
+    <value>帳戶</value>
+  </data>
+  <data name="BankAccount_SpendMoney_AdjustmentsTax" xml:space="preserve">
+    <value>包括調整稅收</value>
+  </data>
+  <data name="BankAccount_SpendMoney_Amount" xml:space="preserve">
+    <value>量</value>
+  </data>
+  <data name="BankAccount_SpendMoney_AmountAre" xml:space="preserve">
+    <value>量是</value>
+  </data>
+  <data name="BankAccount_SpendMoney_Cur" xml:space="preserve">
+    <value>貨幣</value>
+  </data>
+  <data name="BankAccount_SpendMoney_Date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="BankAccount_SpendMoney_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="BankAccount_SpendMoney_Inv" xml:space="preserve">
+    <value>發票號碼</value>
+  </data>
+  <data name="BankAccount_SpendMoney_Method" xml:space="preserve">
+    <value>花費</value>
+  </data>
+  <data name="BankAccount_SpendMoney_Quantity" xml:space="preserve">
+    <value>數量</value>
+  </data>
+  <data name="BankAccount_SpendMoney_RateNoTax" xml:space="preserve">
+    <value>免稅（0％）</value>
+  </data>
+  <data name="BankAccount_SpendMoney_Ref" xml:space="preserve">
+    <value>參考</value>
+  </data>
+  <data name="BankAccount_SpendMoney_Subtotal" xml:space="preserve">
+    <value>小計</value>
+  </data>
+  <data name="BankAccount_SpendMoney_Tax" xml:space="preserve">
+    <value>稅</value>
+  </data>
+  <data name="BankAccount_SpendMoney_TaxRate" xml:space="preserve">
+    <value>稅率</value>
+  </data>
+  <data name="BankAccount_SpendMoney_Title" xml:space="preserve">
+    <value>New Spend Money</value>
+  </data>
+  <data name="BankAccount_SpendMoney_To" xml:space="preserve">
+    <value>至</value>
+  </data>
+  <data name="BankAccount_SpendMoney_Total" xml:space="preserve">
+    <value>總</value>
+  </data>
+  <data name="BankAccount_SpendMoney_UPrice" xml:space="preserve">
+    <value>單價</value>
+  </data>
+  <data name="BankAccount_TransferMoney_Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="BankAccount_TransferMoney_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="BankAccount_TransferMoney_From" xml:space="preserve">
+    <value>From Account</value>
+  </data>
+  <data name="BankAccount_TransferMoney_Title" xml:space="preserve">
+    <value>New Transfer Money</value>
+  </data>
+  <data name="BankAccount_TransferMoney_To" xml:space="preserve">
+    <value>To Account</value>
+  </data>
+  <data name="BOM_Active" xml:space="preserve">
+    <value>活躍</value>
+  </data>
+  <data name="BOM_Add_Finish_Good" xml:space="preserve">
+    <value>添加完成好</value>
+  </data>
+  <data name="BOM_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="BOM_Delete" xml:space="preserve">
+    <value>Delete BOM</value>
+  </data>
+  <data name="BOM_EffectiveDate" xml:space="preserve">
+    <value>生效日期</value>
+  </data>
+  <data name="BOM_Finish_Good" xml:space="preserve">
+    <value>光潔度好</value>
+  </data>
+  <data name="BOM_Good_Category" xml:space="preserve">
+    <value>分類</value>
+  </data>
+  <data name="BOM_Good_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="BOM_Good_Good_type" xml:space="preserve">
+    <value>好型</value>
+  </data>
+  <data name="BOM_Good_Items_Code" xml:space="preserve">
+    <value>項目代碼</value>
+  </data>
+  <data name="BOM_Good_List_FG" xml:space="preserve">
+    <value>成品</value>
+  </data>
+  <data name="BOM_Good_List_Products" xml:space="preserve">
+    <value>產品列表</value>
+  </data>
+  <data name="BOM_Good_List_RM" xml:space="preserve">
+    <value>原料</value>
+  </data>
+  <data name="BOM_Good_List_SF" xml:space="preserve">
+    <value>半成品好</value>
+  </data>
+  <data name="BOM_Good_OUM" xml:space="preserve">
+    <value>OUM</value>
+  </data>
+  <data name="BOM_Good_Price" xml:space="preserve">
+    <value>價格</value>
+  </data>
+  <data name="BOM_List" xml:space="preserve">
+    <value>BOM清單</value>
+  </data>
+  <data name="BOM_Name" xml:space="preserve">
+    <value>輸入名稱</value>
+  </data>
+  <data name="BOM_Name_Column" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="BOM_Save" xml:space="preserve">
+    <value>Save</value>
+  </data>
+  <data name="BOM_Set" xml:space="preserve">
+    <value>設置物料清單</value>
+  </data>
+  <data name="BOM_Title" xml:space="preserve">
+    <value>Bill Of Materials</value>
+  </data>
+  <data name="Budget_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="Budget_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Budget_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Budget_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="Budget_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Category_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="Category_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Category_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Category_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Category_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="Category_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Category_Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="Category_Title" xml:space="preserve">
+    <value>庫存分類</value>
+  </data>
+  <data name="Common_Account" xml:space="preserve">
+    <value>帳戶</value>
+  </data>
+  <data name="Common_Accounts" xml:space="preserve">
+    <value>帳戶</value>
+  </data>
+  <data name="Common_Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="Common_Add" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="Common_AddNewLine" xml:space="preserve">
+    <value>添加一個新行</value>
+  </data>
+  <data name="Common_All" xml:space="preserve">
+    <value>所有</value>
+  </data>
+  <data name="Common_Amount" xml:space="preserve">
+    <value>量</value>
+  </data>
+  <data name="Common_ApprovalUser" xml:space="preserve">
+    <value>認證用戶</value>
+  </data>
+  <data name="Common_Approve" xml:space="preserve">
+    <value>批准</value>
+  </data>
+  <data name="Common_ApprovedDate" xml:space="preserve">
+    <value>批准日期</value>
+  </data>
+  <data name="Common_AwaitingApproval" xml:space="preserve">
+    <value>正在等待批准</value>
+  </data>
+  <data name="Common_AwaitingOutgoingShipment" xml:space="preserve">
+    <value>等待傳出出貨</value>
+  </data>
+  <data name="Common_Back" xml:space="preserve">
+    <value>後面</value>
+  </data>
+  <data name="Common_Bills" xml:space="preserve">
+    <value>採購訂單</value>
+  </data>
+  <data name="Common_Bom" xml:space="preserve">
+    <value>BOM</value>
+  </data>
+  <data name="Common_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Common_CNUnique" xml:space="preserve">
+    <value>Credit Note # mush be unique.</value>
+  </data>
+  <data name="Common_Code" xml:space="preserve">
+    <value>碼</value>
+  </data>
+  <data name="Common_Completed" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="Common_Confirm" xml:space="preserve">
+    <value>Confirm</value>
+  </data>
+  <data name="Common_ConfirmDelete" xml:space="preserve">
+    <value>您確定要刪除它？</value>
+  </data>
+  <data name="Common_CreateDate" xml:space="preserve">
+    <value>創建日期</value>
+  </data>
+  <data name="Common_CreatedUser" xml:space="preserve">
+    <value>創建用戶</value>
+  </data>
+  <data name="Common_Customer" xml:space="preserve">
+    <value>顧客</value>
+  </data>
+  <data name="Common_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Common_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Common_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Common_Done" xml:space="preserve">
+    <value>做</value>
+  </data>
+  <data name="Common_Draft" xml:space="preserve">
+    <value>草案</value>
+  </data>
+  <data name="Common_DueDate" xml:space="preserve">
+    <value>Due Date</value>
+  </data>
+  <data name="Common_EmployeePayments" xml:space="preserve">
+    <value>僱員的付款</value>
+  </data>
+  <data name="Common_error" xml:space="preserve">
+    <value>error</value>
+  </data>
+  <data name="Common_ErrorMissed" xml:space="preserve">
+    <value>You missed</value>
+  </data>
+  <data name="Common_Error_CreateOutShipment" xml:space="preserve">
+    <value>Error in create outgoing shipment.</value>
+  </data>
+  <data name="Common_field" xml:space="preserve">
+    <value>field</value>
+  </data>
+  <data name="Common_FinishedGood" xml:space="preserve">
+    <value>成品</value>
+  </data>
+  <data name="Common_FromStock" xml:space="preserve">
+    <value>現貨</value>
+  </data>
+  <data name="Common_highligh_below" xml:space="preserve">
+    <value>They have been highlighted below</value>
+  </data>
+  <data name="Common_History" xml:space="preserve">
+    <value>歷史</value>
+  </data>
+  <data name="Common_Import" xml:space="preserve">
+    <value>進口</value>
+  </data>
+  <data name="Common_IncomingShipment" xml:space="preserve">
+    <value>傳入出貨</value>
+  </data>
+  <data name="Common_Inventory" xml:space="preserve">
+    <value>Inventory</value>
+  </data>
+  <data name="Common_Invoices" xml:space="preserve">
+    <value>發票</value>
+  </data>
+  <data name="Common_InvoiceUnique" xml:space="preserve">
+    <value>Invoice # must be unique</value>
+  </data>
+  <data name="Common_Item" xml:space="preserve">
+    <value>項目</value>
+  </data>
+  <data name="Common_Job" xml:space="preserve">
+    <value>工作</value>
+  </data>
+  <data name="Common_ListProductMonitors" xml:space="preserve">
+    <value>清單製作監視器</value>
+  </data>
+  <data name="Common_ManufacturingType" xml:space="preserve">
+    <value>生產型</value>
+  </data>
+  <data name="Common_Message" xml:space="preserve">
+    <value>Message</value>
+  </data>
+  <data name="Common_Msg_ApprovalSuccess" xml:space="preserve">
+    <value>The approval is successful</value>
+  </data>
+  <data name="Common_Msg_Archive" xml:space="preserve">
+    <value>Archive items successful</value>
+  </data>
+  <data name="Common_Msg_Change" xml:space="preserve">
+    <value>You have not selected items to change Tax Rate!</value>
+  </data>
+  <data name="Common_Msg_CodeUnique" xml:space="preserve">
+    <value>請輸入唯一代碼</value>
+  </data>
+  <data name="Common_Msg_CountDisplay" xml:space="preserve">
+    <value>有沒有可顯示的項目</value>
+  </data>
+  <data name="Common_Msg_CreateSuccess" xml:space="preserve">
+    <value>The creation is successful</value>
+  </data>
+  <data name="Common_Msg_Delete" xml:space="preserve">
+    <value>您沒有選擇要刪除的項目！</value>
+  </data>
+  <data name="Common_Msg_DeleteFail" xml:space="preserve">
+    <value>Items can not be deleted because they are being used</value>
+  </data>
+  <data name="Common_Msg_DeleteSuccess" xml:space="preserve">
+    <value>The deletion is sucessful</value>
+  </data>
+  <data name="Common_Msg_EditSuccess" xml:space="preserve">
+    <value>The modification is successful</value>
+  </data>
+  <data name="Common_Msg_Error" xml:space="preserve">
+    <value>An error occured in processing. Please try again later !</value>
+  </data>
+  <data name="Common_Msg_NameEmpty" xml:space="preserve">
+    <value>Name cannot be empty</value>
+  </data>
+  <data name="Common_Msg_NameUnique" xml:space="preserve">
+    <value>請輸入唯一的名稱</value>
+  </data>
+  <data name="Common_Msg_Register" xml:space="preserve">
+    <value>Register Items Successful</value>
+  </data>
+  <data name="Common_Msg_RejectSuccess" xml:space="preserve">
+    <value>Reject is successful.</value>
+  </data>
+  <data name="Common_Msg_RepeatingUpdateSuccess" xml:space="preserve">
+    <value>The update is successfull.</value>
+  </data>
+  <data name="Common_Msg_Restore" xml:space="preserve">
+    <value>Restore items successful</value>
+  </data>
+  <data name="Common_Msg_Sold" xml:space="preserve">
+    <value>Sold Items Successful</value>
+  </data>
+  <data name="Common_Msg_SubmitSuccess" xml:space="preserve">
+    <value>Submitted for approval is successful.</value>
+  </data>
+  <data name="Common_Msg_Transaction" xml:space="preserve">
+    <value>Transaction is successful</value>
+  </data>
+  <data name="Common_Msg_TypeEmpty" xml:space="preserve">
+    <value>請選擇商品類型</value>
+  </data>
+  <data name="Common_Msg_UOMEmpty" xml:space="preserve">
+    <value>請選擇商品的計量單位</value>
+  </data>
+  <data name="Common_Msg_UpdateSuccess" xml:space="preserve">
+    <value>Update is sucessful.</value>
+  </data>
+  <data name="Common_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="Common_OtherPayments" xml:space="preserve">
+    <value>其他應付款</value>
+  </data>
+  <data name="Common_OutgoingShipment" xml:space="preserve">
+    <value>傳出出貨</value>
+  </data>
+  <data name="Common_PageSize" xml:space="preserve">
+    <value>Showing</value>
+  </data>
+  <data name="Common_PaymentDate" xml:space="preserve">
+    <value>付款日期</value>
+  </data>
+  <data name="Common_PayPeriod" xml:space="preserve">
+    <value>交期</value>
+  </data>
+  <data name="Common_PayRun" xml:space="preserve">
+    <value>交運行</value>
+  </data>
+  <data name="Common_Pending" xml:space="preserve">
+    <value>有待</value>
+  </data>
+  <data name="Common_POUnique" xml:space="preserve">
+    <value>Purchase Order# mush be unique.</value>
+  </data>
+  <data name="Common_Print" xml:space="preserve">
+    <value>打印</value>
+  </data>
+  <data name="Common_ProductMonitors" xml:space="preserve">
+    <value>生產顯示器</value>
+  </data>
+  <data name="Common_Purchases" xml:space="preserve">
+    <value>購買</value>
+  </data>
+  <data name="Common_Quantity" xml:space="preserve">
+    <value>數量</value>
+  </data>
+  <data name="Common_Remove" xml:space="preserve">
+    <value>清除</value>
+  </data>
+  <data name="Common_ReOrder" xml:space="preserve">
+    <value>重新排序</value>
+  </data>
+  <data name="Common_Repeating" xml:space="preserve">
+    <value>重複</value>
+  </data>
+  <data name="Common_SaleOrder" xml:space="preserve">
+    <value>Sale Orders</value>
+  </data>
+  <data name="Common_Sales" xml:space="preserve">
+    <value>銷售</value>
+  </data>
+  <data name="Common_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Common_SaveAndSubmit" xml:space="preserve">
+    <value>Save and Submit</value>
+  </data>
+  <data name="Common_Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="Common_SelectItem" xml:space="preserve">
+    <value>選擇項目</value>
+  </data>
+  <data name="Common_SelectItem_ForApproval" xml:space="preserve">
+    <value>You have not select an Item to approval</value>
+  </data>
+  <data name="Common_SelectItem_SubmitForApproval" xml:space="preserve">
+    <value>You have not select an Item to submit for approval</value>
+  </data>
+  <data name="Common_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="Common_Stock" xml:space="preserve">
+    <value>庫存</value>
+  </data>
+  <data name="Common_SubmitForApproval" xml:space="preserve">
+    <value>提交審批</value>
+  </data>
+  <data name="Common_SubTotal" xml:space="preserve">
+    <value>小計</value>
+  </data>
+  <data name="Common_Summary" xml:space="preserve">
+    <value>總結</value>
+  </data>
+  <data name="Common_Tax" xml:space="preserve">
+    <value>稅務</value>
+  </data>
+  <data name="Common_ToStock" xml:space="preserve">
+    <value>庫存</value>
+  </data>
+  <data name="Common_Total" xml:space="preserve">
+    <value>總</value>
+  </data>
+  <data name="Common_TranferStock" xml:space="preserve">
+    <value>轉院庫存</value>
+  </data>
+  <data name="Common_Update" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Common_WorkOrder" xml:space="preserve">
+    <value>工作單</value>
+  </data>
+  <data name="Common_WOUnique" xml:space="preserve">
+    <value>WO# must be unique</value>
+  </data>
+  <data name="Company_Business" xml:space="preserve">
+    <value>業務</value>
+  </data>
+  <data name="Company_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Company_Detail_Save" xml:space="preserve">
+    <value>細節</value>
+  </data>
+  <data name="Company_DisplayName" xml:space="preserve">
+    <value>顯示名稱</value>
+  </data>
+  <data name="Company_Edit_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Company_Email" xml:space="preserve">
+    <value>電子郵件地址</value>
+  </data>
+  <data name="Company_Index_Addnew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="Company_Index_Close" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Company_Index_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Company_Index_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Company_Logo" xml:space="preserve">
+    <value>標誌</value>
+  </data>
+  <data name="Company_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="Company_OrgaType" xml:space="preserve">
+    <value>組織</value>
+  </data>
+  <data name="Company_PhysAddress" xml:space="preserve">
+    <value>地址</value>
+  </data>
+  <data name="Company_PhysAttention" xml:space="preserve">
+    <value>關注</value>
+  </data>
+  <data name="Company_PhysCity" xml:space="preserve">
+    <value>城市</value>
+  </data>
+  <data name="Company_PhysCountry" xml:space="preserve">
+    <value>國家</value>
+  </data>
+  <data name="Company_PhysState" xml:space="preserve">
+    <value>態</value>
+  </data>
+  <data name="Company_PhysZipCode" xml:space="preserve">
+    <value>郵編</value>
+  </data>
+  <data name="Company_PosState" xml:space="preserve">
+    <value>態</value>
+  </data>
+  <data name="Company_PostAddress" xml:space="preserve">
+    <value>地址</value>
+  </data>
+  <data name="Company_PostAttention" xml:space="preserve">
+    <value>關注</value>
+  </data>
+  <data name="Company_PostCity" xml:space="preserve">
+    <value>城市</value>
+  </data>
+  <data name="Company_PostCountry" xml:space="preserve">
+    <value>國家</value>
+  </data>
+  <data name="Company_PostZipCode" xml:space="preserve">
+    <value>郵編</value>
+  </data>
+  <data name="Company_Telephone" xml:space="preserve">
+    <value>電話</value>
+  </data>
+  <data name="Company_Tel_Area" xml:space="preserve">
+    <value>區域否</value>
+  </data>
+  <data name="Company_Tel_Country" xml:space="preserve">
+    <value>國家無</value>
+  </data>
+  <data name="Company_Tel_Num" xml:space="preserve">
+    <value>電話號碼</value>
+  </data>
+  <data name="Company_Title" xml:space="preserve">
+    <value>公司</value>
+  </data>
+  <data name="Company_TradingName" xml:space="preserve">
+    <value>交易名稱</value>
+  </data>
+  <data name="Company_Website" xml:space="preserve">
+    <value>網站</value>
+  </data>
+  <data name="Contacts_Add" xml:space="preserve">
+    <value>地址</value>
+  </data>
+  <data name="Contacts_AddNew" xml:space="preserve">
+    <value>加</value>
+  </data>
+  <data name="Contacts_BADetails" xml:space="preserve">
+    <value>銀行賬戶資料</value>
+  </data>
+  <data name="Contacts_BAName" xml:space="preserve">
+    <value>銀行帳戶名稱</value>
+  </data>
+  <data name="Contacts_BANum" xml:space="preserve">
+    <value>銀行帳戶號碼</value>
+  </data>
+  <data name="Contacts_BillDue" xml:space="preserve">
+    <value>欠帳</value>
+  </data>
+  <data name="Contacts_BothType" xml:space="preserve">
+    <value>供應商及客戶</value>
+  </data>
+  <data name="Contacts_City" xml:space="preserve">
+    <value>城市</value>
+  </data>
+  <data name="Contacts_Close" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Contacts_Code" xml:space="preserve">
+    <value>碼</value>
+  </data>
+  <data name="Contacts_ContactName" xml:space="preserve">
+    <value>聯繫人姓名</value>
+  </data>
+  <data name="Contacts_CreateTitle" xml:space="preserve">
+    <value>添加聯繫人</value>
+  </data>
+  <data name="Contacts_Create_Title" xml:space="preserve">
+    <value>添加聯繫人</value>
+  </data>
+  <data name="Contacts_CtryID" xml:space="preserve">
+    <value>國家的ID</value>
+  </data>
+  <data name="Contacts_Currency" xml:space="preserve">
+    <value>默認貨幣</value>
+  </data>
+  <data name="Contacts_Customer" xml:space="preserve">
+    <value>顧客</value>
+  </data>
+  <data name="Contacts_Customer_Title" xml:space="preserve">
+    <value>顧客</value>
+  </data>
+  <data name="Contacts_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Contacts_DirectDial" xml:space="preserve">
+    <value>直接撥號</value>
+  </data>
+  <data name="Contacts_Discount" xml:space="preserve">
+    <value>折扣％</value>
+  </data>
+  <data name="Contacts_EditTitle" xml:space="preserve">
+    <value>Edit Contact</value>
+  </data>
+  <data name="Contacts_Email" xml:space="preserve">
+    <value>電子郵件</value>
+  </data>
+  <data name="Contacts_Employee_CreateTitle" xml:space="preserve">
+    <value>New Employee</value>
+  </data>
+  <data name="Contacts_Employee_EditTitle" xml:space="preserve">
+    <value>Edit Employee</value>
+  </data>
+  <data name="Contacts_Employee_Title" xml:space="preserve">
+    <value>Employee</value>
+  </data>
+  <data name="Contacts_FaxNum" xml:space="preserve">
+    <value>傳真</value>
+  </data>
+  <data name="Contacts_FirstName" xml:space="preserve">
+    <value>名字</value>
+  </data>
+  <data name="Contacts_FullName" xml:space="preserve">
+    <value>全名</value>
+  </data>
+  <data name="Contacts_Index_AddNew" xml:space="preserve">
+    <value>添加聯繫人</value>
+  </data>
+  <data name="Contacts_Index_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Contacts_Index_Title" xml:space="preserve">
+    <value>所有聯繫人</value>
+  </data>
+  <data name="Contacts_LastName" xml:space="preserve">
+    <value>姓</value>
+  </data>
+  <data name="Contacts_OverDue" xml:space="preserve">
+    <value>逾期票據</value>
+  </data>
+  <data name="Contacts_OverDueSale" xml:space="preserve">
+    <value>逾期銷售發票</value>
+  </data>
+  <data name="Contacts_PhoneNumber" xml:space="preserve">
+    <value>移動</value>
+  </data>
+  <data name="Contacts_PhysAddress" xml:space="preserve">
+    <value>地址</value>
+  </data>
+  <data name="Contacts_PhysAttention" xml:space="preserve">
+    <value>關注</value>
+  </data>
+  <data name="Contacts_PhysCity" xml:space="preserve">
+    <value>城市</value>
+  </data>
+  <data name="Contacts_PhysCountry" xml:space="preserve">
+    <value>國家</value>
+  </data>
+  <data name="Contacts_PhysState" xml:space="preserve">
+    <value>態</value>
+  </data>
+  <data name="Contacts_PhysZipCode" xml:space="preserve">
+    <value>郵編</value>
+  </data>
+  <data name="Contacts_PostAddress" xml:space="preserve">
+    <value>地址</value>
+  </data>
+  <data name="Contacts_PostAttention" xml:space="preserve">
+    <value>關注</value>
+  </data>
+  <data name="Contacts_PostCity" xml:space="preserve">
+    <value>城市</value>
+  </data>
+  <data name="Contacts_PostCountry" xml:space="preserve">
+    <value>國家</value>
+  </data>
+  <data name="Contacts_PostState" xml:space="preserve">
+    <value>態</value>
+  </data>
+  <data name="Contacts_PostZipCode" xml:space="preserve">
+    <value>郵編</value>
+  </data>
+  <data name="Contacts_PurchasesTax" xml:space="preserve">
+    <value>購置稅</value>
+  </data>
+  <data name="Contacts_SaleInvoice" xml:space="preserve">
+    <value>銷售發票由於</value>
+  </data>
+  <data name="Contacts_SalesTax" xml:space="preserve">
+    <value>營業稅</value>
+  </data>
+  <data name="Contacts_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Contacts_ShortName" xml:space="preserve">
+    <value>簡稱</value>
+  </data>
+  <data name="Contacts_SkyName" xml:space="preserve">
+    <value>Skype用戶名</value>
+  </data>
+  <data name="Contacts_State" xml:space="preserve">
+    <value>態</value>
+  </data>
+  <data name="Contacts_Supplier" xml:space="preserve">
+    <value>提供者</value>
+  </data>
+  <data name="Contacts_Supplier_Title" xml:space="preserve">
+    <value>提供者</value>
+  </data>
+  <data name="Contacts_TaxCode" xml:space="preserve">
+    <value>稅法</value>
+  </data>
+  <data name="Contacts_TaxNumber" xml:space="preserve">
+    <value>稅號</value>
+  </data>
+  <data name="Contacts_TelNum" xml:space="preserve">
+    <value>電話</value>
+  </data>
+  <data name="Contacts_Title" xml:space="preserve">
+    <value>往來</value>
+  </data>
+  <data name="Contacts_Type" xml:space="preserve">
+    <value>類型</value>
+  </data>
+  <data name="Contacts_ZipCode" xml:space="preserve">
+    <value>郵編</value>
+  </data>
+  <data name="Contact_Index_Index" xml:space="preserve">
+    <value>Contacts</value>
+  </data>
+  <data name="Contact_Index_List" xml:space="preserve">
+    <value>List Of Contact</value>
+  </data>
+  <data name="Control_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="Control_Close" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="Control_Control" xml:space="preserve">
+    <value>控制</value>
+  </data>
+  <data name="Control_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Control_Edit" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Control_Feature" xml:space="preserve">
+    <value>編輯</value>
+  </data>
+  <data name="Control_Function" xml:space="preserve">
+    <value>功能</value>
+  </data>
+  <data name="Control_Index" xml:space="preserve">
+    <value>控制</value>
+  </data>
+  <data name="Control_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="Control_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="CreditNote_AllocateCreditBalance" xml:space="preserve">
+    <value>Allocate Credit Balance</value>
+  </data>
+  <data name="CreditNote_Allocate_Balance_AmountDue" xml:space="preserve">
+    <value>Amount Due</value>
+  </data>
+  <data name="CreditNote_Allocate_Balance_Amount_To_Credit" xml:space="preserve">
+    <value>Amount To Credit</value>
+  </data>
+  <data name="CreditNote_Allocate_Balance_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="CreditNote_Allocate_Balance_Invoice" xml:space="preserve">
+    <value>Invoice</value>
+  </data>
+  <data name="CreditNote_Allocate_Balance_Invoiced" xml:space="preserve">
+    <value>Invoiced</value>
+  </data>
+  <data name="CreditNote_Allocate_Balance_On" xml:space="preserve">
+    <value>Allocate balance on</value>
+  </data>
+  <data name="CreditNote_Allocate_Outstanding_Credit_Balance" xml:space="preserve">
+    <value>Outstanding Credit Balance</value>
+  </data>
+  <data name="CreditNote_Allocate_Remain_Credit" xml:space="preserve">
+    <value>Remaining Credit</value>
+  </data>
+  <data name="CreditNote_Allocate_Total_Amount_To_Credit" xml:space="preserve">
+    <value>Total Amount To Credit</value>
+  </data>
+  <data name="Currency_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="Currency_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Currency_Code" xml:space="preserve">
+    <value>碼</value>
+  </data>
+  <data name="Currency_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Currency_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Currency_ForeignExchange" xml:space="preserve">
+    <value>外匯</value>
+  </data>
+  <data name="Currency_HomeChange" xml:space="preserve">
+    <value>主頁更改</value>
+  </data>
+  <data name="Currency_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="Currency_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Currency_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="Currency_Title" xml:space="preserve">
+    <value>貨幣</value>
+  </data>
+  <data name="Employees_AddNew" xml:space="preserve">
+    <value>新增員工</value>
+  </data>
+  <data name="Employees_BADetails" xml:space="preserve">
+    <value>銀行賬戶資料</value>
+  </data>
+  <data name="Employees_BAName" xml:space="preserve">
+    <value>銀行帳戶名稱</value>
+  </data>
+  <data name="Employees_BANum" xml:space="preserve">
+    <value>銀行帳戶號碼</value>
+  </data>
+  <data name="Employees_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Employees_Code" xml:space="preserve">
+    <value>碼</value>
+  </data>
+  <data name="Employees_CompanyID" xml:space="preserve">
+    <value>公司</value>
+  </data>
+  <data name="Employees_CtryName" xml:space="preserve">
+    <value>國家名稱</value>
+  </data>
+  <data name="Employees_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Employees_DirArea" xml:space="preserve">
+    <value>直區</value>
+  </data>
+  <data name="Employees_DirCtry" xml:space="preserve">
+    <value>直接的國家</value>
+  </data>
+  <data name="Employees_DirNb" xml:space="preserve">
+    <value>直接撥號</value>
+  </data>
+  <data name="Employees_Email" xml:space="preserve">
+    <value>電子郵件</value>
+  </data>
+  <data name="Employees_Face" xml:space="preserve">
+    <value>Facebook的</value>
+  </data>
+  <data name="Employees_FaxArea" xml:space="preserve">
+    <value>傳真面積</value>
+  </data>
+  <data name="Employees_FaxCtry" xml:space="preserve">
+    <value>傳真國家</value>
+  </data>
+  <data name="Employees_FaxNb" xml:space="preserve">
+    <value>傳真</value>
+  </data>
+  <data name="Employees_FirstName" xml:space="preserve">
+    <value>名字</value>
+  </data>
+  <data name="Employees_FullName" xml:space="preserve">
+    <value>全名</value>
+  </data>
+  <data name="Employees_Go" xml:space="preserve">
+    <value>谷歌</value>
+  </data>
+  <data name="Employees_Lastname" xml:space="preserve">
+    <value>姓</value>
+  </data>
+  <data name="Employees_Link" xml:space="preserve">
+    <value>LinkedIn</value>
+  </data>
+  <data name="Employees_MobArea" xml:space="preserve">
+    <value>移動領域</value>
+  </data>
+  <data name="Employees_MobCtry" xml:space="preserve">
+    <value>移動國家</value>
+  </data>
+  <data name="Employees_MobNb" xml:space="preserve">
+    <value>手機號碼</value>
+  </data>
+  <data name="Employees_OrdRate" xml:space="preserve">
+    <value>普通價格</value>
+  </data>
+  <data name="Employees_PasWord" xml:space="preserve">
+    <value>密碼</value>
+  </data>
+  <data name="Employees_PayDetail" xml:space="preserve">
+    <value>付款方式</value>
+  </data>
+  <data name="Employees_PhoneNo" xml:space="preserve">
+    <value>電話號碼</value>
+  </data>
+  <data name="Employees_PhysAdd" xml:space="preserve">
+    <value>地址</value>
+  </data>
+  <data name="Employees_PhysAtt" xml:space="preserve">
+    <value>關注</value>
+  </data>
+  <data name="Employees_PhysCity" xml:space="preserve">
+    <value>城市</value>
+  </data>
+  <data name="Employees_PhysCtry" xml:space="preserve">
+    <value>國家</value>
+  </data>
+  <data name="Employees_PhysStt" xml:space="preserve">
+    <value>態</value>
+  </data>
+  <data name="Employees_PhysZip" xml:space="preserve">
+    <value>郵編</value>
+  </data>
+  <data name="Employees_PostAdd" xml:space="preserve">
+    <value>地址</value>
+  </data>
+  <data name="Employees_PostAtt" xml:space="preserve">
+    <value>關注</value>
+  </data>
+  <data name="Employees_PostCity" xml:space="preserve">
+    <value>城市</value>
+  </data>
+  <data name="Employees_PostCtry" xml:space="preserve">
+    <value>國家</value>
+  </data>
+  <data name="Employees_PostStt" xml:space="preserve">
+    <value>態</value>
+  </data>
+  <data name="Employees_PostZip" xml:space="preserve">
+    <value>郵編</value>
+  </data>
+  <data name="Employees_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Employees_TaxNb" xml:space="preserve">
+    <value>稅號</value>
+  </data>
+  <data name="Employees_Tel_AreaNum" xml:space="preserve">
+    <value>區號碼</value>
+  </data>
+  <data name="Employees_Tel_CtryNum" xml:space="preserve">
+    <value>國家號碼</value>
+  </data>
+  <data name="Employees_Tel_Num" xml:space="preserve">
+    <value>電話</value>
+  </data>
+  <data name="Employees_Twi" xml:space="preserve">
+    <value>Twitter</value>
+  </data>
+  <data name="Expense_Claims_Amount" xml:space="preserve">
+    <value>量</value>
+  </data>
+  <data name="Expense_Claims_Date_Enter" xml:space="preserve">
+    <value>日期輸入</value>
+  </data>
+  <data name="Expense_Claims_Items" xml:space="preserve">
+    <value>項目</value>
+  </data>
+  <data name="Expense_Claims_List_Approved" xml:space="preserve">
+    <value>批准</value>
+  </data>
+  <data name="Expense_Claims_List_Paid" xml:space="preserve">
+    <value>支付</value>
+  </data>
+  <data name="Expense_Claims_List_Pending" xml:space="preserve">
+    <value>有待</value>
+  </data>
+  <data name="Expense_Claims_Payment_Due" xml:space="preserve">
+    <value>到期付款</value>
+  </data>
+  <data name="Expense_Claims_Receipt_Date" xml:space="preserve">
+    <value>接收日期</value>
+  </data>
+  <data name="Expense_Claims_Receipt_From" xml:space="preserve">
+    <value>從收據</value>
+  </data>
+  <data name="Expense_Claims_Reference" xml:space="preserve">
+    <value>參考</value>
+  </data>
+  <data name="Expense_Claims_Reporting_Date" xml:space="preserve">
+    <value>報告日期</value>
+  </data>
+  <data name="Expense_Claims_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="Expense_Claims_Submit_Date" xml:space="preserve">
+    <value>提交日期</value>
+  </data>
+  <data name="Expensive_Claim_Add_Account" xml:space="preserve">
+    <value>帳戶</value>
+  </data>
+  <data name="Expensive_Claim_Add_Amount_Are" xml:space="preserve">
+    <value>行項目金額</value>
+  </data>
+  <data name="Expensive_Claim_Add_Amount_THB" xml:space="preserve">
+    <value>量泰銖</value>
+  </data>
+  <data name="Expensive_Claim_Add_Date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="Expensive_Claim_Add_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Expensive_Claim_Add_Include_Tax" xml:space="preserve">
+    <value>包括稅</value>
+  </data>
+  <data name="Expensive_Claim_Add_Quantity" xml:space="preserve">
+    <value>數量</value>
+  </data>
+  <data name="Expensive_Claim_Add_Receipt_from" xml:space="preserve">
+    <value>從收據</value>
+  </data>
+  <data name="Expensive_Claim_Add_Tax_Exclusive" xml:space="preserve">
+    <value>不含稅</value>
+  </data>
+  <data name="Expensive_Claim_Add_Tax_Include" xml:space="preserve">
+    <value>含稅</value>
+  </data>
+  <data name="Expensive_Claim_Add_Tax_rate" xml:space="preserve">
+    <value>稅率</value>
+  </data>
+  <data name="Expensive_Claim_Add_Unit_Price" xml:space="preserve">
+    <value>單價</value>
+  </data>
+  <data name="Expensive_Claim_Edit_Payment_Due" xml:space="preserve">
+    <value>到期付款</value>
+  </data>
+  <data name="Expensive_Claim_List_Add_Receipt" xml:space="preserve">
+    <value>添加收據</value>
+  </data>
+  <data name="Expensive_Claim_List_Current_Claim" xml:space="preserve">
+    <value>目前索賠</value>
+  </data>
+  <data name="Expensive_Claim_List_Edit_Receipt" xml:space="preserve">
+    <value>編輯</value>
+  </data>
+  <data name="Expensive_Claim_List_Expensive_Claim" xml:space="preserve">
+    <value>報銷</value>
+  </data>
+  <data name="Expensive_Claim_List_Expensive_Claim_Submit" xml:space="preserve">
+    <value>報銷提交</value>
+  </data>
+  <data name="Expensive_Claim_List_Previous_Claim" xml:space="preserve">
+    <value>上一頁索賠</value>
+  </data>
+  <data name="Expensive_Claim_List_Reference" xml:space="preserve">
+    <value>參考</value>
+  </data>
+  <data name="FixedAsset_Account" xml:space="preserve">
+    <value>帳戶</value>
+  </data>
+  <data name="FixedAsset_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="FixedAsset_AssetType" xml:space="preserve">
+    <value>資產類型</value>
+  </data>
+  <data name="FixedAsset_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="FixedAsset_Create" xml:space="preserve">
+    <value>註冊</value>
+  </data>
+  <data name="FixedAsset_CreatedDate" xml:space="preserve">
+    <value>創建日期</value>
+  </data>
+  <data name="FixedAsset_CreatedUserID" xml:space="preserve">
+    <value>創建用戶</value>
+  </data>
+  <data name="FixedAsset_Create_Title" xml:space="preserve">
+    <value>新資產</value>
+  </data>
+  <data name="FixedAsset_Declining" xml:space="preserve">
+    <value>餘額遞減</value>
+  </data>
+  <data name="FixedAsset_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="FixedAsset_Depreciation" xml:space="preserve">
+    <value>折舊</value>
+  </data>
+  <data name="FixedAsset_DepreciationAccount" xml:space="preserve">
+    <value>折舊帳戶</value>
+  </data>
+  <data name="FixedAsset_DepreciationMethod" xml:space="preserve">
+    <value>折舊方法</value>
+  </data>
+  <data name="FixedAsset_DepreciationRate" xml:space="preserve">
+    <value>折舊率</value>
+  </data>
+  <data name="FixedAsset_Depreciation_Title" xml:space="preserve">
+    <value>折舊</value>
+  </data>
+  <data name="FixedAsset_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="FixedAsset_ItemCode" xml:space="preserve">
+    <value>資產編號</value>
+  </data>
+  <data name="FixedAsset_ItemName" xml:space="preserve">
+    <value>項目名稱</value>
+  </data>
+  <data name="FixedAsset_PurchaseDate" xml:space="preserve">
+    <value>購買日期</value>
+  </data>
+  <data name="FixedAsset_PurchasePrice" xml:space="preserve">
+    <value>購買價</value>
+  </data>
+  <data name="FixedAsset_Register" xml:space="preserve">
+    <value>註冊</value>
+  </data>
+  <data name="FixedAsset_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="FixedAsset_Sold" xml:space="preserve">
+    <value>出售/處置</value>
+  </data>
+  <data name="FixedAsset_StartDate" xml:space="preserve">
+    <value>開始日期</value>
+  </data>
+  <data name="FixedAsset_Straight" xml:space="preserve">
+    <value>直線</value>
+  </data>
+  <data name="FixedAsset_Title" xml:space="preserve">
+    <value>固定資產</value>
+  </data>
+  <data name="FixedAsset_Update" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="Function_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="Function_Close" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="Function_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Function_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Function_Edit" xml:space="preserve">
+    <value>編輯</value>
+  </data>
+  <data name="Function_Feature" xml:space="preserve">
+    <value>特點</value>
+  </data>
+  <data name="Function_IndexCreate" xml:space="preserve">
+    <value>功能</value>
+  </data>
+  <data name="Function_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="Function_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Good_Create_Account" xml:space="preserve">
+    <value>帳戶</value>
+  </data>
+  <data name="Good_Create_Active" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="Good_Create_Attachment" xml:space="preserve">
+    <value>圖像</value>
+  </data>
+  <data name="Good_Create_Category" xml:space="preserve">
+    <value>類別</value>
+  </data>
+  <data name="Good_Create_Close" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Good_Create_Code" xml:space="preserve">
+    <value>碼</value>
+  </data>
+  <data name="Good_Create_Contact" xml:space="preserve">
+    <value>聯繫</value>
+  </data>
+  <data name="Good_Create_Create" xml:space="preserve">
+    <value>加</value>
+  </data>
+  <data name="Good_Create_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Good_Create_DomesticPrice" xml:space="preserve">
+    <value>價格</value>
+  </data>
+  <data name="Good_Create_InputPrice" xml:space="preserve">
+    <value>購買價格</value>
+  </data>
+  <data name="Good_Create_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="Good_Create_OutputPrice" xml:space="preserve">
+    <value>銷售價格</value>
+  </data>
+  <data name="Good_Create_ParentID" xml:space="preserve">
+    <value>父ID</value>
+  </data>
+  <data name="Good_Create_PeriodDate" xml:space="preserve">
+    <value>期日期</value>
+  </data>
+  <data name="Good_Create_StartDate" xml:space="preserve">
+    <value>開始日期</value>
+  </data>
+  <data name="Good_Create_TaxRate" xml:space="preserve">
+    <value>稅率</value>
+  </data>
+  <data name="Good_Create_Title" xml:space="preserve">
+    <value>新增商品</value>
+  </data>
+  <data name="Good_Create_Type" xml:space="preserve">
+    <value>類型</value>
+  </data>
+  <data name="Good_Create_UnitPrice" xml:space="preserve">
+    <value>單價</value>
+  </data>
+  <data name="Good_Create_UOM" xml:space="preserve">
+    <value>計量單位</value>
+  </data>
+  <data name="Good_Create_Update" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Good_Index_Archive" xml:space="preserve">
+    <value>存檔</value>
+  </data>
+  <data name="Good_Index_Categories" xml:space="preserve">
+    <value>分類</value>
+  </data>
+  <data name="Good_Index_Create" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="Good_Index_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Good_Index_Restore" xml:space="preserve">
+    <value>恢復</value>
+  </data>
+  <data name="Good_Index_Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="Good_Index_Title" xml:space="preserve">
+    <value>存貨</value>
+  </data>
+  <data name="HeaderPartialLogoff" xml:space="preserve">
+    <value>Log off</value>
+  </data>
+  <data name="HeaderPartialLogon" xml:space="preserve">
+    <value>Log on</value>
+  </data>
+  <data name="HeaderPartialWelcome" xml:space="preserve">
+    <value>Welcome</value>
+  </data>
+  <data name="HeaderTitle" xml:space="preserve">
+    <value>MVC Basic Site</value>
+  </data>
+  <data name="HomeSubText" xml:space="preserve">
+    <value>To learn more about ASP.NET MVC visit http://asp.net/mvc. The page features videos, tutorials, and samples to help you get the most from ASP.NET MVC. If you have any questions about ASP.NET MVC visit our forums.</value>
+  </data>
+  <data name="HomeTitle" xml:space="preserve">
+    <value>Home Page. Modify this template to kick-start your ASP.NET MVC application.</value>
+  </data>
+  <data name="IncomingShipment_Details_Close" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="IncomingShipment_Details_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="IncomingShipment_Details_DISC" xml:space="preserve">
+    <value>折扣％</value>
+  </data>
+  <data name="IncomingShipment_Details_OstQty" xml:space="preserve">
+    <value>OST數量</value>
+  </data>
+  <data name="IncomingShipment_Details_Qty" xml:space="preserve">
+    <value>數量</value>
+  </data>
+  <data name="IncomingShipment_Details_QtyReq" xml:space="preserve">
+    <value>數量要求</value>
+  </data>
+  <data name="IncomingShipment_Details_SKU" xml:space="preserve">
+    <value>SKU</value>
+  </data>
+  <data name="IncomingShipment_Details_Submit" xml:space="preserve">
+    <value>提交</value>
+  </data>
+  <data name="IncomingShipment_Details_SubTotal" xml:space="preserve">
+    <value>小計</value>
+  </data>
+  <data name="IncomingShipment_Details_UnitPrice" xml:space="preserve">
+    <value>單價</value>
+  </data>
+  <data name="IncomingShipment_Details_UOM" xml:space="preserve">
+    <value>計量單位</value>
+  </data>
+  <data name="IncomingShipment_Index_Currency" xml:space="preserve">
+    <value>貨幣</value>
+  </data>
+  <data name="IncomingShipment_Index_Date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="IncomingShipment_Index_Details" xml:space="preserve">
+    <value>傳入寄件明細</value>
+  </data>
+  <data name="IncomingShipment_Index_Draft" xml:space="preserve">
+    <value>草案</value>
+  </data>
+  <data name="IncomingShipment_Index_From" xml:space="preserve">
+    <value>從</value>
+  </data>
+  <data name="IncomingShipment_Index_History" xml:space="preserve">
+    <value>歷史</value>
+  </data>
+  <data name="IncomingShipment_Index_List" xml:space="preserve">
+    <value>來電出貨名單</value>
+  </data>
+  <data name="IncomingShipment_Index_Nodata" xml:space="preserve">
+    <value>無可用數據</value>
+  </data>
+  <data name="IncomingShipment_Index_PlaceHolder" xml:space="preserve">
+    <value>輸入訂單號提單號</value>
+  </data>
+  <data name="IncomingShipment_Index_PoNo" xml:space="preserve">
+    <value>採購訂單編號</value>
+  </data>
+  <data name="IncomingShipment_Index_ReceivedDate" xml:space="preserve">
+    <value>收稿日期</value>
+  </data>
+  <data name="IncomingShipment_Index_Reference" xml:space="preserve">
+    <value>參考</value>
+  </data>
+  <data name="IncomingShipment_Index_Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="IncomingShipment_Index_ShipmentNo" xml:space="preserve">
+    <value>提單號碼</value>
+  </data>
+  <data name="IncomingShipment_Index_SourceNo" xml:space="preserve">
+    <value>源數</value>
+  </data>
+  <data name="IncomingShipment_Index_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="IncomingShipment_Index_Type" xml:space="preserve">
+    <value>類型</value>
+  </data>
+  <data name="IncomingShipment_Inventory" xml:space="preserve">
+    <value>Inventory</value>
+  </data>
+  <data name="IncomingShipment_Stock" xml:space="preserve">
+    <value>Stock</value>
+  </data>
+  <data name="Incom_View_CreateBy" xml:space="preserve">
+    <value>通過創建</value>
+  </data>
+  <data name="Incom_View_ReceivedDate" xml:space="preserve">
+    <value>接收日期</value>
+  </data>
+  <data name="Incom_View_StockInDetails" xml:space="preserve">
+    <value>庫存在詳細信息</value>
+  </data>
+  <data name="Incom_View_ToStock" xml:space="preserve">
+    <value>庫存</value>
+  </data>
+  <data name="IndexTitle" xml:space="preserve">
+    <value>歡迎！</value>
+  </data>
+  <data name="Invoice_AnyDate" xml:space="preserve">
+    <value>Any Date</value>
+  </data>
+  <data name="Invoice_EndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="Invoice_StartDate" xml:space="preserve">
+    <value>Start Date</value>
+  </data>
+  <data name="LogOnErrorMessage" xml:space="preserve">
+    <value>提供的用戶名或密碼不正確。</value>
+  </data>
+  <data name="LogOnLegend" xml:space="preserve">
+    <value>帳戶信息</value>
+  </data>
+  <data name="LogOnLoginButton" xml:space="preserve">
+    <value>登錄</value>
+  </data>
+  <data name="LogOnMessage" xml:space="preserve">
+    <value>請輸入您的用戶名和密碼，或者您也可以</value>
+  </data>
+  <data name="LogOnMessage2" xml:space="preserve">
+    <value>如果你沒有一個帳戶。</value>
+  </data>
+  <data name="LogOnModelPassword" xml:space="preserve">
+    <value>密碼</value>
+  </data>
+  <data name="LogOnModelUsername" xml:space="preserve">
+    <value>用戶名</value>
+  </data>
+  <data name="LogOnRegisterLink" xml:space="preserve">
+    <value>註冊</value>
+  </data>
+  <data name="LogOnTitle" xml:space="preserve">
+    <value>登錄</value>
+  </data>
+  <data name="LogOnValidationSummary" xml:space="preserve">
+    <value>登陸失敗。請修正錯誤，然後再試一次。</value>
+  </data>
+  <data name="MachineHistory_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="MachineHistory_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="MachineHistory_Cost" xml:space="preserve">
+    <value>成本</value>
+  </data>
+  <data name="MachineHistory_CurrencyID" xml:space="preserve">
+    <value>貨幣編號</value>
+  </data>
+  <data name="MachineHistory_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="MachineHistory_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="MachineHistory_MachineID" xml:space="preserve">
+    <value>機器ID</value>
+  </data>
+  <data name="MachineHistory_MaxDailyRuntime" xml:space="preserve">
+    <value>最大每日運行時間</value>
+  </data>
+  <data name="MachineHistory_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="MachineHistory_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="MachineHistory_UpdateTime" xml:space="preserve">
+    <value>更新時間</value>
+  </data>
+  <data name="MachineHistory_WorkCenterID" xml:space="preserve">
+    <value>工作中心的ID</value>
+  </data>
+  <data name="Machines_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="Machines_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Machines_Code" xml:space="preserve">
+    <value>機器碼</value>
+  </data>
+  <data name="Machines_Cost" xml:space="preserve">
+    <value>費用為每分鐘</value>
+  </data>
+  <data name="Machines_DefaultRt" xml:space="preserve">
+    <value>默認運行時間</value>
+  </data>
+  <data name="Machines_DefaultSt" xml:space="preserve">
+    <value>默認設置時間</value>
+  </data>
+  <data name="Machines_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Machines_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Machines_Free" xml:space="preserve">
+    <value>可用的</value>
+  </data>
+  <data name="Machines_InProcess" xml:space="preserve">
+    <value>在過程</value>
+  </data>
+  <data name="Machines_Maintenance" xml:space="preserve">
+    <value>保養</value>
+  </data>
+  <data name="Machines_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="Machines_Repair" xml:space="preserve">
+    <value>修復</value>
+  </data>
+  <data name="Machines_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Machines_Status" xml:space="preserve">
+    <value>機器狀態</value>
+  </data>
+  <data name="Machines_Title" xml:space="preserve">
+    <value>機</value>
+  </data>
+  <data name="Machines_WCenterID" xml:space="preserve">
+    <value>工作中心代碼</value>
+  </data>
+  <data name="MenuAbout" xml:space="preserve">
+    <value>關於我們</value>
+  </data>
+  <data name="MenuHome" xml:space="preserve">
+    <value>主頁</value>
+  </data>
+  <data name="Note_Create_Changes" xml:space="preserve">
+    <value>變化</value>
+  </data>
+  <data name="Note_Create_Date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="Note_Create_Details" xml:space="preserve">
+    <value>詳細信息</value>
+  </data>
+  <data name="Note_Create_User" xml:space="preserve">
+    <value>用戶</value>
+  </data>
+  <data name="OutcomingShipment_Inventory" xml:space="preserve">
+    <value>草案</value>
+  </data>
+  <data name="OutcomingShipment_List" xml:space="preserve">
+    <value>Outcoming Shipments</value>
+  </data>
+  <data name="OutcomingShipment_Stock" xml:space="preserve">
+    <value>Stock</value>
+  </data>
+  <data name="OutgoingShipment_Index_List" xml:space="preserve">
+    <value>即將離任的出貨清單</value>
+  </data>
+  <data name="OutgoingShipment_Inventory" xml:space="preserve">
+    <value>Inventory</value>
+  </data>
+  <data name="OutgoingShipment_List" xml:space="preserve">
+    <value>Outgoing Shipments</value>
+  </data>
+  <data name="OutgoingShipment_Stock" xml:space="preserve">
+    <value>Stock</value>
+  </data>
+  <data name="OutGoing_Index_Draft" xml:space="preserve">
+    <value>Draft</value>
+  </data>
+  <data name="OutGoing_Index_History" xml:space="preserve">
+    <value>歷史</value>
+  </data>
+  <data name="OutGoing_Index_ReceivedStock" xml:space="preserve">
+    <value>收到庫存</value>
+  </data>
+  <data name="OutGoing_Index_SODate" xml:space="preserve">
+    <value>銷售訂單日期</value>
+  </data>
+  <data name="OutGoing_Index_SourceNo" xml:space="preserve">
+    <value>源數</value>
+  </data>
+  <data name="OutGoing_Index_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="OutGoing_Index_Type" xml:space="preserve">
+    <value>類型</value>
+  </data>
+  <data name="Outgoing_ShipmentDetail" xml:space="preserve">
+    <value>即將離任的出貨明細</value>
+  </data>
+  <data name="OutGoing_View_ContactPerson" xml:space="preserve">
+    <value>聯繫人</value>
+  </data>
+  <data name="OutGoing_View_From" xml:space="preserve">
+    <value>從</value>
+  </data>
+  <data name="OutGoing_View_PODate" xml:space="preserve">
+    <value>採購訂單日期</value>
+  </data>
+  <data name="OutGoing_View_PurchaseOrderNo" xml:space="preserve">
+    <value>採購訂單號</value>
+  </data>
+  <data name="OutGoing_View_ShipmentNo" xml:space="preserve">
+    <value>出貨無</value>
+  </data>
+  <data name="OutGoing_WorkOrder_CreateBy" xml:space="preserve">
+    <value>通過創建</value>
+  </data>
+  <data name="OutGoing_WorkOrder_CreateDate" xml:space="preserve">
+    <value>創建日期</value>
+  </data>
+  <data name="OutGoing_WorkOrder_Delivery" xml:space="preserve">
+    <value>配送信息</value>
+  </data>
+  <data name="OutGoing_WorkOrder_DeliveryDate" xml:space="preserve">
+    <value>交貨日期</value>
+  </data>
+  <data name="OutGoing_WorkOrder_Item" xml:space="preserve">
+    <value>產品詳細信息</value>
+  </data>
+  <data name="OutGoing_WorkOrder_OrderDate" xml:space="preserve">
+    <value>訂購日期</value>
+  </data>
+  <data name="OutGoing_WorkOrder_ProductTitle" xml:space="preserve">
+    <value>產品詳細信息</value>
+  </data>
+  <data name="OutGoing_WorkOrder_QtyReq" xml:space="preserve">
+    <value>數量要求</value>
+  </data>
+  <data name="OutGoing_WorkOrder_SKU" xml:space="preserve">
+    <value>SKU</value>
+  </data>
+  <data name="OutGoing_WorkOrder_Stock" xml:space="preserve">
+    <value>庫存</value>
+  </data>
+  <data name="OutGoing_WorkOrder_UOM" xml:space="preserve">
+    <value>計量單位</value>
+  </data>
+  <data name="OutGoing_WorkOrder_WorkOrderNo" xml:space="preserve">
+    <value>工作訂單號</value>
+  </data>
+  <data name="PaidCreditNote_View_Title" xml:space="preserve">
+    <value>Credit Note</value>
+  </data>
+  <data name="PaidPurchase_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="PaidPurchase_View_Title" xml:space="preserve">
+    <value>Bill</value>
+  </data>
+  <data name="PayItem_AccountID" xml:space="preserve">
+    <value>帳戶ID</value>
+  </data>
+  <data name="PayItem_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="PayItem_Close" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="PayItem_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="PayItem_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="PayItem_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="PayItem_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="PayItem_Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="PayItem_ShowOnSlip" xml:space="preserve">
+    <value>顯示在滑</value>
+  </data>
+  <data name="PayItem_Title" xml:space="preserve">
+    <value>支付項目</value>
+  </data>
+  <data name="PayItem_Type" xml:space="preserve">
+    <value>類型</value>
+  </data>
+  <data name="Payment_Account" xml:space="preserve">
+    <value>新增員工</value>
+  </data>
+  <data name="Payment_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Payment_Discount" xml:space="preserve">
+    <value>Discount</value>
+  </data>
+  <data name="Payment_DueDate" xml:space="preserve">
+    <value>Due Date</value>
+  </data>
+  <data name="Payment_Invoice" xml:space="preserve">
+    <value>PO #</value>
+  </data>
+  <data name="Payment_ItemCode" xml:space="preserve">
+    <value>Item Code</value>
+  </data>
+  <data name="Payment_Price" xml:space="preserve">
+    <value>Price</value>
+  </data>
+  <data name="Payment_Quantity" xml:space="preserve">
+    <value>數量</value>
+  </data>
+  <data name="Payment_Reference" xml:space="preserve">
+    <value>Reference</value>
+  </data>
+  <data name="Payment_Supplier" xml:space="preserve">
+    <value>Supplier</value>
+  </data>
+  <data name="Payment_TaxRate" xml:space="preserve">
+    <value>Tax Rate</value>
+  </data>
+  <data name="PayRun_AddEmployee" xml:space="preserve">
+    <value>Add Employee</value>
+  </data>
+  <data name="PayRun_AddNew" xml:space="preserve">
+    <value>New Pay Run</value>
+  </data>
+  <data name="PayRun_AddNewLine" xml:space="preserve">
+    <value>新增線</value>
+  </data>
+  <data name="PayRun_AddPayment" xml:space="preserve">
+    <value>添加付款</value>
+  </data>
+  <data name="PayRun_Amount" xml:space="preserve">
+    <value>量</value>
+  </data>
+  <data name="PayRun_AmountPaid" xml:space="preserve">
+    <value>已支付的款項</value>
+  </data>
+  <data name="PayRun_AmoutDue" xml:space="preserve">
+    <value>大寫金額由於</value>
+  </data>
+  <data name="PayRun_APaid" xml:space="preserve">
+    <value>已支付的款項</value>
+  </data>
+  <data name="PayRun_Awaiting" xml:space="preserve">
+    <value>等待付款</value>
+  </data>
+  <data name="PayRun_AwaitingPayment" xml:space="preserve">
+    <value>等待付款</value>
+  </data>
+  <data name="PayRun_Back" xml:space="preserve">
+    <value>後面</value>
+  </data>
+  <data name="PayRun_BankAccount" xml:space="preserve">
+    <value>銀行帳戶</value>
+  </data>
+  <data name="PayRun_BatchPay" xml:space="preserve">
+    <value>批量支付僱員</value>
+  </data>
+  <data name="PayRun_Bill" xml:space="preserve">
+    <value>法案</value>
+  </data>
+  <data name="PayRun_Contact" xml:space="preserve">
+    <value>聯繫</value>
+  </data>
+  <data name="PayRun_Date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="PayRun_DatePaid" xml:space="preserve">
+    <value>已支付的日期</value>
+  </data>
+  <data name="PayRun_Des" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="PayRun_Details" xml:space="preserve">
+    <value>詳細信息</value>
+  </data>
+  <data name="PayRun_Detail_Allowances" xml:space="preserve">
+    <value>津貼</value>
+  </data>
+  <data name="PayRun_Detail_Deductions" xml:space="preserve">
+    <value>扣除</value>
+  </data>
+  <data name="PayRun_Detail_GrossWages" xml:space="preserve">
+    <value>工資總額</value>
+  </data>
+  <data name="PayRun_Detail_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="PayRun_Detail_NetPay" xml:space="preserve">
+    <value>淨收費</value>
+  </data>
+  <data name="PayRun_Detail_NonTaxableAllowances" xml:space="preserve">
+    <value>非課稅津貼</value>
+  </data>
+  <data name="PayRun_Detail_PostTaxDeductions" xml:space="preserve">
+    <value>稅後扣除</value>
+  </data>
+  <data name="PayRun_Detail_Taxes" xml:space="preserve">
+    <value>稅</value>
+  </data>
+  <data name="PayRun_Due" xml:space="preserve">
+    <value>應有</value>
+  </data>
+  <data name="PayRun_DueDate" xml:space="preserve">
+    <value>到期日</value>
+  </data>
+  <data name="PayRun_Earnings" xml:space="preserve">
+    <value>收益</value>
+  </data>
+  <data name="PayRun_Emp" xml:space="preserve">
+    <value>Employee</value>
+  </data>
+  <data name="PayRun_EmployerContributions" xml:space="preserve">
+    <value>雇主供款</value>
+  </data>
+  <data name="PayRun_EnterEmployee" xml:space="preserve">
+    <value>輸入員工支付</value>
+  </data>
+  <data name="PayRun_Frequency" xml:space="preserve">
+    <value>收費頻率</value>
+  </data>
+  <data name="PayRun_From" xml:space="preserve">
+    <value>從</value>
+  </data>
+  <data name="PayRun_Index" xml:space="preserve">
+    <value>交運行</value>
+  </data>
+  <data name="PayRun_IndexList" xml:space="preserve">
+    <value>收費運行列表</value>
+  </data>
+  <data name="PayRun_IndexTitle" xml:space="preserve">
+    <value>所涵蓋的工資跑</value>
+  </data>
+  <data name="PayRun_Index_Approved" xml:space="preserve">
+    <value>批准</value>
+  </data>
+  <data name="PayRun_Index_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="PayRun_Index_Draft" xml:space="preserve">
+    <value>草案</value>
+  </data>
+  <data name="PayRun_Index_Employee" xml:space="preserve">
+    <value>Employees</value>
+  </data>
+  <data name="PayRun_Index_EmployeePayment" xml:space="preserve">
+    <value>僱員支付</value>
+  </data>
+  <data name="PayRun_Index_Manager" xml:space="preserve">
+    <value>經理付款項目</value>
+  </data>
+  <data name="PayRun_Index_New" xml:space="preserve">
+    <value>新的收費運行</value>
+  </data>
+  <data name="PayRun_Index_OrtherPayment" xml:space="preserve">
+    <value>繁於其付款</value>
+  </data>
+  <data name="PayRun_Index_PayDate" xml:space="preserve">
+    <value>支付日期</value>
+  </data>
+  <data name="PayRun_Index_PayPeriod" xml:space="preserve">
+    <value>支付期限</value>
+  </data>
+  <data name="PayRun_Index_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="PayRun_Index_Total" xml:space="preserve">
+    <value>總</value>
+  </data>
+  <data name="PayRun_Index_Voided" xml:space="preserve">
+    <value>作廢</value>
+  </data>
+  <data name="PayRun_Item" xml:space="preserve">
+    <value>項目</value>
+  </data>
+  <data name="PayRun_Items" xml:space="preserve">
+    <value>項目</value>
+  </data>
+  <data name="PayRun_Less" xml:space="preserve">
+    <value>少</value>
+  </data>
+  <data name="PayRun_LessDeduction" xml:space="preserve">
+    <value>扣減</value>
+  </data>
+  <data name="PayRun_LessPosttaxDeductions" xml:space="preserve">
+    <value>減稅後扣除</value>
+  </data>
+  <data name="PayRun_MakeAPayment" xml:space="preserve">
+    <value>進行付款</value>
+  </data>
+  <data name="PayRun_NetPay" xml:space="preserve">
+    <value>淨工資</value>
+  </data>
+  <data name="PayRun_Next" xml:space="preserve">
+    <value>下一個</value>
+  </data>
+  <data name="PayRun_NumberEmployee" xml:space="preserve">
+    <value>薪酬員工跑</value>
+  </data>
+  <data name="PayRun_Paid" xml:space="preserve">
+    <value>支付</value>
+  </data>
+  <data name="PayRun_PaidFrom" xml:space="preserve">
+    <value>從支付</value>
+  </data>
+  <data name="PayRun_PayCal" xml:space="preserve">
+    <value>支付計算</value>
+  </data>
+  <data name="PayRun_PayItem" xml:space="preserve">
+    <value>支付項目</value>
+  </data>
+  <data name="PayRun_Payment" xml:space="preserve">
+    <value>付款</value>
+  </data>
+  <data name="PayRun_PaymentDate" xml:space="preserve">
+    <value>付款日期</value>
+  </data>
+  <data name="PayRun_PaymentVND" xml:space="preserve">
+    <value>付款</value>
+  </data>
+  <data name="PayRun_PaySlipFor" xml:space="preserve">
+    <value>對於工資單</value>
+  </data>
+  <data name="PayRun_PaySlipNote" xml:space="preserve">
+    <value>工資單票據（可選）</value>
+  </data>
+  <data name="PayRun_PaySlipNoteTitle" xml:space="preserve">
+    <value>此處輸入的任何票據將出現在每一位員工的工資單</value>
+  </data>
+  <data name="PayRun_Payslips" xml:space="preserve">
+    <value>對於工資單</value>
+  </data>
+  <data name="PayRun_PlusAllowances" xml:space="preserve">
+    <value>加津貼</value>
+  </data>
+  <data name="PayRun_PlusNontaxableAllowances" xml:space="preserve">
+    <value>加上非課稅津貼</value>
+  </data>
+  <data name="PayRun_Quanlity" xml:space="preserve">
+    <value>數量</value>
+  </data>
+  <data name="PayRun_Rate" xml:space="preserve">
+    <value>率</value>
+  </data>
+  <data name="PayRun_Ref" xml:space="preserve">
+    <value>參考</value>
+  </data>
+  <data name="PayRun_Reference" xml:space="preserve">
+    <value>參考</value>
+  </data>
+  <data name="PayRun_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="PayRun_SentPaySlip" xml:space="preserve">
+    <value>發送工資單</value>
+  </data>
+  <data name="PayRun_ShowTaxes" xml:space="preserve">
+    <value>顯示工資單上員工的稅號</value>
+  </data>
+  <data name="PayRun_Statement" xml:space="preserve">
+    <value>詳細信息出現在您的銀行對帳單</value>
+  </data>
+  <data name="PayRun_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="PayRun_SubTotal" xml:space="preserve">
+    <value>小計</value>
+  </data>
+  <data name="PayRun_Summary" xml:space="preserve">
+    <value>總結</value>
+  </data>
+  <data name="PayRun_TakeHomPay" xml:space="preserve">
+    <value>拿回家的薪水</value>
+  </data>
+  <data name="PayRun_Taxes" xml:space="preserve">
+    <value>稅</value>
+  </data>
+  <data name="PayRun_TaxesTitle" xml:space="preserve">
+    <value>Show employee's tax number on payslips</value>
+  </data>
+  <data name="PayRun_To" xml:space="preserve">
+    <value>至</value>
+  </data>
+  <data name="PayRun_TotalPayable" xml:space="preserve">
+    <value>應付帳款總額</value>
+  </data>
+  <data name="PayRun_ViewSummary" xml:space="preserve">
+    <value>查看支付運行報告摘要</value>
+  </data>
+  <data name="PayRun_Void" xml:space="preserve">
+    <value>空虛</value>
+  </data>
+  <data name="PayRun_Wages" xml:space="preserve">
+    <value>工資</value>
+  </data>
+  <data name="ProductionMonitors_Create_Approve" xml:space="preserve">
+    <value>批准</value>
+  </data>
+  <data name="ProductionMonitors_Create_Back" xml:space="preserve">
+    <value>後面</value>
+  </data>
+  <data name="ProductionMonitors_Create_ImplementDate" xml:space="preserve">
+    <value>實施日期</value>
+  </data>
+  <data name="ProductionMonitors_Create_MachineName" xml:space="preserve">
+    <value>機器名稱</value>
+  </data>
+  <data name="ProductionMonitors_Create_MPSNo" xml:space="preserve">
+    <value>MPS號碼</value>
+  </data>
+  <data name="ProductionMonitors_Create_ProcessTime" xml:space="preserve">
+    <value>處理時間</value>
+  </data>
+  <data name="ProductionMonitors_Create_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="ProductionMonitors_Create_ScheduleEndTime" xml:space="preserve">
+    <value>附表結束時間</value>
+  </data>
+  <data name="ProductionMonitors_Create_ScheduleStartTime" xml:space="preserve">
+    <value>附表開始時間</value>
+  </data>
+  <data name="ProductionMonitors_Create_Title" xml:space="preserve">
+    <value>生產監控</value>
+  </data>
+  <data name="ProductionMonitors_Create_TitleChildren" xml:space="preserve">
+    <value>新機容量規劃</value>
+  </data>
+  <data name="ProductionMonitors_Create_WorkCenter" xml:space="preserve">
+    <value>工作中心</value>
+  </data>
+  <data name="ProductionMonitors_Create_WorkOrderNo" xml:space="preserve">
+    <value>工作單號</value>
+  </data>
+  <data name="ProductionMonitors_Index_Action" xml:space="preserve">
+    <value>行動</value>
+  </data>
+  <data name="ProductionMonitors_Index_Add" xml:space="preserve">
+    <value>新增時間表</value>
+  </data>
+  <data name="ProductionMonitors_Index_Completed" xml:space="preserve">
+    <value>已完成</value>
+  </data>
+  <data name="ProductionMonitors_Index_Draft" xml:space="preserve">
+    <value>草案</value>
+  </data>
+  <data name="ProductionMonitors_Index_MachineNo" xml:space="preserve">
+    <value>機號碼</value>
+  </data>
+  <data name="ProductionMonitors_Index_Processing" xml:space="preserve">
+    <value>處理</value>
+  </data>
+  <data name="ProductionMonitors_Index_Return" xml:space="preserve">
+    <value>回歸</value>
+  </data>
+  <data name="ProductionMonitors_Index_SetupTime" xml:space="preserve">
+    <value>建立時間</value>
+  </data>
+  <data name="ProductionMonitors_Return_Close" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="ProductionMonitors_Return_Create" xml:space="preserve">
+    <value>創建返回</value>
+  </data>
+  <data name="ProductionMonitors_Return_GoodDetails" xml:space="preserve">
+    <value>良好的細節</value>
+  </data>
+  <data name="ProductionMonitors_Return_GoodName" xml:space="preserve">
+    <value>好名字</value>
+  </data>
+  <data name="ProductionMonitors_Return_MaterialName" xml:space="preserve">
+    <value>材料明細</value>
+  </data>
+  <data name="ProductionMonitors_Return_OrderQty" xml:space="preserve">
+    <value>訂購數量</value>
+  </data>
+  <data name="ProductionMonitors_Return_ReturnQty" xml:space="preserve">
+    <value>退貨數量</value>
+  </data>
+  <data name="ProductionMonitors_Return_StockName" xml:space="preserve">
+    <value>庫存名稱</value>
+  </data>
+  <data name="ProductionMonitors_Return_UsedQty" xml:space="preserve">
+    <value>二手產品數量</value>
+  </data>
+  <data name="ProductionMonitors_View_Approve" xml:space="preserve">
+    <value>批准</value>
+  </data>
+  <data name="ProductionMonitors_View_BeginDate" xml:space="preserve">
+    <value>開始日期</value>
+  </data>
+  <data name="ProductionMonitors_View_CreateDate" xml:space="preserve">
+    <value>創建日期</value>
+  </data>
+  <data name="ProductionMonitors_View_EndDate" xml:space="preserve">
+    <value>結束日期</value>
+  </data>
+  <data name="ProductionMonitors_View_ProductMonitor" xml:space="preserve">
+    <value>生產顯示器詳細信息</value>
+  </data>
+  <data name="ProductionMonitors_View_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="ProductionMonitors_View_SaveStock" xml:space="preserve">
+    <value>保存與庫存</value>
+  </data>
+  <data name="ProductionMonitors_View_WorkOrder" xml:space="preserve">
+    <value>工作單</value>
+  </data>
+  <data name="ProductTypes_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="ProductTypes_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="ProductTypes_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="ProductTypes_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="ProductTypes_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="ProductTypes_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="ProductTypes_Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="ProductTypes_Title" xml:space="preserve">
+    <value>庫存類型</value>
+  </data>
+  <data name="PurchaseOrder_Create_InvoiceNo" xml:space="preserve">
+    <value>Purchase Order #</value>
+  </data>
+  <data name="Purchase_Bill" xml:space="preserve">
+    <value>法案</value>
+  </data>
+  <data name="Purchase_BillForm" xml:space="preserve">
+    <value>從比爾</value>
+  </data>
+  <data name="Purchase_Choose_Stock" xml:space="preserve">
+    <value>Choose Stock</value>
+  </data>
+  <data name="Purchase_CreateCreditNote_Title" xml:space="preserve">
+    <value>新的信貸編號</value>
+  </data>
+  <data name="Purchase_CreateRepeating_Title" xml:space="preserve">
+    <value>新的重複比爾</value>
+  </data>
+  <data name="Purchase_Create_Amount" xml:space="preserve">
+    <value>量是</value>
+  </data>
+  <data name="Purchase_Create_Attachment" xml:space="preserve">
+    <value>附件</value>
+  </data>
+  <data name="Purchase_Create_CreditNo" xml:space="preserve">
+    <value>Credit Note #</value>
+  </data>
+  <data name="Purchase_Create_DueDate" xml:space="preserve">
+    <value>Due Date</value>
+  </data>
+  <data name="Purchase_Create_From_Supplier" xml:space="preserve">
+    <value>從供應商</value>
+  </data>
+  <data name="Purchase_Create_Subtotal" xml:space="preserve">
+    <value>小計</value>
+  </data>
+  <data name="Purchase_Create_Tax" xml:space="preserve">
+    <value>稅務</value>
+  </data>
+  <data name="Purchase_Create_Title" xml:space="preserve">
+    <value>新的採購訂單</value>
+  </data>
+  <data name="Purchase_Create_Total" xml:space="preserve">
+    <value>總</value>
+  </data>
+  <data name="Purchase_Create_Validate_Currency" xml:space="preserve">
+    <value>請提供貨幣。</value>
+  </data>
+  <data name="Purchase_Create_Validate_Good" xml:space="preserve">
+    <value>需要</value>
+  </data>
+  <data name="Purchase_Create_Validate_Quantity" xml:space="preserve">
+    <value>需要</value>
+  </data>
+  <data name="Purchase_Create_Validate_Stock" xml:space="preserve">
+    <value>請提供庫存。</value>
+  </data>
+  <data name="Purchase_Create_Validate_UnitPrice" xml:space="preserve">
+    <value>需要</value>
+  </data>
+  <data name="Purchase_CreditNote" xml:space="preserve">
+    <value>信貸編號</value>
+  </data>
+  <data name="Purchase_Dashboard_Dashboard" xml:space="preserve">
+    <value>儀表盤</value>
+  </data>
+  <data name="Purchase_Dashboard_Title" xml:space="preserve">
+    <value>購買</value>
+  </data>
+  <data name="Purchase_Discount_Span" xml:space="preserve">
+    <value>編輯比爾</value>
+  </data>
+  <data name="Purchase_EditCreditNote_Title" xml:space="preserve">
+    <value>編輯信貸編號</value>
+  </data>
+  <data name="Purchase_EditRepeating_Title" xml:space="preserve">
+    <value>編輯比爾重複</value>
+  </data>
+  <data name="Purchase_Edit_Title" xml:space="preserve">
+    <value>編輯信貸編號</value>
+  </data>
+  <data name="Purchase_List_ContactName" xml:space="preserve">
+    <value>提供者</value>
+  </data>
+  <data name="Purchase_List_Date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="Purchase_List_DueDate" xml:space="preserve">
+    <value>到期日</value>
+  </data>
+  <data name="Purchase_List_No_Records" xml:space="preserve">
+    <value>There are no items to display.</value>
+  </data>
+  <data name="Purchase_List_Number" xml:space="preserve">
+    <value>數</value>
+  </data>
+  <data name="Purchase_List_Purchase" xml:space="preserve">
+    <value>採購</value>
+  </data>
+  <data name="Purchase_List_Reference" xml:space="preserve">
+    <value>參考</value>
+  </data>
+  <data name="Purchase_List_Repeating_Amount" xml:space="preserve">
+    <value>Amount</value>
+  </data>
+  <data name="Purchase_List_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="Purchase_List_TotalMoney" xml:space="preserve">
+    <value>總獎金</value>
+  </data>
+  <data name="Purchase_New_Order" xml:space="preserve">
+    <value>新的採購訂單</value>
+  </data>
+  <data name="Purchase_Payment_Validate_AccountPayment" xml:space="preserve">
+    <value>Account Required!</value>
+  </data>
+  <data name="Purchase_Repeating" xml:space="preserve">
+    <value>重複比爾</value>
+  </data>
+  <data name="Purchase_Repeating_Create_Approve" xml:space="preserve">
+    <value>批准</value>
+  </data>
+  <data name="Purchase_Repeating_Create_DueDate" xml:space="preserve">
+    <value>到期日</value>
+  </data>
+  <data name="Purchase_Repeating_Create_EndDate" xml:space="preserve">
+    <value>結束日期</value>
+  </data>
+  <data name="Purchase_Repeating_Create_InvoiceDate" xml:space="preserve">
+    <value>發票日期</value>
+  </data>
+  <data name="Purchase_Repeating_Create_RepeateEvery" xml:space="preserve">
+    <value>每重複此交易</value>
+  </data>
+  <data name="Purchase_Repeating_Create_SaveDraft" xml:space="preserve">
+    <value>存為草稿</value>
+  </data>
+  <data name="Purchase_UpComing_Bill" xml:space="preserve">
+    <value>Upcoming bills</value>
+  </data>
+  <data name="RegisterBack" xml:space="preserve">
+    <value>返回</value>
+  </data>
+  <data name="RegisterInvalidUsername" xml:space="preserve">
+    <value>該用戶名無效！已經有這個用戶名的銷售記錄的用戶。</value>
+  </data>
+  <data name="RegisterRegister" xml:space="preserve">
+    <value>註冊</value>
+  </data>
+  <data name="RegisterThanks" xml:space="preserve">
+    <value>感謝您註冊！</value>
+  </data>
+  <data name="RegisterTitle" xml:space="preserve">
+    <value>註冊</value>
+  </data>
+  <data name="Role_Create_Title" xml:space="preserve">
+    <value>新增角色</value>
+  </data>
+  <data name="Role_Edit_Close" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="Role_Edit_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Role_Edit_Title" xml:space="preserve">
+    <value>編輯角色</value>
+  </data>
+  <data name="Role_Index_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Role_Index_Index" xml:space="preserve">
+    <value>角色</value>
+  </data>
+  <data name="Role_Index_List" xml:space="preserve">
+    <value>清單角色</value>
+  </data>
+  <data name="Role_Index_RoleName" xml:space="preserve">
+    <value>角色名稱</value>
+  </data>
+  <data name="SaleInvoices_Error" xml:space="preserve">
+    <value>There are no items to display</value>
+  </data>
+  <data name="SaleInvoice_AmountStockOut" xml:space="preserve">
+    <value>缺貨</value>
+  </data>
+  <data name="SaleInvoice_Await_Account" xml:space="preserve">
+    <value>帳戶</value>
+  </data>
+  <data name="SaleInvoice_Await_AddPayment" xml:space="preserve">
+    <value>添加付款</value>
+  </data>
+  <data name="SaleInvoice_Await_AmountDue" xml:space="preserve">
+    <value>應付金額</value>
+  </data>
+  <data name="SaleInvoice_Await_AmountPaid" xml:space="preserve">
+    <value>已支付的款項</value>
+  </data>
+  <data name="SaleInvoice_Await_CreatePay" xml:space="preserve">
+    <value>建立收費</value>
+  </data>
+  <data name="SaleInvoice_Await_DatePaid" xml:space="preserve">
+    <value>已支付的日期</value>
+  </data>
+  <data name="SaleInvoice_Await_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="SaleInvoice_Await_Discount" xml:space="preserve">
+    <value>折扣</value>
+  </data>
+  <data name="SaleInvoice_Await_GoodCode" xml:space="preserve">
+    <value>碼</value>
+  </data>
+  <data name="SaleInvoice_Await_Less" xml:space="preserve">
+    <value>少支付</value>
+  </data>
+  <data name="SaleInvoice_Await_MakeaPayment" xml:space="preserve">
+    <value>進行付款</value>
+  </data>
+  <data name="SaleInvoice_Await_Money" xml:space="preserve">
+    <value>金錢</value>
+  </data>
+  <data name="SaleInvoice_Await_PaidTo" xml:space="preserve">
+    <value>付至</value>
+  </data>
+  <data name="SaleInvoice_Await_Price" xml:space="preserve">
+    <value>價格</value>
+  </data>
+  <data name="SaleInvoice_Await_Quanlity" xml:space="preserve">
+    <value>數量</value>
+  </data>
+  <data name="SaleInvoice_Await_Ref" xml:space="preserve">
+    <value>參考</value>
+  </data>
+  <data name="SaleInvoice_Await_SubTotal" xml:space="preserve">
+    <value>小計</value>
+  </data>
+  <data name="SaleInvoice_Await_TaxRate" xml:space="preserve">
+    <value>稅率</value>
+  </data>
+  <data name="SaleInvoice_Await_Total" xml:space="preserve">
+    <value>總</value>
+  </data>
+  <data name="SaleInvoice_Await_TotalNoTax" xml:space="preserve">
+    <value>總數增值稅0 ​​％</value>
+  </data>
+  <data name="SaleInvoice_Await_TotalSaleTax" xml:space="preserve">
+    <value>總銷售增值稅0 ​​％</value>
+  </data>
+  <data name="SaleInvoice_Await_View" xml:space="preserve">
+    <value>查看比爾</value>
+  </data>
+  <data name="SaleInvoice_CreateRepeat_Approved" xml:space="preserve">
+    <value>批准</value>
+  </data>
+  <data name="SaleInvoice_CreateRepeat_ApprovedSent" xml:space="preserve">
+    <value>批准和已發送</value>
+  </data>
+  <data name="SaleInvoice_CreateRepeat_Draft" xml:space="preserve">
+    <value>存為草稿</value>
+  </data>
+  <data name="SaleInvoice_CreateRepeat_DueDate" xml:space="preserve">
+    <value>到期日</value>
+  </data>
+  <data name="SaleInvoice_CreateRepeat_EndDate" xml:space="preserve">
+    <value>結束日期</value>
+  </data>
+  <data name="SaleInvoice_CreateRepeat_InvoiceDate" xml:space="preserve">
+    <value>發票日期</value>
+  </data>
+  <data name="SaleInvoice_CreateRepeat_Repeat" xml:space="preserve">
+    <value>每重複此交易</value>
+  </data>
+  <data name="SaleInvoice_Create_Account" xml:space="preserve">
+    <value>帳戶</value>
+  </data>
+  <data name="SaleInvoice_Create_Amount" xml:space="preserve">
+    <value>量</value>
+  </data>
+  <data name="SaleInvoice_Create_Currency" xml:space="preserve">
+    <value>貨幣</value>
+  </data>
+  <data name="SaleInvoice_Create_Date" xml:space="preserve">
+    <value>日期</value>
+  </data>
+  <data name="SaleInvoice_Create_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="SaleInvoice_Create_Disc" xml:space="preserve">
+    <value>折扣％</value>
+  </data>
+  <data name="SaleInvoice_Create_DueDate" xml:space="preserve">
+    <value>到期日</value>
+  </data>
+  <data name="SaleInvoice_Create_InvoiceNo" xml:space="preserve">
+    <value>發票號碼</value>
+  </data>
+  <data name="SaleInvoice_Create_Item" xml:space="preserve">
+    <value>項目</value>
+  </data>
+  <data name="SaleInvoice_Create_NewInvoice" xml:space="preserve">
+    <value>新發票</value>
+  </data>
+  <data name="SaleInvoice_Create_NewRepeatInvoice" xml:space="preserve">
+    <value>New Repeating Sale Order</value>
+  </data>
+  <data name="SaleInvoice_Create_Qty" xml:space="preserve">
+    <value>數量</value>
+  </data>
+  <data name="SaleInvoice_Create_Reference" xml:space="preserve">
+    <value>參考</value>
+  </data>
+  <data name="SaleInvoice_Create_SaveAnother" xml:space="preserve">
+    <value>保存並添加另一個</value>
+  </data>
+  <data name="SaleInvoice_Create_SaveAsDraft" xml:space="preserve">
+    <value>另存為草稿</value>
+  </data>
+  <data name="SaleInvoice_Create_SaveContinue" xml:space="preserve">
+    <value>保存（繼續編輯）</value>
+  </data>
+  <data name="SaleInvoice_Create_SaveForApproval" xml:space="preserve">
+    <value>保存和提交審批</value>
+  </data>
+  <data name="SaleInvoice_Create_Subtotal" xml:space="preserve">
+    <value>小計</value>
+  </data>
+  <data name="SaleInvoice_Create_Tax" xml:space="preserve">
+    <value>稅</value>
+  </data>
+  <data name="SaleInvoice_Create_TaxRate" xml:space="preserve">
+    <value>稅率</value>
+  </data>
+  <data name="SaleInvoice_Create_To" xml:space="preserve">
+    <value>為了客戶</value>
+  </data>
+  <data name="SaleInvoice_Create_Total" xml:space="preserve">
+    <value>總</value>
+  </data>
+  <data name="SaleInvoice_Create_UnitPrice" xml:space="preserve">
+    <value>單價</value>
+  </data>
+  <data name="SaleInvoice_Create_VAT" xml:space="preserve">
+    <value>增值稅</value>
+  </data>
+  <data name="SaleInvoice_DashboardCreate_AddContactGroup" xml:space="preserve">
+    <value>添加聯繫人組</value>
+  </data>
+  <data name="SaleInvoice_DashboardCreate_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="SaleInvoice_DashboardCreate_ContactGroup" xml:space="preserve">
+    <value>發票與組</value>
+  </data>
+  <data name="SaleInvoice_DashboardCreate_CreateCreditNote" xml:space="preserve">
+    <value>信貸編號</value>
+  </data>
+  <data name="SaleInvoice_DashboardCreate_CreateditNote" xml:space="preserve">
+    <value>New Credit Note</value>
+  </data>
+  <data name="SaleInvoice_DashboardCreate_Import" xml:space="preserve">
+    <value>進口</value>
+  </data>
+  <data name="SaleInvoice_DashboardCreate_Invoice" xml:space="preserve">
+    <value>新發票</value>
+  </data>
+  <data name="SaleInvoice_DashboardCreate_NewInvoice" xml:space="preserve">
+    <value>發票</value>
+  </data>
+  <data name="SaleInvoice_DashboardCreate_RepeatingInvoice" xml:space="preserve">
+    <value>重複發票</value>
+  </data>
+  <data name="SaleInvoice_DashboardCreate_Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="SaleInvoice_DashboardCreate_SentStatement" xml:space="preserve">
+    <value>發送聲明</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_AddContact" xml:space="preserve">
+    <value>添加聯繫人組</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_AnyDate" xml:space="preserve">
+    <value>任何日期</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_Approved" xml:space="preserve">
+    <value>批准</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_ContactGroup" xml:space="preserve">
+    <value>發票與組</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_CreditNote" xml:space="preserve">
+    <value>信貸編號</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_Deleted" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_Email" xml:space="preserve">
+    <value>電子郵件</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_Invoice" xml:space="preserve">
+    <value>發票</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_Overdue" xml:space="preserve">
+    <value>過期的</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_Print" xml:space="preserve">
+    <value>打印</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_RefOrContact" xml:space="preserve">
+    <value>參考|聯繫人姓名</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_Reject" xml:space="preserve">
+    <value>Reject</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_RepeatingInvoice" xml:space="preserve">
+    <value>重複發票</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_SearchWith" xml:space="preserve">
+    <value>在搜索</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_SeeAll" xml:space="preserve">
+    <value>查看全部</value>
+  </data>
+  <data name="SaleInvoice_Dashboard_SubmitForApproved" xml:space="preserve">
+    <value>提交審批</value>
+  </data>
+  <data name="SaleInvoice_Edit_EditInvoice" xml:space="preserve">
+    <value>編輯發票</value>
+  </data>
+  <data name="SaleInvoice_End_DueDate" xml:space="preserve">
+    <value>Due Date</value>
+  </data>
+  <data name="SaleInvoice_List_AwaitingApproval" xml:space="preserve">
+    <value>正在等待批准</value>
+  </data>
+  <data name="SaleInvoice_List_AwaitingPayment" xml:space="preserve">
+    <value>等待付款</value>
+  </data>
+  <data name="SaleInvoice_List_Code" xml:space="preserve">
+    <value>碼</value>
+  </data>
+  <data name="SaleInvoice_List_ContactName" xml:space="preserve">
+    <value>聯繫人姓名</value>
+  </data>
+  <data name="SaleInvoice_List_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="SaleInvoice_List_Done" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="SaleInvoice_List_Draft" xml:space="preserve">
+    <value>草案</value>
+  </data>
+  <data name="SaleInvoice_List_Due" xml:space="preserve">
+    <value>應有</value>
+  </data>
+  <data name="SaleInvoice_List_EndDate" xml:space="preserve">
+    <value>結束日期</value>
+  </data>
+  <data name="SaleInvoice_List_ExpectedDate" xml:space="preserve">
+    <value>預產期</value>
+  </data>
+  <data name="SaleInvoice_List_InvoiceWillBe" xml:space="preserve">
+    <value>將發票</value>
+  </data>
+  <data name="SaleInvoice_List_NextInvoiceDate" xml:space="preserve">
+    <value>下一頁發票日期</value>
+  </data>
+  <data name="SaleInvoice_List_Number" xml:space="preserve">
+    <value>Number</value>
+  </data>
+  <data name="SaleInvoice_List_Paid" xml:space="preserve">
+    <value>Paid</value>
+  </data>
+  <data name="SaleInvoice_List_PaidDate" xml:space="preserve">
+    <value>已支付</value>
+  </data>
+  <data name="SaleInvoice_List_PaymentAmount" xml:space="preserve">
+    <value>支付日期</value>
+  </data>
+  <data name="SaleInvoice_List_PaymentAmountVND" xml:space="preserve">
+    <value>付款金額</value>
+  </data>
+  <data name="SaleInvoice_List_Rejected" xml:space="preserve">
+    <value>付款金額</value>
+  </data>
+  <data name="SaleInvoice_List_Repeating" xml:space="preserve">
+    <value>重複</value>
+  </data>
+  <data name="SaleInvoice_List_Sent" xml:space="preserve">
+    <value>已發送</value>
+  </data>
+  <data name="SaleInvoice_List_Status" xml:space="preserve">
+    <value>狀態</value>
+  </data>
+  <data name="SaleInvoice_MoneyComingIn" xml:space="preserve">
+    <value>Money coming in</value>
+  </data>
+  <data name="SaleInvoice_Transaction_Date" xml:space="preserve">
+    <value>Transaction Date</value>
+  </data>
+  <data name="SaleInvoic_Dashboard_Dashboard" xml:space="preserve">
+    <value>儀表盤</value>
+  </data>
+  <data name="SaleInvoic_Dashboard_Title" xml:space="preserve">
+    <value>銷售</value>
+  </data>
+  <data name="Sale_SaleInvoices" xml:space="preserve">
+    <value>銷售發票</value>
+  </data>
+  <data name="Sale_SaleInvoicesList" xml:space="preserve">
+    <value>銷售發票清單</value>
+  </data>
+  <data name="Sale_Sales" xml:space="preserve">
+    <value>銷售</value>
+  </data>
+  <data name="StockMovement_Create_NewTranfer" xml:space="preserve">
+    <value>新的庫存轉讓</value>
+  </data>
+  <data name="StockMovement_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="StockMovement_Des_Stock" xml:space="preserve">
+    <value>庫存目的地</value>
+  </data>
+  <data name="StockMovement_Edit" xml:space="preserve">
+    <value>編輯存貨變動</value>
+  </data>
+  <data name="StockMovement_Index_List" xml:space="preserve">
+    <value>存貨變動表</value>
+  </data>
+  <data name="StockMovement_QTY" xml:space="preserve">
+    <value>數量</value>
+  </data>
+  <data name="StockMovement_RecieveDate" xml:space="preserve">
+    <value>接收日期</value>
+  </data>
+  <data name="StockMovement_SKU" xml:space="preserve">
+    <value>SKU</value>
+  </data>
+  <data name="StockMovement_Source_Stock" xml:space="preserve">
+    <value>庫存來源</value>
+  </data>
+  <data name="StockMovement_Stock_Card_Code" xml:space="preserve">
+    <value>庫存卡代碼</value>
+  </data>
+  <data name="StockMovement_UOM" xml:space="preserve">
+    <value>計量單位</value>
+  </data>
+  <data name="Stock_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="Stock_Address" xml:space="preserve">
+    <value>地址</value>
+  </data>
+  <data name="Stock_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="Stock_Code" xml:space="preserve">
+    <value>碼</value>
+  </data>
+  <data name="Stock_CurrentCompanyID" xml:space="preserve">
+    <value>公司</value>
+  </data>
+  <data name="Stock_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="Stock_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="Stock_MaxQuantity" xml:space="preserve">
+    <value>最大數量</value>
+  </data>
+  <data name="Stock_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="Stock_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="Stock_Title" xml:space="preserve">
+    <value>庫存</value>
+  </data>
+  <data name="Suggest1" xml:space="preserve">
+    <value>ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that enables a clean separation of concerns and that gives you full control over markup for enjoyable, agile development. ASP.NET MVC includes many features that enable fast, TDD-friendly development for creating sophisticated applications that use the latest web standards.</value>
+  </data>
+  <data name="TaxRate_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="TaxRate_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="TaxRate_Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="TaxRate_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="TaxRate_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="TaxRate_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="TaxRate_Rate" xml:space="preserve">
+    <value>率</value>
+  </data>
+  <data name="TaxRate_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="TaxRate_Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="TaxRate_Title" xml:space="preserve">
+    <value>稅率</value>
+  </data>
+  <data name="TMT_Index_ConfirmDel" xml:space="preserve">
+    <value>Are you sure deleted item ?</value>
+  </data>
+  <data name="UOM_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="UOM_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="UOM_Code" xml:space="preserve">
+    <value>Code</value>
+  </data>
+  <data name="UOM_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="UOM_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="UOM_Name" xml:space="preserve">
+    <value>名稱</value>
+  </data>
+  <data name="UOM_Quantity" xml:space="preserve">
+    <value>數量</value>
+  </data>
+  <data name="UOM_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="UOM_Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="UOM_Title" xml:space="preserve">
+    <value>計量單位</value>
+  </data>
+  <data name="UserAndAddressComfirmEmail" xml:space="preserve">
+    <value>確認電子郵件</value>
+  </data>
+  <data name="UserAndAddressComfirmPassword" xml:space="preserve">
+    <value>確認密碼</value>
+  </data>
+  <data name="UserAndAddressEmail" xml:space="preserve">
+    <value>電子郵件</value>
+  </data>
+  <data name="UserAndAddressPassword" xml:space="preserve">
+    <value>密碼</value>
+  </data>
+  <data name="UserAndAddressUsername" xml:space="preserve">
+    <value>用戶名</value>
+  </data>
+  <data name="Users_Index_Index" xml:space="preserve">
+    <value>用戶</value>
+  </data>
+  <data name="Users_Index_List" xml:space="preserve">
+    <value>用戶列表</value>
+  </data>
+  <data name="User_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="User_ChangePass_ConfirmPass" xml:space="preserve">
+    <value>確認密碼</value>
+  </data>
+  <data name="User_ChangePass_NewPass" xml:space="preserve">
+    <value>新密碼</value>
+  </data>
+  <data name="User_ChangePass_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="User_ChangePass_Title" xml:space="preserve">
+    <value>更改密碼</value>
+  </data>
+  <data name="User_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="User_FullName" xml:space="preserve">
+    <value>全名</value>
+  </data>
+  <data name="User_Index_Active" xml:space="preserve">
+    <value>Active</value>
+  </data>
+  <data name="User_Index_Add" xml:space="preserve">
+    <value>加</value>
+  </data>
+  <data name="User_Index_Avatar" xml:space="preserve">
+    <value>照片</value>
+  </data>
+  <data name="User_Index_Close" xml:space="preserve">
+    <value>關閉</value>
+  </data>
+  <data name="User_Index_Email" xml:space="preserve">
+    <value>電子郵件</value>
+  </data>
+  <data name="User_Index_Group" xml:space="preserve">
+    <value>組</value>
+  </data>
+  <data name="User_Index_List" xml:space="preserve">
+    <value>用戶列表</value>
+  </data>
+  <data name="User_Index_Login" xml:space="preserve">
+    <value>註冊</value>
+  </data>
+  <data name="User_Index_LoginForm" xml:space="preserve">
+    <value>登錄表</value>
+  </data>
+  <data name="User_Index_Password" xml:space="preserve">
+    <value>密碼</value>
+  </data>
+  <data name="User_Index_Phone" xml:space="preserve">
+    <value>電話</value>
+  </data>
+  <data name="User_Index_SelectRole" xml:space="preserve">
+    <value>選擇用戶權利</value>
+  </data>
+  <data name="User_Index_Update" xml:space="preserve">
+    <value>更新</value>
+  </data>
+  <data name="User_Index_UserName" xml:space="preserve">
+    <value>用戶名</value>
+  </data>
+  <data name="User_Password" xml:space="preserve">
+    <value>密碼</value>
+  </data>
+  <data name="User_UserName" xml:space="preserve">
+    <value>用戶名</value>
+  </data>
+  <data name="ValidationRequired" xml:space="preserve">
+    <value>Required</value>
+  </data>
+  <data name="WebAppTitle" xml:space="preserve">
+    <value>MVC Basic </value>
+  </data>
+  <data name="WorkCenter_AddNew" xml:space="preserve">
+    <value>新增</value>
+  </data>
+  <data name="WorkCenter_Cancel" xml:space="preserve">
+    <value>取消</value>
+  </data>
+  <data name="WorkCenter_Code" xml:space="preserve">
+    <value>號數</value>
+  </data>
+  <data name="WorkCenter_Delete" xml:space="preserve">
+    <value>刪除</value>
+  </data>
+  <data name="WorkCenter_Description" xml:space="preserve">
+    <value>描述</value>
+  </data>
+  <data name="WorkCenter_Save" xml:space="preserve">
+    <value>儲存</value>
+  </data>
+  <data name="WorkCenter_Search" xml:space="preserve">
+    <value>搜索</value>
+  </data>
+  <data name="WorkCenter_Title" xml:space="preserve">
+    <value>工作中心</value>
+  </data>
+  <data name="WorkOrder_List_AssembledBy" xml:space="preserve">
+    <value>Assembled By</value>
+  </data>
+  <data name="WorkOrder_List_NewWorkOrder" xml:space="preserve">
+    <value>New Work Order</value>
+  </data>
+  <data name="WorkOrder_ReceiveStock" xml:space="preserve">
+    <value>Received stock</value>
+  </data>
+  <data name="Common_Msg_Approved" xml:space="preserve">
+    <value>Approved Success</value>
+  </data>
+  <data name="Common_Msg_ShipmentNoFirstSale" xml:space="preserve">
+    <value>Shipment No</value>
+  </data>
+  <data name="Common_Msg_ShipmentNoLastSale" xml:space="preserve">
+    <value>have been created in Outcomingshipment Screen </value>
+  </data>
+  <data name="Common_Msg_NotSelectDelete" xml:space="preserve">
+    <value>Please select item want deleted</value>
+  </data>
+  <data name="Common_AnyDate" xml:space="preserve">
+    <value>Any Date</value>
+  </data>
+  <data name="Common_EndDate" xml:space="preserve">
+    <value>End Date</value>
+  </data>
+  <data name="Common_NextInvoiceDate" xml:space="preserve">
+    <value>Next Invoice Date</value>
+  </data>
+  <data name="Common_PaidDate" xml:space="preserve">
+    <value>Paid Date</value>
+  </data>
+  <data name="Common_PlannedDate" xml:space="preserve">
+    <value>Planned Date</value>
+  </data>
+  <data name="Common_TransactionDate" xml:space="preserve">
+    <value>Transaction Date</value>
+  </data>
+  <data name="Common_Sale_Date" xml:space="preserve">
+    <value>Date</value>
+  </data>
+  <data name="Common_Sale_Due" xml:space="preserve">
+    <value>Due</value>
+  </data>
+  <data name="Common_Sale_DueDate" xml:space="preserve">
+    <value>Due Date</value>
+  </data>
+  <data name="Common_Incoming_InputSearch" xml:space="preserve">
+    <value>Please input Shipment No</value>
+  </data>
+  <data name="FixedAsset_Approve" xml:space="preserve">
+    <value>Approve</value>
+  </data>
+  <data name="Common_Incoming_StockInFail" xml:space="preserve">
+    <value>Items received fail.</value>
+  </data>
+  <data name="Common_Incoming_StockInSuccess" xml:space="preserve">
+    <value>Items received successfully.</value>
+  </data>
+  <data name="Common_InvoiceDate" xml:space="preserve">
+    <value>The NEXT SALE ORDER DATE  you entered has already occurred.</value>
+  </data>
+  <data name="Common_InvoiceDate1" xml:space="preserve">
+    <value>The NEXT INVOICE DATE  you entered has already occurred.Invoices prior to and including today will be generated when you SAVE .</value>
+  </data>
+  <data name="FixedAsset_AccountDebit" xml:space="preserve">
+    <value>Account to debit for sale</value>
+  </data>
+  <data name="FixedAsset_DepreciationOfYear" xml:space="preserve">
+    <value>Depreciation for the financial year</value>
+  </data>
+  <data name="FixedAsset_Dispose" xml:space="preserve">
+    <value>Dispose</value>
+  </data>
+  <data name="FixedAsset_LabelIncludeDepreciation" xml:space="preserve">
+    <value>How much depreciation should be included in this financial year?</value>
+  </data>
+  <data name="FixedAsset_ReviewJournal" xml:space="preserve">
+    <value>Review Journal</value>
+  </data>
+  <data name="FixedAsset_SaleExclude" xml:space="preserve">
+    <value>Sale price (excluding tax)</value>
+  </data>
+  <data name="FixedAsset_SoldDate" xml:space="preserve">
+    <value>Date Sell/Dispose</value>
+  </data>
+  <data name="FixedAsset_HasDepreciation" xml:space="preserve">
+    <value>All depreciation up to and including:</value>
+  </data>
+  <data name="FixedAsset_NoDepreciation" xml:space="preserve">
+    <value>No depreciation this financial year</value>
+  </data>
+  <data name="Function_Index" xml:space="preserve">
+    <value>Functions</value>
+  </data>
+  <data name="Function_IndexEdit" xml:space="preserve">
+    <value>Edit Functions</value>
+  </data>
+  <data name="Control_IndexCreate" xml:space="preserve">
+    <value>Add New Control</value>
+  </data>
+  <data name="Control_IndexEdit" xml:space="preserve">
+    <value>Edit Control</value>
+  </data>
+  <data name="User_CreateUser" xml:space="preserve">
+    <value>Create New User</value>
+  </data>
+  <data name="User_EditUser" xml:space="preserve">
+    <value>Edit User</value>
+  </data>
+  <data name="User_Avatar" xml:space="preserve">
+    <value>Avatar</value>
+  </data>
+  <data name="User_Company" xml:space="preserve">
+    <value>Company</value>
+  </data>
+  <data name="Common_Permission" xml:space="preserve">
+    <value>Permission</value>
+  </data>
+  <data name="ProductionMonitors_Create_Action" xml:space="preserve">
+    <value>Action</value>
+  </data>
+  <data name="ProductionMonitors_Create_EndTime" xml:space="preserve">
+    <value>End Time</value>
+  </data>
+  <data name="ProductionMonitors_Create_ProductItem" xml:space="preserve">
+    <value>Product  Item</value>
+  </data>
+  <data name="ProductionMonitors_Create_StartTime" xml:space="preserve">
+    <value>Start Time</value>
+  </data>
+  <data name="ProductionMonitors_Index_Children01" xml:space="preserve">
+    <value>Inventory</value>
+  </data>
+  <data name="ProductionMonitors_Index_Children02" xml:space="preserve">
+    <value>Machine Management</value>
+  </data>
+  <data name="ProductionMonitors_Index_Children03" xml:space="preserve">
+    <value>Machine Capacity Planning</value>
+  </data>
+  <data name="ProductionMonitors_Index_Parent" xml:space="preserve">
+    <value>Machine Capacity Planning</value>
+  </data>
+  <data name="Common_Component" xml:space="preserve">
+    <value>Component Details</value>
+  </data>
+  <data name="Common_ItemCode" xml:space="preserve">
+    <value>Item Code</value>
+  </data>
+  <data name="Common_Order" xml:space="preserve">
+    <value>Order</value>
+  </data>
+  <data name="Common_OrderProduct" xml:space="preserve">
+    <value>Order Product</value>
+  </data>
+  <data name="Common_UnitPrice" xml:space="preserve">
+    <value>Unit Price</value>
+  </data>
+  <data name="Conmon_Total" xml:space="preserve">
+    <value>Total</value>
+  </data>
+  <data name="Common_Clear" xml:space="preserve">
+    <value>Clear</value>
+  </data>
+  <data name="Common_ConfirmArchive" xml:space="preserve">
+    <value>Archive the selected items ?</value>
+  </data>
+  <data name="Common_ConfirmDispose" xml:space="preserve">
+    <value>Sell / Dispose the selected items ?</value>
+  </data>
+  <data name="Common_ConfirmRegister" xml:space="preserve">
+    <value>Register the selected items ?</value>
+  </data>
+  <data name="Common_ConfirmRestore" xml:space="preserve">
+    <value>Restore the selected items ?</value>
+  </data>
+  <data name="Common_InformArchive" xml:space="preserve">
+    <value>You have select no item to Archive !</value>
+  </data>
+  <data name="Common_InformRegister" xml:space="preserve">
+    <value>You have select no item to Register !</value>
+  </data>
+  <data name="Common_InformRestore" xml:space="preserve">
+    <value>You have select no item to Restore !</value>
+  </data>
+  <data name="Expensive_Claim_AllClaim" xml:space="preserve">
+    <value>所有当前索赔</value>
+  </data>
+  <data name="Expensive_Claim_Awaiting" xml:space="preserve">
+    <value>等待付款</value>
+  </data>
+  <data name="Expensive_Claim_AwaitingAuthor" xml:space="preserve">
+    <value>尚未填写其授权</value>
+  </data>
+  <data name="Expensive_Claim_GoToClaim" xml:space="preserve">
+    <value>进入费用索赔</value>
+  </data>
+  <data name="Expensive_Claim_YourClaim" xml:space="preserve">
+    <value>您当前索赔</value>
+  </data>
+  <data name="Common_InvoiceDateTwo" xml:space="preserve">
+    <value>Invoices prior to and including today will be generated when you SAVE .</value>
+  </data>
+</root>

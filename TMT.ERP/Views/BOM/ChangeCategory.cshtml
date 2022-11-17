@@ -1,0 +1,119 @@
+﻿@{
+    Layout = null;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $('#GoodID').change(function (e) {
+            
+            var value = $('#GoodID').val();
+            if (value != "" && value != null) {
+                $('#btnCreateNew').removeAttr("disabled", "disabled");
+            } else
+                $('#btnCreateNew').attr("disabled", "disabled");
+        });
+
+        /******************** Add new a BOM ************************/
+        $('#btnAddNew').click(function (e) {
+            e.preventDefault();
+            
+            $.ajax(
+                {
+                    type: 'GET',
+                    url: '/BOM/Create/',
+                    success: function () {
+                        
+                        custom.CreatePopup("#dialog", "Add New BOM", 400, 400, "/BOM/Create/", false);
+                        $("#dialog").dialog("open");
+                    }
+                });
+        });
+
+        $('#btnDelete').click(function () {
+            
+            var BomDetailID = $('#BomDetailID').val();
+            var itemID = $('#ItemID').val();
+            $('#confirmDel').empty();
+            $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Delete the selected item ?</p>');
+            $("#confirmDel").dialog({
+                modal: true,
+                height: 120,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        DeleteObject(BomDetailID, itemID);
+                    },
+                    'Cancel': function () {
+                        $('#confirmDel').dialog('close');
+                    }
+                }
+            });
+            $('#confirmDel').dialog('open');
+        });
+
+        //Checked all or Uncheck all element is checkbox
+        $('#cbCheckAll').click(function () {
+            $(".cbCheck").prop('checked', $(this).prop('checked'));
+        });
+
+        //Change Item
+        $("#GoodID").change(function () {
+            
+            ChangeBOM();
+        });
+
+        function ChangeBOM() {
+            
+            var id = $('#GoodID').val();
+            $.ajax(
+            {
+                type: 'POST',
+                url: '/BOM/ChangeItem/',
+                traditional: true,
+                data: {
+                    'id': id
+                },
+                success: function (data) {
+                    
+                    $('div#BomLIST').empty();
+                    $('div#BomLIST').html(data);
+                    $('div#BomLIST').show();
+                    $('div#Choose').hide();
+                }
+            });
+        }
+    });
+    function DeleteObject(BomDetailID, itemID) {
+        $.ajax(
+           {
+               type: 'POST',
+               url: '/BOM/DeleteBom/',
+               traditional: true,
+               data: {
+                   'BomDetailID': BomDetailID, 'itemID': itemID
+               },
+               success: function () {
+                   $('#Inform').empty();
+                   $('#Inform').append('<p style="width: 100%; height:0px !important; font-weight: bold; font-size: 12px; text-align:center;">@Resources.Resource.Common_Msg_DeleteSuccess</p>');
+                       $("#Inform").dialog({
+                           modal: true,
+                           height: 120,
+                           autoOpen: false,
+                           buttons: {
+                               'OK': function () {
+                                   
+                                   $('div#ViewTreeView').empty();
+                                   $('div#ViewTreeView').html(data);
+                                   $('#Inform').dialog('close');
+                                   $('#confirmDel').dialog('close');
+                               }
+                           }
+                       });
+                       $('#Inform').dialog('open');
+                   }
+               });
+           }
+</script>
+
+<label style="width: 100px;">@Resources.Resource.BOM_Good_Items_Code</label>
+@Html.DropDownList("GoodID", new SelectList(ViewBag.GoodID, "Value", "Text", ""), "", new { @class = "good", style = " width: 150px;" })

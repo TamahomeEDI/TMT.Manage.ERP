@@ -1,0 +1,114 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.BomDetail>
+@using TMT.ERP.DataAccess.Model
+@{
+    Layout = null;
+    ErpEntities db = new ErpEntities();
+
+}
+<script>
+
+
+    function viewDetail(element) {
+        debugger;
+        //var strs = new Array();
+        //var str = $(element).attr('id');
+        //strs = str.split('&')
+        //var BomId = strs[0];
+        //var GoodId = strs[1];
+        //var ParentGoodId = strs[2];
+        //if (ParentGoodId == "") {
+        //    ParentGoodId = 0;
+        //}
+        //var quantity = strs[3];
+        //if (quantity == "") {
+        //    quantity = 0;
+        //}
+        //var BOM = {
+        //    BomId: parseInt(BomId),
+        //    GoodId: parseInt(GoodId),
+        //    ParentGoodId: parseInt(ParentGoodId),
+        //    quantity: parseInt(quantity)
+        //} 
+        // var bomDetailID = $(element).getAttribute('id');
+        var component = {
+            bomDetailID: parseInt(element.id)        
+        }
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/BOM/ViewDetailBOM/',
+                traditional: true,
+                data: component,
+                success: function (data) {
+                    $('div#ViewDetail').empty();
+                    $('div#ViewDetail').html(data);
+                }
+            });
+
+    };
+
+</script>
+@foreach (var item in ViewData.Model)
+{
+
+    // var children = db.BomDetails.Where(bom => bom.BomID == item.BomID && bom.ParentGoodID != null);
+    // if (item.ParentGoodID != null)
+    //  {
+    var children = db.BomDetails.Where(bom => bom.BomID == item.BomID && bom.ParentGoodID == item.GoodID);
+    // }
+
+    /*  if (children.Count() > 0)
+      {
+          foreach (var itemChild in children)
+          {
+              var child = db.BomDetails.Where(bom => bom.BomID == item.BomID && bom.ParentGoodID == itemChild.GoodID).OrderBy(bom => bom.ParentGoodID);
+              if (child.Count() > 0)
+              {
+              @:<li class="collapsable"><div class="hitarea collapsable-hitarea"></div>
+
+              }
+              else
+              {
+           @:<li class="last">
+              }
+                  <span id="@itemChild.ParentGoodID">@itemChild.Good.Code (@itemChild.Quantity)</span>
+              if (child.Count() > 0)
+              {
+                      <ul style="display: block;">@Html.Partial("BOM/_itemControl", child)</ul>
+              }
+              @:</li>
+          }
+      } */
+    if (children.Count() > 0)
+    {
+       
+    @:<li class="collapsable"><div class="hitarea collapsable-hitarea"></div>
+
+    }
+    else
+    {
+    @:<li class="last">
+        }
+
+    <span id="@item.ID" onClick="viewDetail(this);">
+        @{ Good good = db.Goods.Find(item.GoodID);}
+        @if (children.Count() > 0 && good != null)
+        {
+            
+        <strong>@good.Code (@item.Quantity)</strong>
+                       
+        }
+        else if(good != null)
+        {
+          <a> @good.Code (@item.Quantity)</a>
+        }
+
+    </span>
+        if (children.Count() > 0)
+        {
+            <ul style="display: block;">@Html.Partial("BOM/_itemControl", children)</ul>
+        }
+    @:</li> 
+}
+
+

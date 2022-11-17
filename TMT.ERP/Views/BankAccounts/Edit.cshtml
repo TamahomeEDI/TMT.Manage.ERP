@@ -1,0 +1,124 @@
+﻿@model TMT.ERP.DataAccess.Model.BankAccount
+
+@{
+    Layout = null;
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+    <script src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+}
+<script type="text/ecmascript">
+    $(document).ready(function () {
+        $('#btnClose').click(function (e) {
+            e.preventDefault();
+            location.reload();
+        });
+
+        $('#bankName').focus();
+
+        jQuery.validator.messages.required = "";
+
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+        $("#btnSave").click(function (e) {
+            
+            var id = $('#hidID').val();
+            var companyID = $('#hdCurrentUserCompanyID').val();
+            var bankName = $('#bankName').val();
+            var accountName = $('#accountName').val();
+            var accountNo = $('#accountNo').val();
+            var currencyID = $('#CurrencyID').val();
+            var description = $('#Description').val();
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            $.ajax({
+                type: 'POST',
+                url: "/BankAccounts/Edit/",
+                tradition: true,
+                data: {
+                    "companyID": companyID, "bankName": bankName, "accountName": accountName, "id": id,
+                    "accountNo": accountNo, "currencyID": currencyID, "description": description
+                },
+                success: function (data) {
+                    location.reload();
+                }
+            });
+        });
+    });
+</script>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <input type="hidden" id="hidID" value="@Model.ID">
+    <input type="hidden" id="hdCurrentUserCompanyID" value="@user.CompanyID" />
+    <div id="popup-breadcrumb">
+        <div style="margin-left: 20px; margin-top: 10px;">
+            <div class="error" style="display: none;">
+                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: -5px 10px 0px 0px;" />
+                <span></span>.<br clear="all" />
+            </div>
+            <div style="display: inline-block; height: 30px; width: 100%">
+                <div style="float: left; width: 35%">
+                    <label>@Resources.Resource.BankAccount_Create_BankName </label>
+                </div>
+                <div style="float: right; width: 60%">
+                    <input id="bankName" name="bankName" type="text" class="required" style="width: 200px;" maxlength="100" value="@Model.BankName" />
+                </div>
+            </div>
+            <div style="display: inline-block; height: 30px; width: 100%">
+                <div style="float: left; width: 35%">
+                    <label>@Resources.Resource.BankAccount_Create_AccountName </label>
+                </div>
+                <div style="float: right; width: 60%">
+                    <input id="accountName" name="accountName" type="text" class="required" style="width: 200px;" maxlength="250" value="@Model.AccoutName"/>
+                </div>
+            </div>
+            <div style="display: inline-block; height: 30px; width: 100%">
+                <div style="float: left; width: 35%">
+                    <label>@Resources.Resource.BankAccount_Create_AccountNumber </label>
+                </div>
+                <div style="float: right; width: 60%">
+                    <input id="accountNo" name="accountNo" type="text" class="required" style="width: 200px;" maxlength="20" value="@Model.AccoutNum"/>
+                </div>
+            </div>
+            <div style="display: inline-block; height: 30px; width: 100%">
+                <div style="float: left; width: 35%">
+                    <label>@Resources.Resource.BankAccount_Create_Currentcy </label>
+                </div>
+                <div style="float: right; width: 60%">
+                    @Html.DropDownList("CurrencyID", null, string.Empty, new { @class = "required", style = "width: 200px; height: 26px;" })
+                </div>
+            </div>
+            <div style="display: inline-block; height: 55px; width: 100%">
+                <div style="float: left; width: 35%">
+                    <label>@Resources.Resource.BankAccount_Create_Description </label>
+                </div>
+                <div style="float: right; width: 60%">
+                    <textarea id="Description" style="width: 200px;" maxlength="1000">@Model.Description</textarea>
+                </div>
+            </div>
+            <div style="margin-left: 215px;">
+                <input id="btnSave" type="button" class="btn btn-defaultxero" value="@Resources.Resource.BankAccount_Create_Create" />
+                <input type="button" style="margin-left: 6px;" class="btn btn-defaultxero" value="@Resources.Resource.BankAccount_Create_Close" id="btnClose"/>
+            </div>
+        </div>
+    </div>
+}
+

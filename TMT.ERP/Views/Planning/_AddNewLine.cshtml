@@ -1,0 +1,23 @@
+﻿<tr>
+    <td class="" tabindex="0" style="width: 150px;" id="machine">@Html.DropDownList("MachineID", null, String.Empty, new { style = "width:100%;" })</td>
+    <td class="" tabindex="0" style="width: 150px;">@Html.DropDownList("WorkOrderID", null, String.Empty, new { style = "width:100%;" })</td>
+    <td style="width: 190px;">
+        <input type="text" id="txtEStartDate+@ViewBag.Index" class="datepicker" name="txtEStartDate"/></td>
+    <td style="width: 190px;">
+        <input type="text" id="txtLStartDate+@ViewBag.Index" class="datepicker" name="txtLStartDate"/></td>
+    <td style="width: 190px;">
+        <input type="text" id="txtSetupTime+@ViewBag.Index" class="datepicker" name="txtSetupTime"/></td>
+    <td style="width: 190px;">
+        <input type="text" id="txtProcessTime" /></td>
+    <td style="width: 190px;">
+        <input type="text" id="txtSStartTime+@ViewBag.Index" class="datepicker" name="txtSStartTime"/>
+    </td>
+    <td style="width: 190px;">
+        <input type="text" id="txtSEndTime+@ViewBag.Index" class="datepicker" name="txtSEndTime"/></td>
+    <td style="width: 190px;"><a id="delRow" onclick="RemoveRow(this);">Del</a></td>
+</tr>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').datepicker();
+    });
+</script>

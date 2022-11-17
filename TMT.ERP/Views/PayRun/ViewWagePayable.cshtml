@@ -1,0 +1,259 @@
+﻿@using System.Diagnostics
+@using TMT.ERP.BusinessLogic.Utils
+@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.PayRun
+
+@{
+    int payItemID = ViewBag.PayItemID;
+    var oPayRun = ViewBag.PayRun as PayRun;
+    var ooPayRunEmployee = new List<PayRunEmployee>();
+    if (oPayRun != null)
+    {
+        ooPayRunEmployee = oPayRun.PayRunEmployees.Where(x => x.Active == true).ToList();
+    }
+    var oPayItem = ViewBag.PayItem as PayItem;
+    var oPayment = ViewBag.Payment as PaymentForPayItem;
+    var totalBill = oPayment.Amount ?? 0;
+    var fromDate = Convert.ToDateTime(Model.FromDate);
+    var toDate = Convert.ToDateTime(Model.ToDate);
+    var paymentDate = Convert.ToDateTime(Model.PaymentDate);
+    bool status = !(oPayment != null && oPayment.Status == 0);
+    var ooPayRunDetails = ViewBag.PayRunDetails as List<PayRunEmployeeDetail>;
+    var ooPayment = ViewBag.ListPayment as List<Payment>;
+    var amountDue = totalBill - ooPayment.Sum(x => Convert.ToDouble(x.TotalMoney));
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var amountDue = $('#hdfAmountDue').val();
+        if (parseInt(amountDue) == 0) {
+            $('#makePayment').css('display', 'none');
+        }
+        $('#btnAddPayment').click(function () {
+            
+            var paymentId = $('#hdfPaymentId').val();
+            var paymentTo = $('#bpaidTo').val();
+            var money = $('#txtAmountPaid').val();
+            var datePaid = $('#txtDatePaid').val();
+            var paidTo = $('#ddlAccount').val();
+            var reference = $('#txtReference').val();
+            var totalBill = $('#totalBill').html();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Payment/Create/',
+                    data: {
+                        "paymentId": paymentId,
+                        "paymentTo": paymentTo,
+                        "totalMoney": money,
+                        "currentId": "",
+                        "datePaid": datePaid,
+                        "paytoAccount": paidTo,
+                        "reference": reference,
+                        "status": 0,
+                        "type": 3
+                    }, success: function () {
+                        updateStatusPayment(paymentId, totalBill, 0);
+                        location.href = "/PayRun/ViewPayRun?payrunId=" + $('#hdfPayRunId').val();
+                    }
+                });
+        });
+        function updateStatusPayment(paymentId, totalMoney, type) {
+            
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/PayRun/UpdateStatusPayment/",
+                    data:
+                        {
+                            "paymentId": paymentId,
+                            "totalMoney": totalMoney,
+                            "type": type
+                        }
+                });
+        }
+    });
+</script>
+<input type="hidden" id="hdfAmountDue" value="@amountDue"/>
+<input type="hidden" id="hdfPaymentId" value="@oPayment.ID"/>
+<input type="hidden" value="@Model.ID" id="hdfPayRunId"/>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.PayRun_Bill @Model.Code</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.PayRun_Index</span></li>
+                        <li><a href="/PayRun/ViewPayRun?payrunId=@Model.ID">&nbsp;@Resources.Resource.PayRun_Index&nbsp;(@TMT.ERP.Commons.Utility.DateFormat(fromDate) &nbsp;-&nbsp;@TMT.ERP.Commons.Utility.DateFormat(toDate))</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div id="tabbody">
+                <div class="cleardiv"></div>
+                <div style="float: left; width: 50%;">
+                    @if (status == false)
+                    {
+                        <b style="color: #349400;">@Resources.Resource.PayRun_Awaiting</b>
+                    }
+                    @if (status)
+                    {
+                        <b style="color: red;">@Resources.Resource.PayRun_Paid</b>
+                    }
+
+                </div>
+                <div style="width: 50%; float: right;">
+                </div>
+                <div class="cleardiv"></div>
+
+                <div style="width: 20%; float: left;">
+                    <b>@Resources.Resource.PayRun_To</b>
+                    <div class="cleardiv"></div>
+                    @{
+                        var paidTo = "";
+                        if (oPayItem != null && oPayItem.PaidTo != null)
+                        {
+                            paidTo = oPayItem.PaidTo;
+                        }
+                    }
+                    <b id="bpaidTo">@paidTo</b>
+                </div>
+                <div style="width: 20%; float: left;">
+                    <b>@Resources.Resource.PayRun_Date</b>
+                    <div class="cleardiv"></div>                    
+                    @TMT.ERP.Commons.Utility.DateFormat(fromDate)
+                </div>
+                <div style="width: 20%; float: left;">
+                    <b>@Resources.Resource.PayRun_DueDate</b>
+                    <div class="cleardiv"></div>                    
+                    @TMT.ERP.Commons.Utility.DateFormat(paymentDate)
+                </div>
+                <div style="width: 20%; float: left;">
+                    <b>@Resources.Resource.PayRun_Reference</b>
+                    <div class="cleardiv"></div>
+                    @Model.Code
+                </div>
+                <div style="width: 20%; float: right; text-align: right;">
+                    <b>@Resources.Resource.PayRun_Index_Total</b>
+                    <div class="cleardiv"></div>
+                    <b class="currency">@totalBill</b>
+
+                </div>
+                <hr />
+                <div class="cleardiv"></div>
+                <div style="float: right; text-align: right;">Amounts are Tax Exclusive</div>
+                <div class="cleardiv"></div>
+                <table id="payrunEmployee">
+                    <thead>
+                        <tr>
+                            <th>@Resources.Resource.PayRun_Des</th>
+                            <th>@Resources.Resource.PayRun_Quanlity</th>
+                            <th>@Resources.Resource.PayRun_Rate</th>
+                            <th>@Resources.Resource.PayRun_Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in ooPayRunEmployee)
+                        {
+                            var fullName = "";
+                            if (item.Employee.FirstName != null)
+                            {
+                                fullName += item.Employee.FirstName;
+                            }
+                            if (item.Employee.LastName != null)
+                            {
+                                fullName += " " + item.Employee.LastName;
+                            }
+                            <tr>
+                                <td>
+                                    <b>@fullName </b>
+                                    @if (oPayItem != null && oPayItem.Name != null)
+                                    {
+                                        <b>(@oPayItem.Name)</b>
+                                    }
+                                </td>
+                                @if (ooPayRunDetails != null)
+                                {
+                                    var quanlity = Convert.ToDouble(@ooPayRunDetails.First(x => x.PayRunEmployeeID == item.ID).Quantity);
+                                    var rate = Convert.ToDouble(@ooPayRunDetails.First(x => x.PayRunEmployeeID == item.ID).Rate);
+                                    var totalPay = Convert.ToDouble(@ooPayRunDetails.First(x => x.PayRunEmployeeID == item.ID).TotalPay);
+                                    <td><b>@quanlity</b></td>
+                                    <td><b class="currency">@rate</b></td>
+                                    <td><b class="currency">@totalPay</b></td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div class="cleardiv"></div>
+                <div style="float: right; text-align: right; width: 50%;">
+                    <b>@Resources.Resource.PayRun_SubTotal:&nbsp;</b><b class="currency">
+                        @totalBill
+                    </b>
+                    <hr />
+                    <h4><b>@Resources.Resource.PayRun_Index_Total</b>:<b class="currency" id="totalBill"> @totalBill</b></h4>
+                    <hr />
+                    @foreach (var item in ooPayment)
+                    {
+                        <div style="display: inline;"><b>@Resources.Resource.PayRun_Less</b>&nbsp;<a href="javascript:void(0);" style="color: #048fc2;">@Resources.Resource.PayRun_Payment</a>&nbsp;<b class="currency">@item.TotalMoney</b></div>
+                        <br />
+                        <div style="display: inline;">
+                            @{
+                        var datePaid = item.DatePaid;
+                            }                            
+                            @TMT.ERP.Commons.Utility.DateFormat(datePaid)
+                        </div>
+                        <hr />
+                    }
+                    <hr />
+                    <b style="text-transform: uppercase;">@Resources.Resource.PayRun_AmoutDue:&nbsp;</b><b class="currency">@amountDue</b>
+                </div>
+                <div class="cleardiv"></div>
+                <div id="makePayment">
+                    <h4><b>@Resources.Resource.PayRun_MakeAPayment</b></h4>
+                    <div class="cleardiv"></div>
+                    <div style="width: 20%; float: left;">
+                        <b>@Resources.Resource.PayRun_AmountPaid</b>
+                        <div class="cleardiv"></div>
+                        <input type="text" id="txtAmountPaid" class="form-control currency" style="width: 150px !important;" value="@amountDue"/>
+                    </div>
+                    <div style="width: 20%; float: left;">
+                        <b>@Resources.Resource.PayRun_DatePaid</b>
+                        <div class="cleardiv"></div>
+                        <input type="text" class="form-control datepicker" id="txtDatePaid" style="width: 150px !important;" />
+                    </div>
+                    <div style="width: 20%; float: left;">
+                        <b>@Resources.Resource.PayRun_PaidFrom</b>
+                        @{
+                            var list = ViewBag.AccountID as List<AccountInfo>;
+                        
+                        }
+                        <div class="cleardiv"></div>
+                        <select id="ddlAccount" class="form-control" style="width: 150px !important;">
+                            @foreach (var item in list)
+                            {
+                                <option value="@item.AccountID">@item.AccountName</option>
+                            }
+                        </select>
+                    </div>
+                    <div style="width: 20%; float: left;">
+                        <b>@Resources.Resource.PayRun_Reference</b>
+                        <div class="cleardiv"></div>
+                        <input type="text" id="txtReference" class="form-control" style="width: 150px !important;" />
+                    </div>
+                    <div style="width: 20%; float: right;">
+                        <b></b>
+                        <div class="cleardiv"></div>
+                        <div class="cleardiv"></div>
+                        <input type="submit" class="btn btn-defaultxero" id="btnAddPayment" value="@Resources.Resource.PayRun_AddPayment" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

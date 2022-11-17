@@ -1,0 +1,538 @@
+﻿@model TMT.ERP.DataAccess.Model.Contact
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/ecmascript">
+    var result = 0;
+    $(document).ready(function () {
+        $("#Discount").change(function () {
+            debugger;
+            var discount = $('#Discount').asNumber();
+            if (discount > 100) {
+                $('#Discount').val(0.00);
+                return false;
+            } else {
+                var count = $('#Discount').val().replace(/[^0-9.]/g, '');
+                $('#Discount').val(count);
+                var value = $('#Discount').asNumber();
+                if (value > 100) {
+                }
+                if (count == "") {
+                    count = 0.00;
+                }
+                $('#Discount').val(count).formatCurrency();
+            }
+        });
+
+        $('#ContactName').focus();
+
+        jQuery.validator.messages.required = "";
+
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                    $('#AlertDuplicate').hide();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+            messages: {
+                email: {
+                    required: " ",
+                    email: '&nbsp;Please enter a valid email address.'
+                }
+            },
+        });
+
+        //$('#telCountry').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#telCountry').val().replace(/[^0-9]/g, '');
+        //    $('#telCountry').val(valueString);
+        //});
+        //$('#telArea').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#telArea').val().replace(/[^0-9]/g, '');
+        //    $('#telArea').val(valueString);
+        //});
+        //$('#telNo').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#telNo').val().replace(/[^0-9]/g, '');
+        //    $('#telNo').val(valueString);
+        //});
+        //$('#mobiCountry').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#mobiCountry').val().replace(/[^0-9]/g, '');
+        //    $('#mobiCountry').val(valueString);
+        //});
+        //$('#mobiArea').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#mobiArea').val().replace(/[^0-9]/g, '');
+        //    $('#mobiArea').val(valueString);
+        //});
+        //$('#mobiNo').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#mobiNo').val().replace(/[^0-9]/g, '');
+        //    $('#mobiNo').val(valueString);
+        //});
+        //$('#directCountry').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#directCountry').val().replace(/[^0-9]/g, '');
+        //    $('#directCountry').val(valueString);
+        //});
+        //$('#directArea').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#directArea').val().replace(/[^0-9]/g, '');
+        //    $('#directArea').val(valueString);
+        //});
+        //$('#directNo').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#directNo').val().replace(/[^0-9]/g, '');
+        //    $('#directlNo').val(valueString);
+        //});
+        //$('#faxCountry').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#faxCountry').val().replace(/[^0-9]/g, '');
+        //    $('#faxCountry').val(valueString);
+        //});
+        //$('#faxArea').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#faxArea').val().replace(/[^0-9]/g, '');
+        //    $('#faxArea').val(valueString);
+        //});
+        //$('#faxNo').change(function (e) {
+        //    debugger;
+        //    var valueString = $('#faxNo').val().replace(/[^0-9]/g, '');
+        //    $('#faxNo').val(valueString);
+        //});
+    });
+
+    function ExistsContactName(contact) {
+        var id = $('#hidID').val();
+        $.ajax({
+            type: 'POST',
+            url: '/Contacts/ExistsContactName/',
+            data: { "contactName": contact, "id": id },
+            success: function (data) {
+                debugger;
+                if (data == 1) {
+                    result = 1;
+                }
+                if (data == 0)
+                    result = 0;
+            },
+            async: false
+        });
+    }
+
+    $(document).ready(function () {
+
+        $('#btnClose').click(function (e) {
+            e.preventDefault();
+            location.href = "/Contacts/Index/";
+        });
+
+        $(".numeric").numeric();
+
+        $('#Discount').change(function () {
+            $("#Discount").val(function () {
+                var amount = $('#Discount').asNumber();
+                return amount;
+            }).formatCurrency();
+        });
+
+        $('#btnSame').click(function (e) {
+            debugger;
+            var attention = $('#Attention').val();
+            var address = $('#Address').val();
+            var zipcode = $('#ZipCode').val();
+            var state = $('#State').val();
+            var city = $('#City').val();
+            var country = $('#Country').val();
+            $('#PAttention').val(attention);
+            $('#PAddress').val(address);
+            $('#PZipCode').val(zipcode);
+            $('#PState').val(state);
+            $('#PCity').val(city);
+            $('#PCountry').val(country);
+        })
+    });
+
+    //Display Customer / Supplier / Both
+    $(function () {
+        debugger;
+        var type = $('#typeID').val();
+        if (type == 0) {
+            $('#Supplier').attr('checked', 'checked');
+        } else if (type == 1) {
+            $('#Customer').attr('checked', 'checked');
+        } else {
+            $('#Both').attr('checked', 'checked');
+        }
+    });
+
+
+
+    //Create new Contact
+    $(document).ready(function () {
+        $('#btnSave').click(function (e) {
+            debugger;
+            var id = $('#hidID').val();
+            var contact = $('#ContactName').val();
+            var fname = $('#FirstName').val();
+            var lname = $('#LastName').val();
+            var email = $('#Email').val();
+            var attention = $('#Attention').val();
+            var address = $('#Address').val();
+            var zipcode = $('#ZipCode').val();
+            var state = $('#State').val();
+            var city = $('#City').val();
+            var country = $('#Country').val();
+            var pAttention = $('#PAttention').val();
+            var pAddress = $('#PAddress').val();
+            var pZipcode = $('#PZipCode').val();
+            var pState = $('#PState').val();
+            var pCity = $('#PCity').val();
+            var pCountry = $('#PCountry').val();
+            var telCountry = $('#telCountry').val();
+            var telArea = $('#telArea').val();
+            var telNo = $('#telNo').val();
+            var dCountry = $('#directCountry').val();
+            var dArea = $('#directArea').val();
+            var dNo = $('#directNo').val();
+            var mCountry = $('#mobiCountry').val();
+            var mArea = $('#mobiArea').val();
+            var mNo = $('#mobiNo').val();
+            var fCountry = $('#faxCountry').val();
+            var fArea = $('#faxArea').val();
+            var fNo = $('#faxNo').val();
+            var skyname = $('#skyName').val();
+            var website = $('#Website').val();
+            var taxNo = $('#TaxNumber').val();
+            var saleTaxID = $('#SaleTaxID').val();
+            var purchaseTaxID = $('#PurchaseTaxID').val();
+            var discount = $('#Discount').val();
+            var currencyID = $('#CurrencyID').val();
+            var baName = $('#BAName').val();
+            var baNumber = $('#BANumber').val();
+            var baDetails = $('#BADetails').val();
+            var description = $('#Description').val();
+            var error = 0;
+
+            if ($('#Supplier').is(":checked")) {
+                var type = 0;
+            } else if ($('#Customer').is(":checked")) {
+                var type = 1;
+            } else if ($('#Both').is(":checked")) {
+                var type = 2;
+            }
+
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            ExistsContactName(contact);
+            if (result == 1) {
+                $('#AlertDuplicate').show();
+                $('.error').hide();
+                return false;
+            } else {
+                $('#AlertDuplicate').hide();
+                $.ajax(
+                {
+                    type: 'POST',
+                    traditional: true,
+                    url: '/Contacts/Edit/',
+                    data: {
+                        "contactname": contact, "fname": fname, "lname": lname, "email": email,
+                        "attention": attention, "address": address, "zipcode": zipcode, "state": state,
+                        "city": city, "country": country, "pAddress": pAddress, "pAttention": pAttention,
+                        "pZipcode": pZipcode, "pState": pState, "pCity": pCity, "pCountry": pCountry,
+                        "telCountry": telCountry, "telArea": telArea, "telNo": telNo,
+                        "dCountry": dCountry, "dArea": dArea, "dNo": dNo, "id": id,
+                        "mCountry": mCountry, "mArea": mArea, "mNo": mNo,
+                        "fCountry": fCountry, "fArea": fArea, "fNo": fNo,
+                        "skyName": skyname, "website": website, "taxNo": taxNo, "type": type, "baDetails": baDetails,
+                        "saleTaxID": saleTaxID, "purchaseTaxID": purchaseTaxID, "description": description,
+                        "currencyID": currencyID, "discount": discount, "baName": baName, "baNumber": baNumber
+                    },
+                    success: function (data) {
+                        window.location.href = "/Contacts/Index/";
+                    }
+                });
+            }
+        });
+    });
+</script>
+
+<style type="text/css">
+    #colright, #colcenter, #colleft {
+        width: 33%;
+        float: left;
+    }
+</style>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    
+    <input type="hidden" id="typeID" value="@Model.Type"/>
+    <input type="hidden" id="hidID" value="@Model.ID"/>
+    <div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+        <div id="con_top">
+            <div class="c_container">
+                 <h3>@Resources.Resource.Contacts_EditTitle</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><a href="/Contacts/Index/">@Resources.Resource.Contacts_Title</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="c_container">
+            <div id="popup-breadcrumb" style="width: 100%; margin-left: 0px; margin-top: 10px; margin-bottom: 10px;">
+                <div class="container">
+                    <div id="con_top">
+                        <div class="c_container">
+                            <div id="dialog"></div>
+                            <div id="confirmDel"></div>
+                            <div class="error" style="display: none; margin-top: 5px; height: 30px; border-radius: 6px; line-height: 2">
+                                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                                <span></span>.<br clear="all" />
+                            </div>
+                            <div id="AlertDuplicate" style="display: none; margin-top: 5px; height: 30px; border-radius: 6px; line-height: 2">
+                                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                                <label style="color: red; font-weight: normal;">Contact Name must be unique</label>
+                            </div>
+                            <div style="display: inline">
+                                <p style="display: inline-block">
+                                    @Resources.Resource.Contacts_ContactName
+                                    <br />
+                                    <input id="ContactName" class="required" type="text" size="25" value="@Model.ContactName" maxlength="60"/>
+                                </p>
+                                <fieldset style="display: inline-block; border: 1px solid darkgrey; border-radius: 6px; width: 375px; margin-left: 75px;">
+                                    <legend style="margin-bottom: -8px; width: 100px; font-size: 14px; margin-left: 15px; height: 30px;">Contact Type </legend>
+                                    <input type="radio" name="Type" id="Both" style="margin-left: 15px;" checked />
+                                    <label style="font-weight: normal">@Resources.Resource.Contacts_BothType</label>
+                                    <input type="radio" name="Type" id="Supplier" style="margin-left: 15px;" />
+                                    <label style="font-weight: normal">@Resources.Resource.Contacts_Supplier</label>
+                                    <input type="radio" name="Type" id="Customer" style="margin-left: 15px;" />
+                                    <label style="font-weight: normal">@Resources.Resource.Contacts_Customer</label>
+                                </fieldset>
+                            </div>
+                            <hr class="x-boxed" />
+                            <div>
+                                <p class="x-boxed" style="margin-bottom: 10px;">
+                                    <label>Contact Person</label>
+                                </p>
+                                <div>
+                                    <p style="display: inline-block">
+                                        @Resources.Resource.Contacts_FirstName
+                                        <br />
+                                        <input id="FirstName" type="text" size="23" value="@Model.FirstName" maxlength="250"/>
+                                    </p>
+                                    <p style="display: inline-block">
+                                        @Resources.Resource.Contacts_LastName
+                                        <br />
+                                        <input id="LastName" type="text" size="23" value="@Model.LastName" maxlength="50"/>
+                                    </p>
+                                    <p style="display: inline-block; width: 490px;">
+                                        @Resources.Resource.Contacts_Email
+                                        <br />
+                                        <label style="display: inline-flex; width: 100%">
+                                        <input id="Email" name="email" class="email" type="text" size="23" value="@Model.Email" maxlength="50" placeholder="ex: you@yourdomain.com"/>
+                                    </label></p>
+                                </div>
+                            </div>
+                            <div style="margin-top: 5px;">
+                                <p class="x-boxed" style="margin-bottom: 10px;">
+                                    <label>Contact Details </label>
+                                </p>
+                                <hr style="margin-bottom: 5px; margin-top: 5px;" />
+                                <div id="colleft">
+                                    <p class="x-boxed1"><b>Postal Address </b></p>
+                                    <p>
+                                        <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Contacts_PostAttention
+                                        </label>
+                                        <input id="Attention" type="text" size="25" style="width: 140px;" value="@Model.PostAttention" maxlength="250"/>
+                                    </p>
+                                    <p>
+                                        <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Contacts_PostAddress
+                                        </label>
+                                        <textarea id="Address" rows="3" style="resize: none; width: 140px;" maxlength="1000"> @Model.PostAddress</textarea>
+                                    </p>
+                                    <p>
+                                        <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Contacts_PostCity
+                                        </label>
+                                        <input id="City" type="text" size="25" style="width: 140px;" value="@Model.PostCity"/ maxlength="250">
+                                    </p>
+                                    <p>
+                                        <label style="float: left; width: 150px; font-weight: normal;">
+                                            @Resources.Resource.Contacts_PostState
+                                        </label>
+                                        <input id="State" type="text" size="25" style="width: 140px;" value="@Model.PostState"/ maxlength="250">
+                                    </p>
+                                    <p>
+                                        <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Contacts_PostZipCode
+                                        </label>
+                                        <input id="ZipCode" type="text" size="25" style="width: 140px;" value="@Model.PostZipCode" maxlength="40"/>
+                                    </p>
+                                    <p>
+                                        <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Contacts_PostCountry
+                                        </label>
+                                        <input id="Country" type="text" size="25" style="width: 140px;" value="@Model.PostCountry" maxlength="40"/>
+                                    </p>
+                                </div>
+
+                                <div id="colcenter">
+                                    <p class="x-boxed1"><b>Physical Address </b><a href="#" id="btnSame">[Same as postal address] </a></p>
+                                    <p>
+                                        <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Contacts_PhysAttention
+                                        </label>
+                                        <input id="PAttention" type="text" size="25" style="width: 140px;" value="@Model.PhysAttention" maxlength="250"/>
+                                    </p>
+                                    <p>
+                                        <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Contacts_PhysAddress
+                                        </label>
+                                        <textarea id="PAddress" rows="3" style="resize: none; width: 140px;" maxlength="1000">@Model.PhysAddress</textarea>
+                                    </p>
+                                    <p>
+                                        <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Contacts_PhysCity
+                                        </label>
+                                        <input id="PCity" type="text" size="25" style="width: 140px;" value="@Model.PhysCity" maxlength="250"/>
+                                    </p>
+                                    <p>
+                                        <label style="float: left; width: 150px; font-weight: normal;">
+                                            @Resources.Resource.Contacts_PhysState
+                                        </label>
+                                        <input id="PState" type="text" size="25" style="width: 140px;" value="@Model.PhysState" maxlength="250"/>
+                                    </p>
+                                    <p>
+                                        <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Contacts_PhysZipCode
+                                        </label>
+                                        <input id="PZipCode" type="text" size="25" style="width: 140px;" value="@Model.PhysZipCode" maxlength="40"/>
+                                    </p>
+                                    <p>
+                                        <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Contacts_PhysCountry
+                                        </label>
+                                        <input id="PCountry" type="text" size="25" style="width: 140px;" value="@Model.PostCountry" maxlength="40"/>
+                                    </p>
+                                </div>
+
+                                <div id="colright">
+                                    <p class="x-boxed1"><b>Telephone </b></p>
+                                    <p>
+                                        <label style="float: left; width: 100px; font-weight: normal;">@Resources.Resource.Contacts_TelNum </label>
+                                        <input id="telCountry" type="text" size="5" style="width: 60px;" placeholder="Country" value="@Model.Tel_Country" class="numeric" maxlength="5"/>
+                                        <input id="telArea" type="text" size="5" style="width: 40px;" placeholder="Area" value="@Model.Tel_Area" class="numeric" maxlength="5"/>
+                                        <input id="telNo" type="text" size="15" style="width: 80px;" placeholder="Tel No" value="@Model.Tel_Num" class="numeric" maxlength="15"/>
+                                    </p>
+                                    <p>
+                                    <label style="float: left; width: 100px; font-weight: normal;">@Resources.Resource.Contacts_DirectDial </label>
+                                    <input id="directCountry" type="text" size="5" style="width: 60px;" placeholder="Country" class="numeric" value="@Model.Direct_Country" maxlength="5"/>
+                                    <input id="directArea" type="text" size="5" style="width: 40px;" placeholder="Area" class="numeric" value="@Model.Direct_Area" maxlength="5"/>
+                                    <input id="directNo" type="text" size="15" style="width: 80px;" placeholder="Tel No" class="numeric" value="@Model.Direct_Num" maxlength="15"/>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 100px; font-weight: normal;">@Resources.Resource.Contacts_PhoneNumber </label>
+                                    <input id="mobiCountry" type="text" size="5" style="width: 60px;" placeholder="Country" class="numeric" value="@Model.Mobi_Country" maxlength="5"/>
+                                    <input id="mobiArea" type="text" size="5" style="width: 40px;" placeholder="Area" class="numeric" value="@Model.Mobi_Area" maxlength="5"/>
+                                    <input id="mobiNo" type="text" size="15" style="width: 80px;" placeholder="Tel No" class="numeric" value="@Model.Mobi_Num" maxlength="15"/>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 100px; font-weight: normal;">@Resources.Resource.Contacts_FaxNum </label>
+                                    <input id="faxCountry" type="text" size="5" style="width: 60px;" placeholder="Country" class="numeric" value="@Model.Fax_Country" maxlength="5"/>
+                                    <input id="faxArea" type="text" size="5" style="width: 40px;" placeholder="Area" class="numeric" value="@Model.Fax_Area" maxlength="5"/>
+                                    <input id="faxNo" type="text" size="15" style="width: 80px;" placeholder="Tel No" class="numeric" value="@Model.Fax_Num" maxlength="15"/>
+                                </p>
+                                    <p>
+                                        <label style="float: left; width: 100px; font-weight: normal;">Website </label>
+                                        <input id="Website" type="text" size="25" style="width: 188px;" value="@Html.DisplayFor(c => c.Website)" maxlength="50"/>
+                                    </p>
+                                </div>
+                            </div>
+                            <hr style="margin-top: 310px; margin-bottom: 5px;" />
+                            <div>
+                                <p class="x-boxed" style="margin-bottom: 10px;">
+                                    <label>Tax</label>
+                                </p>
+                                <div>
+                                    <p style="display: inline-block">
+                                        @Resources.Resource.Contacts_TaxNumber
+                                        <br />
+                                        <input id="TaxNumber" type="text" size="25" value="@Html.DisplayFor(c => c.TaxNumber)" maxlength="50"/>
+                                    </p>
+                                    <p style="display: inline-block">
+                                        @Resources.Resource.Contacts_SalesTax
+                                        <br />
+                                        @Html.DropDownList("SaleTaxID", null, string.Empty, new { style = "width: 150px; height: 26px;" })
+                                    </p>
+                                    <p style="display: inline-block">
+                                        @Resources.Resource.Contacts_PurchasesTax
+                                        <br />
+                                        @Html.DropDownList("PurchaseTaxID", null, string.Empty, new { style = "width: 150px; height: 26px;" })
+                                    </p>
+                                    <hr style="margin-top: 5px; margin-bottom: 5px;" />
+                                </div>
+                                <div>
+                                    <p class="x-boxed" style="margin-bottom: 10px;">
+                                        <label>Sales Discount</label>
+                                    </p>
+                                    <p style="display: inline-block">
+                                        @Resources.Resource.Contacts_Discount
+                                        <br />
+                                        <input id="Discount" type="text" size="5" class="numeric currency" value="@Html.DisplayFor(c => c.Discount)"/>
+                                    </p>
+                                </div>
+                                <hr style="margin-bottom: 5px; margin-top: 3px;" />
+                                <div>
+                                    <p class="x-boxed" style="margin-bottom: 10px;">
+                                        <label>Currency</label>
+                                    </p>
+                                    @Html.DropDownList("CurrencyID", null, String.Empty, new { style = "width: 150px; height: 26px;" })
+                                </div>
+                                <p class="x-boxed" style="margin-bottom: 10px;">
+                                    <label>Batch Payment</label>
+                                </p>
+                                <div>
+                                    <p style="display: inline-block">
+                                        @Resources.Resource.Contacts_BAName
+                                        <br />
+                                        <input id="BAName" type="text" size="25" value="@Html.DisplayFor(c => c.BankAccountName)" maxlength="50"/>
+                                    </p>
+                                    <p style="display: inline-block">
+                                        @Resources.Resource.Contacts_BANum
+                                        <br />
+                                        <input id="BANumber" type="text" size="25" value="@Html.DisplayFor(c => c.BankAccoutNum)" maxlength="50"/>
+                                    </p>
+                                    <p style="display: inline-block">
+                                        @Resources.Resource.Contacts_BADetails
+                                        <br />
+                                        <input id="BADetails" type="text" size="25" style="width:320px" value="@Html.DisplayFor(c => c.BankAccountDetail)" maxlength="50"/>
+                                    </p>
+                                </div>
+                                <hr style="margin-bottom: 5px; margin-top: 3px;" />
+                            </div>
+                            <p>
+                                <input id="btnSave" type="button" class="btn btn-defaultxero" value="@Resources.Resource.Contacts_Save" />
+                                <input type="button" class="btn btn-defaultxero" value="@Resources.Resource.Contacts_Close" id="btnClose"/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>    
+}

@@ -1,0 +1,157 @@
+﻿@{  
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var noteType = $("#hidNoteType").val();
+        var noteFromID = $("#hidNoteFromID").val();
+        var numberItems = $("#hidNumberItem").val();
+        if (numberItems != "") {
+            $('#btnShow').val("Show History (" + numberItems + " changes)");
+        }
+
+        $('.datepicker').click(function () {
+            $(this).datepicker();
+        });
+
+        $('#btnAdd').click(function () {
+            var value = $('#noteAdd').css('display');
+            if (value == 'none') {
+                $('#noteAdd').css('display', 'block');
+            } else {
+                $('#noteAdd').css('display', 'none');
+            }
+        });
+        $('#btnCancel').click(function () {
+            $('#noteAdd').css('display', 'none');
+        });
+        $('#btnShow').click(function () {
+            
+            noteType = $("#hidNoteType").val();
+            noteFromID = $("#hidNoteFromID").val();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Note/GetNotesList/',
+                    data: { 'noteType': noteType, 'noteFromID': noteFromID },
+                    success: function (data) {
+                        $('#noteShow').html(data);
+                    }
+                });
+            var value = $('#noteShow').css('display');
+            if (value == 'none') {
+                $('#noteShow').css('display', 'block');
+            } else {
+                $('#noteShow').css('display', 'none');
+            }
+        });
+        $('#btnSave').click(function () {
+            
+            noteType = $("#hidNoteType").val();
+            noteFromID = $("#hidNoteFromID").val();
+            if (noteFromID == 0) {
+                $('#confirmDel').empty();
+                $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Create Invoice first !</p>');
+                $("#confirmDel").dialog({
+                    modal: true,
+                    height: 140,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                        }
+
+                    }
+                });
+                $('#confirmDel').dialog('open');
+            } else {
+                var createDate = "";
+                var notes = $('#txtNotes').val();
+                var expectedDate = $('#txtExpectedPaymentDate').val();
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/Note/Create/',
+                        data: {
+                            "noteFromId": noteFromID,
+                            "createDate": createDate,
+                            "notes": notes,
+                            "type": noteType,
+                            "status": 0,
+                            "changes": "Created",
+                            "expectedDate": expectedDate
+                        },
+                        success: function (data) {
+                            
+                            var numberItems = $('#hidCountChanges').val();
+                            $('#btnShow').val("Show History (" + numberItems + " changes)");
+                        }
+                    });
+                var value = $('#noteAdd').css('display');
+                if (value == 'none') {
+                    $('#noteAdd').css('display', 'block');
+                } else {
+                    $('#txtNotes').val('');
+                    $('#txtExpectedPaymentDate').val('');
+                    $('#noteAdd').css('display', 'none');
+                    $.ajax(
+                        {
+                            type: 'POST',
+                            url: '/Note/GetNotesList/',
+                            data: { 'noteType': noteType, 'noteFromID': noteFromID },
+                            success: function (data) {
+                                
+                                $('#noteShow').empty();
+                                var numberItems = $('#hidCountChanges').val();
+                                $('#btnShow').val("Show History (" + numberItems + " changes)");
+                                $('#noteShow').html(data);
+                                var valueShow = $('#noteShow').css('display');
+                                if (valueShow == 'none') {
+                                    $('#noteShow').css('display', 'block');
+                                }
+                            }
+                        });
+                }
+            }
+        });
+    });
+</script>
+
+<input type="hidden" id="hidCountChanges" value="@ViewBag.CountItems" />
+<div class="con_history">
+    <div class="container">
+        <div class="c_container">
+            <div>
+                <h5>History & Note</h5>
+                <div class="con_clr"></div>
+                <div class="tablefooter">
+                    <div class="">
+                        <input type="submit" value="Show History" id="btnShow" class="showhistory" />
+                            <input type="submit" value="Add Note" id="btnAdd" class="addline" />
+                    </div>
+                </div>
+            </div>
+            <div style="width: 100%; display: inline; display: none" id="noteAdd">
+
+                <div style="width: 25%;">
+                    Notes:<textarea cols="40" rows="5" id="txtNotes" class="txt_box1"></textarea>
+                </div>
+                <div style="width: 25%;">
+                    Expected Payment Date :<input type="text" id="txtExpectedPaymentDate" class="datepicker" />
+                </div>
+                <div style="width: 25%;">
+                    <input type="submit" value="Save" id="btnSave" class="btn" />
+                    <input type="submit" value="Cancel" id="btnCancel" class="btn" />
+                </div>
+            </div>
+            <div style="width: 100%; display: none" id="noteShow">
+            </div>
+             <div id="confirmDel" title="Alert!"></div>
+        </div>
+    </div>
+</div>
+
+@*<input type="hidden" id="hdfUserID" value="@ViewBag.EmployeeID"/>*@
+

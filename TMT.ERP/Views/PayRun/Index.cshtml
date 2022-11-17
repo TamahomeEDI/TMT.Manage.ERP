@@ -1,0 +1,258 @@
+﻿@using PagedList.Mvc
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.PayRun>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#sPageSize').html($('#hdfPageSize').val());
+        var countModel = $('#hdfCountList').val();
+        if (countModel == 0) {
+            $('#error').css('display', 'block');
+            $('#tabs-1').css('display', 'none');
+            $('#function').css('display', 'none');
+        } else {
+            $('#error').css('display', 'none');
+        }
+        $('#btnAdd').click(function () {
+            location.href = "/PayRun/SetDate/";
+        });
+        $('#btnPayItem').click(function () {
+            location.href = "/PayItems/";
+        });
+        $('.aDelete').click(function () {
+            
+            var payId = $(this).find("#hdfPayRunID").val();
+            $('#confirmDel').empty();
+            $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Are you sure delete ?</p>');
+            $("#confirmDel").dialog({
+                modal: true,
+                height: 140,
+                autoOpen: false,
+                buttons: {
+                    'Agree': function () {
+                        Delete(payId);
+                    },
+                    Cancel: function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#confirmDel').dialog('open');
+        });
+
+    });
+
+    function Delete(payrunId) {
+        $.ajax(
+            {
+                type: "POST",
+                url: "/PayRun/DeletePayRun/",
+                data:
+                    {
+                        "payrunId": payrunId
+                    },
+                success: function (data) {
+                    $('#confirmDel').empty();
+                    $('#confirmDel').append('<p style="height:0px !important;text-align:center;">' + data + '</p>');
+                    $("#confirmDel").dialog({
+                        modal: true,
+                        height: 140,
+                        autoOpen: false,
+                        buttons: {
+                            'OK': function () {
+                                location.reload();
+                            },
+                        }
+                    });
+                    $('#confirmDel').dialog('open');
+                }
+            });
+    }
+    function SetPageSize(pageSize) {
+        
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/PayRun/SetPageSize',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+</script>
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<input type="hidden" value="@Model.Count" id="hdfCountList"/>
+
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.PayRun_Index</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.PayRun_Index</span></li>
+                        <li><a href="/PayRun/">@Resources.Resource.PayRun_IndexList</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="con_body">
+    <div class="container">
+        <div class="c_container">
+            <div class="cleardiv"></div>
+            <input type="submit" value="@Resources.Resource.PayRun_Index_New" id="btnAdd" class="btn btn-defaultxero" />
+            <input type="submit" value="@Resources.Resource.PayRun_Index_Manager" id="btnPayItem" class="btn btn-defaultxero" />
+            <div class="cleardiv"></div>
+            <div class="chartPurchase">
+                <ul>
+                    <li>Awaiting Payment</li>
+                    <li>Paid</li>
+                </ul>
+                @{Html.RenderAction("StackedColumn", "Chart", new { iType = 4, chartname = "PayRun" });}
+            </div>
+            <div class="cleardiv"></div>
+            <div id="tabbody">
+                <div id="tabs-1">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>@Resources.Resource.PayRun_Index_PayPeriod</th>
+                                <th>@Resources.Resource.PayRun_Index</th>
+                                <th>@Resources.Resource.PayRun_Index_PayDate</th>
+                                <th>@Resources.Resource.PayRun_Index_Employee</th>
+                                <th>@Resources.Resource.PayRun_Index_EmployeePayment</th>
+                                <th>@Resources.Resource.PayRun_Index_OrtherPayment</th>
+                                <th>@Resources.Resource.PayRun_Index_Total</th>
+                                <th>@Resources.Resource.PayRun_Index_Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var x in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        @TMT.ERP.Commons.Utility.DateFormat(Convert.ToDateTime(x.FromDate))&nbsp;<b>---</b>&nbsp;@TMT.ERP.Commons.Utility.DateFormat(Convert.ToDateTime(x.ToDate))
+                                    </td>
+                                    <td>
+                                        @if (x.Status == 0)
+                                        {
+                                            <a href="/PayRun/SetDateEmployee?payrunId=@x.ID">@x.Code</a>
+                                        }
+                                        else if (x.Status == 1)
+                                        {
+                                            <a href="/PayRun/EnterEmployee?payrunId=@x.ID&payRunEmployeeID=0">@x.Code</a>
+                                        }
+                                        else if (x.Status == 2)
+                                        {
+                                            <a href="/PayRun/Details?payrunId=@x.ID">@x.Code</a>
+                                        }
+                                        else if (x.Status == 3)
+                                        {
+                                            <a href="/PayRun/ViewPayRun?payrunId=@x.ID">@x.Code</a>
+                                        }
+                                        else if (x.Status == 4)
+                                        {
+                                            <a href="/PayRun/ViewVoid?payrunId=@x.ID">@x.Code</a>
+                                        }
+                                        else if (x.Status == 5)
+                                        {
+                                            <a href="javascript:void(0);">@x.Code</a>
+                                        }
+                                        else
+                                        {
+                                            <a href="javascript:void(0);">@x.Code</a>
+                                        }
+
+                                    </td>
+                                    <td>
+                                        @{
+                                        var paymentDate = Convert.ToDateTime(x.PaymentDate);
+                                        }
+                                        @TMT.ERP.Commons.Utility.DateFormat(paymentDate)
+                                    </td>
+                                    <td>
+                                        <b>@x.NumOfEmployee</b>
+                                    </td>
+                                    <td>
+                                        <b class="currency">
+                                            @x.EmployeePayment
+                                        </b>
+                                    </td>
+                                    <td>
+                                        <b class="currency">
+                                            @x.OtherPayment
+                                        </b>
+                                    </td>
+                                    <td>
+                                        <b class="currency">
+                                            @x.Total
+                                        </b>
+                                    </td>
+                                    <td>
+                                        @{
+                                        var status = x.Status;
+                                        }
+                                        @if (status == 0 || status == 1)
+                                        {
+                                            <b>@Resources.Resource.PayRun_Index_Draft</b>
+                                        }
+                                        @if (status == 2)
+                                        {
+                                            <b>Wait Approved</b>
+                                        }
+                                        @if (status == 3)
+                                        {
+                                            <b>@Resources.Resource.PayRun_Index_Approved</b>                                        
+                                        }
+                                        @if (status == 4)
+                                        {
+                                            <b style="color: red;">@Resources.Resource.PayRun_Index_Voided</b>
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (x.Status == 0 || x.Status == 1 || x.Status == 2)
+                                        {
+                                            <a id="aDelete" href="javascript:void(0);" class="aDelete">
+                                                <input type="hidden" value="@x.ID" id="hdfPayRunID"/>@Resources.Resource.PayRun_Index_Delete</a>
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div style="height: 50px; padding-top: 5px;">
+                        <div style="float: left;">
+                            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+                        </div>
+                        <div style="width: 25%; float: right;">
+                            <label style="margin-left: 70px; margin-top: 10px;">Showing&nbsp;</label>
+                            <div id="showpag" class="dropdown" style="float: right;">
+                                <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cleardiv"></div>
+                <div id="error">
+                    <label>
+                        @Resources.Resource.SaleInvoices_Error
+                    </label>
+                </div>
+                <div class="cleardiv"></div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="confirmDel" title="Confirm!"></div>

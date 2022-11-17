@@ -1,0 +1,36 @@
+﻿@model TMT.ERP.DataAccess.Model.AccountBalance
+
+@{
+    ViewBag.Title = "Details";
+}
+
+<h2>Details</h2>
+
+<fieldset>
+    <legend>AccountBalance</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.AccoutID)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.AccoutID)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Debit)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Debit)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Credit)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Credit)
+    </div>
+</fieldset>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+     
+</p>

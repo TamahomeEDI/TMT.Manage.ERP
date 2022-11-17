@@ -1,0 +1,188 @@
+﻿@model TMT.ERP.Models.Profit_Loss
+@{
+    //Layout = null;
+}
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Model.TitleDocument</h3>
+            </div>
+        </div>
+     </div>
+</div>
+<div id="con_body">
+    <div class="container">
+        <div id="Report_Css">
+            <div class="MainTitle1">@Model.TitleDocument</div>
+            <div class="MainTitle2">@Model.CompanyName</div>
+            <div class="MainTitle2">@Model.ReportDate</div>
+            <table>
+                <thead>
+                    <tr>
+                        <th >
+                        </th>
+                        @foreach (var item in Model.ColumnName)
+                        {
+                        <th>
+                            @item
+                        </th>
+                        }
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td colspan="6" class="SectionTitle2">
+                            @Model.Title_Income
+                        </td>
+                    </tr>
+                    @foreach (var item in Model.Income)
+                    {
+                        <tr>
+                            <td class="Indent1">
+                                @Html.DisplayFor(model => item.AccountName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.s_TotalAccountTran_1)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.s_TotalAccountTran_2)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.s_TotalAccountTran_3)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.s_TotalAccountTran_4)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.s_TotalAccountTran_YTD)
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td class="Indent1 Total1Indented">
+                            @Model.Title_TotalIncome
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.s_TotalIncome_1
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.s_TotalIncome_2
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.s_TotalIncome_3
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.s_TotalIncome_4
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.s_TotalIncome_YTD
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="SectionTitle2 Total3">
+                            @Model.Title_GrossProfit
+                        </td>
+                        <td class="Total3">
+                            @Model.s_TotalIncome_1
+                        </td>
+                        <td class="Total3">
+                            @Model.s_TotalIncome_2
+                        </td>
+                        <td class="Total3">
+                            @Model.s_TotalIncome_3
+                        </td>
+                        <td class="Total3">
+                            @Model.s_TotalIncome_4
+                        </td>
+                        <td class="Total3">
+                            @Model.s_TotalIncome_YTD
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6" class="SectionTitle2">
+                            @Model.Title_OperatingExpenses
+                        </td>
+                    </tr>
+                    @foreach (var item in Model.OperatingExpenses)
+                    {
+                        <tr>
+                            <td class="Indent1">
+                                @Html.DisplayFor(model => item.AccountName)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.s_TotalAccountTran_1)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.s_TotalAccountTran_2)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.s_TotalAccountTran_3)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.s_TotalAccountTran_4)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(model => item.s_TotalAccountTran_YTD)
+                            </td>
+                        </tr>
+                    }
+                    <tr>
+                        <td class="Indent1 Total1Indented">
+                            @Model.Title_TotalOperatingExpenses
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.s_TotalOperatingExpenses_1
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.s_TotalOperatingExpenses_2
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.s_TotalOperatingExpenses_3
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.s_TotalOperatingExpenses_4
+                        </td>
+                        <td class="Total1Indented">
+                            @Model.s_TotalOperatingExpenses_YTD
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="SectionTitle2 Total3">
+                            @Model.Title_NetProfit
+                        </td>
+                        <td class="Total3">
+                            @Model.s_NetProfit_1
+                        </td>
+                        <td class="Total3">
+                            @Model.s_NetProfit_2
+                        </td>
+                        <td class="Total3">
+                            @Model.s_NetProfit_3
+                        </td>
+                        <td class="Total3">
+                            @Model.s_NetProfit_4
+                        </td>
+                        <td class="Total3">
+                            @Model.s_NetProfit_YTD
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div id="Report_Button">
+            <div>
+                <div class="btn-group">
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        Export <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li>
+                            <a href="/Report/ExportReport?iType=1">Excel</a>
+                        </li>
+                    </ul>
+                </div>        
+            </div>    
+        </div>
+    </div>
+</div>

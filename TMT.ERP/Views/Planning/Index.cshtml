@@ -1,0 +1,222 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.ProductivePlanDetail>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#aPending').click(function () {
+            $(this).parent().addClass('active');
+            $('#aCompleted').parent().removeClass('active');
+            $('#aCompleted').parent().addClass('selected');
+            $('#pending').css('display', 'block');
+            $('#completed').css('display', 'none');
+        });
+        $('#aCompleted').click(function () {
+            $(this).parent().addClass('active');
+            $('#aPending').parent().removeClass('active');
+            $('#aPending').parent().addClass('selected');
+            $('#pending').css('display', 'none');
+            $('#completed').css('display', 'block');
+        });
+
+        $('#btnAddNewSchedule').click(function () {
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Planning/CreatePlan/",
+                    success: function () {
+                        window.location.href = "/Planning/CreatePlan/";
+                    }
+                });
+        });
+
+        $('#WorkCenterID').change(function () {
+            var value = $(this).val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Planning/",
+                    success: function () {
+                        window.location.href = "/Planning?index=" + value;
+                    }
+                });
+        });
+    });
+</script>
+<div style="display: inline;">
+    <input type="submit" value="Add New Schedule" id="btnAddNewSchedule" />
+</div>
+<div style="clear: both;"></div>
+<div style="display: inline;">
+    <p>
+        <label>Work Center:</label><span>@Html.DropDownList("WorkCenterID", null, String.Empty, new { style = "width:200px;" })</span>
+    </p>
+</div>
+<div style="clear: both;"></div>
+<div style="display: inline-block;">
+    <ul style="margin: 0px;" class="group nav nav-tabs">
+        <li class="active">
+            <a href="javascript:void(0);" title="Pending" id="aPending">Pending
+            </a></li>
+        <li class="selected">
+            <a href="javascript:void(0);" title="Completed" id="aCompleted">Completed</a></li>
+    </ul>
+
+</div>
+<div style="clear: both; height: 10px;">
+</div>
+<div id="pending">
+    <table id="productplanPending" class="table">
+        <thead>
+            <tr>
+                <th>MPS No</th>
+                <th>Machine No
+                </th>
+                <th>WorkOrder No
+                </th>
+                <th>Earliest Start Date
+                </th>
+                <th>Latest Start Date
+                </th>
+                <th>Setup Time</th>
+                <th>Process Time
+                </th>
+                <th>Schedule Start Time
+                </th>
+                <th>Schedule End Time
+                </th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td><a href='/Planning/ProductionMonitor?mpsId=@item.MPSNoID&workorderId=@item.WorkOrderID&machineId=@item.MachineID'>@ViewBag.MpsNo(item.MPSNoID)</a></td>
+                    <td>@ViewBag.MachineCode(item.MachineID)</td>
+                    <td>@ViewBag.WorkOrderNo(item.WorkOrderID)</td>
+                    <td>@{
+                DateTime date0 = Convert.ToDateTime(item.EarliestStartDate);
+                            
+                    }
+                        @date0.ToString("d")
+                    </td>
+                    <td>
+                        @{
+                DateTime date1 = Convert.ToDateTime(item.LatestStartDate);
+                        }
+                        @date1.ToString("d")
+                    </td>
+                    <td>
+                        @{
+                DateTime date2 = Convert.ToDateTime(item.SetupDateTime);
+                        }
+                        @date2.ToString("d")
+                    </td>
+                    <td>
+                        @item.ProcessTime
+                    </td>
+                    <td>
+                        @{
+                DateTime date3 = Convert.ToDateTime(item.ScheduleStartTime);
+                        }
+                        @date3.ToString("d")
+                    </td>
+                    <td>
+                        @{
+                DateTime date4 = Convert.ToDateTime(item.ScheduleEndTime);
+                        }
+                        @date4.ToString("d")
+                    </td>
+                    <td>
+                        @{
+                var status = item.Status;
+                if (status == 0)
+                {
+                            @Html.Raw("Pending")
+                }
+                else
+                {
+                            @Html.Raw("In process")
+                }
+                        }
+                    </td>
+                    <td>
+                        <a href="javascript:void(0);" title="Delete">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+<div id="completed" style="display: none;">
+    <table id="productplanCompleted" class="table">
+        <thead>
+            <tr>
+                <th>MPS No</th>
+                <th>Machine No
+                </th>
+                <th>WorkOrder No
+                </th>
+                <th>Earliest Start Date
+                </th>
+                <th>Latest Start Date
+                </th>
+                <th>Setup Time</th>
+                <th>Process Time
+                </th>
+                <th>Schedule Start Time
+                </th>
+                <th>Schedule End Time
+                </th>
+
+            </tr>
+        </thead>
+        <tbody>
+            @{
+                var list = ViewBag.Completed;
+            }
+            @foreach (var item in list)
+            {
+                <tr>
+                    <td>@ViewBag.MpsNo(item.MPSNoID)</td>
+                    <td>@ViewBag.MachineCode(item.MachineID)</td>
+                    <td>@ViewBag.WorkOrderNo(item.WorkOrderID)</td>
+                    <td>@{
+                DateTime date0 = Convert.ToDateTime(item.EarliestStartDate);
+                            
+                    }
+                        @date0.ToString("d")
+                    </td>
+                    <td>
+                        @{
+                DateTime date1 = Convert.ToDateTime(item.LatestStartDate);
+                        }
+                        @date1.ToString("d")
+                    </td>
+                    <td>
+                        @{
+                DateTime date2 = Convert.ToDateTime(item.SetupDateTime);
+                        }
+                        @date2.ToString("d")
+                    </td>
+                    <td>
+                        @item.ProcessTime
+                    </td>
+                    <td>
+                        @{
+                DateTime date3 = Convert.ToDateTime(item.ScheduleStartTime);
+                        }
+                        @date3.ToString("d")
+                    </td>
+                    <td>
+                        @{
+                DateTime date4 = Convert.ToDateTime(item.ScheduleEndTime);
+                        }
+                        @date4.ToString("d")
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>

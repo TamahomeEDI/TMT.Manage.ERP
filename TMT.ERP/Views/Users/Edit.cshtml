@@ -1,0 +1,175 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.User
+
+@{
+    ViewBag.Title = "Create";
+    Layout = null;  
+}
+<script type="text/ecmascript">
+
+    $(document).ready(function () {
+        $('#UserName').focus();
+        $("#Phone").mask("999-999-9999");
+        $('#btnClose').unbind('click').click(function (e) {
+            $('#dialog').dialog('close');
+            return false;
+        });
+
+        $('#btnUpdate').unbind('click').click(function () {
+            var isValid = $("#frmEditUser").valid();
+            if (!isValid) {
+                return;
+            }
+        });
+
+        jQuery.validator.messages.required = "";
+        $("#frmEditUser").validate({
+            invalidHandler: function (e, validator) {
+                
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+            rules: {
+                RePassword: {
+                    equalTo: "#Password"
+                }
+            }
+        });
+
+    });
+</script>
+
+<div style="display: inline;">
+    <div class="cleardiv"></div>
+    <div class="error" style="display: none;">
+        <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: -5px 10px 0px 0px;" />
+        <span></span>.<br clear="all" />
+    </div>
+    <div id="divMessage"></div>
+    <div class="cleardiv"></div>
+    @using (Html.BeginForm("Edit", "Users", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmEditUser" }))
+    {    
+        <fieldset>
+            <legend>@Resources.Resource.User_EditUser</legend>
+            <div style="width: 50%; float: left; margin-right: 10px;" class="bovien">
+
+                <div class="editor-label">
+                    <b>@Resources.Resource.User_Index_UserName</b>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.UserName, new { @class = "required", style = "width:200px;" })
+                </div>
+                <div class="cleardiv"></div>
+                <div class="editor-label">
+                    <b>@Resources.Resource.User_FullName</b>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.FullName, new { style = "width:200px;" })
+                </div>
+                <div class="cleardiv"></div>
+                <div class="editor-label">
+                    <b>@Resources.Resource.User_Index_Password</b>
+                </div>
+                <div class="editor-field">
+                    @Html.PasswordFor(model => model.Password, new { value = Model.Password, style = "width:200px;" })
+                </div>
+                <div class="cleardiv"></div>                
+                <div class="editor-label">
+                    <b>@Resources.Resource.User_Index_RePassword</b>
+                </div>
+                <div class="editor-field">
+                    <input type="password" id="RePassword" name="RePassword" style="width:200px;" value="@Model.Password"/>
+                </div>
+                <div class="cleardiv"></div>
+                <div class="editor-label">
+                    <b>@Resources.Resource.User_Index_Email</b>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.Email, new { @class = "email", style = "width:200px;" })
+                </div>
+                <div class="cleardiv"></div>
+                <div class="editor-label">
+                    <b>@Resources.Resource.User_Index_Phone</b>
+                </div>
+                <div class="editor-field">
+                    @Html.TextBoxFor(model => model.Phone, new { style = "width:200px;" })
+                </div>
+                <div class="cleardiv"></div>
+                <div class="editor-label">
+                    <b>@Resources.Resource.User_Avatar</b>
+                </div>
+                <div class="editor-field" style="display: none;">
+                    @Html.EditorFor(model => model.Avartar)
+                </div>
+                <input name="file" type="file" class="txt_box1" />
+                @if (Model.Avartar != null)
+                {
+                    <img src="@Model.Avartar.Replace("~", "")" id="imgAvatar" title="Avatar" style="max-height: 50px;max-width: 50px;"/>
+                }
+                else
+                {
+                    <img src="/Uploads/noimage.jpg" id="imgAvatar1" title="Avatar" style="max-height: 50px; max-width: 50px;" />
+                }
+                <div class="cleardiv"></div>
+                <div class="editor-label">
+                    <b>@Resources.Resource.User_Company</b>
+                </div>
+                <div class="editor-field">
+                    @{
+                var ooCompany = ViewBag.Company as List<Company>;
+                    }
+                    <select id="ddlCompany" name="ddlCompany" style="width: 200px; height: 25px;">
+                        @if (ooCompany != null && ooCompany.Count > 0)
+                        {
+                            <option value="">@Resources.Resource.Common_SelectItem</option>
+                            foreach (var item in ooCompany)
+                            {
+                            <option value="@item.ID">@item.DisplayName</option>
+                            }
+                        }
+                    </select>
+                </div>
+                <div class="cleardiv"></div>
+            </div>
+            <div style="width: 48%; float: left;" class="bovien">
+                <p><b><i>@Resources.Resource.User_Index_SelectRole</i></b></p>
+                @{
+                        var role = ViewBag.Role as List<Role>;
+                        var roleCheck = ViewBag.RoleCheck as List<int>;
+                }
+                @if (role != null)
+                {
+
+                    foreach (var items in role)
+                    {
+                        if (roleCheck.Contains(items.ID))
+                        {
+                    <input type="checkbox" name="cbRol" value ="@items.ID" id="cbRole" checked="checked" style="margin-right: 10px;"/>@items.RoleName<br />
+                        }
+                        else
+                        {
+                    <input type="checkbox" name="cbRol2" value ="@items.ID" id="cbRole2" style="margin-right: 10px;"/>@items.RoleName<br />
+                        }
+                    }
+                }
+            </div>
+            <div class="cleardiv"></div>
+            <p>
+                <input type="submit" class="btn btn-defaultxero" value="@Resources.Resource.User_Index_Update" id="btnUpdate"/>
+                <input type="button" class="btn btn-defaultxero" value="@Resources.Resource.User_Index_Close" id="btnClose"/>
+            </p>
+        </fieldset>
+    }
+</div>

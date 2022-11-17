@@ -1,0 +1,311 @@
+﻿@model TMT.ERP.DataAccess.Model.Company
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#btnClose').click(function (e) {
+            e.preventDefault();
+            location.href = '/Company/Index/';
+        });
+
+        $('#DisplayName').focus();
+
+        $(".numeric").numeric();
+
+        jQuery.validator.messages.required = "";
+
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+        $('#btnSame').click(function (e) {
+            
+            var attention = $('#Attention').val();
+            var address = $('#Address').val();
+            var zipcode = $('#ZipCode').val();
+            var state = $('#State').val();
+            var city = $('#City').val();
+            var country = $('#Country').val();
+            $('#PAttention').val(attention);
+            $('#PAddress').val(address);
+            $('#PZipCode').val(zipcode);
+            $('#PState').val(state);
+            $('#PCity').val(city);
+            $('#PCountry').val(country);
+        });
+
+        $("#btnBrowser").click(function () {
+            var ckfinder = new CKFinder();
+            ckfinder.selectActionFunction = function (fileUrl) {
+                $("#Images").val(fileUrl);
+                $('#imageLogo').attr('src', fileUrl);
+            };
+            ckfinder.popup();
+        });
+
+        //Check Input Value
+        $('#btnSave').click(function (e) {
+            
+            var name = $('#DisplayName').val();
+            var legal = $('#TradingName').val();
+            var bussiness = $('#Bussiness').val();
+            var organization = $('#Organization').val();
+            var description = $('#Description').val();
+            var url = $("#Images").val();
+            var attention = $('#Attention').val();
+            var address = $('#Address').val();
+            var city = $('#City').val();
+            var state = $('#State').val();
+            var zipcode = $('#ZipCode').val();
+            var country = $('#Country').val();
+            var pAttention = $('#PAttention').val();
+            var pAddress = $('#PAddress').val();
+            var pCity = $('#PCity').val();
+            var pState = $('#PState').val();
+            var pZipcode = $('#PZipCode').val();
+            var pCountry = $('#PCountry').val();
+            var telCountry = $('#telCountry').val();
+            var telArea = $('#telArea').val();
+            var telNo = $('#telNo').val();
+            var email = $('#Email').val();
+            var website = $('#Website').val();
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            $.ajax(
+                {
+                    type: 'POST',
+                    traditional: true,
+                    url: '/Company/Create/',
+                    data: {
+                        "name": name, "legal": legal, "bussiness": bussiness, "email": email,
+                        "attention": attention, "address": address, "zipcode": zipcode, "state": state,
+                        "city": city, "country": country, "pAddress": pAddress, "pAttention": pAttention,
+                        "pZipcode": pZipcode, "pState": pState, "pCity": pCity, "pCountry": pCountry,
+                        "telCountry": telCountry, "telArea": telArea, "telNo": telNo, "website": website,
+                        "organization": organization, "description": description, "url": url
+                    },
+                    success: function (data) {
+                        window.location.href = "/Company/Index/";
+                    }
+                });
+        });
+    });
+</script>
+
+<style type="text/css">
+    #colright, #colcenter, #colleft {
+        width: 33%;
+        float: left;
+    }
+</style>
+
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container">
+            <h3>New Company</h3>
+            <div id="breadcrumbs">
+                <ul>
+                    <li><a href="/Company/Index/"><span>Company</span></a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <div class="container">
+        <div class="c_container">
+            <div id="popup-breadcrumb" style="width: 102%; margin-top: 10px; margin-bottom: 10px;">
+                <div class="container">
+                    <div class="c_container">
+                        <div id="dialog"></div>
+                        <div id="confirmDel"></div>
+                        <div class="error" style="display: none; margin-top: 5px; height: 30px; border-radius: 6px; line-height: 2">
+                            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                            <span></span>.<br clear="all" />
+                        </div>
+                        <div class="x-boxed" style="margin-top: 20px;">
+                            <p class="x-boxed" style="margin-bottom: 10px;">
+                                <label>Basic Information </label>
+                            </p>
+                        </div>
+                        <div style="height: 200px;">
+                            <div style="float: left; width: 50%">
+                                <div style="width: 100%; height: 30px; margin-bottom: 5px; margin-top: 5px;">
+                                    <div style="float: left; width: 30%;">
+                                        <label style="font-weight: normal">@Resources.Resource.Company_DisplayName</label>
+                                    </div>
+                                    <div style="float: right; width: 70%">
+                                        <input type="text" class="required" name="DisplayName" id="DisplayName" size="25" maxlength="250" />
+                                    </div>
+                                </div>
+                                <div style="width: 100%; height: 30px; margin-bottom: 5px; margin-top: 5px;">
+                                    <div style="float: left; width: 30%">
+                                        <label style="font-weight: normal">@Resources.Resource.Company_TradingName</label>
+                                    </div>
+                                    <div style="float: right; width: 70%">
+                                        <input type="text" class="required" name="TradingName" id="TradingName" size="25" maxlength="250" />
+                                    </div>
+                                </div>
+                                <div style="width: 100%; height: 30px; margin-bottom: 5px; margin-top: 5px;">
+                                    <div style="float: left; width: 30%">
+                                        <label style="font-weight: normal">@Resources.Resource.Company_Business</label>
+                                    </div>
+                                    <div style="float: right; width: 70%">
+                                        <input type="text" class="required" name="Bussiness" id="Bussiness" size="25" placeholder="Your Company's Bussiness" maxlength="1000" />
+                                    </div>
+                                </div>
+                                <div style="width: 100%; height: 30px; margin-bottom: 5px; margin-top: 5px;">
+                                    <div style="float: left; width: 30%">
+                                        <label style="font-weight: normal">@Resources.Resource.Company_OrgaType</label>
+                                    </div>
+                                    <div style="float: right; width: 70%">
+                                        <input type="text" id="Organization" size="25" placeholder="Your Company's Organization Type" maxlength="250" />
+                                    </div>
+                                </div>
+                                <div style="width: 100%; height: 30px; margin-bottom: 5px; margin-top: 5px;">
+                                    <div style="float: left; width: 30%">
+                                        <label style="font-weight: normal">@Resources.Resource.Company_Description</label>
+                                    </div>
+                                    <div style="float: right; width: 70%">
+                                        <textarea id="Description" maxlength="1000" style="width: 220px;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="float: left; width: 50%">
+                                <div style="display: inline-block">
+                                    <p class="x-boxed1">
+                                        <label>@Resources.Resource.Company_Logo</label>
+                                    </p>
+                                </div>
+                                <div>
+                                    <a href="javascript:void(0);" id="btnBrowser">Browser</a>
+                                    <img src="/Uploads/noimage.jpg" title="image" alt="image" id="imageLogo" style="max-height: 150px; max-width: 200px; margin-left: 20px;" />
+                                    <input id="Images" name="Images" type="hidden" />
+                                </div>
+                            </div>
+                        </div>
+                        <hr class="x-boxed" />
+                        <div>
+                            <p class="x-boxed" style="margin-bottom: 10px;">
+                                <label>Contact Details </label>
+                            </p>
+                            <div id="colleft">
+                                <p class="x-boxed1"><b>Postal Address </b></p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Company_PostAttention
+                                    </label>
+                                    <input id="Attention" name="Attention" class="required" type="text" size="25" style="width: 140px;" maxlength="250" />
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Company_PostAddress
+                                    </label>
+                                    <textarea id="Address" name="Address" class="required" rows="3" style="width: 140px;" maxlength="1000"></textarea>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Company_PostCity
+                                    </label>
+                                    <input id="City" name="City" class="required" type="text" size="25" style="width: 140px;" maxlength="250" />
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Company_PosState
+                                    </label>
+                                    <input id="State" name="State" class="required" type="text" size="25" style="width: 140px;" maxlength="250" />
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Company_PostZipCode
+                                    </label>
+                                    <input id="ZipCode" name="ZipCode" class="required" type="text" size="25" style="width: 140px;" maxlength="40" />
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Company_PostCountry
+                                    </label>
+                                    <input id="Country" name="Country" class="required" type="text" size="25" style="width: 140px;" maxlength="40" />
+                                </p>
+                            </div>
+
+                            <div id="colcenter">
+                                <p class="x-boxed1"><b>Physical Address </b><a href="javascript:void(0);" id="btnSame">[Same as postal address] </a></p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Company_PhysAttention
+                                    </label>
+                                    <input id="PAttention" type="text" size="25" style="width: 140px;" maxlength="250" />
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Company_PhysAddress
+                                    </label>
+                                    <textarea id="PAddress" rows="3" style="width: 140px;" maxlength="1000"></textarea>
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Company_PhysCity
+                                    </label>
+                                    <input id="PCity" type="text" size="25" style="width: 140px;" maxlength="250" />
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Company_PhysState
+                                    </label>
+                                    <input id="PState" type="text" size="25" style="width: 140px;" maxlength="250" />
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Company_PhysZipCode
+                                    </label>
+                                    <input id="PZipCode" type="text" size="25" style="width: 140px;" maxlength="40" />
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 150px; font-weight: normal;">@Resources.Resource.Company_PhysCountry
+                                    </label>
+                                    <input id="PCountry" type="text" size="25" style="width: 140px;" maxlength="250" />
+                                </p>
+                            </div>
+
+                            <div id="colright">
+                                <p class="x-boxed1"><b>Telephone </b></p>
+                                <p>
+                                    <label style="float: left; width: 100px; font-weight: normal;">@Resources.Resource.Company_Tel_Num </label>
+                                    <input onpaste="return false" id="telCountry" type="text" size="5" style="width: 60px;" placeholder="Country" class="numeric" maxlength="40" />
+                                    <input onpaste="return false" id="telArea" type="text" size="5" style="width: 40px;" placeholder="Area" class="numeric" maxlength="40" />
+                                    <input onpaste="return false" id="telNo" type="text" size="15" style="width: 80px;" placeholder="Tel No" class="numeric" maxlength="40" />
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 100px; font-weight: normal;">Email </label>
+                                    <input id="Email" class="email" type="text" size="25" style="width: 188px;" maxlength="250" /><br />
+                                </p>
+                                <p>
+                                    <label style="float: left; width: 100px; font-weight: normal;">Website </label>
+                                    <input id="Website" type="text" size="25" style="width: 188px;" maxlength="250" />
+                                </p>
+                            </div>
+                        </div>
+                        <div style="margin-top: 315px; margin-bottom: 10px;">
+                            <input id="btnSave" type="button" class="btn btn-defaultxero" value="@Resources.Resource.Company_Index_Save" />
+                            <input type="button" class="btn btn-defaultxero" value="@Resources.Resource.Company_Index_Close" id="btnClose"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>      
+}

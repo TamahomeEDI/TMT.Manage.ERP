@@ -1,0 +1,186 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.ProductionMonitor
+<style type="text/css">
+    #con_form label {
+        width: 190px !important;
+    }
+</style>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnClose').click(function () {
+            location.href = "/ProductionMonitors/";
+        });
+    });
+</script>
+<div id="breadcrumb">
+  <div class="c_container">
+                <h3>@Resources.Resource.ProductionMonitors_Index_Parent</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.ProductionMonitors_Index_Children01</span></li>
+                        <li><span>@Resources.Resource.ProductionMonitors_Index_Children02</span></li>
+                        <li><a href="/ProductionMonitors/">@Resources.Resource.ProductionMonitors_Index_Children03</a></li>
+                    </ul>
+                </div>
+            </div>
+</div>
+@{
+    var createDate = Convert.ToDateTime(Model.ImplementDate);
+    var scheduleStart = Convert.ToDateTime(Model.ScheduleStartTime);
+    var scheduleEnd = Convert.ToDateTime(Model.ScheduleEndTime);
+    var actualStartDate = Convert.ToDateTime(Model.RealStartTime);
+    var actualEndDate = Convert.ToDateTime(Model.EndStartTime);
+    var list = ViewBag.Complete as List<AllocWOItemDetail>;
+                                
+}
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div class="cleardiv"></div>
+            <input type="button" id="btnClose" value="Close" class="btn btn-defaultxero" />
+            <div class="cleardiv"></div>
+            <div class="form_position1 bovien">
+                <div class="form_left">
+                    <div class="form-group">
+                        <label class="labelstock">WorkCenter:</label>
+                        <label>@Model.WorkCenter.Code</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">WorkOrder No:</label>
+                        <label>@Model.AllocWO.WorkOrder.Code</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">Machine No:</label>
+                        <label>@Model.Machine.Code</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">Schedule Start Time:</label>
+                        <label>@TMT.ERP.Commons.Utility.DateFormat(scheduleStart)</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">Order Product:</label>
+                        <label>@ViewBag.GetItem</label>
+                    </div>
+                </div>
+                <div class="form_right">
+                    <div class="form-group">                        
+                        <label class="labelstock">Create Date:</label>
+                        <label>@TMT.ERP.Commons.Utility.DateFormat(createDate)</label>
+                    </div>
+                    <div class="form-group">                        
+                        <label class="labelstock">Process Time:</label>
+                        <label>
+                            @Model.ProcessTime
+                        </label>
+                    </div>
+                    <div class="form-group">                        
+                        <label class="labelstock">Schedule End Time</label>
+                        <label>@TMT.ERP.Commons.Utility.DateFormat(scheduleEnd)</label>
+                    </div>
+                    <div class="form-group">                        
+                        <label class="labelstock">Quanlity</label>
+                        <label>@ViewBag.QuanlityOrder</label>
+                    </div>
+                </div>
+            </div>                     
+            <div class="cleardiv"></div>
+            <h4>Process Information</h4>
+            <div class="cleardiv"></div>
+            <div class="form_position1">
+                <div class="form_left">
+                    <div class="form-group">
+                        <label class="labelstock">Actual Start Date:</label>
+                        <label>@TMT.ERP.Commons.Utility.DateFormat(actualStartDate)</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">Actual Product produce:</label>
+                        <label>
+                            @Model.ImplementQuantity
+                        </label>
+                    </div>
+                </div>
+                <div class="form_right">
+                    <div class="form-group">
+                        <label class="labelstock">Actual End Date:</label>
+                        <label>@TMT.ERP.Commons.Utility.DateFormat(actualEndDate)</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">Actual Process time:</label>
+                        <label>@Model.ProcessTime</label>
+                    </div>
+                </div>
+            </div>
+            <div class="cleardiv"></div>
+            <h4>Item Detail</h4>
+            <div class="cleardiv"></div>
+            <table style="width: 940px;" class="tableOver">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th>Description</th>
+                        <th>Order Detail</th>
+                        <th>Actual Used</th>
+                        <th>UOM</th>
+                        <th>Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (list != null)
+                    {
+                        foreach (var x in list)
+                        {
+                            var good = ViewBag.Good(x.GoodID) as Good;                                
+                            <tr>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(good.Name))
+                                    {
+                                        <label>@good.Name</label>
+                                    }
+                                    else
+                                    {
+                                        <label>No data</label>
+                                    }
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(good.Description))
+                                    {
+                                        <label>@good.Description</label>
+                                    }
+                                    else
+                                    {
+                                        <label>No data</label>
+                                    }
+                                </td>
+                                <td>
+                                    @x.AllocQty
+                                </td>
+                                <td>
+                                    @{
+                                        var z = x.AllocQty - x.RemainQuantity;
+                                    }
+                                    @z
+                                </td>
+                                <td>
+                                    @good.UOM.Name
+                                </td>
+                                <td>
+                                    @x.Price
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6">
+                                <label>No data</label>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+            <div class="cleardiv"></div>
+        </div>
+    </div>
+</div>
+

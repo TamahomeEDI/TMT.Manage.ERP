@@ -1,0 +1,117 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.Function
+
+@{
+    Layout = null;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#txtName').focus();
+        jQuery.validator.messages.required = "";
+        $("#frmEditFunction").validate({
+            invalidHandler: function (e, validator) {
+                
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+        $('#ddlFeature').val($('#hdfFeatureId').val());
+        $('#btnSave').click(function () {
+            
+            var isValid = $("#frmEditFunction").valid();
+            if (!isValid) {
+                return;
+            }
+
+            var name = $('#txtName').val();
+            var description = $('#txtDescription').val();
+            var featureId = $('#ddlFeature').val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/Function/Save/",
+                    data:
+                        {
+                            "functionId": $('#FunctionID').val(),
+                            "name": name,
+                            "description": description,
+                            "featureId": featureId
+                        },
+                    success: function () {
+                        location.reload();
+                    }
+
+                });
+        });
+        $('#btnClose').click(function () {
+            $('#dialog').dialog('close');
+        });
+    });
+</script>
+
+@{
+    var feature = ViewBag.FeatureID as List<Feature>;
+}
+<input type="hidden" value="@ViewBag.ID" id="FunctionID"/>
+<input type="hidden" value="@ViewBag.FeatureIDSelect" id="hdfFeatureId"/>
+<div class="cleardiv"></div>
+<div class="error" style="display: none;">
+    <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: -5px 10px 0px 0px;" />
+    <span></span>.<br clear="all" />
+</div>
+<div id="divMessage"></div>
+<div class="cleardiv"></div>
+
+<fieldset>
+    @using (Html.BeginForm("", "Function", FormMethod.Post, new { enctype = "multipart/form-data", id = "frmEditFunction" }))
+    {
+        <legend>@Resources.Resource.Function_IndexEdit</legend>
+        <label>
+            @Resources.Resource.Function_Name
+        </label>
+        <div class="editor-field">
+            @Html.TextBox("txtName", Model.Name, new { @class = "required", style = "width:200px;" })
+        </div>
+        <div class="cleardiv"></div>
+        <label>
+            @Resources.Resource.Function_Description
+        </label>
+        <div class="editor-field">            
+            @Html.TextArea("txtDescription", Model.Description, new { style = "width:200px;height:150px;" })
+        </div>
+        <div class="cleardiv"></div>
+        <label>
+            @Resources.Resource.Function_Feature
+        </label>
+        <div class="editor-field">
+            <select id="ddlFeature" name="ddlFeature" style="width: 200px; height: 25px;" class="required">
+                <option value="">@Resources.Resource.Common_SelectItem</option>
+                @if (feature != null && feature.Count > 0)
+                {
+                    foreach (var item in feature)
+                    {
+                        <option value="@item.ID">@item.FeatureName</option>
+                    }
+                }
+            </select>
+        </div>
+        <div class="cleardiv"></div>
+    }
+    <div class="cleardiv"></div>
+    <input type="submit" value="@Resources.Resource.Function_Save" id="btnSave" class="btn btn-defaultxero" />
+    <input type="submit" value="@Resources.Resource.Function_Close" id="btnClose" class="btn btn-defaultxero" />
+</fieldset>
+
+

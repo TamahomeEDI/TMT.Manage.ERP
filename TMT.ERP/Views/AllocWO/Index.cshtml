@@ -1,0 +1,256 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.Models.WOStockOutObj>
+@{
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+<script>
+    $(document).ready(function () {
+        debugger;
+        $('#sPageSize').html($('#hdfPageSize').val());
+    });
+    function SetPageSize(pageSize) {
+        debugger;
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/AllocWO/SetPageSize/',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+
+    function SortWONo(value) {
+        debugger;
+        $.ajax(
+            {
+                type: "POST",
+                url: "/AllocWO/SetWorkOrderAsc/",
+                data:
+                    {
+                        "value": value
+                    },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+
+    function SortType(value) {
+        debugger;
+        $.ajax(
+            {
+                type: "POST",
+                url: "/AllocWO/SetTypeAsc/",
+                data:
+                    {
+                        "value": value
+                    },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+    function SortProduct(value) {
+        debugger;
+        $.ajax(
+            {
+                type: "POST",
+                url: "/AllocWO/SetProductAsc/",
+                data:
+                    {
+                        "value": value
+                    },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+    
+    
+</script>
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<div class="container">
+    <div class="c_container">
+        <div id="breadcrumb">
+            <div class="container">
+                <div id="con_top">
+                    <div class="c_container">
+                        <h3>@Resources.Resource.Allocate_List_Inventory_Allocation</h3>
+                        <div id="breadcrumbs">
+                            <ul>
+                                <li><a href="/Purchase/Dashboard/"><span>@Resources.Resource.Allocate_List_Stock</span></a></li>
+                                <li><a href="/Purchase/Draft/">@Resources.Resource.Allocate_List_Inventory_Allocation</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div id="con_body">
+
+            @using (Html.BeginForm("Index", "AllocWO", FormMethod.Get))
+            {
+                <div id="search" style="display: inline;">
+                    <div style="float: right; width: 30%;">
+                        <span>@Resources.Resource.AlloCate_List_Search</span>
+                        <br />
+                        @Html.TextBox("searchString", ViewBag.CurrentFilter as string)
+                        <input type="submit" value="@Resources.Resource.SaleInvoice_DashboardCreate_Search" id="btnSearch" class="btn btn-defaultxero" />
+                    </div>
+                </div>
+            }
+            <div style="clear: both; height: 10px;"></div>
+            @if (Model.ToList().Count > 0)
+            {
+                       
+                <table id="workOrders" class="tableOver" width="100%">
+                    <thead>
+                        <tr>
+                            <th>@Resources.Resource.Allocate_List_Work_Order_No
+                                  <span style="float: right;">
+                                        <a href="javascript:void(0);" onclick="SortWONo('desc');">
+                                            <img src="~/Images/sort_asc.png" />
+                                        </a>
+                                        <a href="javascript:void(0);" onclick="SortWONo('asc');">
+                                            <img src="~/Images/sort_desc.png" />
+                                        </a>
+                                    </span>
+                            </th>
+                            <th>Shipment No</th>
+                            <th>
+                                @Resources.Resource.Allocate_List_Type
+                                    <span style="float: right;">
+                                        <a href="javascript:void(0);" onclick="SortType('desc');">
+                                            <img src="~/Images/sort_asc.png" />
+                                        </a>
+                                        <a href="javascript:void(0);" onclick="SortType('asc');">
+                                            <img src="~/Images/sort_desc.png" />
+                                        </a>
+                                    </span>
+                            </th>
+                            <th>
+                                @Resources.Resource.Allocate_List_Product_Order
+                                    <span style="float: right;">
+                                        <a href="javascript:void(0);" onclick="SortProduct('desc');">
+                                            <img src="~/Images/sort_asc.png" />
+                                        </a>
+                                        <a href="javascript:void(0);" onclick="SortProduct('asc');">
+                                            <img src="~/Images/sort_desc.png" />
+                                        </a>
+                                    </span>
+                            </th>
+                            <th>
+                                @Resources.Resource.Allocate_List_Description
+                            </th>
+                            <th>
+                                @Resources.Resource.Allocate_List_Qty
+                            </th>
+                            <th style="width: 180px;">
+                                @Resources.Resource.Allocate_List_Status
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+
+                                <td>
+                                    <a href="/AllocWO/Edit?AlloWOID=@item.AlloWOID" >@Html.DisplayFor(modelItem => item.WorkOrderNo)</a>
+                                </td>
+                                <td> @Html.DisplayFor(modelItem => item.StockOutCardCode) </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Type)
+                                 @*   @{int? stype = 0;
+                                      stype = item.Type;
+                                      string result = "";
+                                      switch (stype)
+                                      {
+                                          case 0:
+                                              result = Resources.Resource.Allocate_List_Type_Standard;
+                                              break;
+                                          case 1:
+                                              result = Resources.Resource.Allocate_List_Type_Custom;
+                                              break;
+                                          default:
+                                              break;
+                                      }
+                                    }*@
+
+                                </td>
+                                <td>
+                                    <span>@Html.DisplayFor(modelItem => item.ProductOrder)</span>
+                                </td>
+                                <td>
+                                    <span>@Html.DisplayFor(modelItem => item.Description)</span>
+                                </td>
+                                <td style="text-align: right">
+                                    <span style="text-align: right">@Html.DisplayFor(modelItem => item.Qty)</span>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Status)
+                                 @*   @{int? sStr = 0;
+                                      sStr = item.Status;
+                                      string resultStr = "";
+                                      switch (sStr)
+                                      {
+                                          case 0:
+                                              resultStr = Resources.Resource.Alocate_List_Create;
+                                              break;
+                                          case 1:
+                                              resultStr = Resources.Resource.Alocate_List_Approval;
+                                              break;
+                                          case 2:
+                                              result = Resources.Resource.Alocate_List_Not_Finish;
+                                              break;
+                                          case 3:
+                                              result = Resources.Resource.Alocate_List_Finish;
+                                              break;
+                                      }
+                                    }
+                                    @Html.Raw(result)*@
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div style="clear: both; height: 10px;"></div>
+
+                <br />
+                <div style="display: inline;">
+                    <div style="width: 70%; float: left;">
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilter = ViewBag.CurrentFilter }))
+                    </div>
+                    <div style="width: 25%; float: right;">
+                        <label style="margin-left: 70px; margin-top: 10px;">Showing&nbsp;</label>
+                        <div id="showpag" class="dropdown" style="float: right;">
+                            <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div style="clear: both; height: 20px;"></div>
+                <div style="width: 100%; clear: both; height: 50px; float: left;">
+                    @Resources.Resource.Purchase_List_No_Records
+                </div>
+                               
+            }
+
+        </div>
+    </div>
+</div>
+
+

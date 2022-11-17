@@ -1,0 +1,54 @@
+﻿@using TMT.ERP.Commons;
+@model IEnumerable<TMT.ERP.DataAccess.Model.Note>
+<div class="con_history">
+    <div class="container">
+        <div class="c_container">
+<table style="width:100%">
+    <thead>
+    <tr>
+ 
+        <th>@Resources.Resource.Note_Create_Changes
+        </th>
+        <th>@Resources.Resource.Note_Create_Date
+        </th>
+        <th>@Resources.Resource.Note_Create_User
+        </th>
+        <th>@Resources.Resource.Note_Create_Details
+        </th>
+
+    </tr>
+     </thead>
+    @if(Model.ToList().Count > 0){
+    <tbody>
+    @foreach (var item in Model)
+    {
+        <tr>
+          
+            <td>
+                @Html.DisplayFor(modelItem => item.Changes)
+            </td>
+            <td>
+                @{
+        DateTime createDate = item.CreatedDate;
+                }
+                @createDate.ToString("d")
+            </td>
+            <td>
+                @{
+        var username = AppContext.RequestVariables.CurrentUser.UserName;
+                    @(username != null ? Html.Raw(username) : Html.Raw("Admin"))
+                }
+
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Note1)
+            </td>
+            <input type="hidden" value="@item.ID" class ="noteID" />
+        </tr>
+    }
+   </tbody>
+                } else {
+         <tbody><tr><td colspan="4">Contains no records </td></tr></tbody>
+        }
+</table>
+            </div></div></div>

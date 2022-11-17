@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "StartFixedAsset";
+}
+
+<script type="text/ecmascript">
+    $(document).ready(function () {
+        $('#btnOk').click(function (e) {
+            e.preventDefault();
+            
+            var year = $('#Year').val();
+            $.ajax(
+                {
+                    type: 'GET',
+                    tradition: true,
+                    url: "/FixedAssets/SetYear/",
+                    data: { "year": year },
+                    success: function (data) {
+                        window.location.href = "/FixedAssets/Index/";
+                    }
+                });
+        });
+    });
+</script>
+
+<div id="con_body">
+    <div class="container">
+        <div class="c_container">
+            <div id="form_body">
+                <div style="border: 1px solid darkgrey; border-radius: 6px; background-color: #E8F1FF; width: 70%; margin-top: 10px; height: 150px; margin-bottom: 10px;">
+                    <div style="margin-left: 10px; margin-top: 10px;">
+                        <label style="font-size: 15px;">Choose your start date</label>
+                        <hr style="margin-top: 10px; margin-bottom: 10px;" />
+                        <p>The start date for managing your fixed assets will be 1st of the first month in your financial year.</p>
+                        <p>Start Year</p>
+                        <select id="Year">
+                            <option value="@ViewBag.Year">1 Jan @ViewBag.Year</option>
+                            <option value="@ViewBag.NextYear">1 Jan @ViewBag.NextYear</option>
+                        </select>
+                        <input id="btnOk" type="button" class="btn btn-defaultxero" value="@Resources.Resource.FixedAsset_Update" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

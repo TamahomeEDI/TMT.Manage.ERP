@@ -1,0 +1,720 @@
+﻿@model TMT.ERP.DataAccess.Model.BankAccountDetail
+
+@{
+    ViewBag.Title = "ReceiveMoney";
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+
+    var error = 0;
+    $(document).ready(function () {
+        $('#btnCancel').click(function (e) {
+            e.preventDefault();
+            location.href = "/BankAccounts/Index/";
+        });
+        $('#Invoice').hide();
+
+        $(".numeric").numeric();
+
+        $('.currency').blur(function () {
+            $('.currency').formatCurrency();
+        });
+
+        jQuery.validator.messages.required = "";
+
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+        //Save spend money
+        $('#btnSave').click(function (e) {
+            e.preventDefault();
+            
+            var userID = $('#hdCurrentUserID').val();
+            var method = $('#method').val();
+            var accID = $('#AccountIDOver').val();
+            var descriptionOver = $('#txtDes').val();
+            var amountover = $('#txtmoney').val();
+            var bankaccountID = $("#hidID").val();
+            var contactName = $("#txtTo").val();
+            var date = $("#txtDate").val();
+            var reference = $("#txtReference").val();
+            var subtotal = $("#txtSubTotal").asNumber();
+            var total = $("#txtTotal").asNumber();
+
+            if (method == 1) {
+                var invoice = $('#txtInvoice').val();
+            } else
+                var invoice = 0;
+            if ($('#amountare').is(":checked")) {
+                var amountare = 1;
+                var tax = jQuery('#txtTax').asNumber();
+            } else {
+                var amountare = 0;
+                var tax = $('#txtTaxAdd').asNumber() + $('#txtTax').asNumber();
+            }
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            if (method != 2) {
+                var SpendMoneyDetail = BuildJSON();
+                checkFullInfor();
+            }
+            if (error > 0) {
+                error = 0;
+                $('#AlertInfor').show();
+                return false;
+            } else
+                $('#AlertInfor').hide();
+
+            if (method == 0 || method == 1) {
+                if (method == 0) {
+                    var transactionName = contactName;
+                } else
+                    var transactionName = "Prepayment: " + contactName;
+                $.ajax(
+                    {
+                        type: 'POST',
+                        traditional: true,
+                        url: '/BankAccounts/ReceiveBill/',
+                        data: {
+                            'id': bankaccountID, 'contactName': contactName, 'method': method, 'transactionName': transactionName,
+                            'amountare': amountare, 'reference': reference, 'subtotal': subtotal, 'invoice': invoice,
+                            'total': total, 'tax': tax, 'SpendMoneyDetail': SpendMoneyDetail, 'userID': userID, 'date': date
+                        },
+                        dataType: 'text',
+                        success: function (data) {
+                            if (data == "Receive") {
+                                $('#Inform').empty();
+                                $('#Inform').append('<p style="width: 100%; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Transaction !</p>');
+                                $("#Inform").dialog({
+                                    modal: true,
+                                    height: 120,
+                                    width: 300,
+                                    autoOpen: false,
+                                    buttons: {
+                                        'OK': function () {
+                                            $(this).dialog('close');
+                                                location.href = "/AccountTrans/Index/" + bankaccountID;
+                                        }
+                                    }
+                                });
+                                $('#Inform').dialog('open');
+                            } else {
+                                $('#Inform').empty();
+                                $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Error</p>');
+                               $("#Inform").dialog({
+                                   modal: true,
+                                   height: 120,
+                                   width: 300,
+                                   autoOpen: false,
+                                   buttons: {
+                                       'OK': function () {
+                                           $(this).dialog('close');
+                                           location.href = "/BankAccounts/Index/";
+                                       }
+                                   }
+                               });
+                               $('#Inform').dialog('open');
+                            }
+                        }
+                    });
+                } else {
+                    var currency = $('#CurrencyID').val();
+                    var transactionName = "Overpayment: " + contactName;
+                    jQuery.ajax(
+                        {
+                            type: 'POST',
+                            traditional: true,
+                            url: '/BankAccounts/ReceiveBillOver/',
+                            data: {
+                                'id': bankaccountID, 'contactName': contactName, 'date': date, 'total': total, 'currency': currency,
+                                'reference': reference, 'subtotal': subtotal, 'amountover': amountover, 'userID': userID,
+                                'accID': accID, 'description': descriptionOver, 'method': method, 'invoice': invoice, 'transactionName': transactionName
+                            },
+                            success: function (data) {
+                                if (data == "Receive") {
+                                    $('#Inform').empty();
+                                    $('#Inform').append('<p style="width: 100%; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Transaction !</p>');
+                                $("#Inform").dialog({
+                                    modal: true,
+                                    height: 120,
+                                    width: 300,
+                                    autoOpen: false,
+                                    buttons: {
+                                        'OK': function () {
+                                            $(this).dialog('close');
+                                            location.href = "/AccountTrans/Index/" + bankaccountID;
+                                        }
+                                    }
+                                });
+                                $('#Inform').dialog('open');
+                            } else {
+                                $('#Inform').empty();
+                                $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Error</p>');
+                                $("#Inform").dialog({
+                                    modal: true,
+                                    height: 120,
+                                    width: 300,
+                                    autoOpen: false,
+                                    buttons: {
+                                        'OK': function () {
+                                            $(this).dialog('close');
+                                            location.href = "/BankAccounts/Index/";
+                                        }
+                                    }
+                                });
+                                $('#Inform').dialog('open');
+                            }
+                        }
+                    });
+                }
+        });
+
+    });
+
+        $(document).ready(function () {
+            $("#addNewLine").click(function () {
+                
+                $.ajax(
+                     {
+                         type: "POST",
+                         url: "/BankAccounts/AddNewLine/",
+                         success: function (data) {
+                             $('#insertRow').append(data);
+
+                         }
+                     });
+                return false;
+            });
+        });
+
+        function addTableRow() {
+            var $tr = jQuery('table#tbReceiveMoney').find("tbody tr:last").clone();
+            jQuery('table#tbReceiveMoney').find("tbody tr:last").after($tr);
+        };
+        function RemoveRow(element) {
+            var tr = $(element).closest('tr');
+            tr.remove();
+            CalSubTotal();
+            CalTotal();
+        }
+
+
+        $(document).ready(function () {
+            $("#txtmoney").change(function () {
+                $('#txtmoney').val(function () {
+                    var amount = $('#txtmoney').asNumber();
+                    return amount;
+                }).formatCurrency();
+                
+                CalAmount(this);
+                CalSubTotal();
+                CalTotal();
+            });
+        });
+
+        $(document).ready(function () {
+            $(".taxrate").change(function () {
+                ChangeTax(this);
+            });
+        });
+
+        $(document).ready(function () {
+            $(".account").change(function () {
+                ChangeAccount(this);
+            });
+        });
+
+        function ChangeAccount(element) {
+            var tr = $(element).closest('tr');
+            var accountID = $("#AccountID", tr).val();
+            if (accountID == 0) {
+                alert("Open add new account");
+            }
+        }
+
+        $(document).ready(function () {
+            $(".qty").change(function () {
+                $(this).val(function () {
+                    var qty = $(this).asNumber();
+                    return qty;
+                }).formatCurrency();
+                CalAmount(this);
+                if ($('#amountare').val() != 2) {
+                    CalTax();
+                }
+                CalSubTotal();
+                CalTotal();
+            });
+        });
+
+        // Change payment method
+        $(document).ready(function () {
+            $("#method").change(function () {
+                if ($('#method').val() == 0 || $('#method').val() == 1) {
+                    
+                    $('#currencyDirect').show();
+                    $('#currencyOver').hide();
+                    $('#thQuantity').show();
+                    $('#thUnitPrice').show();
+                    $('#thDel').show();
+                    $('#thAmount').hide();
+                    $('#insertRow').show();
+                    $('#addNewLine').show();
+                    $('#overpayment').hide();
+                    if ($('#method').val() == 1) {
+                        $('#Invoice').show();
+                    } else {
+                        $('#Invoice').hide();
+                    }
+                    $('#Tax').show();
+                    if ($('#amountare').is(":checked")) {
+                        $('#TaxAdd').hide();
+                    } else {
+                        $('#TaxAdd').show();
+                    }
+                    CalSubTotal();
+                    CalTotal();
+                } else if ($('#method').val() == 2) {
+                    
+                    $('#Invoice').hide();
+                    $('#currencyDirect').hide();
+                    $('#currencyOver').show();
+                    $('#thQuantity').hide();
+                    $('#thUnitPrice').hide();
+                    $('#thDel').hide();
+                    $('#TaxAdd').hide();
+                    $('#Tax').hide();
+                    $('#addNewLine').hide();
+                    $('#insertRow').hide();
+                    $('#amountare').hide();
+                    $('#thAmount').show();
+                    $('#overpayment').show();
+                }
+            });
+        });
+
+        // Change Tax Method
+        $(document).ready(function () {
+            $("#amountare").change(function () {
+                if ($('#amountare').is(":checked")) {
+                    
+                    $('#Tax').show();
+                    $('#TaxAdd').hide();
+                    CalTax();
+                } else {
+                    
+                    $('#Tax').show();
+                    $('#TaxAdd').show();
+                    CalTax();
+                }
+                CalSubTotal();
+                CalTotal();
+            });
+        });
+
+        $(document).ready(function () {
+            $("#txtTaxAdd").change(function () {
+                CalTotal();
+            });
+        });
+
+        $(document).ready(function () {
+            jQuery('#txtTax').change(function () {
+                CalTotal();
+            });
+        });
+
+
+        $(document).ready(function () {
+            $(".unitprice").change(function () {
+                $(this).val(function () {
+                    var unitprice = $(this).asNumber();
+                    return unitprice;
+                }).formatCurrency();
+                CalAmount(this);
+                if ($('#amountare').val() != 2) {
+                    CalTax();
+                }
+                CalSubTotal();
+                CalTotal();
+            });
+        });
+
+        function CalAmount(element) {
+            
+            if ($('#method').val() == 2) {
+                $("#txtAmountOver").val(function () {
+                    var amount = $('#txtmoney').asNumber();
+                    return amount;
+                }).formatCurrency();
+            }
+            else {
+                var tr = $(element).closest('tr');
+                $(".amount", tr).val(function () {
+                    var qty = 0;
+                    if ($('.qty', tr).val() != "")
+                        qty = $('.qty', tr).asNumber();
+
+                    var unitprice = 0;
+                    if ($('.unitprice', tr).val() != "")
+                        unitprice = $('.unitprice', tr).asNumber();
+
+                    var retValue = qty * unitprice;
+                    return retValue;
+                }).formatCurrency();
+            }
+        }
+
+        function CalSubTotal() {
+            $(".subtotal").text(function () {
+                
+                var value = 0;
+                if ($('#method').val() == 0 || $('#method').val() == 1) {
+                    $(".amount").each(function () {
+                        if ($(this).val() != "")
+                            value += $(this).asNumber();
+                    });
+                } else {
+                    if ($('#txtmoney').val() != "") {
+                        value = $('#txtmoney').val();
+                    }
+                }
+                return value;
+            }).formatCurrency();
+        }
+
+        function CalTotal() {
+            $("#txtTotal").text(function () {
+                
+                if ($('#method').val() == 0 || $('#method').val() == 1) {
+                    var subtotal = 0;
+                    if ($('.subtotal').text() != "")
+                        subtotal = $('.subtotal').asNumber();
+                    var tax = 0;
+                    if ($('#amountare').is(":checked")) {
+                        if (jQuery('#txtTax').text() != "") {
+                            tax = jQuery('#txtTax').asNumber();
+                        }
+                        return subtotal;
+                    }
+                    else {
+                        if ($('#txtTax').text() != "") {
+                            tax = $('#txtTax').asNumber() + $('#txtTaxAdd').asNumber();
+                        }
+                        return subtotal + tax;
+                    }
+                } else {
+                    var subtotal = 0;
+                    if ($('.subtotal').text() != "")
+                        subtotal = $('.subtotal').asNumber();
+                    return subtotal;
+                }
+            }).formatCurrency();
+        }
+
+        function CalTax() {
+            
+            if ($('#amountare').is(":checked")) {
+                jQuery('#txtTax').text(function () {
+                    var value = 0;
+                    $("#tbReceiveMoney tr").each(function () {
+                        var tr = $(this).closest('tr');
+                        var taxvalue = $(".taxvalue", tr).asNumber();
+                        var amount = $(".amount", tr).asNumber();
+                        if (taxvalue > 0 & amount > 0)
+                            value += taxvalue * amount / 100;
+                    });
+                    return value;
+                }).formatCurrency();
+            } else {
+                jQuery('#txtTax').text(function () {
+                    var value = 0;
+                    $("#tbReceiveMoney tr").each(function () {
+                        var tr = $(this).closest('tr');
+                        var taxvalue = $(".taxvalue", tr).asNumber();
+                        var amount = $(".amount", tr).asNumber();
+                        if (taxvalue > 0 & amount > 0)
+                            value += taxvalue * amount / 100;
+                    });
+                    return value;
+                }).formatCurrency();
+            }
+        }
+
+        function ChangeTax(element) {
+            var tr = $(element).closest('tr');
+            var taxID = $("#TaxRateID", tr).val();
+            
+            if (taxID > 0) {
+                $.ajax({
+                    type: "POST",
+                    url: "/Services/GoodService.asmx/GetTaxByID",
+                    data: JSON.stringify({
+                        taxID: taxID
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    success: function (data) {
+                        try {
+                            var tax = JSON.parse(data.d);
+                            $('.taxvalue', tr).val(tax.Rate);
+                            CalTax();
+                            CalTotal();
+                        } catch (ex) { }
+                    }
+                }).error(function (event, jqXHR, ajaxSettings, thrownError) {
+                    alert('Error when loading data');
+                });
+            }
+            else {
+                $('.taxvalue', tr).val("0");
+                CalTax();
+                CalTotal();
+            }
+        }
+
+        function checkFullInfor() {
+            var arrayData = [];
+            $("#tbReceiveMoney tr").each(function () {
+                var tr = $(this).closest('tr');
+                var quantity = $("#txtQuantity", tr).asNumber();
+                var unitprice = $("#txtUnitPrice", tr).asNumber();
+                var accID = $("#AccountID", tr).asNumber();
+                if (quantity > 0 && unitprice > 0 && accID > 0) {
+                }
+                else if (typeof quantity == "undefined" && typeof unitprice == "undefined" && typeof accID == "undefined") {
+                }
+                else if (quantity == null && unitprice == null && accID == null || quantity == "" && unitprice == "" && accID == "") {
+                }
+                else {
+                    error++;
+                }
+            });
+        }
+
+        function BuildJSON() {
+            var arrayData = [];
+            $("#tbReceiveMoney tr").each(function () {
+                var tr = $(this).closest('tr');
+                var quantity = $("#txtQuantity", tr).asNumber();
+                var unitprice = $("#txtUnitPrice", tr).asNumber();
+                if (quantity > 0 && unitprice > 0) {
+                    var item = {
+                        "quantity": quantity,
+                        "unitprice": unitprice,
+                        "description": $("#txtDescription", tr).val(),
+                        "taxrateID": $("#TaxRateID", tr).val(),
+                        "accID": $("#AccountID", tr).val(),
+                        "amount": $("#txtAmount", tr).val(),
+                    };
+                    arrayData.push(item);
+                }
+            });
+            return JSON.stringify(arrayData);
+        }
+
+
+
+</script>
+
+
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container">
+            <h3>@ViewBag.Name</h3>
+            <div id="breadcrumbs">
+                <ul>
+                    <li><a href="/BankAccount/Index/">@Resources.Resource.BankAccounts_Index_Title</a></li>
+                    <li><a href="/BankAccounts/Receive/@ViewBag.ID">@Resources.Resource.BankAccount_ReceiveMoney_Title</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <input type="hidden" id="hdCurrentUserID" value="@user.ID" />
+    <input type="hidden" id="hidID" value="@ViewBag.ID"/>
+    <div id="con_form">
+        <div class="container">
+            <div class="popup-breadcrumb" style="background-color: aliceblue; border: 1px solid darkgrey; margin-top: 10px; margin-bottom: 10px;">
+                <div id="dialog"></div>
+                <div id="Inform" title="Inform" style="background: white"></div>
+                <div class="error" style="display: none;">
+                    <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: -5px 10px 0px 0px;" />
+                    <span></span>.<br clear="all" />
+                </div>
+                <div style="display: none" id="AlertInfor">
+                    <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: -5px 10px 0px 0px;" />
+                    <label style="color: red; font-weight: normal">Please input full information of each item or clear all of its </label>
+                </div>
+                <div style="height: 50px; margin-bottom: 10px; margin-top: 10px;">
+                    <label style="margin-top: 16px; width: 80px;">@Resources.Resource.BankAccount_ReceiveMoney_Method</label>
+                    <select id="method" name="method" style="width: 150px; margin-top: 10px;">
+                        <option value="0">Direct Payment</option>
+                        <option value="1">Prepayment</option>
+                        <option value="2">Overpayment</option>
+                    </select>
+                </div>
+                <div>
+                    <div class="invoicing-details" style="display: inline">
+                        <p style="display: inline-block; width: 20%">
+                            <label>From</label><br />
+                            @Html.TextBox("txtTo", String.Empty, new { @class = "required", style = "width: 150px;" })
+                        </p>
+                        <p style="display: inline-block; width: 20%">
+                            <label>@Resources.Resource.BankAccount_SpendMoney_Date</label><br />
+                            <input type="text" id="txtDate" style="width: 120px;" class="datepicker required" readonly="" />
+                        </p>
+                        <p id="Invoice" style="display: inline-block; width: 20%">
+                            <label>@Resources.Resource.BankAccount_ReceiveMoney_Invoice</label><br />
+                            <input id="txtInvoice" type="text" value="@ViewBag.BillCode" readonly="" style="width: 120px;">
+                        </p>
+                        <p style="display: inline-block; width: 20%">
+                            <label>@Resources.Resource.BankAccount_SpendMoney_Ref</label><br />
+                            @Html.TextBox("txtReference", String.Empty, new { style = "width: 120px;" })
+                        </p>
+                    </div>
+                    <br />
+                    <div style="margin-bottom: 35px; width: 100%">
+                        <div style="float: left; width: 15%">
+                            <label>@Resources.Resource.BankAccount_SpendMoney_Cur</label>
+                        </div>
+                        <div style="float: left; width: 15%">
+                            <label id="currencyDirect">@ViewBag.Currency</label>
+                            <p id="currencyOver" style="display: none;">
+                                @Html.DropDownList("CurrencyID", new SelectList(ViewBag.Currencies, "Value", "Text", ""), "",
+                    new { @class = "account", style = " width: 150px;" })
+                            </p>
+                        </div>
+                        <div style="display: inline-block; float: left; margin-left: 305px; width: 15%" id="divAmount">
+                            <label>@Resources.Resource.BankAccount_SpendMoney_AmountAre
+                                <input type="checkbox" id="amountare" name="amountare" /></label>
+                        </div>
+                    </div>
+                </div>
+                <div id="form_body">
+                    <table class="table table-striped" width="100%" id="tbReceiveMoney" border="0">
+                        <thead>
+                            <tr bgcolor="#e2efff">
+                                <th>@Resources.Resource.BankAccount_SpendMoney_Description</th>
+                                <th id="thQuantity">@Resources.Resource.BankAccount_SpendMoney_Quantity</th>
+                                <th id="thUnitPrice">@Resources.Resource.BankAccount_SpendMoney_UPrice</th>
+                                <th id="thAmount" style="display: none;">@Resources.Resource.BankAccount_SpendMoney_Amount</th>
+                                <th>@Resources.Resource.BankAccount_SpendMoney_Account</th>
+                                <th>@Resources.Resource.BankAccount_SpendMoney_TaxRate</th>
+                                <th>@Resources.Resource.BankAccount_SpendMoney_Amount</th>
+                                <th id="thDel"><span></span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="insertRow">
+                            @for (int iIndex = 0; iIndex < 5; iIndex++)
+                            {
+                                <tr>
+                                    <td class="" tabindex="0" style="width: 200px;">
+                                        <input type="text" id="txtDescription" class="txt1 description" />
+                                    </td>
+                                    <td class="" tabindex="0" style="width: 50px;">
+                                        <input type="text" id="txtQuantity" onpaste="return false" class="txt1 qty numeric" />
+                                    </td>
+                                    <td class="" tabindex="0" style="width: 150px;">
+                                        <input type="text" id="txtUnitPrice" onpaste="return false" class="txt1 unitprice currency numeric" />
+                                    </td>
+                                    <td style="width: 150px;">@Html.DropDownList("AccountID", new SelectList(ViewBag.AccountID, "Value", "Text", ""), "", new { @class = "account" })
+                                    </td>
+                                    <td class="HasTax" style="width: 150px;">@Html.DropDownList("TaxRateID", new SelectList(ViewBag.TaxRateID, "Value", "Text", ""), "", new { @class = "taxrate" })
+                                        <input type="hidden" value="0" class="taxvalue" />
+                                    </td>
+                                    <td class="NoTax" style="width: 150px; display: none">
+                                        <label style="font-weight: normal; font-size: 11px;">
+                                            @Resources.Resource.BankAccount_SpendMoney_RateNoTax</label>
+                                    </td>
+                                    <td style="width: 150px;">
+                                        <input type="text" id="txtAmount" class="txt1 amount currency" readonly="" /></td>
+                                    <td>
+                                        <div class="remove" id="delRow" onclick="RemoveRow(this);"></div>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                        <tbody id="overpayment" style="display: none;">
+                            <tr>
+                                <td class="" tabindex="0">
+                                    <input type="text" id="txtDes" style="width: 250px;" />
+                                </td>
+                                <td class="" tabindex="0">
+                                    <input type="text" id="txtmoney" onpaste="return false" class="currency numeric" style="width: 100px;" />
+                                </td>
+                                <td style="width: 100px;">@Html.DropDownList("AccountIDOver", new SelectList(ViewBag.AccountID, "Value", "Text", ""), "", new { @class = "account" })
+                                </td>
+                                <td style="width: 100px;">@Resources.Resource.BankAccount_SpendMoney_RateNoTax</td>
+                                <td style="width: 206px;">
+                                    <input type="text" id="txtAmountOver" class="currency" readonly="" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div id="tableFooter" style="display: inline-block; width: 100%">
+                        <div class="pos1" style="width: 25%">
+                            <button id="addNewLine" class="addline">Add a new line</button>
+                        </div>
+                        <div style="float: left; width: 40%;">
+                            <div class="pos2 posprice" style="width: 220px;">
+                                <p>
+                                    <span class="ta_label">@Resources.Resource.BankAccount_SpendMoney_Subtotal</span>
+                                    <span class="price subtotal" id="txtSubTotal">0.00</span>
+                                </p>
+                            </div>
+                            <div id="Tax" class="pos2 posprice" style="width: 220px;">
+                                <p>
+                                    <span class="ta_label">@Resources.Resource.BankAccount_SpendMoney_Tax</span>
+                                    <span class="price vat" id="txtTax">0.00</span>
+                                </p>
+                            </div>
+                            <div id="TaxAdd" class="pos2 posprice" style="width: 220px;">
+                                <p>
+                                    <span class="ta_label" style="margin-bottom: 5px;">@Resources.Resource.BankAccount_SpendMoney_AdjustmentsTax</span>
+                                    <input id="txtTaxAdd" type="text" value="0.00" class="price vat"
+                                        style="width: 210px; text-align: right; font-size: 15px; font-weight: bold; color: #313d53;">
+                                </p>
+                            </div>
+                        </div>
+                        <div style="float: left; width: 35%">
+                            <div class="pos3 posprice" style="width: 220px;">
+                                <p>
+                                    <span class="ta_label" style="margin-top: 8px;">@Resources.Resource.BankAccount_SpendMoney_Total </span>
+                                    <span class="price total" id="txtTotal" style="margin-top: 8px;">0.00</span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div id="button" style="margin-bottom: 10px;">
+                    <input class="btn btn-defaultxero" style="width: 75px; margin-top: 22px;" id="btnSave" value="@Resources.Resource.BankAccount_Create_Create"/>
+                    <input class="btn btn-defaultxero" id="btnCancel" style="width:75px; margin-top: 20px;" value="@Resources.Resource.BankAccount_Create_Close"/>
+                </div>
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,329 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.Contact>
+@{
+    ViewBag.Title = "Supplier";
+}
+
+<script type="text/javascript">
+
+    window.onload = function () {
+        $("#cbCheckAll").prop('checked', false);
+        $(".cbCheck").prop('checked', false);
+    }
+
+    $(document).ready(function () {
+        
+        
+        $("#Supplier").find("input:first").focus();
+
+        $('#sPageSize').html($('#hdfPageSize').val());
+
+        if ($('#hidError').val() == "Error") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Error</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 120,
+                width: 'auto',
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() != "Success" && $('#hidError').val() != "" && $('#hidError').val() != "Create" && $('#hidError').val() != "Edit") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_DeleteFail</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 120,
+                width: 'auto',
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() == "Success") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%;  font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_DeleteSuccess</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 120,
+                width: 300,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() == "Create") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%;  font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_CreateSuccess</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 120,
+                width: 300,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() == "Edit") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%;  font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_EditSuccess</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 120,
+                width: 300,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        }
+    });
+
+
+    $(document).ready(function () {
+
+        /******************** Code area *************************/
+        /******************** Begin Add New Contact ************************/
+        $("#btnAddNew").click(function (e) {
+            
+            location.href = "/Contacts/Create/";
+
+        });
+
+        //Add new Employee
+        $("#btnNewEm").click(function (e) {
+            
+            location.href = "/Contacts/AddEmployee/";
+        });
+
+        /******************** Begin Edit a Contact ************************/
+        /*********************/
+        $("table > tbody > tr > td > a#ContactEditID").unbind('click').click(function (e) {
+            e.preventDefault();
+            
+            location.href = "/Contacts/Edit/" + $(this).find('input').val();
+        });
+
+        //Delete Contact
+        $('#btnDelete').click(function () {
+            
+            var valueString = [];
+            $("input[name=cbCheck]:checked").each(
+            function () {
+                valueString.push(this.value);
+            });
+            if (valueString.length > 0) {
+                var DelConfirmed = {
+                    delConfirm: valueString,
+                }
+                $('#confirmDel').empty();
+                $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Delete the selected item ?</p>');
+                $("#confirmDel").dialog({
+                    modal: true,
+                    height: 120,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                            $.ajax(
+                                {
+                                    type: 'POST',
+                                    url: '/Contacts/DeleteConfirmed/',
+                                    traditional: true,
+                                    data: DelConfirmed,
+                                    success: function (data) {
+                                        if (data == 'Success') {
+
+                                            location.reload();
+                                        } else {
+                                            location.reload();
+                                        }
+                                    }
+                                });
+                        },
+                        'Cancel': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#confirmDel').dialog('open');
+
+            } else {
+                $('#Inform').empty();
+                $('#Inform').append('<p style="height:0px !important;text-align:center;">You have not selected items to delete !</p>');
+                $("#Inform").dialog({
+                    modal: true,
+                    height: 120,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#Inform').dialog('open');
+            }
+        });
+
+        //Checked all or Uncheck all element is checkbox
+        $('#cbCheckAll').click(function () {
+            $(".cbCheck").prop('checked', $(this).prop('checked'));
+        });
+    })
+    function SetPageSize(pageSize) {
+        
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/Contacts/SetPageSize',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+</script>
+
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container">
+            <h3>@Resources.Resource.Contacts_Supplier_Title</h3>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="hidError" value="@ViewBag.Error">
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div class="Error"></div>
+            <div id="dialog" title="Basic modal dialog"></div>
+            <div id="confirmDel" title="Confirm" style="background: white"></div>
+            <div id="Inform" title="Inform" style="background: white"></div>
+            <div style="margin-top: 10px;">
+                <button id="btnAddNew" class="btn btn-defaultxero">@Resources.Resource.Contacts_Index_AddNew</button>
+                <button id="btnNewEm" class="btn btn-defaultxero">@Resources.Resource.Employees_AddNew</button>
+            </div>
+            @{
+                var db = new ErpEntities();
+                List<Contact> contact = db.Contacts.ToList();
+                List<Employee> employee = db.Employees.ToList();
+            }
+            <ul style="margin-top: 10px; margin-bottom: 10px; width: 100%;" class="group nav nav-tabs">
+                <li class="selected">
+                    <a href="/Contacts/Index/">All Contacts (@contact.Count())</a></li>
+                <li class="active">
+                    <a href="/Contacts/Supplier/" id="tabSupplier">Supplier (@contact.Count(c => c.Type == 0 || c.Type == 2))</a></li>
+                <li class="selected">
+                    <a href="/Contacts/Customer/" id="tabCustomer">Customer (@contact.Count(c => c.Type == 1 || c.Type == 2))</a></li>
+                <li class="selected">
+                    <a href="/Contacts/Employee/" id="tabEmployee">Employee (@employee.Count())</a></li>
+            </ul>
+
+            <div class="bovien" style="margin-bottom: 10px;">
+                    <button id="btnDelete" class="btn btn-defaultxero">@Resources.Resource.Contacts_Index_Delete</button>
+                    <div style="float: right;">
+                        @using (Html.BeginForm("Supplier", "Contacts", FormMethod.Get, new { style = "margin:0px !important;" }))
+                        {
+                            @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "form-control", placeholder = "Input Contact Name", style = "margin-top: 2px; margin-right: 10px;" })
+                            <input type="submit" id="btnSearch" style="margin-right: 2px;" value="@Resources.Resource.Category_Search" class="btn btn-defaultxero" />
+                        }
+                    </div>
+                </div>
+            @if (Model.Count > 0)
+            {
+                <table style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px;">
+                                <input type="checkbox" id="cbCheckAll" />
+                            </th>
+                            <th style="font-size: 11px;">
+                                @Resources.Resource.Contacts_ContactName
+                            </th>
+                            <th style="font-size: 11px; width: 200px;">
+                                @Resources.Resource.Contacts_Email
+                            </th>
+                            <th style="font-size: 11px; width: 220px;">
+                                @Resources.Resource.Contacts_PhoneNumber
+                            </th>
+                            <th style="font-size: 11px; width: 120px;">
+                                @Resources.Resource.Contacts_BillDue
+                            </th>
+                            <th style="font-size: 11px; width: 120px;">
+                                @Resources.Resource.Contacts_OverDue
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="Supplier">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" id="cbCheck" name="cbCheck" class="cbCheck" value="@item.ID"/>
+                            </td>
+                            <td style="word-break: break-all;">
+                                <a id="ContactEditID" href="#">@Html.DisplayFor(modelItem => item.ContactName) @Html.HiddenFor(modelItem => item.ID)</a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Email)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Tel_Country) - 
+                                    @Html.DisplayFor(modelItem => item.Tel_Area) - 
+                                    @Html.DisplayFor(modelItem => item.Tel_Num)
+                            </td>
+                            <td>&nbsp;</td>
+                            <td>&nbsp;</td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+                <div style="display: inline;">
+                    <div style="width: 60%; float: left; margin-top: 10px;">
+                        @Html.PagedListPager(Model, page => Url.Action("Supplier", new { page, currentFilter = ViewBag.CurrentFilter }))
+                    </div>
+                    <div style="float: left; margin-top: 10px; margin-left: 225px;">
+                        <label style="width: 70px; margin-top: 10px; font-size: 12px; font-weight: bold">@Resources.Resource.Common_PageSize</label>
+                        <div id="showpag" class="dropdown" style="float: right;">
+                            <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @Html.Raw("<div id='divNoRecord'>"+ @Resources.Resource.Common_Msg_CountDisplay+ "</div>")
+            }
+
+        </div>
+    </div>
+</div>
+
+

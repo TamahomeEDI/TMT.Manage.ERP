@@ -1,0 +1,95 @@
+﻿@using TMT.ERP.DataAccess.Model
+@using TMT.ERP.BusinessLogic.Utils
+@model IEnumerable<TMT.ERP.DataAccess.Model.BankAccountDetail>
+
+
+
+
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container">
+            <h3>@Resources.Resource.BankAccounts_Index_Title - <a href="/AccountTrans/Index/@ViewBag.ID">@ViewBag.Name</a></h3>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container">
+    <div id="popup-breadcrumb" style="width: 100%; margin-left: 0px; margin-top: 10px; margin-bottom: 10px;">
+        <div class="container">
+            <div id="con_top">
+                <div class="c_container">
+                    <div style="margin-bottom: 10px; width: 100%; margin-left: 5px;">
+                        <p style="display: inline-block; width: 100px;">
+                            <label>@ViewBag.To</label><br>
+                            @ViewBag.Contact
+                        </p>
+                        <p style="display: inline-block; width: 100px;">
+                            <label>Date</label><br>
+                            @{
+                                DateTime date = Convert.ToDateTime(ViewBag.Date);
+                            }
+                            @TMT.ERP.Commons.Utility.DateFormat(date)
+                        </p>
+                        <p style="display: inline-block; width: 100px;">
+                            <label>Reference</label><br>
+                            @ViewBag.Ref
+                        </p>
+                    </div>
+                    <div style="margin-left: 5px;">
+                        <p style="display: inline-block; width: 100px;">
+                            @if (ViewBag.VAT == 0)
+                            { 
+                                <label style="width: 50px;">VAT : </label><br/>
+                                <input type="checkbox" disabled />
+                            }
+                            else
+                            {
+                                <label style="width: 50px;">VAT : </label><br/>
+                                <input type="checkbox" checked disabled />
+                            }
+                        </p>
+                    </div>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>@Resources.Resource.BankAccount_Create_Description</th>
+                                <th>@Resources.Resource.BankAccount_SpendMoney_Quantity</th>
+                                <th>@Resources.Resource.BankAccount_SpendMoney_UPrice</th>
+                                <th>@Resources.Resource.BankAccount_SpendMoney_Account</th>
+                                <th>@Resources.Resource.BankAccount_SpendMoney_TaxRate</th>
+                                <th>@Resources.Resource.BankAccount_SpendMoney_Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Description</td>
+                                    <td>@item.Quantity</td>
+                                    <td>@item.UnitPrice</td>
+                                    <td>@item.Account.Name</td>
+                                    <td>@item.TaxRate.Name</td>
+                                    <td>@item.Amount</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div style="float: right; width: 35%">
+                        <div>
+                            <p style="display: inline-block; width: 100%">
+                                <span class="ta_label" style="width: 50%; float: left; margin-top: 8px;">@Resources.Resource.BankAccount_SpendMoney_Subtotal</span>
+                                <span class="price total" style="margin-right: 48px; float: right; margin-top: 8px;">@ViewBag.Subtotal</span>
+                            </p>
+                            <p style="height: 50px; display: inline-block; border-top: 1px solid black; border-bottom: 3px double black;  width: 100%">
+                                <span class="ta_label" style="width: 50%; float: left; margin-top: 8px; font-weight: bold; font-size: 22px;">@Resources.Resource.BankAccount_SpendMoney_Total </span>
+                                <span class="price total" style="font-weight: bold; margin-right: 48px; float: right; margin-top: 8px;">@ViewBag.Total</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

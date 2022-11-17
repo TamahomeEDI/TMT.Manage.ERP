@@ -1,0 +1,310 @@
+﻿@model TMT.ERP.DataAccess.Model.Good
+
+@{
+    Layout = null;
+    <script src="~/Content/ckeditor/ckeditor.js"></script>
+    <script src="~/Content/ckfinder/ckfinder.js"></script>
+    <script src="@Url.Content("~/Scripts/ERPScripts/jquery.formatCurrency-1.4.0.js")"></script>
+    <script src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+}
+<script type="text/javascript">
+    var result = 0;
+    $(document).ready(function () {
+
+        //Press enter
+        $('.noEnterSubmit').keypress(function (e) {
+            debugger;
+            if (e.which == 13) return false;
+            //or...
+            if (e.which == 13) e.preventDefault();
+        });
+
+        $('#Code').focus();
+
+        jQuery.validator.messages.required = "";
+
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                    $('#AlertDuplicate').hide();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+        $("#SalePrice").change(function () {
+            debugger;
+            var rate = $('#SalePrice').asNumber();
+            if (rate > 100) {
+                $('#SalePrice').val(0.00);
+                return false;
+            } else {
+                var count = $('#SalePrice').val().replace(/[^0-9.]/g, '');
+                $('#SalePrice').val(count);
+                var value = $('#SalePrice').asNumber();
+                if (value > 100) {
+                    return false;
+                }
+                if (count == "") {
+                    count = 0.00;
+                }
+                $('#SalePrice').val(count).formatCurrency();
+            }
+        });
+
+        $("#PurchasePrice").change(function () {
+            debugger;
+            var rate = $('#PurchasePrice').asNumber();
+            if (rate > 100) {
+                $('#PurchasePrice').val(0.00);
+                return false;
+            } else {
+                var count = $('#PurchasePrice').val().replace(/[^0-9.]/g, '');
+                $('#PurchasePrice').val(count);
+                var value = $('#PurchasePrice').asNumber();
+                if (value > 100) {
+                    return false;
+                }
+                if (count == "") {
+                    count = 0.00;
+                }
+                $('#PurchasePrice').val(count).formatCurrency();
+            }
+        });
+
+        $('#PurchaseAccountID').change(function (e) {
+            debugger;
+            var id = $('#PurchaseAccountID').val();
+            if (id == "") {
+                $('#PurchaseTaxRateID').val("");
+            } else {
+                RateForAccount(id);
+                $('#PurchaseTaxRateID').val(result);
+            }
+        });
+
+        $('#SaleAccountID').change(function (e) {
+            debugger;
+            var id = $('#SaleAccountID').val();
+            if (id == "") {
+                $('#SaleTaxRateID').val("");
+            } else {
+                RateForAccount(id);
+                $('#SaleTaxRateID').val(result);
+            }
+        });
+
+        $('#btnClose').unbind('click').click(function () {
+            debugger;
+            $('#dialog').dialog('close');
+        });
+
+        $("#btBrowser").click(function () {
+            var ckfinder = new CKFinder();
+            ckfinder.selectActionFunction = function (fileUrl) {
+                $("#Images").val(fileUrl);
+                $('#imageGood').attr('src', fileUrl);
+            };
+            ckfinder.popup();
+        });
+
+        $('#btnSave').click(function (e) {
+            debugger;
+            var name = $('#Name').val();
+            var url = $('#Images').val();
+            var code = $('#Code').val();
+            var category = $('#CategoryID').val();
+            var type = $('#ProductTypeID').val();
+            var uom = $('#UOMID').val();
+            var description = $('#Description').val();
+            var outPrice = $('#SalePrice').val();
+            var inPrice = $('#PurchasePrice').val();
+            var saleAccID = $('#SaleAccountID').val();
+            var saleTaxID = $('#SaleTaxRateID').val();
+            var purchaseAccID = $('#PurchaseAccountID').val();
+            var purchaseTaxID = $('#PurchaseTaxRateID').val();
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            ExistsCode(code);
+            if (result == 1) {
+                $('#AlertDuplicate').show();
+                $('.error').hide();
+                return false;
+            } else {
+                $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Good/Create/',
+                    traditional: true,
+                    data: {
+                        "code": code, "category": category, "type": type, "uom": uom, "inPrice": inPrice, "name": name,
+                        "outPrice": outPrice, "saleAccID": saleAccID, "saleTaxID": saleTaxID, "description": description,
+                        "purchaseAccID": purchaseAccID, "purchaseTaxID": purchaseTaxID, "url": url
+                    },
+                    success: function (data) {
+                        location.href = "/Good/Index/";
+                    }
+                });
+            }
+        });
+
+    });
+
+    // Check Exists Code
+    function ExistsCode(code) {
+        var id = 0;
+        $.ajax({
+            type: 'POST',
+            url: '/Good/ExistsCode/',
+            data: { "code": code, "id": id },
+            success: function (data) {
+                debugger;
+                if (data == 1) {
+                    result = 1;
+                }
+                if (data == 0)
+                    result = 0;
+            },
+            async: false
+        });
+    }
+
+    function RateForAccount(id) {
+        debugger;
+        $.ajax(
+        {
+            type: 'POST',
+            url: '/Good/RateForAccount/',
+            traditional: true,
+            data: { "id": id },
+            success: function (data) {
+                debugger;
+                result = data;
+            },
+            async: false
+        });
+    }
+
+</script>
+<div id="popup-breadcrumb" style="margin-top: -6px; width: 102%">
+    <div class="error" style="display: none; margin-top: 5px; border: 2px solid red; height: 30px; width: 665px; border-radius: 6px; line-height: 2">
+        <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+        <span></span>.<br clear="all" />
+    </div>
+    <div id="AlertDuplicate" style="display: none; margin-top: 5px; border: 2px solid red; height: 30px; border-radius: 6px; width: 665px; line-height: 2">
+        <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+        <label style="color: red; font-weight: normal; font-size: 12px;">@Resources.Resource.Common_Msg_CodeUnique</label>
+    </div>
+    <div style="margin-left: 10px; margin-top: 10px; margin-bottom: 10px;">
+        <input type="submit" value="@Resources.Resource.Good_Create_Update" name="Save" class="btn btn-defaultxero" id="btnSave"/>
+        <input type="submit" value="@Resources.Resource.Good_Create_Close" class="btn btn-defaultxero" id="btnClose"/>
+    </div>
+    @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+    {
+        <div style="float: left; width: 50%; margin-top: -215px;">
+            <div style="width: 90%; height: 30px; margin-bottom: 5px; margin-top: 5px; margin-left: 10px;">
+                <div style="float: left; width: 30%;">
+                    <label>@Resources.Resource.Good_Create_Code</label>
+                </div>
+                <div style="float: right; width: 70%">
+                    <input type="text" class="required noEnterSubmit" name="Code" id="Code" style="width: 175px;" maxlength="40" />
+                </div>
+            </div>
+            <div style="width: 90%; height: 30px; margin-bottom: 5px; margin-top: 5px; margin-left: 10px;">
+                <div style="float: left; width: 30%">
+                    <label>@Resources.Resource.Good_Create_Category</label>
+                </div>
+                <div style="float: right; width: 70%">
+                    @Html.DropDownList("CategoryID", null, string.Empty, new { @class = "required", style = "width: 175px;" })
+                </div>
+            </div>
+            <div style="width: 90%; height: 30px; margin-bottom: 5px; margin-top: 5px; margin-left: 10px;">
+                <div style="float: left; width: 30%">
+                    <label>@Resources.Resource.Good_Create_Type</label>
+                </div>
+                <div style="float: right; width: 70%">
+                    @Html.DropDownList("ProductTypeID", null, string.Empty, new { @class = "required", style = "width: 175px;" })
+                </div>
+            </div>
+            <div style="width: 90%; height: 30px; margin-bottom: 5px; margin-top: 5px; margin-left: 10px;">
+                <div style="float: left; width: 30%">
+                    <label>@Resources.Resource.Good_Create_UOM</label>
+                </div>
+                <div style="float: right; width: 70%">
+                    @Html.DropDownList("UOMID", null, string.Empty, new { @class = "required", style = "width: 175px;" })
+                </div>
+            </div>
+            <div style="width: 90%; height: 30px; margin-bottom: 5px; margin-top: 5px; margin-left: 10px;">
+                <div style="float: left; width: 30%">
+                    <label>@Resources.Resource.Good_Create_Description</label>
+                </div>
+                <div style="float: right; width: 70%">
+                    <textarea id="Description" maxlength="1000" style="width: 175px; resize: none;"></textarea>
+                </div>
+            </div>
+        </div>
+        <div style="float: right; width: 49%; margin-top: -215px;">
+            <div style="display: inline-block">
+                <p class="x-boxed1">
+                    <label>@Resources.Resource.Good_Create_Attachment</label>
+                </p>
+            </div>
+            <div style="border: 1px solid #ccc; height: 158px;">
+                <a href="javascript:void(0);" class="btn btn-defaultxero" id="btBrowser" style="margin-left: 10px;">Browser</a>
+                <img src="/Uploads/noimage.jpg" title="image" alt="image" id="imageGood" style="margin-top: 3px; max-height: 150px; max-width: 200px; margin-left: 20px;" />
+                <input id="Images" name="Images" type="hidden" />
+            </div>
+        </div>
+
+        <div style="border: 1px solid #CCCCCC; height: 70px; margin-left: 10px; width: 682px; margin-top: 230px; border-radius: 10px 10px 10px 10px;">
+            <p class="x-boxed" style="margin-left: 5px; margin-top: 5px;">
+                <label>For Purchase </label>
+            </p>
+            <p style="display: inline; margin-left: 25px;">
+                <label style="font-weight: normal">@Resources.Resource.Good_Create_UnitPrice</label>
+                <input type="text" id="PurchasePrice" class="currency" value="0.00" />
+            </p>
+            <p style="display: inline">
+                <label style="font-weight: normal">@Resources.Resource.Good_Create_Account</label>
+                @Html.DropDownList("PurchaseAccountID", null, string.Empty, new { style = "width: 150px;" })
+            </p>
+            <p style="display: inline">
+                <label style="font-weight: normal">@Resources.Resource.Good_Create_TaxRate</label>
+                @Html.DropDownList("PurchaseTaxRateID", null, string.Empty, new { style = "width: 150px;" })
+            </p>
+        </div>
+
+        <div style="border: 1px solid #CCCCCC; height: 70px; margin-left: 10px; width: 682px; margin-top: 15px; border-radius: 10px 10px 10px 10px; margin-bottom: 10px;">
+            <p class="x-boxed" style="margin-left: 5px; margin-top: 5px;">
+                <label>For Sale</label>
+            </p>
+            <p style="display: inline; margin-left: 25px;">
+                <label style="font-weight: normal">@Resources.Resource.Good_Create_UnitPrice</label>
+                <input type="text" id="SalePrice" class="currency" value="0.00" />
+            </p>
+            <p style="display: inline">
+                <label style="font-weight: normal">@Resources.Resource.Good_Create_Account</label>
+                @Html.DropDownList("SaleAccountID", null, string.Empty, new { style = "width: 150px;" })
+            </p>
+            <p style="display: inline">
+                <label style="font-weight: normal">@Resources.Resource.Good_Create_TaxRate</label>
+                @Html.DropDownList("SaleTaxRateID", null, string.Empty, new { style = "width: 150px;" })
+            </p>
+        </div>
+    }
+</div>
+

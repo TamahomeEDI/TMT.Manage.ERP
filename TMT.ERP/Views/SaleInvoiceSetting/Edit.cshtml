@@ -1,0 +1,86 @@
+﻿@model TMT.ERP.DataAccess.Model.SaleInvoiceSetting
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+
+    <fieldset>
+        <legend>SaleInvoiceSetting</legend>
+
+        @Html.HiddenFor(model => model.ID)
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.BillDefaultDueDate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.BillDefaultDueDate)
+            @Html.ValidationMessageFor(model => model.BillDefaultDueDate)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.SaleInvoiceDefaultDueDate)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.SaleInvoiceDefaultDueDate)
+            @Html.ValidationMessageFor(model => model.SaleInvoiceDefaultDueDate)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.InvoicePrefix)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.InvoicePrefix)
+            @Html.ValidationMessageFor(model => model.InvoicePrefix)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.CreditNotePrefix)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.CreditNotePrefix)
+            @Html.ValidationMessageFor(model => model.CreditNotePrefix)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.NextNumber)
+        </div>
+        <div class="editor-field">
+            @Html.EditorFor(model => model.NextNumber)
+            @Html.ValidationMessageFor(model => model.NextNumber)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.BillDefaultTypeID, "DueDateType")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("BillDefaultTypeID", String.Empty)
+            @Html.ValidationMessageFor(model => model.BillDefaultTypeID)
+        </div>
+
+        <div class="editor-label">
+            @Html.LabelFor(model => model.SaleInvoiceDefaultTypeID, "DueDateType1")
+        </div>
+        <div class="editor-field">
+            @Html.DropDownList("SaleInvoiceDefaultTypeID", String.Empty)
+            @Html.ValidationMessageFor(model => model.SaleInvoiceDefaultTypeID)
+        </div>
+
+        <p>
+            <input type="submit" value="Save" />
+        </p>
+    </fieldset>
+}
+
+<div>
+     
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

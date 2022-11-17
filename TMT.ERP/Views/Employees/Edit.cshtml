@@ -1,0 +1,355 @@
+﻿@model TMT.ERP.DataAccess.Model.Employee
+
+@{
+    ViewBag.Title = "Edit";
+    Layout = null;
+}
+<script type="text/ecmascript">
+    $(document).ready(function () {
+        $('#btnClose').click(function (e) {
+            e.preventDefault();
+            location.reload();
+        });
+    });
+</script>
+
+@using (Html.BeginForm())
+{
+    @Html.ValidationSummary(true)
+    @Html.AntiForgeryToken();
+    <div class="container">
+    <div class="c_container">
+        <div id="breadcrumb">
+            <div class="container">
+                <div id="con_top">
+                    <div class="c_container"> 
+                        <fieldset>
+                            <legend>Employee</legend>
+
+                            <table style="width:100%;">
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_Code</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.EditorFor(model => model.Code)
+                                            @Html.ValidationMessageFor(model => model.Code)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_CtryName</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.CountryName)
+                                            @Html.ValidationMessageFor(model => model.CountryName)
+                                        </div>
+                                    </td>
+                                </tr>
+             
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_FirstName</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.FirstName)
+                                            @Html.ValidationMessageFor(model => model.LastName)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_Lastname</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.LastName)
+                                            @Html.ValidationMessageFor(model => model.LastName)
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_Email</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Email)
+                                            @Html.ValidationMessageFor(model => model.Email)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_PasWord</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Password)
+                                            @Html.ValidationMessageFor(model => model.Password)
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_CompanyID</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.DropDownList("CompanyID", null, string.Empty, new { style = "width:70%;" })
+                                            @Html.ValidationMessageFor(model => model.CompanyID)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_PostAtt</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.PostAttention)
+                                            @Html.ValidationMessageFor(model => model.PostAttention)
+                                        </div>
+                                    </td>
+                                </tr>   
+        
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_PostAdd</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.PostAddress)
+                                            @Html.ValidationMessageFor(model => model.PostAddress)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_PostCity</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.PostCity)
+                                            @Html.ValidationMessageFor(model => model.PostCity)
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_PostStt</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.PostState)
+                                            @Html.ValidationMessageFor(model => model.PostState)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_PostZip</td>
+                                    <td style="width:25%">
+                                        @Html.TextBoxFor(model => model.PostZipCode)
+                                        @Html.ValidationMessageFor(model => model.PostZipCode)
+                                    </td>
+                                </tr>   
+
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_PostCtry</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.PostCountry)
+                                            @Html.ValidationMessageFor(model => model.PostCountry)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_PhysAtt</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.PhysAttention)
+                                            @Html.ValidationMessageFor(model => model.PhysAttention)
+                                        </div>
+                                    </td>
+                                </tr>   
+
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_PhysAdd</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.PhysAddress)
+                                            @Html.ValidationMessageFor(model => model.PhysAddress)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_PhysCity</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.PhysCity)
+                                            @Html.ValidationMessageFor(model => model.PhysCity)
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_PhysStt</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.PhysState)
+                                            @Html.ValidationMessageFor(model => model.PhysState)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_PhysZip</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.PhysZipCode)
+                                            @Html.ValidationMessageFor(model => model.PhysZipCode)
+                                        </div>
+                                    </td>
+                                </tr>   
+
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_PhysCtry</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.PhysCountry)
+                                            @Html.ValidationMessageFor(model => model.PhysCountry)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_Tel_CtryNum</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Tel_Country)
+                                            @Html.ValidationMessageFor(model => model.Tel_Country)
+                                        </div>
+                                    </td>
+                                </tr> 
+
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_Tel_AreaNum</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Tel_Area)
+                                            @Html.ValidationMessageFor(model => model.Tel_Area)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_Tel_Num</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Tel_Num)
+                                            @Html.ValidationMessageFor(model => model.Tel_Num)
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_FaxCtry</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Fax_Country)
+                                            @Html.ValidationMessageFor(model => model.Email)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_FaxArea</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Fax_Area)
+                                            @Html.ValidationMessageFor(model => model.Fax_Area)
+                                        </div>
+                                    </td>
+                                </tr> 
+
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_FaxNb</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Fax_Num)
+                                            @Html.ValidationMessageFor(model => model.Fax_Num)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_DirCtry</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Direct_Country)
+                                            @Html.ValidationMessageFor(model => model.Direct_Country)
+                                        </div>
+                                    </td>
+                                </tr>
+             
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_DirArea</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Direct_Area)
+                                            @Html.ValidationMessageFor(model => model.Direct_Area)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_DirNb</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Direct_Num)
+                                            @Html.ValidationMessageFor(model => model.Direct_Num)
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_Face</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Facebook)
+                                            @Html.ValidationMessageFor(model => model.Facebook)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_Twi</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Twitter)
+                                            @Html.ValidationMessageFor(model => model.Twitter)
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_Link</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.LinkedIn)
+                                            @Html.ValidationMessageFor(model => model.LinkedIn)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_Go</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.Google)
+                                            @Html.ValidationMessageFor(model => model.Google)
+                                        </div>
+                                    </td>
+                                </tr>
+
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_TaxNb</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.TaxNumber)
+                                            @Html.ValidationMessageFor(model => model.TaxNumber)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_OrdRate</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.OrdinaryRate)
+                                            @Html.ValidationMessageFor(model => model.OrdinaryRate)
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_BANb</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.BankAccountNumber)
+                                            @Html.ValidationMessageFor(model => model.BankAccountNumber)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%">@Resources.Resource.Employees_BAName</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.BankAccountName)
+                                            @Html.ValidationMessageFor(model => model.BankAccountName)
+                                        </div>
+                                    </td>
+                                </tr> 
+
+                                <tr>
+                                    <td style="width:25%">@Resources.Resource.Employees_PayDetail</td>
+                                    <td style="width:25%">
+                                        <div class="editor-field">
+                                            @Html.TextBoxFor(model => model.PaymentDetails)
+                                            @Html.ValidationMessageFor(model => model.PaymentDetails)
+                                        </div>
+                                    </td>
+                                    <td style="width:25%"></td>
+                                    <td style="width:25%"></td>
+                                </tr> 
+                            </table>   
+                            <p>
+                                <input type="submit" class="btn" value="@Resources.Resource.Account_Index_Save" />
+                                <input type="submit" value="@Resources.Resource.Account_Index_Close" class="btn" id="btnClose" />
+                            </p>  
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>   
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

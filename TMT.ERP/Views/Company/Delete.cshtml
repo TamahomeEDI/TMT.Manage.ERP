@@ -1,0 +1,180 @@
+﻿@model TMT.ERP.DataAccess.Model.Company
+
+@{
+    ViewBag.Title = "Delete";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<fieldset>
+    <legend>Company</legend>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.DisplayName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.DisplayName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.TradingName)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.TradingName)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Logo)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Logo)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Business)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Business)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.OrgaType)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.OrgaType)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Description)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Description)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PostAttention)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PostAttention)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PostAddress)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PostAddress)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PostCity)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PostCity)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PostState)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PostState)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PostZipCode)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PostZipCode)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PostCountry)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PostCountry)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PhysAttention)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PhysAttention)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PhysAddress)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PhysAddress)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PhysCity)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PhysCity)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PhysState)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PhysState)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PhysZipCode)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PhysZipCode)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.PhysCountry)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.PhysCountry)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Tel_Country)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Tel_Country)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Tel_Area)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Tel_Area)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Tel_Num)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Tel_Num)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Email)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Email)
+    </div>
+
+    <div class="display-label">
+         @Html.DisplayNameFor(model => model.Website)
+    </div>
+    <div class="display-field">
+        @Html.DisplayFor(model => model.Website)
+    </div>
+</fieldset>
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    <p>
+        <input type="submit" value="Delete" /> |
+         
+    </p>
+}

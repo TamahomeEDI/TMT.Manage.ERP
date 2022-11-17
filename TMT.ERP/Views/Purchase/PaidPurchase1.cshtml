@@ -1,0 +1,279 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.Purchase
+
+@{
+    ViewBag.Title = "Edit Bill";
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+<script>
+    $(document).ready(function () {
+        $('#discSpan').hide();
+        if ($("#discSpanText").text() > 0) {
+            $('#discSpan').show();
+        }
+
+        $('a#viewbill').click(function () {
+            debugger;
+            var giatri = $(this).attr('title');
+            var tongtien = $('#totalmoney').attr('title');
+            window.location.href = encodeURI('/Purchase/ViewBill?id=' + giatri + '&tongtien=' + tongtien);
+        });
+    });
+</script>
+
+<input type="hidden" id="hidNoteType" value="@ViewBag.NoteType" />
+<input type="hidden" id="hidNoteFromID" value="@ViewBag.NoteFromID" />
+<input type="hidden" id="hidNumberItem" value="@ViewBag.NumberItems" />
+<input type="hidden" id="hidDiscount" value="@ViewBag.Discount" />
+
+<div class="fu">
+    <div id="breadcrumb">
+        <div class="container">
+            <div id="con_top">
+                <div class="c_container">
+                    @if (Model.Type == 0)
+                    {
+                        <h3>@Resources.Resource.PaidPurchase_View_Title @Model.Code</h3>
+                    }
+                    else
+                    {
+                        <h3>@Resources.Resource.PaidCreditNote_View_Title @Model.Code</h3>
+                    }
+                    <div id="breadcrumbs">
+                        <ul>
+                            <li><a href="/Purchase/Dashboard/"><span>@Resources.Resource.Common_Purchases</span></a></li>
+                            <li><a href="/Purchase/Draft/">@Resources.Resource.Common_Bills</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="cleardiv"></div>
+    <div id="title">
+    </div>
+    <div class="cleardiv"></div>
+    <div id="AccountSetting">
+        <div>
+            <label>Paid Payment</label>
+        </div>
+        <div>
+            <div>
+                @if (Model.Type == 1)
+                {                
+                    <div>
+                        <label>
+                            @Resources.Resource.Payment_Supplier
+                        </label>
+                        <br />
+                        <label>
+                            <a href="/Contacts/Edit/@ViewBag.ContactID">@ViewBag.To</a>
+                        </label>
+                        <br />
+                        <label>
+                            @if (!string.IsNullOrEmpty(ViewBag.Address))
+                            {
+                                @Html.Raw("No Addresss");
+                            }
+                            else
+                            {
+                                @Html.Raw(ViewBag.Address);
+                            }
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            @Resources.Resource.PaidPurchase_Date
+                        </label>
+                        <br />
+                        <label>
+                            @TMT.ERP.Commons.Utility.DateFormat(Model.CreatedDate)
+                        </label>
+                    </div>
+                    <div>
+
+                        <label>@Resources.Resource.Purchase_AWPayment_CN</label> 
+
+                        <br />
+                        <label>
+                            @Model.Code
+                        </label>
+                    </div>
+                    <div>
+                        <label>@Resources.Resource.Payment_Reference</label>
+                        <br />
+                        <label>@ViewBag.Ref</label>
+                    </div>
+                }
+                else
+                {                
+                    <div>
+                        <label>@Resources.Resource.Payment_Supplier</label>
+                        <br />
+                        <label>
+                            <a href="/Contacts/Edit/@ViewBag.ContactID">@ViewBag.To</a>
+                        </label>
+                        <br />
+                        <label>
+                            @if (!string.IsNullOrEmpty(ViewBag.Address))
+                            {
+                                @Html.Raw("No Addresss");
+                            }
+                            else
+                            {
+                                @Html.Raw(ViewBag.Address);
+                            }
+                        </label>
+                    </div>
+                    <div>
+                        <label>@Resources.Resource.PaidPurchase_Date</label>
+                        <br />
+                        <label>
+                        @TMT.ERP.Commons.Utility.DateFormat(Model.CreatedDate)
+                        </label>
+                    </div>
+                    <div>
+                        <label>@Resources.Resource.Payment_DueDate</label>
+                        <br />
+                        <label>
+                          @{
+                          DateTime due = Model.DueDate != null ? Convert.ToDateTime(Model.DueDate) : DateTime.Now;
+                          }
+                            @TMT.ERP.Commons.Utility.DateFormat(due)
+                        </label>
+                    </div>
+                    <div>
+                            <label>@Resources.Resource.Purchase_AWPayment_PO</label>
+                        <br />
+                        <label>
+                            @Model.Code
+                        </label>
+                    </div>
+                    <div>
+                        <label>@Resources.Resource.Payment_Reference</label>
+                        <br />
+                        <label>@ViewBag.Ref</label>
+                    </div>
+                }
+                <div class="line">
+                </div>
+                <div class="gridview">
+                    <table id="tblPurchaseDetail" class="table">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;" colspan="1"><span>@Resources.Resource.Purchase_Create_Item</span></th>
+                                <th style="width: 140px;"><span>@Resources.Resource.SaleInvoice_Create_Description</span></th>
+                                <th style="width: 60px;"><span>@Resources.Resource.SaleInvoice_Create_Qty</span></th>
+                                <th style="width: 90px;"><span>@Resources.Resource.SaleInvoice_Create_UnitPrice</span></th>
+                                <th style="width: 60px;"><span>@Resources.Resource.SaleInvoice_Create_Disc</span></th>
+                                <th style="width: 130px;"><span>@Resources.Resource.SaleInvoice_Create_Account</span></th>
+                                <th><span>@Resources.Resource.SaleInvoice_Create_TaxRate</span></th>
+                                <th style="width: 100px;"><span>@Resources.Resource.SaleInvoice_Create_Amount</span></th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="insertRow">
+                            @foreach (var item in Model.PurchaseDetails)
+                            {	
+
+                                <tr>
+                                    <td>@Html.Raw(item.Good.Code)</td>
+                                    <td>@Html.Raw(item.Description)</td>
+                                    <td style="text-align: right">@Html.Raw(item.Quantity)</td>
+                                    <td style="text-align: right" class="currency">@Html.Raw(item.Price)</td>
+                                    <td style="text-align: right">@Html.Raw(item.Discount)</td>
+                                    <td>@Html.Raw(item.Account.Name)</td>
+                                    <td>@Html.Raw(item.TaxRate.Name) </td>
+                                    <td style="text-align: right" class="currency">@Html.Raw(item.TotalMoney)</td>
+                                </tr>							
+                            }
+                        </tbody>
+                    </table>
+                    <div class="total">
+                        @{
+                            ErpEntities db = new ErpEntities();
+                            Dictionary<double?, double?> dicTax = new Dictionary<double?, double?>();
+
+                            List<PurchaseDetail> purchaseDetailList = null;
+                            List<int?> listTax = null;
+                            int ID = Model.ID;
+                            purchaseDetailList = db.PurchaseDetails.Where(i => i.PurchaseID == ID).ToList().OrderBy(i => i.TaxRateID).ToList();
+                            listTax = purchaseDetailList.Select(details => details.TaxRateID).Distinct().ToList();
+                            foreach (var taxRateID in listTax)
+                            {
+                                TaxRate tax = db.TaxRates.Find(taxRateID);
+                                double? rate = tax.Rate;
+                                double amount = 0;
+                                foreach (var item in purchaseDetailList)
+                                {
+                                    if (item.TaxRateID == taxRateID)
+                                    {
+                                        amount += item.Price * item.Quantity;
+                                    }
+                                }
+                                dicTax.Add(rate, amount * rate / 100);
+                            }
+                        }
+                        <div>
+                            <label>
+                                @Resources.Resource.Purchase_Create_Subtotal
+                                <span style="font-style: italic; font-size: 12px;" id="discSpan">(@Resources.Resource.Purchase_Discount_Span
+                                    <span style="font-style: italic; font-size: 12px;" id="discSpanText" class="currency"></span>)
+                                </span>
+                            </label>
+                            <label class="currency">@Model.SubTotal</label>
+                        </div>
+                        @foreach (var item in dicTax)
+                        {
+                            if (item.Value != 0)
+                            {
+                            <div>
+                                <label>Total Tax @Html.Raw(item.Key)@Html.Raw("%")</label>
+                                <label id="txtTax" class="price vat currency">@Html.Raw(item.Value)</label>
+                            </div>  
+                            }
+                        }
+                        <div class="subtotal">
+                            <label>@Resources.Resource.Purchase_Create_Total</label>
+                            <label><span id="txtPurchaseTotal" class="price total currency">@Model.TotalMoney</span></label>
+                        </div>
+                        @foreach (var itemPayment in (ViewBag.PayList as List<Payment>))
+                        {
+                            DateTime datePaid = Convert.ToDateTime(itemPayment.DatePaid);
+                            <div>
+                                <label><a href="javascript:void(0);" id="viewbill" title="@itemPayment.ID"><span style="font-size: 13px;">Less Payment</span></a></label>
+                                <label><span id="txtLesspayment" class="price currency">@itemPayment.TotalMoney</span></label>
+                            </div>
+                            <div>
+                                <label><span style="font-size: 10px;">@TMT.ERP.Commons.Utility.DateFormat(datePaid)</span></label>
+                            </div>
+                        }
+                        <div class="total">
+                            <label>Amount Due</label>
+                            <label class="price currency">0.00</label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div class="form_position1">
+            </div>
+        </div>
+    </div>
+</div>
+<div style="clear: both;"></div>
+@*@Html.Partial("Note/_ViewNote")*@
+@{Html.RenderAction("GetNotesList", "Note", new { noteType = @ViewBag.NoteType, noteFromID = @ViewBag.NoteFromID, Type = 1, dTotal = @Model.TotalMoney });}
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

@@ -1,0 +1,458 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.BusinessLogic.Utils.AccountInfo>
+
+
+@{
+    ViewBag.Title = "Revenue";
+}
+
+<script type="text/javascript">
+
+    window.onload = function () {
+        $("#cbCheckAll").prop('checked', false);
+        $(".cbCheck").prop('checked', false);
+        $('#TaxRateID').val('');
+    }
+
+    $(document).ready(function () {
+        debugger;
+
+        $("#Account").find("input:first").focus();
+
+        $('#sPageSize').html($('#hdfPageSize').val());
+
+        if ($('#hidError').val() == "Error") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Error</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 'auto',
+                width: 'auto',
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() != "Success" && $('#hidError').val() != "" && $('#hidError').val() != "Create" && $('#hidError').val() != "Edit") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_DeleteFail</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 'auto',
+                width: 'auto',
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() == "Success") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%;  font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_DeleteSuccess</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 'auto',
+                width: 300,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() == "Create") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%;  font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_CreateSuccess</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 'auto',
+                width: 300,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() == "Edit") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%;  font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_EditSuccess</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 'auto',
+                width: 300,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        }
+    });
+
+    $(document).ready(function () {
+
+
+        /******************** Code area *************************/
+        /******************** Begin Add New Account ************************/
+        $("#btnAddNew").click(function (e) {
+            debugger;
+            $.ajax({
+                type: 'GET',
+                url: "/Accounts/Create/",
+                success: function () {
+                    debugger;
+                    custom.Create_Popup("#dialog", "Create New Account", 750, 'auto', "/Accounts/Create/", false);
+                    $("#dialog").dialog("open");
+                }
+            });
+
+        });
+
+        /******************** Begin Add New Bank Account ************************/
+        $("#btnAddBank").click(function (e) {
+            debugger;
+            $.ajax({
+                type: 'GET',
+                url: "/Accounts/BankAdd/",
+                success: function () {
+                    debugger;
+                    custom.Create_Popup("#dialog", "Create New Bank Account", 400, 'auto', "/Accounts/BankAdd/", false);
+                    $("#dialog").dialog("open");
+                }
+            });
+
+        });
+
+        /******************** Begin Edit a Account ************************/
+        $("table > tbody > tr > td > a#AccountEditID").unbind('click').click(function (e) {
+            e.preventDefault();
+            debugger;
+            var _url = "/Accounts/Edit/" + $(this).find('input').val()
+            $.ajax({
+                type: 'GET',
+                url: _url,
+                success: function () {
+                    custom.Create_Popup("#dialog", "Edit Account", 750, 'auto', _url, false);
+                    $("#dialog").dialog("open");
+                }
+            });
+        });
+
+        /******************** Begin Edit a Bank Account ************************/
+        $("table > tbody > tr > td > a#BankAccountEditID").unbind('click').click(function (e) {
+            e.preventDefault();
+            debugger;
+            var _url = "/Accounts/BankEdit/" + $(this).find('input').val()
+            $.ajax({
+                type: 'GET',
+                url: _url,
+                success: function () {
+                    custom.Create_Popup("#dialog", "Edit Bank Account", 400, 'auto', _url, false);
+                    $("#dialog").dialog("open");
+                }
+            });
+        });
+
+        //Change Tax Rate
+        $('#btnChange').click(function () {
+            debugger;
+            var valueString = [];
+            $("input[name=cbCheck]:checked").each(
+            function () {
+                valueString.push(this.value);
+            });
+            var taxID = $('#TaxRateID').val();
+            if (taxID == null) {
+                $('#Inform').empty();
+                $('#Inform').append('<p style="height:0px !important;text-align:center;">@Resources.Resource.Common_InformNoTaxRate</p>');
+                $("#Inform").dialog({
+                    modal: true,
+                    height: 120,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#Inform').dialog('open');
+            } else {
+                if (valueString.length > 0) {
+                    var ChangeConfirmed = {
+                        accID: valueString,
+                        taxID: taxID
+                    }
+                    {
+                        $('#confirmDel').empty();
+                        $('#confirmDel').append('<p style="height:0px !important;text-align:center;">@Resources.Resource.Common_ConfirmChangeTax</p>');
+                        $("#confirmDel").dialog({
+                            modal: true,
+                            height: 120,
+                            autoOpen: false,
+                            buttons: {
+                                'OK': function () {
+                                    $(this).dialog('close');
+                                    $.ajax(
+                                    {
+                                        type: 'POST',
+                                        url: '/Accounts/ChangeTax/',
+                                        traditional: true,
+                                        data: ChangeConfirmed,
+                                        success: function (data) {
+                                            location.reload();
+                                        }
+                                    });
+                                },
+                                'Cancel': function () {
+                                    $(this).dialog('close');
+                                }
+                            }
+                        });
+                        $('#confirmDel').dialog('open');
+                    }
+                } else {
+                    $('#confirmDel').empty();
+                    $('#confirmDel').append('<p style="height:0px !important;text-align:center;">@Resources.Resource.Common_Msg_Change</p>');
+                    $("#confirmDel").dialog({
+                        modal: true,
+                        height: 120,
+                        autoOpen: false,
+                        buttons: {
+                            'OK': function () {
+                                $(this).dialog('close');
+                            }
+                        }
+                    });
+                    $('#confirmDel').dialog('open');
+                }
+            }
+        });
+
+        //Delete Account
+        $('#btnDelete').click(function () {
+            debugger;
+            var valueString = [];
+            $("input[name=cbCheck]:checked").each(
+            function () {
+                valueString.push(this.value);
+            });
+            if (valueString.length > 0) {
+                var DelConfirmed = {
+                    delConfirm: valueString,
+                }
+                $('#confirmDel').empty();
+                $('#confirmDel').append('<p style="height:0px !important;text-align:center;">@Resources.Resource.Common_ConfirmDelete</p>');
+                $("#confirmDel").dialog({
+                    modal: true,
+                    height: 120,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                            $.ajax(
+                                {
+                                    type: 'POST',
+                                    url: '/Accounts/DeleteConfirmed/',
+                                    traditional: true,
+                                    data: DelConfirmed,
+                                    success: function (data) {
+                                        if (data == 'Success') {
+
+                                            location.reload();
+                                        } else {
+                                            location.reload();
+                                        }
+                                    }
+                                });
+                        },
+                        'Cancel': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#confirmDel').dialog('open');
+
+            } else {
+                $('#Inform').empty();
+                $('#Inform').append('<p style="height:0px !important;text-align:center;">@Resources.Resource.Common_InformDelete</p>');
+                $("#Inform").dialog({
+                    modal: true,
+                    height: 120,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#Inform').dialog('open');
+            }
+        });
+    });
+
+    function SetPageSize(pageSize) {
+        debugger;
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/Accounts/SetPageSize',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+
+</script>
+
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container">
+            <h3>@Resources.Resource.Account_Title</h3>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="hidError" value="@ViewBag.Error">
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div class="Error"></div>
+            <div id="dialog"></div>
+            <div id="confirmDel" title="Confirm" style="background: white"></div>
+            <div id="Inform" title="Inform" style="background: white"></div>
+            <div style="margin-top: 10px;">
+                <input type="button" id="btnAddNew" class="btn btn-defaultxero" value="@Resources.Resource.Account_Index_AddNew" />
+                <input type="button" id="btnAddBank" class="btn btn-defaultxero" value="@Resources.Resource.Account_Index_AddBank"/>
+            </div>
+            <br>
+            @{
+                List<TMT.ERP.BusinessLogic.Utils.AccountInfo> account = TMT.ERP.BusinessLogic.Utils.AccountManager.GetAllAccount().ToList();    
+            }
+            <ul style="margin-bottom: 20px;" class="group nav nav-tabs">
+                <li class="selected">
+                    <a href="/Accounts/Index/">All Accounts (@account.Count())</a></li>
+                <li class="selected">
+                    <a href="/Accounts/Assets/">Assets (@account.Where(a => a.TypeID == 24).Count())</a></li>
+                <li class="selected">
+                    <a href="/Accounts/Liabilities/">Liabilities (@account.Where(a => a.TypeID == 25).Count())</a></li>
+                <li class="selected">
+                    <a href="/Accounts/Equity/">Equity (@account.Where(a => a.TypeID == 26).Count())</a></li>
+                <li class="selected">
+                    <a href="/Accounts/Expenses/">Expenses (@account.Where(a => a.TypeID == 27).Count())</a></li>
+                <li class="active">
+                    <a href="/Accounts/Revenue/">Revenue (@account.Where(a => a.TypeID == 29).Count())</a></li>
+            </ul>
+
+            <div class="bovien" style="margin-bottom: 10px;">
+                @Html.DropDownList("TaxRateID", null, String.Empty, new { style = "width: 200px; margin-top: 2px;" })
+                <input type="button" id="btnChange" style="margin-left: 5px; margin-right: 5px;" class="btn btn-defaultxero" value="@Resources.Resource.Account_Index_ChangeTax" />
+                <input type="button" id="btnDelete" class="btn btn-defaultxero" value="@Resources.Resource.Account_Index_Delete"/>
+                <div style="float: right;">
+                    @using (Html.BeginForm("Revenue", "Accounts", FormMethod.Get, new { style = "margin:0px !important;" }))
+                    {
+                        @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "form-control", placeholder = "Input Account Name", style = "margin-top: 2px; margin-right: 10px;" })
+                        <input type="submit" id="btnSearch" style="margin-right: 2px;" value="@Resources.Resource.Category_Search" class="btn btn-defaultxero" />
+                    }
+                </div>
+            </div>
+            @if (Model.Count > 0)
+            {
+                <table class="table" style="width: 100%;">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px;">
+                                <input type="checkbox" id="cbCheckAll" />
+                            </th>
+                            <th>
+                                @Resources.Resource.Account_Create_Code
+                            </th>
+                            <th>
+                                @Resources.Resource.Account_Create_Name
+                            </th>
+                            <th>
+                                @Resources.Resource.Account_Index_TypeID
+                            </th>
+                            <th>
+                                @Resources.Resource.Account_Index_TaxRate
+                            </th>
+                            <th>
+                                @Resources.Resource.Account_Create_YTD
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="Account">
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                <input type="checkbox" id="cbCheck" name="cbCheck" class="cbCheck" value="@item.AccountID"/>
+                            </td>
+                            <td style="word-break: break-all; width: 120px;">
+                                @Html.DisplayFor(modelItem => item.AccountCode)
+                            </td>
+                            <td style="word-break: break-all; width: 400px; text-align: left">
+                                <a id="AccountEditID" href="#">@Html.DisplayFor(modelItem => item.AccountName)@Html.HiddenFor(modelItem => item.AccountID)</a>
+                            </td>
+                            <td style="word-break: break-all; width: 100px;">
+                                @Html.DisplayFor(modelItem => item.Type)
+                            </td>
+                            <td style="word-break: break-all; width: 160px;">
+                                @Html.DisplayFor(modelItem => item.TaxRate)
+                            </td>
+                            @if(@item.Type == "Bank"){
+                            <td style="word-break: break-all; width: 120px;">
+                                <a href="/Accounts/AccountDetails?id=@item.AccountID&&type=0">
+                                    @Html.DisplayFor(modelItem => item.s_YTD)
+                                </a>
+                            </td>
+                            }else{
+                            <td style="word-break: break-all; width: 120px;">
+                                <a href="/Accounts/AccountDetails?id=@item.AccountID&&type=1">
+                                    @Html.DisplayFor(modelItem => item.s_YTD)
+                                </a>
+                            </td>
+                            }
+                        </tr>
+                    }
+                    </tbody>
+                </table>
+                <div style="display: inline;">
+                    <div style="width: 60%; float: left; margin-top: 10px;">
+                        @Html.PagedListPager(Model, page => Url.Action("Revenue", new { page, currentFilter = ViewBag.CurrentFilter }))
+                    </div>
+                    <div style="float: left; margin-top: 10px; margin-left: 225px;">
+                        <label style="width: 70px; margin-top: 10px; font-size: 12px; font-weight: bold">@Resources.Resource.Common_PageSize</label>
+                        <div id="showpag" class="dropdown" style="float: right;">
+                            <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @Html.Raw("<div id='divNoRecord'>"+ @Resources.Resource.Common_Msg_CountDisplay+ "</div>")
+            }
+
+        </div>
+    </div>
+</div>

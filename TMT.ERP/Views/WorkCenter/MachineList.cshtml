@@ -1,0 +1,81 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.Machine>
+
+@{
+    ViewBag.Title = "MachineList";
+    Layout = null;
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        //Checked all or Uncheck all element is checkbox
+        $('#cbCheckAll').click(function () {
+            $(".cbCheck").prop('checked', $(this).prop('checked'));
+        });
+
+        //Select Machine
+        $('#btnSelect').click(function () {
+            
+            var valueString = [];
+            $("input[name=cbCheck]:checked").each(
+            function () {
+                valueString.push(this.value);
+            });
+            window.location.reload();
+        });
+
+
+    });
+
+</script>
+
+<div id="con_body">
+    <div class="container">
+        <div class="c_container">
+            <div id="form_body">
+                <div id="dialog" title="Basic modal dialog"></div>
+                <div id="confirmDel" title="Confirm!"></div>
+                <button id="btnSelect" class="btn">@Resources.Resource.WorkCenter_Save</button>
+                <div style="float: right;">
+                    <input type="text" id="txtSearch" placeholder="Input Machine Name"/>
+                    <button id="btnSearch" class="btn">@Resources.Resource.WorkCenter_Search</button>
+                </div>
+                @if(Model != null){
+                    <table id="Machine">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="cbCheckAll" />
+                                </th>
+                                <th>
+                                    @Resources.Resource.Machines_Code
+                                </th>
+                                <th>
+                                    @Resources.Resource.Machines_Description
+                                </th>
+                            </tr>
+                        </thead>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>
+                                    <input type="checkbox" id="cbCheck" name="cbCheck" class="cbCheck" value="@item.ID"/>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Code)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                            </tr>
+                        }
+
+                    </table>
+                }else{
+                     @Html.Raw("<label id='lblRecord'>No data available</label>")
+                }
+            </div>
+        </div>
+    </div>
+</div>

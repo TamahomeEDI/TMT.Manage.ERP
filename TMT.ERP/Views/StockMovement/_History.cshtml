@@ -1,0 +1,90 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.StockMovement>
+@{
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+<script>
+    $('#sPageSize').html($('#hdfPageSize').val());
+    function SetPageSize(pageSize) {
+        
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/StockMovement/SetPageSize/',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+</script>
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<div id="tabbody">
+    @if(Model.ToList().Count > 0){
+        <table>
+            <thead>
+                <tr>
+                    <th><span>@Resources.Resource.Common_Code</span></th>
+                    <th><span>@Resources.Resource.Common_CreateDate</span></th>
+                    <th><span>@Resources.Resource.Common_CreatedUser</span></th>
+                    <th><span>@Resources.Resource.Common_Approve</span></th>
+                    <th><span>@Resources.Resource.Common_FromStock</span></th>
+                    <th><span>@Resources.Resource.Common_ToStock</span></th>
+                    <th><span>@Resources.Resource.Common_Quantity</span></th>
+                </tr>
+            </thead>
+        <tbody>
+        @foreach (var item in Model) {    
+          var quantity =  item.StockMovementDetails.Sum(details => details.Quantity);    
+            <tr>
+                <td>
+                   <a href="/StockMovement/Edit?id=@item.ID"> @Html.DisplayFor(modelItem => item.Code)</a>
+                </td>
+                <td>
+                    @item.CreatedDate.ToString("d")
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.User.FullName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ApprovalUserID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Stock.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Stock1.Name)
+                </td>
+                <td>
+                  @quantity
+                </td>
+            </tr>
+        }
+        </tbody>
+        </table>
+        } 
+    else 
+    {
+        <div class="pager"> <h4> Contains no records </h4></div>
+    }
+                            <div style="display: inline;">
+                        <div style="width: 70%; float: left;">
+                            @*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount*@
+                            @Html.PagedListPager(Model, page => Url.Action("GetStockMovement", new { page,type = 1}))
+                        </div>
+                        <div style="width: 25%; float: right;">
+                            <label style="margin-left: 70px; margin-top: 10px;">Showing&nbsp;</label>
+                            <div id="showpag" class="dropdown" style="float: right;">
+                                <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+</div>

@@ -1,0 +1,241 @@
+﻿@model TMT.ERP.DataAccess.Model.Machine
+
+@{
+    Layout = null;
+    <script src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+}
+<script type="text/ecmascript">
+    var result = 0;
+    $(document).ready(function () {
+
+        $('#btnClose').click(function (e) {
+            $("#dialog").dialog("close");
+            return false;
+        });
+
+        $('#Code').focus();
+
+        jQuery.validator.messages.required = "";
+
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                    $('#AlertDuplicate').hide();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+        //Display Machine Status
+        $(function () {
+            debugger;
+            var status = $('#hidStatus').val();
+            if (status == 0) {
+                $('#Status').val(status);
+            } else if (status == 1) {
+                $('#Status').val(status);
+            } else if (status == 2) {
+                $('#Status').val(status);
+            } else {
+                $('#Status').val(status);
+            }
+        });
+
+        // Check Exists Code
+        function ExistsCode(code) {
+            var id = $('#hidID').val();
+            $.ajax({
+                type: 'POST',
+                url: '/Machines/ExistsCode/',
+                data: { "code": code, "id": id },
+                success: function (data) {
+                    debugger;
+                    if (data == 1) {
+                        result = 1;
+                    }
+                    if (data == 0)
+                        result = 0;
+                },
+                async: false
+            });
+        }
+
+        //Press enter
+        $('.noEnterSubmit').keypress(function (e) {
+            debugger;
+            if (e.which == 13) return false;
+            //or...
+            if (e.which == 13) e.preventDefault();
+        });
+
+        // Create Machine
+        $('#btnSave').click(function (e) {
+            debugger;
+            var id = $('#hidID').val();
+            var code = $('#Code').val();
+            var name = $('#Name').val();
+            var status = $('#Status').val();
+            var wcenterID = $('#WorkCenterID').val();
+            var description = $('#Description').val();
+            /*if (run == null || run == "") {
+                $('#AlertRunTime').show();
+                error++;
+            } else {
+                $('#AlertRunTime').hide();
+            }
+            if (setup == null || setup == "") {
+                $('#AlertSetupTime').show();
+                error++;
+            } else {
+                $('#AlertSetupTime').hide();
+            }
+            if (cost == null || cost == "") {
+                $('#AlertCost').show();
+                error++;
+            } else {
+                $('#AlertCost').hide();
+            }*/
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            ExistsCode(code);
+            if (result == 1) {
+                $('#AlertDuplicate').show();
+                $('.error').hide();
+                return false;;
+            } else {
+                $('#AlertDuplicate').hide();
+                $.ajax(
+            {
+                type: 'POST',
+                traditional: true,
+                url: '/Machines/Edit/',
+                data: {
+                    "code": code, "name": name, "status": status, "id": id,
+                    "wcenterID": wcenterID, "description": description,
+                },
+                success: function (e) {
+                    location.href = "/Machines/Index/";
+                },
+                async: false
+            });
+            }
+        });
+
+    });
+</script>
+
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <input type="hidden" id="hidStatus" value="@Model.Status"/>
+    <input type="hidden" id="hidID" value="@Model.ID"/>
+    <div id="popup-breadcrumb" style="margin-top: -6px;">
+        <div class="error" style="display: none; margin-top: 5px; border: 2px solid red; height: 30px; border-radius: 6px; line-height: 2">
+            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+            <span style="font-size: 11px;"></span>.<br clear="all" />
+        </div>
+        <div id="AlertDuplicate" style="display: none; margin-top: 5px; border: 2px solid red; height: 30px; border-radius: 6px; line-height: 2">
+            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+            <label style="color: red; font-weight: normal; font-size: 12px;">@Resources.Resource.Common_Msg_CodeUnique</label>
+        </div>
+        @*<div id="AlertRunTime" style="display: none;">
+                            <label style="color: red">Run Time cannot be empty</label>
+                        </div>
+                        <div id="AlertSetupTime" style="display: none;">
+                            <label style="color: red">Setup Time cannot be empty</label>
+                        </div>
+                        <div id="AlertCost" style="display: none;">
+                            <label style="color: red">Cost cannot be empty</label>
+                        </div>*@
+        <div style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;">
+            <div style="height: 30px; width: 100%; margin-top: 5px;">
+                <div style="float: left; width: 40%">
+                    <label>@Resources.Resource.Machines_Code </label>
+                </div>
+                <div style="float: right; width: 60%">
+                    <input id="Code" name="Code" type="text" style="width: 185px;" class="required noEnterSubmit" maxlength="60" value="@Model.Code"/>
+                </div>
+            </div>
+            <div style="height: 30px; width: 100%; margin-top: 5px;">
+                <div style="float: left; width: 40%">
+                    <label>@Resources.Resource.Machines_Name </label>
+                </div>
+                <div style="float: right; width: 60%">
+                    <input id="Name" name="Name" type="text" style="width: 185px;" class="required noEnterSubmit" maxlength="120" value="@Model.Name" />
+                </div>
+            </div>
+            @*<div style="height: 30px; width: 100%; margin-top: 5px;">
+                            <div style="float: left; width: 40%">
+                                <label>@Resources.Resource.Machines_DefaultRt </label>
+                            </div>
+                            <div style="float: right; width: 60%">
+                                <input id="RunTime" type="text" size="26" maxlength="250" />
+                            </div>
+                        </div>
+                        <div style="height: 30px; width: 100%; margin-top: 5px;">
+                            <div style="float: left; width: 40%">
+                                <label>@Resources.Resource.Machines_DefaultSt </label>
+                            </div>
+                            <div style="float: right; width: 60%">
+                                <input id="SetupTime" type="text" size="26" maxlength="250" />
+                            </div>
+                        </div>
+                        <div style="height: 30px; width: 100%; margin-top: 5px;">
+                            <div style="float: left; width: 40%">
+                                <label>@Resources.Resource.Machines_Cost </label>
+                            </div>
+                            <div style="float: right; width: 60%">
+                                <input id="Cost" type="text" size="26" maxlength="250" />
+                            </div>
+                        </div>*@
+            <div style="height: 30px; width: 100%; margin-top: 5px;">
+                <div style="float: left; width: 40%">
+                    <label>@Resources.Resource.Machines_WCenterID </label>
+                </div>
+                <div style="float: right; width: 60%">
+                    @Html.DropDownList("WorkCenterID", null, string.Empty, new { @class = "required", style = "width: 185px;" })
+                </div>
+            </div>
+            <div style="height: 30px; width: 100%; margin-top: 5px;">
+                <div style="float: left; width: 40%">
+                    <label>@Resources.Resource.Machines_Status </label>
+                </div>
+                <div style="float: right; width: 60%">
+                    <select id="Status" style="width: 185px;">
+                        <option value="0">@Resources.Resource.Machines_Repair</option>
+                        <option value="1">@Resources.Resource.Machines_Maintenance</option>
+                        <option value="2">@Resources.Resource.Machines_InProcess</option>
+                        <option value="3">@Resources.Resource.Machines_Free</option>
+                    </select>
+                </div>
+            </div>
+            <div style="height: 80px; width: 100%">
+                <div style="float: left; width: 40%">
+                    <label>@Resources.Resource.Machines_Description</label>
+                </div>
+                <div style="float: right; width: 60%">
+                    <textarea id="Description" maxlength="1000" style="width: 185px; resize: none" rows="3">@Model.Description</textarea>
+                </div>
+            </div>
+            <div style="margin-left: 188px; margin-bottom: 10px; float: left; margin-top: 5px;">
+                <input type="button" class="btn btn-defaultxero" id="btnSave" value="@Resources.Resource.Machines_Save"/>
+                <input style="margin-left: 6px;" type="button" class="btn btn-defaultxero" id="btnClose" value="@Resources.Resource.Machines_Cancel"/>
+            </div>
+        </div>
+    </div>
+}

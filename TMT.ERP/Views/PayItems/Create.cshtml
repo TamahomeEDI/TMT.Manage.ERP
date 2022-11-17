@@ -1,0 +1,263 @@
+﻿@model TMT.ERP.DataAccess.Model.PayItem
+
+@{
+    <script src="@Url.Content("~/Scripts/jquery.validate.js")"></script>
+    <script src="@Url.Content("~/Scripts/custom.js")"></script>
+    Layout = null;  
+}
+<script type="text/ecmascript">
+
+    $(document).ready(function () {
+        $('#btnClose').click(function (e) {
+            $("#dialog").dialog("close");
+            return false;
+        });
+
+        $('#Name').focus();
+
+        $('.datepicker').datepicker();
+
+        $('.currency').blur(function () {
+            $('.currency').formatCurrency();
+        });
+
+        $(".numeric").numeric();
+
+        jQuery.validator.messages.required = "";
+
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+        
+        $('#MultiOrdRate').click(function (e) {
+            $('#MulRate').removeAttr("disabled");
+        });
+
+        $('#EmpOrdRate').click(function (e) {
+            $('#MulRate').attr("disabled", "disabled");
+        });
+
+        $('#PayItemTypeID').change(function (e) {
+            debugger;
+            $('#Account').show()
+            $('#AccountID').addClass("required");
+            $('#PaidTo').removeClass("required");
+            $('#PaySlip').hide();
+            var value = $('#PayItemTypeID').val();
+            if (value == 1) {
+                $('#Wages').show();
+            } else
+                $('#Wages').hide();
+            if (value == 2 || value == 5) {
+                $('#Allowances').show();
+                $('#AllowancesType').show();
+            } else
+                $('#Allowances').hide();
+            if (value == 3 || value == 6) {
+                $('#Allowances').show();
+                $('#AllowancesType').show();
+                $('#Deductions').show();
+                $('#Account').hide();
+                $('#AccountID').removeClass("required");
+                $('#PaidTo').addClass("required");
+            } else if (value == 4 || value == 7) {
+                $('#Allowances').show();
+                $('#AllowancesType').hide();
+                $('#Deductions').show();
+                $('#PaidTo').addClass("required");
+                if (value == 4) { 
+                    $('#Account').hide();
+                    $('#AccountID').removeClass("required");
+                } else if (value == 7) {
+                    $('#Account').show();
+                    $('#PaySlip').show();
+                }
+            } else
+                $('#Deductions').hide();
+        });
+
+
+
+        $('#btnSave').click(function (e) {
+            debugger;
+            var name = $('#Name').val();
+            var description = $('#Description').val();
+            var type = $('#PayItemTypeID').val();
+            var account = $('#AccountID').val();
+            var paidTo = $('#PaidTo').val();
+            if (type == 1) {
+                if ($('#EmpOrdRate').is(":checked")) {
+                    var rate = null;
+                } else if ($('#EmpOrdRate').is(":checked")) {
+                    var rate = $('#MulRate').val();
+                }
+            } else if (type == 2 || type == 3 || type == 5 || type == 6) {
+                var rate = $('#Rate').val();
+            } else
+                var rate = null;
+            if (type == 7) {
+                if ($('#ShowOn').is(":checked")) {
+                    var onslip = 1;
+                } else
+                    var onslip = 0;
+            } else
+                var onslip = 0;
+            if ($('#ShowDefault').is(":checked"))
+                var onDefault = 1;
+            else
+                var onDefault = 0;
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            $.ajax({
+                type: 'POST',
+                tradition: true,
+                url: '/PayItems/Create',
+                data: {
+                    'name': name, 'description': description, 'type': type, 'account': account, 'paidTo': paidTo,
+                    'rate': rate, 'onslip': onslip, 'onDefault': onDefault
+                },
+                success: function (data) {
+                    location.href = "Index/";
+                }
+            })
+        });
+    });
+</script>
+
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <div id="popup-breadcrumb" style="margin-top: -6px; width: 102%">
+        <div style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;">
+            <div class="error" style="display: none; margin-top: 5px; border: 2px solid red; height: 30px; border-radius: 6px; line-height: 2">
+                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                <span style="font-size: 12px;"></span>.<br clear="all" />
+            </div>
+
+            <div>
+                <label>@Resources.Resource.PayItem_Name</label>
+            </div>
+            <div>
+                <input type="text" class="required" name="Name" id="Name" maxlength="120" style="width: 250px;" />
+                <label style="font-size: 12px; font-weight: normal; color: darkgrey">e.g. 'Travel Allowance' or 'Time and a half'</label>
+            </div>
+
+            <div>
+                <label>@Resources.Resource.PayItem_Description</label>
+            </div>
+            <div>
+                <textarea id="Description" style="width: 500px;" rows="3" maxlength="1000"></textarea>
+            </div>
+            <div>
+                <p style="display: inline-block">
+                    <label>@Resources.Resource.PayItem_Type</label>
+                    <br />
+                    @Html.DropDownList("PayItemTypeID", null, String.Empty, new { @class = "required", style = "width: 250px;" })
+                </p>
+                <p style="display: inline-block" id="Account">
+                    <label>@Resources.Resource.PayItem_AccountID</label>
+                    <br />
+                    @Html.DropDownList("AccountID", null, String.Empty, new { @class = "required", style = "width: 250px;" })
+                </p>
+            </div>
+            <div id="Wages" style="display: none; margin-top: 10px;">
+                <p class="x-boxed">
+                    Default Rate
+                    <label style="font-size: 11px; font-weight: normal; color: darkgrey">(can be overridden during the pay run)</label>
+                </p>
+                <p style="display: inline-block">
+                    <input type="radio" id="EmpOrdRate" name="Rate" checked>
+                    <label style="font-weight: normal">Use the employee's Ordinary Rate</label>
+                </p>
+                <p style="display: inline-block">
+                    <input type="radio" id="MultiOrdRate" name="Rate">
+                    <label style="font-weight: normal">Multiply the employee's Ordinary Rate by a factor of &nbsp;&nbsp;&nbsp;</label>
+                    <input type="text" disabled id="MulRate" value="1.00" class="numeric currency" style="width: 50px; text-align: right;" />
+                </p>
+            </div>
+            <div id="Allowances" style="display: none; margin-top: 10px;">
+                <div id="AllowancesType">
+                <p class="x-boxed" style="display: inline-block">
+                    Default Rate
+                    <label style="font-size: 11px; font-weight: normal; color: darkgrey">(can be overridden during the pay run)</label>
+                    <input type="text" id="Rate" value="1.00" class="numeric currency" style="width: 50px; text-align: right;" />
+                </p>
+                </div>
+                <div id="Deductions" style="display: none; margin-top: 10px;">
+                    <div style="display: inline-block">
+                        <p class="x-boxed">
+                            <label>Choose who to pay</label>
+                        </p>
+                        <hr style="margin-top: 5px; margin-bottom: 5px; border: 1px solid darkgrey" />
+                        <p style="display: inline-block">
+                            Contact to make payments to
+                            <br />
+                            <input id="PaidTo" type="text" size="25" maxlength="250" />
+                            <br/>
+                            <label style="font-size: 11px; font-weight: normal; color: darkgrey">
+                                e.g. tax authority or superannuation fund</label>
+                        </p>
+                        <p style="display: inline-block">
+                            Payment Frequency
+                            <br />
+                            <select style="height: 26px;">
+                                <option>Weekly</option>
+                                <option>Every 2 Weeks</option>
+                                <option>Monthly</option>
+                                <option>2 Monthly</option>
+                                <option>Quarterly</option>
+                                <option>6 Monthly</option>
+                                <option>Annually</option>
+                            </select>
+                            <br/>
+                            <label>&nbsp;</label>
+                        </p>
+                        <p style="display: inline-block">
+                            Next Payment
+                            <br />
+                            <input id="NextPaymentDate" class="datepicker" type="text" size="20" readonly=""/>
+                            <br/>
+                            <label>&nbsp;</label>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top: 10px; width: 98%">
+                <p class="x-boxed">
+                    <label>Preferences</label>
+                </p>
+                <hr style="margin-top: 5px; margin-bottom: 5px; border: 1px solid darkgrey" />
+                <p style="display: inline-block; display: none" id="PaySlip">
+                    <input type="checkbox" id="ShowOn"/>
+                    <span style="margin-left: 10px;">Show on employee payslips</span>
+                </p>
+                <p style="display: inline-block">
+                    <input type="checkbox" id="ShowDefault"/>
+                    <span style="margin-left: 10px;">Show as default pay item for all employees</span>
+                </p>
+            </div>
+            <div>
+                <input type="button" class="btn btn-defaultxero" id="btnSave" value="@Resources.Resource.PayItem_Save"/>
+                <input style="margin-left: 30px;" type="button" class="btn btn-defaultxero" id="btnClose" value="@Resources.Resource.PayItem_Close"/>
+            </div>
+        </div>
+    </div>
+}

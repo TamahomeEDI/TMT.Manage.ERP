@@ -1,0 +1,635 @@
+﻿@using TMT.ERP.Commons;
+@model TMT.ERP.DataAccess.Model.Purchase
+
+@{
+    ViewBag.Title = "New Repeating Invoice ";
+}
+
+<script src="@Url.Content("~/Scripts/ERPScripts/Purchase/Purchase.js")"></script>
+<script>
+    $('#ContactID').focus();
+    function RemoveRow(element) {
+        var tr = $(element).closest('tr');
+        tr.remove();
+        CalSubTotal();
+        CalTax();
+        CalTotal();
+        CalDiscToTal();
+    }
+
+    function CalSubTotal() {
+        $(".subtotal").text(function () {
+            var value = 0;
+            $(".amount").each(function () {
+                if ($(this).val() != "")
+                    //  value += parseInt($(this).val());
+                    value += $(this).asNumber();
+            });
+            return value;
+        }).formatCurrency();
+    }
+
+    function CalTotal() {
+
+        $("#txtPurchaseTotal").text(function () {
+            var subtotal = 0;
+            if ($('.subtotal').text() != "")
+                subtotal = $('.subtotal').asNumber();
+            var tax = 0;
+            if ($('#txtTax').text() != "")
+                tax = $('#txtTax').asNumber();
+
+            if ($('#chkVAT').prop('checked')) //Inclusive
+                return subtotal;
+            else //Exclusive
+                return subtotal + tax;
+        }).formatCurrency();
+    }
+
+    function CalTax() {
+        $("#txtTax").text(function () {
+            var value = 0;
+            if ($('#chkVAT').prop('checked')) //Inclusive
+            {
+                $("#tblPurchaseDetail tr").each(function () {
+                    var tr = $(this).closest('tr');
+                    var taxvalue = $(".taxvalue", tr).asNumber();
+                    var qty = 0;
+                    if ($('.qty', tr).val() != "")
+                        qty = $('.qty', tr).asNumber();
+
+                    var unitprice = 0;
+                    if ($('.unitprice', tr).val() != "")
+                        unitprice = $('.unitprice', tr).asNumber();
+
+                    var disc = 0;
+                    if ($('.disc', tr).val() != "")
+                        disc = $('.disc', tr).asNumber();
+
+                    if (taxvalue > 0 & qty > 0 & unitprice > 0)
+                        value += qty * ((unitprice - (unitprice * disc / 100)) / ((100 + taxvalue) / 100)) * taxvalue / 100;
+                    //value += taxvalue * amount / 100;
+                });
+
+            }//Exclusive
+            else {
+                debugger;
+                $("#tblPurchaseDetail tr").each(function () {
+                    var tr = $(this).closest('tr');
+                    var taxvalue = $(".taxvalue", tr).asNumber();
+                    var amount = $(".amount", tr).asNumber();
+
+                    if (taxvalue > 0 & amount > 0)
+                        value += taxvalue * amount / 100;
+                });
+            }
+            return value;
+        }).formatCurrency();
+    }
+
+    function CalDiscToTal() {
+        $('#discSpan').hide();
+        $("#discSpanText").text(function () {
+            var value = 0;
+            $("#tblPurchaseDetail tr").each(function () {
+                var tr = $(this).closest('tr');
+                var disc = 0;
+                if ($('.disc', tr).val() != "")
+                    disc = $('.disc', tr).asNumber();
+                var unitprice = 0;
+                if ($('.unitprice', tr).val() != "")
+                    unitprice = $('.unitprice', tr).asNumber();
+                var quantity = 0;
+                quantity = $('.qty', tr).asNumber();
+                if (disc > 0 & unitprice > 0)
+                    $('#discSpan').show();
+                value += unitprice * quantity * disc / 100;
+            });
+            return value;
+        }).formatCurrency();
+    }
+    var strResultCompareDate = "";
+
+    function SaveRepeatingPurchase() {
+        var isValid = $("#frmMain").valid();
+        if (!isValid) {
+            return false;
+        }
+        arrNoteID = [];
+        $(".noteID").each(function () {
+            if ($(this).val() != "")
+                //  value += parseInt($(this).val());
+                arrNoteID.push($(this).val());
+        });
+
+        var contactName = $('#ContactID').val();
+        var contactID = $('#ContactIDValue').val();
+        var createDate = $('#txtInvoiceDate').val();
+        var dueDate = null;
+        if ($('#txtEndDate').val() != "") {
+            dueDate = $('#txtEndDate').val();
+        }
+        var reference = null;
+        if ($('#Reference').val() != "") {
+            reference = $('#Reference').val();
+        }
+        var currencyID = $('#CurrencyID').val();
+        var UseVAT = 0;
+        if ($('#chkVAT').prop('checked'))
+            UseVAT = 1;
+        var createdEmployeeID = 1;
+        var invoiceNo = null;
+        var SubTotal = $('#txtSubTotal').asNumber();
+        var totalTax = $('#txtTax').asNumber();
+        var totalMoney = $('#txtPurchaseTotal').asNumber();
+        var status = 4;
+        var dateRun = $('#txtInvoiceDate').val();
+        var statusRepeating = $("input:radio[id='rbGroup']:checked").val();
+        strResultCompareDate = CompareDate(dateRun);
+        if (statusRepeating == 1) {
+            if (strResultCompareDate == "true") {
+                debugger;
+                invoiceNo = $('#hidBillCode').val();
+                dueDate = getDueDate($('#txtInvoiceDate').val(), $('#txtDueDate').val(), $('#ListDateSettingDuaDate').val());
+                status = 2;
+            }
+        } else if (statusRepeating == 0) {
+            if (strResultCompareDate == "true") {
+                debugger;
+                invoiceNo = $('#hidBillCode').val();
+                dueDate = getDueDate($('#txtInvoiceDate').val(), $('#txtDueDate').val(), $('#ListDateSettingDuaDate').val());
+                status = 0;
+            }
+        }
+
+        if ((strResultCompareDate == "true") && ($('#ListDateSettingDuaDate').val() == "2")) {
+            if (getDay(dueDate) < getDay($('#txtInvoiceDate').val())) {
+                var message = "The Due Date cannot precede the Purchase Order Date.";
+                $("div.error span").html(message);
+                $("div.error").show();
+                $("#txtDueDate").focus();
+                return false;
+            }
+        } else if ((strResultCompareDate == "false") && ($('#ListDateSettingDuaDate').val() == "2")) {
+            dueDate = getDueDate($('#txtInvoiceDate').val(), $('#txtDueDate').val(), $('#ListDateSettingDuaDate').val());
+            if (getDay(dueDate) < getDay($('#txtInvoiceDate').val())) {
+                var message = "The Due Date cannot precede the Purchase Order Date.";
+                $("div.error span").html(message);
+                $("div.error").show();
+                $("#txtDueDate").focus();
+                return false;
+            }
+        }
+
+        var retValue = 0;
+        var type = 0;
+        var StockID = null;
+        if ($('#StockID').val() != "") {
+            StockID = $('#StockID').val();
+        }
+        var purchaseDetail = BuildJSON();
+        jQuery.ajax({
+            type: "POST",
+            url: "/Services/SavePurchaseService.asmx/SavePurchase",
+            data: JSON.stringify({
+                purchaseID: 0,
+                contactID: contactID,
+                contactName: contactName,
+                createDate: createDate,
+                dueDate: dueDate,
+                invoiceNo: invoiceNo,
+                reference: reference,
+                currencyID: currencyID,
+                createdEmployeeID: createdEmployeeID,
+                tax: totalTax,
+                totalMoney: totalMoney,
+                status: status,
+                type: type,
+                UseVAT: UseVAT,
+                SubTotal: SubTotal,
+                StockID: StockID,
+                purchaseDetail: purchaseDetail,
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (dat) {
+                debugger;
+                retValue = JSON.parse(dat.d);
+                if (retValue.toString().indexOf("ERROR") != -1) {
+                    alert(retValue);
+                    return;
+                } else {
+                    $("#hidNoteType").val(3);
+                    $("#hidNoteFromID").val(retValue);
+                    AddNoteByNoteFromID(parseInt($("#hidNoteFromID").val()), parseInt($("#hidNoteType").val()));
+                    AddRepeating(retValue);
+                    var _url = "/Purchase/Draft/";
+                    var msg = '@Resources.Resource.Common_Msg_CreateSuccess';
+                    if (status == 4) {
+                        _url = "/Purchase/Repeating/";
+                        msg = '@Resources.Resource.Common_Msg_CreateSuccess';
+                    }
+                    if (status == 2) {
+                        _url = "/Purchase/Repeating/";
+                        msg = '@Resources.Resource.Common_Msg_ApprovalSuccess';
+                    }
+                    CreatePopupMessage('divMessage', msg, '@Resources.Resource.Common_Message', 120, 300, _url);
+                }
+            }
+        }).error(function (data) {
+            alert('Error in save purchase\n' + data);
+        });
+
+    }
+
+    function AddRepeating(retValue) {
+        debugger;
+        var numday = $('#txtDueDateDefault').val();
+        var repeatTime = $('#ListDateSetting').val();
+        var dateRun = $('#txtInvoiceDate').val();
+        var duaDateNum = $('#txtDueDate').val();
+        var duaDatetype = $('#ListDateSettingDuaDate').val();
+        var endDate = $('#txtEndDate').val();
+        var status = $("input:radio[id='rbGroup']:checked").val();
+        //purchase
+        var repeatType = 1;
+        var purchaseId = retValue;
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/Repeating/Create/',
+                data: {
+                    "numday": numday,
+                    "repeatTime": repeatTime,
+                    "dateRun": dateRun,
+                    "dueDateNum": duaDateNum,
+                    "dueDateType": duaDatetype,
+                    "endDate": endDate,
+                    "status": status,
+                    "repeatType": repeatType,
+                    "saleId": 0,
+                    "purchaseId": purchaseId
+                },
+                success: function (data) {
+                    // alert('success');
+                    // location.reload();
+                }
+            });
+
+    }
+
+    function AddNoteByNoteFromID(id, noteType) {
+        var note = {
+            noteFromID: id,
+            noteType: noteType,
+            arrNoteID: arrNoteID,
+            change: "Created",
+        }
+
+        $.ajax({
+            type: 'POST',
+            url: '/Note/AddNoteByNoteFromID/',
+            data: note,
+            traditional: true,
+            success: function () {
+            }
+
+        });
+    }
+
+    function BuildJSON() {
+        var arrayData = [];
+        $("#tblPurchaseDetail tr").each(function () {
+            var tr = $(this).closest('tr');
+            var goodID = $("#ddlGoodID", tr).val();
+            if (goodID != "-1" && parseInt(goodID) > 0) {
+                var item = {
+                    "goodId": goodID,
+                    "quantity": $("#txtQty", tr).val(),
+                    "price": $("#txtUnitPrice", tr).val(),
+                    "taxRateID": $("#ddlTaxRateID", tr).val(),
+                    "accountID": $("#ddlAccountID", tr).val(),
+                    "totalMoney": $("#txtAmount", tr).val(),
+                    "description": $("#txtDescription", tr).val(),
+                    "discount": $("#txtDisc", tr).val(),
+                };
+                arrayData.push(item);
+            }
+        });
+        return JSON.stringify(arrayData);
+    }
+
+    function CompareDate(date) {
+        var strResult = "";
+        var date = {
+            strDate: date
+        }
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/Purchase/CompareDate/',
+                async: false,
+                data: date,
+                success: function (data) {
+                    strResult = data;
+                }
+            });
+        return strResult;
+    }
+
+    $(document).ready(function () {
+        $('#ContactID').focus();
+        $(".dateRun").change(function () {
+            debugger;
+            var date = {
+                strDate: $(this).val()
+            }
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Purchase/CompareDate/',
+                    traditional: true,
+                    data: date,
+                    success: function (data) {
+                        // var retValue = data.d;
+                        if (data == "true") {
+                            // var msg = 'The <i>Next Purchase Order Date</i> you entered has already occurred.';
+                            // msg += '\nPurchase to and including today will be generated when you <b>Save</b>.';
+                            var msg = '@Resources.Resource.PO_Message_Repeating_Create';
+                                CreatePopupMessage('divMessage', msg, '@Resources.Resource.Common_Message', 160, 400, '#');
+                            }
+                        }
+                    });
+        });
+        $('#discSpan').hide();
+        setControlShowHide(1, 'frmPurchase_Create');
+
+        $(".numeric").numeric();
+
+        //Validate
+        jQuery.validator.messages.required = "";
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+            //debug: true
+        });
+
+        $("#ContactID").autocomplete({
+            source: function (request, response) {
+                var term = request.term;
+                /*   if (term in cache) {
+                       response(cache[term]);
+                       return;
+                   } */
+                $.ajax({
+                    type: "POST",
+                    url: "/Services/ContactService.asmx/GetContactStartWith",
+                    contentType: "application/json; charset=utf-8",
+                    dataType: "json",
+                    data: JSON.stringify({
+                        name_startsWith: term
+                    }),
+
+                    success: function (data) {
+                        var contact = JSON.parse(data.d);
+                        if (contact == "") {
+                            $("#ContactIDValue").val(0);
+                        }
+                        var results = $.map(contact, function (item) {
+                            return { label: item.Name, value: item.ID }
+                        });
+                        response(results.slice(0, 10));
+                    }
+                });
+            },
+            minLength: 0,
+            select: function (event, ui) {
+                event.preventDefault();
+                $("#ContactID").val(ui.item.label);
+                $("#ContactIDValue").val(ui.item.value);
+            },
+            change: function (event, ui) {
+                event.preventDefault();
+                $("#ContactID").val(ui.item.label);
+                $("#ContactIDValue").val(ui.item.value);
+            },
+            focus: function (event, ui) {
+                return false;
+            }
+        });
+    });
+</script>
+
+<div class="container">
+    <div id="con_top">
+        <div class="c_container">
+            <h3>@Resources.Resource.Purchase_CreateRepeating_Title</h3>
+            <div id="breadcrumbs">
+                <ul>
+                    <li><a href="/Purchase/Dashboard/"><span>@Resources.Resource.Common_Purchases</span></a></li>
+                    <li><a href="/Purchase/Draft/">@Resources.Resource.Common_Bills</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="divMessage" style="background: white;"></div>
+<div class="error" style="display: none; border: 1px solid rgb(204, 204, 204); border-radius: 4px 4px 4px 4px; height: 38px; line-height: 33px;">
+    <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 4px 10px 0 0;" />
+    <span></span>.<br clear="all" />
+</div>
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    string billCode = Utility.GetCode(CommonLib.EnumHelper.GetDescription(TMT.ERP.Models.Lookups.CodeType.PurchaseOrder));
+    <div class="container">
+        <div class="c_container">
+            <div class="form_position1">
+
+                <table width="100%" id="BankAccount">
+                    <thead>
+                        <tr>
+                            <th>@Resources.Resource.Purchase_Repeating_Create_RepeateEvery </th>
+                            <th>@Resources.Resource.Purchase_Repeating_Create_InvoiceDate </th>
+                            <th>@Resources.Resource.Purchase_Repeating_Create_DueDate</th>
+                            <th>@Resources.Resource.Purchase_Repeating_Create_EndDate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <input  type="text" style="width:20% !important;" id="txtDueDateDefault" value="@ViewBag.BillDefaultDuaDate"  />
+                                @Html.DropDownList("ListDateSetting", (SelectList)ViewData["ListDateSetting"], new { @style = "width:50% !important;" })
+                            </td>
+                            <td>
+                                <input type="text" id="txtInvoiceDate" style="width: 55% !important;" class="datepicker dateRun required" />
+                                <br />
+                            </td>
+                            <td>Due:<input type="text" style="width:15% !important;" id="txtDueDate" value="@ViewBag.SaleInvoiceDefaultDueDate" class="required"/>
+                                @Html.DropDownList("ListDateSettingDuaDate", (SelectList)ViewData["ListDateSettingDuaDate"], new { @style = "width:50% !important;" })
+                            </td>
+                            <td>
+                                <input type="text" id="txtEndDate" style="width: 55% !important;" class="datepicker" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>@Html.RadioButton("rbGroup", "0", true)@Resources.Resource.Purchase_Repeating_Create_SaveDraft</td>
+                            <td>@Html.RadioButton("rbGroup", "1", false)@Resources.Resource.Purchase_Repeating_Create_Approve</td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="clear: both;"></div>
+
+
+            </div>
+        </div>
+    </div>
+  
+    <input type="hidden" id="hidNoteType" value="@ViewBag.NoteType" />
+    <input type="hidden" id="hidNoteFromID" value="@ViewBag.NoteFromID" />
+    <input type="hidden" id="hidNumberItem" value="@ViewBag.NumberItems" />
+    <input type="hidden" id="hidBillCode" value="@billCode" />
+    <div id="con_form">
+        <div class="container">
+            <div class="c_container">
+                <div class="form_position1">
+                    <div class="form_left">
+                        <div class="form-group">
+                            <label for="to">@Resources.Resource.Purchase_Create_From_Supplier</label>
+                            @* @Html.DropDownList("ContactID", (IEnumerable<SelectListItem>)ViewData["AccList"], new { @class = "form-control" })*@
+                            <input type="text" id="ContactID" name="ContactID" autofocus="autofocus" class="required">
+                            @Html.Hidden("ContactIDValue")
+                        </div>
+
+                        <div class="form-group">
+                            <label for="schedule">@Resources.Resource.SaleInvoice_Create_Currency</label>
+                            @Html.DropDownList("CurrencyID", (IEnumerable<SelectListItem>)ViewData["CurrencyList"], new { @class = " required form-control" })
+                        </div>
+                        <div id="divvat" class="form-group">
+                            <label for="createdate">@Resources.Resource.SaleInvoice_Create_VAT</label>
+                            @Html.CheckBox("chkVAT", true, new { @class = "checkbox" })
+                        </div>
+                    </div>
+
+                    <div class="form_right">
+                        <div class="form-group">
+                            <label for="createdate">@Resources.Resource.SaleInvoice_Create_Reference</label>
+                            @Html.EditorFor(model => model.Reference, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            <label for="stock">@Resources.Resource.Purchase_Choose_Stock</label>
+                            @Html.DropDownList("StockID", (IEnumerable<SelectListItem>)ViewData["StockList"], new { @class = "form-control" })
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        
+    <div id="con_body">
+        <div class="container">
+            <div class="c_container">
+                <div id="form_body">
+                    <table id="tblPurchaseDetail">
+                        <thead>
+                            <tr>
+                                <th style="width: 100px;" colspan="1"><span>@Resources.Resource.SaleInvoice_Create_Item</span></th>
+                                <th style="width: 140px;"><span>@Resources.Resource.SaleInvoice_Create_Description</span></th>
+                                <th style="width: 60px;"><span>@Resources.Resource.SaleInvoice_Create_Qty</span></th>
+                                <th style="width: 90px;"><span>@Resources.Resource.SaleInvoice_Create_UnitPrice</span></th>
+                                <th style="width: 60px;"><span>@Resources.Resource.SaleInvoice_Create_Disc</span></th>
+                                <th style="width: 130px;"><span>@Resources.Resource.SaleInvoice_Create_Account</span></th>
+                                <th><span>@Resources.Resource.SaleInvoice_Create_TaxRate</span></th>
+                                <th style="width: 100px;"><span>@Resources.Resource.SaleInvoice_Create_Amount</span></th>
+                                <th style="width: 20px;"><span></span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="insertRow">
+                            @for (int iIndex = 0; iIndex < 5; iIndex++)
+                            {	
+                                <tr>
+                                    <td>@Html.DropDownList("ddlGoodID", (IEnumerable<SelectListItem>)ViewData["GoodList"], new { @class = "goodchange colCheckValid" })</td>
+                                    <td>
+                                        <input type="text" id="txtDescription" class="txt1 description" /></td>
+                                    <td>
+                                        <input style="text-align: right" type="text" id="txtQty" class="numeric qty checkvalid text-right" /></td>
+                                    <td>
+                                        <input style="text-align: right" type="text" id="txtUnitPrice" class="numeric currency unitprice checkvalid" /></td>
+                                    <td>
+                                        <input style="text-align: right" type="text" id="txtDisc" class="numeric disc" /></td>
+                                    <td>@Html.DropDownList("ddlAccountID", (IEnumerable<SelectListItem>)ViewData["AccountList"], new { @class = "account checkvalid" })</td>
+                                    <td>@Html.DropDownList("ddlTaxRateID", (IEnumerable<SelectListItem>)ViewData["TaxRateList"], new { @class = "taxrate checkvalid" })
+                                        <input type="hidden" value="0" class="taxvalue" />
+                                    </td>
+                                    <td>
+                                        <input style="text-align: right" type="text" id="txtAmount" class="numeric currency amount currency" /></td>
+                                    <td>
+                                        <div class="remove" onclick="RemoveRow(this);"></div>
+                                    </td>
+                                </tr>							
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="tablefooter">
+                    <div class="pos1">
+                        @*<button class="addline" id="addNewLineRP">Add a new line</button>*@
+                        <input type="button" id="addNewLineRP" class="addline" value="Add a new line" />
+                    </div>
+                    <div class="pos2 posprice" style="width: 350px">
+                        <p>
+                            <span class="ta_label" style="width: 230px">@Resources.Resource.Purchase_Create_Subtotal
+                                <span style="font-style: italic; font-size: 12px;" id="discSpan">(@Resources.Resource.Purchase_Discount_Span
+                                    <span style="font-style: italic; font-size: 12px;" id="discSpanText" class="currency"></span>)
+                                </span>
+                            </span>
+                            <span id="txtSubTotal" class="price subtotal currency">0.00</span>
+                        </p>
+                        <p>
+                            <span id="taxlbl" class="ta_label">@Resources.Resource.Purchase_Create_Tax</span>
+                            <span id="txtTax" class="price vat currency">0.00</span>
+                        </p>
+                    </div>
+                    <div class="pos3 posprice">
+                        <p>
+                            <span class="ta_label">@Resources.Resource.Purchase_Create_Total</span>
+                            <span id="txtPurchaseTotal" class="price total currency">0.00</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="btn-group">
+                    <input type="button" class="btn btn-defaultxero" id="btnCreate" value="Save" onclick="SaveRepeatingPurchase();" />
+                    <input type="button" value="Cancel" onclick="javascript: location.href = '/Purchase/Repeating/';" class="btn btn-defaultxero" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+            
+}
+@*@Html.Partial("Note/_ViewNote")*@
+@{Html.RenderAction("GetNotesList", "Note", new { noteType = @ViewBag.NoteType, noteFromID = @ViewBag.NoteFromID, Type = 3, dTotal = 0 });}
+<div>
+</div>
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

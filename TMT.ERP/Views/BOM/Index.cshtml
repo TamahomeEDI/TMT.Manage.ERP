@@ -1,0 +1,100 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.BOM>
+@{
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        //Change Category
+        $("#CategoryID").change(function () {
+            
+            ChangeItem();
+        });
+
+        function ChangeItem() {
+            
+            var id = $('#CategoryID').val();
+            $.ajax(
+            {
+                type: 'POST',
+                url: '/BOM/ChangeCategory/',
+                traditional: true,
+                data: {
+                    'id': id
+                },
+                success: function (data) {
+                    
+                    $('#itemList').empty();
+                    $('#itemList').html(data);
+                    $('#itemList').show();
+                    $('div#BomLIST').hide();
+                    $('div#Choose').show();
+                }
+            });
+        }
+
+        //Change Item
+        $("#GoodID").change(function () {
+            
+            ChangeBOM();
+        });
+
+        function ChangeBOM() {
+            
+            var id = $('#GoodID').val();
+            itemID = $('#GoodID').val();
+
+            $.ajax(
+            {
+                type: 'POST',
+                url: '/BOM/ChangeItem/',
+                traditional: true,
+                data: {
+                    'id': id
+                },
+                success: function (data) {
+                    
+                    $('div#BomLIST').empty();
+                    $('div#BomLIST').html(data);
+                    $('div#BomLIST').show();
+                    $('div#Choose').hide();
+                }
+            });
+        }
+    });
+
+</script>
+<div id="contentdiv">
+    <div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.BOM_Title</h3>
+            </div>
+        </div>
+    </div>
+
+    <input type="hidden" id="hidError" value="@ViewBag.Error">
+    <div id="con_form">
+        <div class="container">
+            <div class="c_container">
+                <div id="dialog"></div>
+                <div id="confirmDel" title="Inform" style="background: white"></div>
+                <div id="Inform" title="Inform" style="background: white"></div>
+                <div style="display: inline-block; width: 100%; margin-top: 10px;">
+                    <label style="width: 100px;">@Resources.Resource.BOM_Good_Category</label>
+                    @Html.DropDownList("CategoryID", new SelectList(ViewBag.CategoryID, "Value", "Text", ""), "", new { @class = "category", style = " width: 150px;" })
+                </div>
+                <div id="itemList" style="display: none; width: 100%">
+                </div>
+                <div id="BomLIST" style="margin-top: 40px;">
+                    <div style="margin-bottom: 10px;">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,150 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.WorkOrder>
+@{
+    ViewBag.Title = "WorkOrder List";
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#aDone').click(function () {
+            $(this).parent().addClass('active');
+            $('#aDraft').parent().removeClass('active');
+            $('#aDraft').parent().addClass('selected');
+
+
+
+            $.post(encodeURI("/WorkOrder/GetWorkOrderDone"),
+                        function (data) {
+                            $('#tableload').css('display', 'block');
+                            $('#tableload').empty();
+                            $('#tableload').html(data);
+                        });
+
+        });
+
+
+        $('#aDraft').click(function () {
+            $(this).parent().addClass('active');
+            $('#aDone').parent().removeClass('active');
+            $('#aDone').parent().addClass('selected');
+            $('#tabledone').css('display', 'none');
+            $('#tabledraft').css('display', 'block');
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/workorder/workorderlist",
+                    success: function () {
+                        window.location.href = "/workorder/workorderlist";
+                    }
+                });
+        });
+
+        $('#btnSearch').click(function () {
+
+        });
+    });
+
+    $(document).ready(function () {
+        $('#btnDelete').click(function () {
+            var retConfirm = confirm('@Resources.Resource.Common_ConfirmDelete');
+            if (retConfirm)
+                UpdateStatus('-1');
+
+        });
+    });
+    
+    $(document).ready(function () {
+        $('#btnApproval').click(function () {
+            UpdateStatus(1);
+        });
+    });
+
+
+    function UpdateStatus(status) {
+        var arrayData = [];
+        $("input[name=chkDraft]:checked").each(function () {
+            var item = {
+                "WorkOrderID": this.id
+            };
+            arrayData.push(item);
+        });
+        var workOrders = JSON.stringify(arrayData);
+
+        $.ajax({
+            type: "POST",
+            url: "/Services/WorkOrderService.asmx/UpdateStatus",
+            data: JSON.stringify({
+                workOrders: workOrders,
+                status: status
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                
+                var retValue = JSON.parse(data.d);
+                if (retValue == "Success")
+                    window.location.href = "/WorkOrder/WorkOrderList/";
+            }
+        });
+
+    }
+</script>
+
+<div class="bankDiv">
+    <h2>
+        @Resources.Resource.Common_WorkOrder
+    </h2>
+</div>
+<div class="div1">
+    <div style="float: left; width: 50%;">
+        <a class="btn" href="/WorkOrder/Create">@Resources.Resource.Good_Index_Create</a>
+        <a class="btn" id="btnApproval" href="#">@Resources.Resource.Common_Approve</a>
+        <a class="btn" id="btnReOrder" href="#">@Resources.Resource.Common_ReOrder</a>
+        <a class="btn" id="btnDelete" href="#">@Resources.Resource.Common_Delete</a>
+    </div>
+    <div style="float: right; width: 49%; text-align: right;">
+        <label style="display: inline-block;">@Resources.Resource.Common_WorkOrder :&nbsp;</label><input type="search" id="txtSearch" name="txtSearch" value="" placeholder="Search work order!" style="width: 40.5%;" style="float: right;" />
+        <button id="btnSearch" class="btn">@Resources.Resource.Common_Search</button>
+    </div>
+</div>
+
+<div id="confirmDel" title="Confirm!"></div>
+<div style="clear: both; height: 20px;"></div>
+<ul style="margin: 0px;" class="group nav nav-tabs">
+    <li class="active">
+        <a href="javascript:void(0);" title="Draft" id="aDraft">@Resources.Resource.Common_Draft<span>(@ViewBag.Draft)</span>
+        </a></li>
+    <li class="selected">
+        <a href="javascript:void(0);" title="Done" id="aDone">@Resources.Resource.Common_History<span>(@ViewBag.Done) </span>
+        </a></li>
+</ul>
+
+<div id="tableload">
+    <table id="WorkOrder" class="table">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="cbCheckAll" /></th>
+                <th>@Resources.Resource.Common_WorkOrder</th>
+                <th>@Resources.Resource.Common_Item</th>
+                <th>@Resources.Resource.Common_Quantity</th>
+                <th>@Resources.Resource.Common_Stock</th>
+                <th>@Resources.Resource.WorkOrder_List_AssembledBy</th>
+                <th>@Resources.Resource.Common_CreateDate</th>                
+                <th>@Resources.Resource.Common_ReOrder</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>@Html.CheckBox("chkDraft", false, new { id = item.ID })</td>
+                <td><a href="/WorkOrder/Edit/@item.ID">@Html.DisplayFor(modelItem => item.Code)</a></td>
+                <td>@Html.DisplayFor(modelItem => item.Good.Code)</td>
+                <td>@Html.DisplayFor(modelItem => item.OrderQuantity)</td>
+                <td>@Html.DisplayFor(modelItem => item.Stock.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.User.UserName)</td>            
+                <td>@item.CreatedDate.ToShortDateString()</td>                             
+                <td><a href="/WorkOrder/ReOrder/@item.ID">@Resources.Resource.Common_ReOrder</a></td>
+            </tr>            
+            }
+        </tbody>
+    </table>
+</div>

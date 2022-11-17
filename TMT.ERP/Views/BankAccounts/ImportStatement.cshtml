@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "Import Statement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    <script src="~/Scripts/jquery-1.8.2.min.js"></script>
+    <script src="~/Content/ckeditor/ckeditor.js"></script>
+    <script src="~/Content/ckfinder/ckfinder.js"></script>
+}
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#btnCancel').click(function (e) {
+            e.preventDefault();
+            
+            var id = $('#hidID').val();
+            window.location.href = "/BankAccounts/Index/";
+        });
+    });
+
+    $(document).ready(function () {
+        
+        if ($('#hidError').val() == "Empty") {
+            $('.Error').html('<label style="width: 100%; color: red; font-weight: bold; font-size: 15px; margin-top: 10px; margin-bottom: 10px;">The file was not found, or is empty. Please select a file.</label>');
+        }
+    });
+</script>
+
+<input type="hidden" id="hidError" value="@ViewBag.Error"/>
+<fieldset style="margin-left: 200px; margin-top: 10px;">
+    <legend style="height: 50px;font-size: 18px; font-weight: bold">Import Bank Transactions</legend>
+    <div style="width: 550px;">
+        <div class="Error"></div>
+        <section style="width: 500px; margin-bottom: 25px;">
+            <label style="font-size: 16px; border-color: rgb(193, 193, 193); padding: 2px 0px; height: 50px; 
+            margin-bottom: -15px;">Follow these steps to import your transactions</label>
+            <div style="width:500px; height: 500px; color: black; border-style: solid; border-width: 1px; border-color: darkgray;
+                background: none repeat scroll 0px 0px rgb(209, 240, 255);">
+                <div style="margin-left: 10px;  border-style: none none solid; border-width: 1px; 
+                    margin-bottom: 10px; margin-top: 10px;">
+                    <label style="color: black; font-size: 12px;">Step 1. Download our bank statement template file</label>
+                </div>
+                <div style="margin-left: 10px;">
+                    <label style="font-weight: normal; font-size: 12px;">
+                        Start by downloading our bank statement CSV (Comma Separated Values) template file. 
+                        This file has the correct column headings TMT needs to import your bank statement data.</label>
+                    <a href="@Url.Content("~/Uploads/CsvTemplate/BankStatementTemplate.csv")">Download template file</a>
+                </div>
+                <div style="margin-left: 10px; border-style: none none solid; border-width: 1px; margin-bottom: 10px; margin-top: 10px;">
+                    <label style="color: black; font-size: 12px;">Step 2. Copy your bank statement into the template</label>
+                </div>
+                <div style="margin-left: 10px;">
+                        Export your bank statement from your old system as a comma separated list. 
+                        Using Excel or another spreadsheet editor, copy and paste your bank statement from the exported file into the TMT template. 
+                        Make sure the bank statement data you copy matches the column headings provided in the template.
+                    <p style="color: chocolate"> 
+                        <label>IMPORTANT:</label> Do not change the column headings provided in the TMT template.
+                        These need to be unchanged for the import to work in the next step. 
+                        Dates are assumed to be in Invariant Language (Invariant Country) format. For example, 12/25/2013 or 25 Dec 2013.
+                    </p>
+                </div>
+                <div style="margin-left: 10px; ">
+                    <label style="color: black; font-size: 12px;">Step 3. Import the updated template file here...</label>
+                </div>
+                <form action="" method="post" enctype="multipart/form-data">
+                 <input type="hidden" name="hidID" id="hidID" value="@ViewBag.ID">
+                <div style="margin-left: 30px;">
+                    <input id="file" name="file" type="file" />
+                </div>
+                <div style="margin-top: 25px;">
+                    <input  type="submit" id="Submit" value="Submit" class="btn btn-defaultxero" style="float: left; margin-left: 10px;"/>
+                    <input id="btnCancel" class="btn btn-defaultxero" style="margin-left: 20px;" type="button" value="Cancel"/>
+                </div>
+                </form>
+            </div>
+        </section>    
+    </div>
+</fieldset>

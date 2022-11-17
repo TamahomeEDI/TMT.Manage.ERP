@@ -1,0 +1,165 @@
+﻿ @model IEnumerable<TMT.ERP.DataAccess.Model.ActualGoodInStock>   
+ <script type="text/javascript">
+
+     $(document).ready(function () {
+
+         $("#addNewLine").click(function () {
+             addTableRow();
+             return false;
+         });
+
+         $("#delRow").click(function () {
+             RemoveRow(this);
+             return false;
+         });
+
+         function RemoveRow(element) {
+             var tr = $(element).closest('tr');
+             tr.remove();
+             CalTotal();
+         }
+
+         $(".ddlgoodchange").change(function () {
+             
+             ChangeGoodInStock(this);
+         });
+
+         $(".stockchange").change(function () {
+             ChangeStock(this);
+         });
+
+         $(".qty").change(function () {
+             debugger;
+             var msg = "";
+             var tr = $(this).closest('tr');
+             if (parseInt($('#totalAmount', tr).val()) != 0 && (parseInt($(this).val()) > parseInt($('#totalAmount', tr).val()))) {               
+                 msg = '@Resources.Resource.StockMovement_Alert_Quantity_Less_Than ' + $('#totalAmount', tr).val();
+                 CreatePopupMessage('divMessage', msg, '@Resources.Resource.Common_Message', 120, 350, '#');
+                 debugger;
+                 $('#divMessage').dialog('open');
+                // $(this).focus();
+                // $('#txtQty', tr).focus();
+                 //return;
+             } else if (parseInt($('#totalAmount', tr).val()) == 0) {
+                 msg = '@Resources.Resource.StockMovement_Alert_Quantity_Equal ';
+                 CreatePopupMessage('divMessage', msg, '@Resources.Resource.Common_Message', 120, 350, '#');
+                 $(this).disabled = true;
+             }
+             CalTotal();
+         });
+
+         function CalTotal() {
+             $("#txtStockMovementTotal").text(function () {
+                 var value = 0;
+                 $(".qty").each(function () {
+                     if ($(this).val() != "")
+                         //  value += parseInt($(this).val());
+                         value += $(this).asNumber();
+                 });
+                 return value;
+             }).asNumber();
+         }
+
+         function addTableRow() {
+             // clone the last row in the table
+             var $tr = jQuery('div#myDiv table#tblStockMovementDetails').find("tbody tr:last").clone(true);
+             jQuery('div#myDiv table#tblStockMovementDetails').find("tbody tr:last").after($tr);
+             CalTotal();
+         };
+
+
+
+ 
+         function ChangeGoodInStock(element) {
+             
+             var good = $(element).val();
+             var tbody = $(element).closest('tr');
+             var goodID = $("#ddlGoodID", tbody).val();
+             var stockID = $("#ddlStockID").val();
+             if (goodID > 0) {
+                 $.ajax({
+                     type: "POST",
+                     url: "/Services/GoodService.asmx/GetGoodByStockID",
+                     data: JSON.stringify({
+                         goodID: parseInt(goodID),
+                         stockID: parseInt(stockID)
+                     }),
+                     contentType: "application/json; charset=utf-8",
+                     dataType: "json",
+                     success: function (data) {
+                         try {
+                             var good = JSON.parse(data.d);
+                             $('.description', tbody).val(good.Decription);
+                             $('.uom', tbody).val(good.umoCode);
+                             $('.umoID', tbody).val(good.umoID);
+                             $('.qty', tbody).val(good.quantity);
+                             $('#totalAmount').val(good.quantity);
+                             CalTotal();
+
+                         } catch (ex) { }
+                     }
+                 }).error(function (event, jqXHR, ajaxSettings, thrownError) {
+                     alert('Error when loading users');
+                 });
+             }
+             else if (goodID == 0) {
+                 alert("Add new inventory");
+             }
+         }
+
+         function ChangeStock(element) {
+             
+             var tbody = $(element).closest('tr');
+             var stockID = $("#ddlStockID", tbody).val();
+             if (stockID > 0) {
+                 $.ajax({
+                     type: 'GET',
+                     contentType: 'application/html',
+                     url: "/StockMovement/GetGoodByStockID",
+                     data: { StockID: stockID },
+                     success: function (data) {
+                         try {
+                             $('#tblStockMovement').empty();
+                             $('#div#myDiv div#tblStockMovement').remove();
+                             $('#tblStockMovement').html(data);
+                             // ajaxifyJavascript();
+
+                         } catch (ex) { }
+                     }
+                 }).error(function (event, jqXHR, ajaxSettings, thrownError) {
+                     alert('Error when loading users');
+                 });
+             }
+         }
+
+     });
+ </script>    
+<div id="divMessage" style="background:white;"></div>          
+    <table class="table table-striped" style="width: 100%" id ="tblStockMovementDetails">
+        <thead>
+            <tr bgcolor="#e2efff">
+                <th></th>
+               @* <th>@Resources.Resource.StockMovement_SKU</th>*@
+                <th>Item Code</th>
+                <th>@Resources.Resource.StockMovement_Description</th>
+                <th>@Resources.Resource.StockMovement_UOM</th>
+                <th>@Resources.Resource.StockMovement_QTY</th>
+                    <th></th>  
+            </tr>
+        </thead>   
+        <tbody id="insertRow">
+        @for (int iIndex = 0; iIndex < 5; iIndex++)
+        {
+            <tr>
+                <td></td>
+                <td style="width: 89px;">
+                        @Html.DropDownList("ddlGoodID",(IEnumerable<SelectListItem>)ViewData["GoodList"], new { @class = "form-control ddlgoodchange" })
+                </td>
+                <td><input type="text" id="txtDescription" class="form-control description" /></td>
+                <td><input type="text" id="txtUOM" class="form-control uom" /><input type="hidden" id="hidUmoId" class="txt1 umoID" /></td>
+                <td><input type="text" id="txtQty" class="form-control qty text-right" /><input type="hidden" id="totalAmount" class="txt1 totalAmount" /></td>  
+                <td><a id="delRow" >Del</a></td>
+            </tr>
+        }
+        </tbody>
+    </table> 

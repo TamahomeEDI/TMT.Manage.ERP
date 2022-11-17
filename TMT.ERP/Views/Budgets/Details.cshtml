@@ -1,0 +1,32 @@
+﻿@model TMT.ERP.DataAccess.Model.Budget
+
+@{
+    ViewBag.Title = "Details";
+    Layout = null;
+}
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+   
+
+    <fieldset>
+        <legend>UOM</legend>
+
+        <div class="display-label">
+             @Html.LabelFor(model => model.Name)
+        </div>
+        <div class="display-field">
+            @Html.DisplayFor(model => model.Name)
+        </div>
+        <br/>
+        <p>
+            @Html.ActionLink("Edit", "Edit", new { id=Model.ID }) |
+             
+        </p>
+    </fieldset>
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

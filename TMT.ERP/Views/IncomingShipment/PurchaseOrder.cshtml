@@ -1,0 +1,410 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.StockInCard
+@{
+    var stocks = Model.StockInCardsDetails.ToList();
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var stockDefault = $('#hdfStockID').val();
+        if (stockDefault == "" || stockDefault == undefined) {
+            $('#ddlStock').val("");
+        } else {
+            $('#ddlStock').val(stockDefault);
+        }
+
+
+        $('input[name=chkVAT]').prop("disabled", true);
+        var isDone = $('#hdfIsDone').val();
+        if (isDone == 0) {
+            $('#btnSubmit').css('display', 'inline-block');
+            $('.numeric').prop('readonly', false);
+            
+        } else {
+            $('#btnSubmit').css('display', 'none');
+            $('#ddlStock').val($('#hdfStockID').val());
+            $('#ddlStock').attr('disabled', 'disabled');
+            $('tbody > tr > td#qty').each(function () {            
+                $('input[name=txtQuantity]').css('display', 'none');
+                $(this).find('.qtyDone').css('display', 'block');
+
+            });
+        }
+        $('#btnClose').click(function () {
+            location.href = "/IncomingShipment/";
+        });
+        $('#btnSubmit').click(function () {
+
+            debugger;
+            var flag = true;
+            var error = "Please input required field (stock , quantity)";
+            var stockId = $('#ddlStock').val();
+            if (stockId == 0) {
+                $('#ddlStock').css('border', '1px solid Red');
+                flag = false;
+            } else {
+                $('#ddlStock').css('border', '1px solid #acb6cb');
+            }
+            $('#Incoming > tbody > tr').each(function () {
+                debugger;
+                var tr = $(this).closest('tr');
+                var qty = $('input[name=txtQuantity]', tr).val();
+                //if (qty == "0" || qty == null || qty == undefined || qty == "") {
+                //    $('input[name=txtQuantity]', tr).css('border', '1px solid Red');
+                //    flag = false;
+                //} else {
+                //    $('input[name=txtQuantity]', tr).css('border', '1px solid #acb6cb');
+                //}
+
+            });
+            if (flag) {
+                var stockCardId = $('#hdfID').val();
+                var quatity = [];
+                var id = [];
+                $('#Incoming > tbody > tr > td#qty').each(function () {
+                    debugger;
+                    var giatri = $(this).find('#txtQuantity').val();
+                    if (giatri == "" || giatri == null || giatri == undefined) {
+                        giatri = 0;
+                    }
+                    quatity.push(giatri.toString());
+                });
+                $('#Incoming > tbody > tr').each(function () {
+                    var valueId = $(this).find('#hdfStockInCardDetailID').val();
+                    id.push(valueId.toString());
+                });
+
+                var packaged = {
+                    quatity: quatity,
+                    listid: id,
+                    stockInCardId: stockCardId,
+                    stockId: stockId
+                };
+
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/IncomingShipment/UpdateStatus/',
+                        traditional: true,
+                        data: packaged,
+                        success: function (data) {                            
+                            if (data == "success") {
+                                var urlSuccess = "/IncomingShipment/";
+                                var msgSuccess = '@Resources.Resource.Common_Incoming_StockInSuccess';
+                                CreatePopupMessage('divMessage', msgSuccess, '@Resources.Resource.Common_Message', 160, 400, urlSuccess);
+                                return false;
+                            } else {
+                                var urlFail = "/IncomingShipment/";
+                                var msgFail = '@Resources.Resource.Common_Incoming_StockInFail';
+                                CreatePopupMessage('divMessage', msgFail, '@Resources.Resource.Common_Message', 160, 400, urlFail);
+                                return false;
+                            }
+                        }
+                    });
+                    $("div.error").hide();
+                } else {
+                    $("div.error span").html(error);
+                    $("div.error").show();
+                    return false;
+                }
+        });
+
+    });
+
+        function OnChange(obj) {
+            debugger;
+            var tr = $(obj).closest('tr');
+            var ost = $('.qtyOst', tr).html();
+            var qty = $('input[name=txtQuantity]', tr).val();
+            if (parseInt(qty) > parseInt(ost)) {
+                $('#confirmDel').empty();
+                $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Plase input value less than or equal Qty Ost</p>');
+                $("#confirmDel").dialog({
+                    modal: true,
+                    height: 140,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $('#confirmDel').dialog('close');
+                            $('input[name=txtQuantity]', tr).val(ost);
+                            $('input[name=txtQuantity]', tr).focus();
+                        }
+                    }
+                });
+                $('#confirmDel').dialog('open');
+            }
+        }
+</script>
+@{
+    var oPurchase = ViewBag.Purchase as Purchase;
+    var stockID = 0;
+}
+<style type="text/css">
+    .labelstock {
+        width: 140px !important;
+    }
+</style>
+<div id="confirmDel" title="Confirm!" style="background: white; margin-top: 10px;"></div>
+
+<input type="hidden" value="@stocks.Count" id="hdfCountList"/>
+<input type="hidden" id="hdfID" value="@ViewBag.ID"/>
+<input type="hidden" id="hdfIsDone" value="@ViewBag.Done"/>
+@if (oPurchase != null && oPurchase.StockID != null)
+{
+    stockID = Convert.ToInt32(oPurchase.StockID);
+}
+<input type="hidden" id="hdfStockID" value="@Model.StockID"/>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.IncomingShipment_Index_Details</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.IncomingShipment_Inventory</span></li>
+                        <li><span>@Resources.Resource.IncomingShipment_Stock</span></li>
+                        <li><a href="/IncomingShipment/Index/">@Resources.Resource.IncomingShipment_Index_List</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div class="cleardiv"></div>
+            <div class="error" style="display: none;">
+                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: -5px 10px 0px 0px;" />
+                <span></span>.
+            </div>
+            <div id="divMessage"></div>
+            <div class="cleardiv"></div>
+            @* @using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmWorkPurchaseOrder_InStock", style = "margin-top:0px;" }))
+            {
+            *@<input type="submit" class="btn btn-defaultxero" id="btnClose" value="@Resources.Resource.IncomingShipment_Details_Close"/>
+            <input type="submit" class="btn btn-defaultxero" id="btnSubmit" value="@Resources.Resource.IncomingShipment_Details_Submit"/>
+            <div class="cleardiv"></div>
+            <div class="form_position1 bovien">
+                <div class="form_left">
+                    <div class="form-group">
+                        <label class="labelstock">@Resources.Resource.IncomingShipment_Index_ShipmentNo</label>
+                        <label>@Model.Code</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">Supplier</label>
+                        <label>
+                            @if (oPurchase != null && oPurchase.Contact.ContactName != null)
+                            {
+                                @oPurchase.Contact.ContactName
+                            }
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">@Resources.Resource.IncomingShipment_Index_Currency</label>
+
+                        <label>
+                            @if (oPurchase != null && oPurchase.Currency != null)
+                            {
+                                @oPurchase.Currency.Name
+                            }</label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">@Resources.Resource.OutGoing_View_PODate</label>
+                        <label>
+                            @if (oPurchase != null)
+                            {
+                                @TMT.ERP.Commons.Utility.DateFormat(@oPurchase.CreatedDate)
+                            }
+                        </label>
+                    </div>
+                </div>
+                <div class="form_right">
+                    <div class="form-group">
+                        <label class="labelstock">@Resources.Resource.IncomingShipment_Index_PoNo</label>
+                        <label>
+                            @if (oPurchase != null && oPurchase.Code != null)
+                            {
+                                @oPurchase.Code
+                            }
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">@Resources.Resource.OutGoing_View_ContactPerson</label>
+                        <label>
+                            @if (oPurchase != null && oPurchase.Contact.FirstName != null && oPurchase.Contact.FirstName != null)
+                            {
+                                @oPurchase.Contact.FirstName
+                                @oPurchase.Contact.FirstName
+                            }
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">VAT</label>
+                        @if (oPurchase != null && oPurchase.UseVAT == 1)
+                        {
+                            <label>@Html.CheckBox("chkVAT", true)</label>
+                        }
+                        else
+                        {
+                            <label>@Html.CheckBox("chkVAT", false)</label>
+                        }
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">
+                            @Resources.Resource.SaleInvoice_Create_Reference
+                        </label>
+                        <label>
+                            @if (oPurchase != null && oPurchase.Reference != null)
+                            {
+                                @oPurchase.Reference
+                            }
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="cleardiv"></div>
+            <div style="width: 100%;">
+                <div style="width: 33%; display: inline-block; float: left;">
+                    <div style="float: left;">
+                        <label class="labelstock">To Stock&nbsp;:&nbsp;</label>
+                    </div>
+                    @{
+                        var ooStocks = ViewBag.StockID as List<Stock>;
+                    }
+                    <div style="float: left;">
+                        <select id="ddlStock" name="ddlStock" style="width: 140px;" class="required">
+                            @if (ooStocks != null && ooStocks.Count > 0)
+                            {                                                                        
+                                <option value="">@Resources.Resource.Common_SelectItem</option>
+                                foreach (var item in ooStocks)
+                                {
+                                <option value="@item.ID">@item.Name</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 33%; display: inline-block; float: left;">
+                    <div style="float: left;">
+                        <label class="labelstock">Create Date&nbsp;:&nbsp;</label>
+                    </div>
+                    <div style="float: right;">
+                        <label>
+                            @TMT.ERP.Commons.Utility.DateFormat(Model.CreatedDate)
+                        </label>
+                    </div>
+                </div>
+                <div style="width: 33%; display: inline-block; float: right;">
+                    <div style="float: left;">
+                        <label class="labelstock">Receive Date&nbsp;:&nbsp;</label>
+                    </div>
+                    <div style="float: right;">
+                        <label>@TMT.ERP.Commons.Utility.DateFormat(DateTime.Now)</label>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="cleardiv"></div>
+            <div id="tabbody">
+                <div id="tabs-1">
+                    <table id="Incoming" class="tableOver">
+                        <thead>
+                            <tr>
+                                <th>
+                                    @*@Resources.Resource.IncomingShipment_Details_SKU*@
+                                    Item Code
+                                </th>
+                                <th>
+                                    @Resources.Resource.IncomingShipment_Details_Description
+                                </th>
+                                <th>
+                                    @Resources.Resource.IncomingShipment_Details_UOM
+                                </th>
+                                <th style="width: 8%;" id="thqty">
+                                    @*@Resources.Resource.IncomingShipment_Details_Qty*@
+                                    Qty
+                                </th>
+                                <th style="width: 8%;" id="thqtyReq">
+                                    @*@Resources.Resource.IncomingShipment_Details_QtyReq*@
+                                    Qty Req
+                                </th>
+                                <th style="width: 8%;" id="thqtyOst">Qty Ost
+                                        @*@Resources.Resource.IncomingShipment_Details_OstQty*@
+                                </th>
+                                <th>
+                                    @Resources.Resource.IncomingShipment_Details_UnitPrice
+                                </th>
+                                @*<th>
+                                    @Resources.Resource.IncomingShipment_Details_DISC
+                                </th>*@
+                                <th>
+                                    @Resources.Resource.IncomingShipment_Details_SubTotal
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in stocks)
+                            {                                
+                                <tr>
+                                    <td style="display: none;">
+                                        <input type="hidden" id="hdfStockInCardDetailID" value="@item.ID"/>
+                                    </td>
+                                    <td>
+                                        @if (item.Good.Code != null)
+                                        {
+                                            @item.Good.Code
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.Good.Description != null)
+                                        {
+                                            @item.Good.Description
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.UOM.Name != null)
+                                        {
+                                            @item.UOM.Name
+                                        }
+                                    </td>
+                                    <td id="qty">                                        
+                                        <input type="text" id="txtQuantity" name="txtQuantity" style="width: 50px !important; text-align: right;" onkeypress="return isNumber(event)" />
+                                        <label class="qtyDone" style="display: none; max-width: 50px;">@item.Quantity</label>
+                                    </td>
+                                    <td id="qtydathang" style="width: 50px !important;">
+                                        @item.QuantityReq
+                                    </td>
+                                    <td id="qtytotal" style="width: 50px !important;">
+                                        @{
+                                        var qtyReq = Convert.ToInt32(item.QuantityReq);
+                                        var qty = Convert.ToInt32(item.Quantity ?? 0);
+                                        var value = qtyReq - qty;
+                                        }
+                                        <label class="qtyOst" style="width: 50px !important; text-align: center;">@value</label>
+                                    </td>
+                                    <td class="currency">
+                                        @item.Price
+                                    </td>
+                                    @*<td>
+                                        @if (item.Discount != null)
+                                        {
+                                            @item.Discount
+                                        }
+                                    </td>*@
+                                    <td class="currency">
+                                        @{
+                                        var subTotal = item.QuantityReq * item.Price;
+                                        }
+                                        @subTotal
+                                    </td>
+                                </tr>                             
+                            }
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            @*}*@
+        </div>
+    </div>
+</div>

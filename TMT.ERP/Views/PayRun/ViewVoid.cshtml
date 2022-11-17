@@ -1,0 +1,164 @@
+﻿@model TMT.ERP.DataAccess.Model.PayRun
+@{
+    var fromDate = Convert.ToDateTime(Model.FromDate);
+    var toDate = Convert.ToDateTime(Model.ToDate);
+    var paymentDate = Convert.ToDateTime(Model.PaymentDate);
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var payrunId = $('#hdfPayRunId').val();
+        $('#btnVoid').click(function () {
+            
+            alert(payrunId);
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/PayRun/VoidPayRun/",
+                    data: { "payrunId": payrunId },
+                    success: function () {
+                        location.href = "/PayRun/";
+                    }
+
+                });
+        });
+        $('#btnSentPay').click(function () {
+
+        });
+        $('#btnBatch').click(function () {
+            location.href = "/PayRun/BatchPayEmployees?payrunId=" + payrunId;
+        });
+    });
+</script>
+@*<input type="hidden" value="@ViewBag.ID" id="hdfPayRunId"/>*@
+<input type="hidden" value="@Model.ID" id="hdfPayRunId"/>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.PayRun_Index</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>&nbsp;@Resources.Resource.PayRun_Index&nbsp;(@TMT.ERP.Commons.Utility.DateFormat(fromDate) &nbsp;-&nbsp;@TMT.ERP.Commons.Utility.DateFormat(toDate))</span></li>
+                        <li><a href="/PayRun/">@Resources.Resource.PayRun_IndexList</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div id="tabbody">
+                <div class="cleardiv"></div>
+                <div style="float: left; width: 50%; text-align: left;">
+                    <h4><b>@Resources.Resource.PayRun_Index_Voided</b></h4>
+                </div>
+                <div style="float: right; width: 50%; text-align: right;">
+                </div>
+                <div class="cleardiv"></div>
+                <hr style="border: 1px dotted #C1C1C1;" />
+                <div style="float: left; width: 50%; text-align: left;">
+                    <h4><b>@Resources.Resource.PayRun_Summary</b></h4>
+                </div>
+                <div style="float: right; width: 50%; text-align: right;">
+                    <a href="javascript:void(0);">@Resources.Resource.PayRun_ViewSummary</a>
+                </div>
+                <div class="cleardiv"></div>
+                <hr style="border: 1px solid #C1C1C1;" />
+                <table id="payrun">
+                    <thead>
+                        <tr>
+                            <th>@Resources.Resource.PayRun_Index_PayPeriod</th>
+                            <th>@Resources.Resource.PayRun_Index_PayDate</th>
+                            <th>@Resources.Resource.PayRun_Index_EmployeePayment</th>
+                            <th>@Resources.Resource.PayRun_Index_OrtherPayment</th>
+                            <th>@Resources.Resource.PayRun_Index_Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>                                
+                                @TMT.ERP.Commons.Utility.DateFormat(fromDate)&nbsp;---&nbsp;@TMT.ERP.Commons.Utility.DateFormat(toDate)
+                            </td>
+                            <td>                                
+                                @TMT.ERP.Commons.Utility.DateFormat(paymentDate)
+                            </td>
+                            <td class="currency">
+                                @Model.EmployeePayment
+                            </td>
+                            <td class="currency">
+                                @Model.OtherPayment
+                            </td>
+                            <td class="currency">
+                                @Model.Total
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="cleardiv"></div>
+                <div>
+                    <h4><b>@Resources.Resource.PayRun_Index_EmployeePayment</b></h4>
+                </div>
+                <div class="cleardiv"></div>
+                <table id="employeePayment">
+                    <thead>
+                        <tr>
+                            <th>@Resources.Resource.PayRun_Detail_Name</th>
+                            <th>@Resources.Resource.PayRun_Detail_GrossWages</th>
+                            <th>@Resources.Resource.PayRun_Detail_Allowances</th>
+                            <th>@Resources.Resource.PayRun_Detail_Deductions</th>
+                            <th>@Resources.Resource.PayRun_Detail_Taxes</th>
+                            <th>@Resources.Resource.PayRun_Detail_NonTaxableAllowances</th>
+                            <th>@Resources.Resource.PayRun_Detail_PostTaxDeductions</th>
+                            <th>@Resources.Resource.PayRun_Index_Status</th>
+                            <th>@Resources.Resource.PayRun_Detail_NetPay</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        <tr>
+                            <td><b>@Resources.Resource.PayRun_Index_Total</b></td>
+                            <td >
+                                <b class="currency">0</b>
+                            </td>
+                            <td>
+                                <b class="currency">0</b>
+                            </td>
+                            <td>
+                                <b class="currency">0</b>
+                            </td>
+                            <td>
+                                <b class="currency">0</b>
+                            </td>
+                            <td>
+                                <b class="currency">0</b>
+                            </td>
+                            <td>
+                                <b class="currency">0</b>
+                            </td>
+                            <td>
+                                <b>----------------</b>
+                            </td>
+                            <td>
+                                <b class="currency">0</b>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="cleardiv"></div>
+                <div style="float: left; width: 50%; text-align: left;">
+                    <h4><b style="text-transform: uppercase;">@Resources.Resource.PayRun_Index_Total</b></h4>
+                </div>
+                <div style="float: right; width: 50%; text-align: right;">
+                    <a href="javascript:void(0);"><b id="bTotal" class="currency">@Model.Total</b></a>
+                </div>
+                <div class="cleardiv"></div>
+                <hr style="border: 1px solid #C1C1C1;" />
+                <hr style="border: 1px solid #C1C1C1;" />
+                <input type="checkbox" id="cbPayRun" checked="checked" />&nbsp;@Resources.Resource.PayRun_ShowTaxes
+
+            </div>
+        </div>
+    </div>
+</div>

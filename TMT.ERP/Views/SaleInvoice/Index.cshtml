@@ -1,0 +1,110 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.SaleInvoice>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+
+<div id="con_body">
+    <div class="container">
+        <div class="c_container">
+                <div id="toolbar">
+                    <ul>
+                        <li class="item1 dropdown parent">
+                            <a href="" class="dropdown-toggle firstchild" data-toggle="dropdown"><span class="icon icon_new"></span><span>New Invoice</span></a>
+                            <ul class="dropdown-menu">
+                                <li><a href="#">Dropdown link</a></li>
+                                <li><a href="#">Dropdown link</a></li>
+                                <li><a href="#">Dropdown link</a></li>
+                            </ul>
+                        </li>
+                        <li class="item2"><a href=""><span class="icon icon_new"></span><span>New Credit Note</span></a></li>
+                        <li class="item3"><a href=""><span class="icon icon_send"></span><span>Send Statements</span></a></li>
+                        <li class="item4"><a href=""><span class="icon icon_import"></span><span>ImPort</span></a></li>
+                    </ul>
+                </div>
+                <div id="tabcontent">
+                    <ul>
+                        <li class="item1" id="current">All</li>
+                        <li class="item2">Draft (5)</li>
+                        <li class="item3">Awaiting approval</li>
+                        <li class="item4">awaiting payment (1)</li>
+                        <li class="item4">paid</li>
+                        <li class="item5">repeating</li>
+                    </ul>
+                </div>
+                <div id="tabbody">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th><span>Number</span></th>
+                                <th>Ref</th>
+                                <th>To</th>
+                                <th><span>Date</span><span class="sort sort_asc"></span></th>
+                                <th>Due Date</th>
+                                <th>Paid</th>
+                                <th>Due</th>
+                                <th>Status</th>
+                                <th>Send</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>INV-0012</td>
+                                <td>Lorem ipsum dolor sit amet</td>
+                                <td><span class="email">Sammy Soe</span></td>
+                                <td>23 Sep, 2003</td>
+                                <td>23 Oct, 2003</td>
+                                <td>27.00 EUR</td>
+                                <td>
+                                    <div id="listprice" class="dropdown">
+                                        <span class="price dropdown-toggle" data-toggle="dropdown">5,900.00 EUR</span>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#">Dropdown link</a></li>
+                                            <li><a href="#">Dropdown link</a></li>
+                                            <li><a href="#">Dropdown link</a></li>
+                                        </ul>
+                                    </div>
+                                </td>
+                                <td>Awaiting Approval</td>
+                                <td></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="numberitems">2 Items</div>
+
+                <div id="con_footer">
+                    <div id="pag">
+                        <ul>
+                            <li id="prev"><a href=""></a></li>
+                            <li class="active"><span>1</span></li>
+                            <li><a href="">2</a></li>
+                            <li><span>...</span></li>
+                            <li><a href="">24</a></li>
+                            <li id="next"><a href=""></a></li>
+                        </ul>
+                    </div>
+                    <div id="showpag" class="dropdown">
+                        <span class="dropdown-toggle" data-toggle="dropdown">Show 4</span>
+                        <ul class="dropdown-menu">
+                            <li><a href="#">5</a></li>
+                            <li><a href="#">10</a></li>
+                            <li><a href="#">15</a></li>
+                            <li><a href="#">20</a></li>
+                            <li><a href="#">25</a></li>
+                        </ul>
+                    </div>
+                    <div id="consearch">
+                        <form>
+                            <input type="text" name="txtSearch" placeholder="SEARCH" />
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+
+        </div>
+    </div>
+

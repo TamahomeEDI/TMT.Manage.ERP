@@ -1,0 +1,16 @@
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\bin\Debug\TMT.ERP.UnitTest.dll.config
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\bin\Debug\TMT.ERP.UnitTest.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\bin\Debug\TMT.ERP.UnitTest.pdb
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\bin\Debug\TMT.ERP.BusinessLogic.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\bin\Debug\TMT.ERP.DataAccess.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\bin\Debug\EntityFramework.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\bin\Debug\GenericParsing.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\bin\Debug\CommonLib.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\bin\Debug\LinqKit.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\bin\Debug\TMT.ERP.BusinessLogic.pdb
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\bin\Debug\TMT.ERP.DataAccess.pdb
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\bin\Debug\EntityFramework.xml
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\bin\Debug\CommonLib.pdb
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\obj\Debug\TMT.ERP.UnitTest.csprojResolveAssemblyReference.cache
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\obj\Debug\TMT.ERP.UnitTest.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.UnitTest\obj\Debug\TMT.ERP.UnitTest.pdb

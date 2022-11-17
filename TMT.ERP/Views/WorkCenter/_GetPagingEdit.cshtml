@@ -1,0 +1,138 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.Machine>
+@{
+    Layout = null;
+}
+<script type="text/javascript">
+    $(document).ready(function () {
+        var array = SetColumn();
+        if (array.length > 0) {
+            ReDrawTable(array);
+        }
+        $('#btnCancel').click(function () {
+            $('#dialog').dialog('close');
+        });
+        $('#btnSelect').click(function () {
+            var valueString = [];
+            $("input[name=chkMachine]:checked").each(
+                function () {
+                    
+                    var tr = $(this).closest('tr');
+                    var trValue = "<tr>" + tr.html() + "</tr>";
+                    valueString.push(trValue);
+                }
+            );
+            if ($('#bodyItem > tr').length == 0) {
+                $('#bodyItem').html(valueString);
+            } else {
+                $('#bodyItem > tr:first').after(valueString);
+            }
+            $('#dialog').dialog("close");
+            $('#itemSelect').css('display', 'block');
+            $('table#tableItem > tbody#bodyItem > tr > td.cb').css('display', 'none');
+
+        });
+        $('#btnSearch').click(function () {
+            
+            var search = $('#txtMachineName').val();
+            var workCenterId = $('#hdfWorkCenterId').val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/WorkCenter/GetPagingEdit/",
+                    data:
+                        {
+                            "page": 1,
+                            "search": search,
+                            "workcenterId": workCenterId
+                        }, success: function (data) {
+                            $('#html').empty();
+                            $('#html').html(data);
+                        }
+                });
+        });
+        $('.pagination li a').click(function () {
+            var giatri = $(this).html();
+            var workCenterId = $('#hdfWorkCenterId').val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/WorkCenter/GetPagingEdit/",
+                    data:
+                        {
+                            "page": giatri,
+                            "search": "None",
+                            "workcenterId": workCenterId
+                        }, success: function (data) {
+                            $('#html').empty();
+                            $('#html').html(data);
+                        }
+                });
+            return false;
+        });
+    });
+    function ReDrawTable(array) {
+        for (var i = 0; i < array.length; i++) {
+            for (var j = 0; j < $($("#tblMachine > tbody").find("input")).length; j++) {
+                var machineid = $($("#tblMachine > tbody").find("input")[j]).attr("id");
+                if ((machineid != undefined) && (machineid == array[i])) {
+                    $($("#tblMachine > tbody").find("input")[j]).prop('disabled', true);
+                }
+            }
+        }
+    }
+
+    function SetColumn() {
+        var Obj = new Array();
+        if ($('#tableItem > #bodyItem > tr').val() != undefined) {
+            for (var i = 0; i < $('#tableItem > #bodyItem > tr').length ; i++) {
+
+                Obj[i] = $($('#tableItem > #bodyItem > tr')[i]).find("input").attr("id");
+            }
+        }
+        return Obj;
+    }
+</script>
+<input type="hidden" value="@ViewBag.WorkCenterID" id="hdfWorkCenterId"/>
+<div id="html" style="padding-left: 20px; background: white;">
+    <div class="cleardiv"></div>
+    <h4>Machine List</h4>
+    <hr />
+    <div style="float: right; margin-right: 20px;">
+        <input type="text" id="txtMachineName" />
+        <input type="submit" class="btn btn-defaultxero" id="btnSearch" value="Search" />
+    </div>
+    <div class="cleardiv"></div>
+    <table id="tblMachine" style="width: 96%">
+        <thead>
+            <tr>
+                <th>
+                    @*<input type="checkbox" id="cbCheckAll" />*@
+                </th>
+                <th>MC Code</th>
+                <th>Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td class="cb">@Html.CheckBox("chkMachine", false, new { id = item.ID })</td>
+                    <td>
+                        @item.Code
+                    </td>
+                    <td>
+                        @item.Description
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div class="cleardiv"></div>
+    @Html.PagedListPager(Model, page => Url.Action(null, new { page }))
+    <div class="cleardiv"></div>
+    <input type="submit" class="btn btn-defaultxero" value="Select" id="btnSelect" />
+    <input type="submit" class="btn btn-defaultxero" value="Cancel" id="btnCancel" />
+    <div class="cleardiv"></div>
+</div>

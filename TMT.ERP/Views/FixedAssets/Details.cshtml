@@ -1,0 +1,149 @@
+﻿@model TMT.ERP.DataAccess.Model.FixedAsset
+
+@{
+    ViewBag.Title = "Create";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script type="text/ecmascript">
+
+    $(document).ready(function () {
+
+        $('#btnClose').click(function (e) {
+            location.href = '/FixedAssets/Dispose/';
+        });
+
+        var methodCal = $('#hidMethod').val();
+        $('#Method').val(methodCal);
+
+        $('.currency').blur(function () {
+            $('.currency').formatCurrency();
+        });
+    });
+
+</script>
+
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container">
+            <h3>@Resources.Resource.FixedAsset_Title</h3>
+            <div id="breadcrumbs">
+                <ul>
+                    <li><a href="/FixedAsset/Index/">@Resources.Resource.FixedAsset_Title</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <input type="hidden" id="hidID" value="@Model.ID" />
+    <input type="hidden" id="hidMethod" value="@Model.DepreciationMethod" />
+    <div class="container">
+        <div id="popup-breadcrumb" style="width: 100%; margin-left: 0px; margin-top: 10px; margin-bottom: 10px;">
+            <div class="container">
+                <div id="con_top">
+                    <div class="c_container">
+                        <div>
+                            <p class="x-boxed" style="margin-bottom: 10px;">
+                                <label style="font-size: 15px;">Asset Details</label>
+                            </p>
+                            <hr style="margin-top: 10px; margin-bottom: 10px;" />
+                            <p style="display: inline-block">
+                                @Resources.Resource.FixedAsset_ItemName
+                                <br />
+                                <input id="Name" type="text" readonly="" size="20" value="@Model.Name" />
+                            </p>
+                            <p style="display: inline-block;">
+                                @Resources.Resource.FixedAsset_ItemCode
+                                <br />
+                                <input id="Code" type="text" readonly="" size="20" value="@Model.Code"/>
+                            </p>
+                            <p style="display: inline-block;">
+                                @Resources.Resource.FixedAsset_Account
+                                <br />
+                                @Html.DropDownList("AccountID", null, string.Empty, new { @disabled = "disabled", style = "width: 150px; height: 26px;" })
+                            </p>
+                            <p style="display: inline-block">
+                                @Resources.Resource.FixedAsset_PurchaseDate
+                                <br />
+                                <input id="Date" readonly="" type="text" size="20" value="@Model.PurchaseDate"/>
+                            </p>
+                            <p style="display: inline-block;">
+                                @Resources.Resource.FixedAsset_PurchasePrice
+                                <br />
+                                <input class="currency numeric" id="Price" readonly="" type="text" size="20" value="@Model.PurchasePrice" />
+                            </p>
+                        </div>
+                        <div>
+                            <p>@Resources.Resource.FixedAsset_Description</p>
+                            <textarea id="Description" rows="3" readonly="" style="width: 100%; resize: none" maxlength="1000">@Model.Description</textarea>
+                        </div>
+                        <br />
+                        <div style="width: 100%">
+                            <p class="x-boxed" style="margin-bottom: 10px;">
+                                <label style="font-size: 15px;">Depreciation </label>
+                            </p>
+                            <hr style="margin-top: 10px; margin-bottom: 10px;" />
+                            <p style="display: inline-block; width: 20%;">
+                                @Resources.Resource.FixedAsset_AssetType
+                                <br />
+                                <input id="Type" readonly="" type="text" size="20" value="@Model.AssetType"/>
+                            </p>
+                            <p style="display: inline-block; width: 20%;">
+                                @Resources.Resource.FixedAsset_DepreciationRate
+                                <br />
+                                <input id="Rate" readonly="" class="currency numeric" type="text" size="10" maxlength="6" value="@Model.DepreciationRate"/>
+                                %
+                            </p>
+                            <p style="display: inline-block; width: 20%;">
+                                @Resources.Resource.FixedAsset_DepreciationMethod
+                                <br />
+                                <select id="Method" disabled="disabled">
+                                    <option value="0">@Resources.Resource.FixedAsset_Straight</option>
+                                    <option value="1">@Resources.Resource.FixedAsset_Declining</option>
+                                </select>
+                            </p>
+                            <p style="display: inline-block; width: 20%;">
+                                @Resources.Resource.FixedAsset_DepreciationAccount
+                                <br />
+                                @Html.DropDownList("DepreciationAccountID", null, string.Empty, new { @disabled = "disabled", style = "width: 150px; height: 26px;" })
+                            </p>
+                        </div>
+                        @{
+    if (Model.AccumulatedDepreciation > 0)
+    {
+                            <div id="Depreciation">
+                                <hr style="margin-bottom: 10px; margin-top: 10px;" />
+                                <label>
+                                    The purchase date is prior to the Fixed Assets start date (1 Jan @ViewBag.Year) so please enter:
+                                </label>
+                                <p>The depreciation before start date</p>
+                                <input type="text" id="Accummulate" value="@Model.AccumulatedDepreciation" readonly="" class="currency numeric"/>
+                            </div>
+                            <br />
+    }
+                        }
+                        @{
+    if (Model.AccumulatedDepreciationAccountID > 0 && Model.AccountID != 55)
+    {
+                            <div id="DepreciationAccount">
+                                <hr style="margin-bottom: 10px; margin-top: 10px;" />
+                                <label>
+                                    The asset account you have selected needs a linked accumulated depreciation account
+                                </label>
+                                <p>Accumulated Depreciation Account</p>
+                                @Html.DropDownList("AccumDepreAccountID", null, string.Empty, new {@disabled = "disabled", style = "width: 300px; height: 26px;" })
+                            </div>
+                            <br>
+    }
+                        }
+                        <div>
+                            <input type="button" class="btn btn-defaultxero" value="@Resources.Resource.FixedAsset_Cancel" id="btnClose"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

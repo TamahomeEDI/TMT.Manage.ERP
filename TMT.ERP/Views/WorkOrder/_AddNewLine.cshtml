@@ -1,0 +1,50 @@
+﻿<tr>
+	<td style ="text-align:left">@Html.DropDownList("ddlSubGoodID", new SelectList(ViewBag.GoodID, "Value", "Text", ""), "", new { @class = "form-control goodchange" })</td>
+	<td style ="text-align:left;"><label id="txtDescription" class="form-control description" /></td>
+	<td style ="text-align:left;"><input type="text" id="txtSubQty" class="form-control qty" /></td>
+    <td><div class="remove" id="delRow" onclick="RemoveRow(this);"></div></td>
+</tr>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".goodchange").change(function () {
+            ChangeGood(this);
+        });
+    });
+
+    function RemoveRow(element) {
+        var tr = $(element).closest('tr');
+        tr.remove();
+    }
+
+
+    function ChangeGood(element) {
+        var good = $(element).val();
+        var tbody = $(element).closest('tr');
+        var goodID = $("#ddlSubGoodID", tbody).val();
+        if (goodID != "") {
+            $.ajax({
+                type: "POST",
+                url: "/Services/GoodService.asmx/GetGoodByID",
+                data: JSON.stringify({
+                    goodID: goodID
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    try {
+                        var good = JSON.parse(data.d);
+                        $('.description', tbody).text(good.Decription);
+
+                    } catch (ex) { }
+                }
+            }).error(function (event, jqXHR, ajaxSettings, thrownError) {
+                alert('Error when loading data');
+            });
+        }
+        else {
+            $('.description', tbody).val("");
+        }
+    }
+
+</script>

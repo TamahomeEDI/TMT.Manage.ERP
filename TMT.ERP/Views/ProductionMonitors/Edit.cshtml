@@ -1,0 +1,205 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model TMT.ERP.DataAccess.Model.ProductionMonitor
+<script type="text/javascript">
+    $(document).ready(function () {
+        var status = 0;
+        $('#WorkCenterID').val($('#hdfworkcenterId').val());
+        $('#AllocID').val($('#hdfallocId').val());
+        $('#MachineID').val($('#hdfmachineId').val());
+        $.ajax({
+            type: 'GET',
+            url: "/ProductionMonitors/GetGood/",
+            data: { "allocId": $('#hdfallocId').val() },
+            success: function (data) {
+                $('#goodorder').empty();
+                $('#goodorder').html(data);
+            }
+        });
+
+
+        $('#btnBackProduct').click(function () {
+            window.location.href = "/ProductionMonitors/Index/";
+        });
+        $("#WorkCenterID").change(function () {
+            var id = $(this).val();
+            GetMachine(id);
+            GetAlloCate(id);
+        });
+        $('#AllocID').change(function () {
+            var id = $(this).val();
+            $.ajax(
+                {
+                    type: "POST",
+                    url: "/ProductionMonitors/GetGood/",
+                    data: { "allocId": id },
+                    success: function (data) {
+                        $('#goodorder').empty();
+                        $('#goodorder').html(data);
+                    }
+                });
+        });
+        $('#btnSaveProduct').click(function () {
+            
+            status = 0;
+            AddOrApproved(status);
+        });
+        $('#btnApproveProduct').click(function () {
+            
+            status = 1;
+            AddOrApproved(status);
+        });
+    });
+    function GetMachine(value) {
+        $.ajax(
+            {
+                type: "POST",
+                url: "/ProductionMonitors/GetMachine/",
+                data: { 'wId': value },
+                success: function (data) {
+                    $('#loadMachine').empty();
+                    $('#loadMachine').html(data);                    
+                }
+            });
+    }
+
+    function GetAlloCate(value) {
+        $.ajax(
+                  {
+                      type: "POST",
+                      url: "/ProductionMonitors/GetAlloCate/",
+                      data: { 'wId': value },
+                      success: function (data) {
+                          $('#loadAlloc').empty();
+                          $('#loadAlloc').html(data);
+                      }
+                  });
+    }
+    function AddOrApproved(status) {
+        
+        var id = $('#hdfId').val();
+        var workcenterId = $('#WorkCenterID').val();
+        var machineId = $('#MachineID').val();
+        var alloId = $('#AllocID').val();
+        var scheduleStartTime = $('#txtScheduleStartTime').val();
+        var scheduleEndTime = $('#txtScheduleEndTime').val();
+        $.ajax({
+            type: "POST",
+            url: "/ProductionMonitors/EditProductMonitors/",
+            data: {
+                "id": id,
+                "workCenterId": workcenterId,
+                "allocId": alloId,
+                "machineId": machineId,
+                "scheduleStartTime": scheduleStartTime,
+                "scheduleEndTime": scheduleEndTime,
+                "status": status
+            },
+            success: function () {
+                if (status == 1) {
+                    location.href = "/ProductionMonitors/Process/";
+                }
+                if (status == 0) {
+                    location.href = "/ProductionMonitors/";
+                }
+            }
+        });
+    }
+</script>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+             <div class="c_container">
+                <h3>@Resources.Resource.ProductionMonitors_Index_Parent</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.ProductionMonitors_Index_Children01</span></li>
+                        <li><span>@Resources.Resource.ProductionMonitors_Index_Children02</span></li>
+                        <li><a href="/ProductionMonitors/">@Resources.Resource.ProductionMonitors_Index_Children03</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<input type="hidden" value="@Model.ID" id="hdfId"/>
+<input type="hidden" id="hdfworkcenterId" value="@Model.WorkCenterID"/>
+<input type="hidden" id="hdfallocId" value="@Model.AllocWOID"/>
+<input type="hidden" id="hdfmachineId" value="@Model.MachineID"/>
+<div id="con_body">
+    <div class="container">
+        <div class="c_container">
+            <div class="cleardiv"></div>
+            <div style="display: inline-block;">
+                <input type="submit" id="btnSaveProduct" value="@Resources.Resource.ProductionMonitors_Create_Save" class="btn btn-defaultxero" />
+                <input type="submit" id="btnApproveProduct" value="@Resources.Resource.ProductionMonitors_Create_Approve" class="btn btn-defaultxero" />
+                <input type="submit" id="btnBackProduct" value="@Resources.Resource.ProductionMonitors_Create_Back" class="btn btn-defaultxero" />
+            </div>
+            <div class="cleardiv"></div>
+            <div class="form_position1">
+                <div class="form_left">
+                    <div class="form-group">
+                        <label class="labelstock">@Resources.Resource.ProductionMonitors_Create_MPSNo:</label>
+                        <input type="text" id="txtMPSNo" value="@Model.Code" class="form-control" readonly="readonly" style="width: 200px;"/>
+                    </div>
+                    <div class="form-group">
+                        <label class="labelstock">@Resources.Resource.ProductionMonitors_Create_WorkCenter:</label>
+                        @Html.DropDownList("WorkCenterID", null, String.Empty, new { @class = "form-control" ,style="width: 200px;"})
+                    </div>
+                    <div class="form-group" id="loadAlloc">
+                        <label class="labelstock">Allocate:</label>
+                        @{
+                            var ooAllocs = ViewBag.AllocID as List<AllocWO>;
+                        }
+                        <select id="AllocID" name="AllocID" style="width: 200px !important;" class="form-control required">
+                            <option value="@Model.AllocWOID" selected="selected">@Model.AllocWO.Code</option>
+                            @if (ooAllocs != null && ooAllocs.Count > 0)
+                            {
+                                foreach (var item in ooAllocs)
+                                {
+                                <option value="@item.ID">@item.Code</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form_right">
+                    <div class="form-group" id="loadMachine">
+                        <label class="labelstock">@Resources.Resource.ProductionMonitors_Create_MachineName:</label>
+                        @{
+                            var ooMachines = ViewBag.AllocID as List<Machine>;
+                        }
+                        <select id="MachineID" name="MachineID" style="width: 200px !important;" class="form-control required">
+                            <option value="@Model.MachineID" selected="selected">@Model.Machine.Code</option>
+                            @if (ooMachines != null && ooMachines.Count > 0)
+                            {
+                                foreach (var item in ooMachines)
+                                {
+                                <option value="@item.ID">@item.Code</option>
+                                }
+                            }
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        @{
+                            DateTime scheduleStartTime = Convert.ToDateTime(Model.ScheduleStartTime);
+                        }
+                        <label class="labelstock">@Resources.Resource.ProductionMonitors_Create_ScheduleStartTime:</label>
+                        @Html.TextBox("txtScheduleStartTime", TMT.ERP.Commons.Utility.DateFormat(scheduleStartTime), new { @class = "form-control datepicker",style="width: 200px;" })
+                    </div>
+                    <div class="form-group">
+                        @{
+                            DateTime scheduleEndTime = Convert.ToDateTime(Model.ScheduleEndTime);
+                        }
+                        <label class="labelstock">@Resources.Resource.ProductionMonitors_Create_ScheduleEndTime:</label>
+                        @Html.TextBox("txtScheduleEndTime", TMT.ERP.Commons.Utility.DateFormat(scheduleEndTime), new { @class = "form-control datepicker",style="width: 200px;" })
+                    </div>
+                </div>
+            </div>
+            <div class="cleardiv"></div>
+            <div id="goodorder">
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,98 @@
+﻿@model TMT.ERP.DataAccess.Model.Payment
+
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>Payment</h3>
+                @*<div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.Sale_Sales</span></li>
+                        <li>
+                            <a href="/SaleInvoice/Dashboard/">
+                                @Resources.Resource.Sale_SaleInvoices
+                            </a>
+                        </li>
+                    </ul>
+                </div>*@
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_body">
+    <div class="container">
+        <div class="c_container">
+            <div id="form_body">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Payment Date</th>
+                            <th>Reference</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                @{
+                                    DateTime dateCreate = Convert.ToDateTime(Model.CreatedDate);                        
+                                }
+                                @dateCreate.ToString("d")
+                            </td>
+                            <td>
+                                @Model.Reference
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div style="clear: both; height: 10px;"></div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>@Resources.Resource.SaleInvoice_List_ContactName</th>
+                            <th>@Resources.Resource.SaleInvoice_List_Code</th>
+                            <th>@Resources.Resource.SaleInvoice_Create_Date</th>
+                            <th>@Resources.Resource.SaleInvoice_Create_DueDate</th>
+                            <th>@Resources.Resource.SaleInvoice_Create_Total</th>
+                            <th>@Resources.Resource.SaleInvoice_List_PaymentAmount</th>
+                            <th>@Resources.Resource.SaleInvoice_List_PaymentAmountVND</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>@ViewBag.ContactName</td>
+                            <td>@{
+                                string goodCode = ViewBag.GoodCode;
+                            }
+                                @goodCode.Substring(0, goodCode.Length - 1)
+                            </td>
+                            <td>@{
+                                DateTime createDate = Convert.ToDateTime(ViewBag.Date);
+                            }
+                                @createDate.ToString("d")
+                            </td>
+                            <td>
+                                @{
+                                    DateTime dueDate = Convert.ToDateTime(ViewBag.DueDate);
+                                }
+                                @dueDate.ToString("d")
+                            </td>
+                            <td>@ViewBag.TongTien</td>
+                            <td>
+                                @Model.TotalMoney
+                            </td>
+                            <td>No data
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />
+                <div style="float: right; display: inline;">
+                    <b>Payment Total:&nbsp;No data</b>
+                    <p style="text-align: right;">
+                        <input type="submit" class="btn" value="Cancel" id="btnCancel" onclick="window.history.back();" />
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

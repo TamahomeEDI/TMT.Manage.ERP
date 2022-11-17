@@ -1,0 +1,186 @@
+﻿@{
+    ViewBag.Title = "SellDispose";
+}
+
+<script type="text/ecmascript">
+
+    $(document).ready(function () {
+
+        $(".numeric").numeric();
+
+        $('.currency').blur(function () {
+            $('.currency').formatCurrency();
+        });
+
+        jQuery.validator.messages.required = "";
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+        $('#Sell').click(function (e) {
+            $('#SellItem').show();
+            $('#AccountID').addClass("required");
+            $('#Price').addClass("required");
+        });
+
+        $('#Dispose').click(function (e) {
+            $('#SellItem').hide();
+            $('#AccountID').removeClass("required");
+            $('#Price').removeClass("required");
+        });
+
+        $('#NoDepreciation').click(function (e) {
+            $('#Date').attr("disabled", "disabled");
+            $('#Date').removeClass("required");
+        });
+
+        $('#HasDepreciation').click(function (e) {
+            $('#Date').removeAttr("disabled", "disabled");
+            $('#Date').addClass("required");
+        });
+
+        $('#btnReview').click(function (e) {
+            
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            var id = $('#hidID').val();
+            var dateSold = $('#DateSold').val();
+            var method = $("input[name=Method]:checked").val();
+            if (method == 0) {
+                var account = $('#AccountID').val();
+                var price = $('#Price').val();
+            } else {
+                var account = 0;
+                var price = 0;
+            }
+            var depreciation = $("input[name=Depreciation]:checked").val();
+            if (depreciation == 1) {
+                var depreciationDate = $('#Date').val();
+            } else {
+                var depreciationDate = "";
+            }
+            var _url = '/FixedAssets/ReviewJournal?id=' + id + '&account=' + account + '&price=' + price + '&dateSold=' + dateSold + '&depreciationDate=' + depreciationDate;
+            $.ajax({
+                type: 'GET',
+                url: '/FixedAssets/ReviewJournal/',
+                data: {
+                    "id": id, "account": account, "price": price, "dateSold": dateSold, "depreciationDate": depreciationDate
+                },
+                success: function () {
+                    custom.CreatePopup("#dialog", "@Resources.Resource.FixedAsset_ReviewJournal", 600, 'auto', _url, false);
+                    $("#dialog").dialog("open");
+                }
+            });
+        });
+    })
+</script>
+
+<input type="hidden" id="hidID" value="@ViewBag.ID"/>
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container">
+            <h3>@ViewBag.Code - @ViewBag.Name</h3>
+            <div id="breadcrumbs">
+                <ul>
+                    <li><a href="/FixedAssets/Index/">@Resources.Resource.FixedAsset_Title</a></li>
+                    <li><a href="/FixedAssets/Edit?id=@ViewBag.ID&&tab=1">@ViewBag.Code - @ViewBag.Name</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <div class="container">
+        <div id="popup-breadcrumbs" style="width: 65%; background: rgb(232, 241, 255); border: 1px solid darkgrey; border-radius: 6px; margin-bottom: 10px; margin-top: 10px;">
+            <div class="container">
+                <div id="con_top">
+                    <div class="c_container">
+                        <div id="dialog"></div>
+                        <div class="error" style="display: none; margin-bottom: 5px; line-height: 2">
+                            <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                            <span></span>.<br clear="all" />
+                        </div>
+                        <div>
+                            <label style="font-size: 20px;">Method</label>
+                            <hr style="margin-bottom: 5px; margin-top: 5px; border: 1px solid silver" />
+                            <div>
+                                <p>
+                                    <input type="radio" name="Method" id="Sell" value="0" checked /><label style="font-weight: normal">@Resources.Resource.FixedAsset_Sold</label>
+                                </p>
+                                <p>
+                                    <input type="radio" name="Method" id="Dispose" value="1" /><label style="font-weight: normal">@Resources.Resource.FixedAsset_Dispose</label>
+                                </p>
+                            </div>
+                        </div>
+                        <div style="height: 115px;">
+                            <label style="font-size: 20px;">Details</label>
+                            <hr style="margin-bottom: 5px; margin-top: 5px; border: 1px solid silver" />
+                            <div style="display: inline-block; width: 100%">
+                                <p style="display: inline-block; float: left; width: 200px;">
+                                    <label style="font-weight: normal">@Resources.Resource.FixedAsset_SoldDate</label><br />
+                                    <input type="text" class="datepicker required" name="DateSold" id="DateSold" style="width: 150px;" />
+                                </p>
+                                <div id="SellItem">
+                                    <p style="display: inline-block; width: 200px;">
+                                        <label style="font-weight: normal">@Resources.Resource.FixedAsset_AccountDebit</label><br />
+                                        @Html.DropDownList("AccountID", null, string.Empty, new {@class = "required", style = "width: 150px; height: 24px;" })
+                                    </p>
+                                    <p style="display: inline-block; width: 200px;">
+                                        <label style="font-weight: normal">@Resources.Resource.FixedAsset_SaleExclude</label><br />
+                                        <input type="text" class="currency numeric" value="0.00" name="Price" id="Price" style="width: 150px;" />
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div>
+                            <label style="font-size: 20px;">@Resources.Resource.FixedAsset_DepreciationOfYear</label>
+                            <hr style="margin-bottom: 5px; margin-top: 5px; border: 1px solid silver" />
+                            <p>@Resources.Resource.FixedAsset_LabelIncludeDepreciation</p>
+                            <div>
+                                <p>
+                                    <input type="radio" name="Depreciation" id="NoDepreciation" value="0" checked /><label style="font-weight: normal">@Resources.Resource.FixedAsset_NoDepreciation</label>
+                                </p>
+                                <div>
+                                    <input type="radio" name="Depreciation" id="HasDepreciation" value="1" /><label style="font-weight: normal">@Resources.Resource.FixedAsset_HasDepreciation</label>
+                                    <br />
+                                    <p style="margin-left: 12px;">
+                                        <label style="font-weight: normal">@Resources.Resource.Common_Date</label><br />
+                                        <input type="text" class="datepicker" name="Date" id="Date" disabled />
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="margin-top: 5px; margin-bottom: 10px;">
+                            <label style="font-weight: normal">Notes</label><br />
+                            <textarea maxlength="1000" rows="4" style="resize: none; width: 92%"></textarea>
+                        </div>
+                        <div style="float: right; margin-right: 55px;">
+                            <input id="btnReview" type="button" class="btn btn-defaultxero" value="@Resources.Resource.FixedAsset_ReviewJournal" />
+                            <input id="btnClose" type="button" class="btn btn-defaultxero" value="@Resources.Resource.FixedAsset_Cancel"/>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

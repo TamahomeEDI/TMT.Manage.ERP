@@ -1,0 +1,210 @@
+﻿@model TMT.ERP.DataAccess.Model.WorkOrder
+@{
+    ViewBag.Title = "ReOrder";
+}
+
+<h2>ReOrder @Model.Code</h2>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnSave').click(function () {
+            var workOrderID = 0;
+            var status = 0;
+            var createUserID = 1;
+            var approvalUserID = null;
+            SaveWorkOrder(workOrderID, status, createUserID, approvalUserID);
+        });
+
+        $('#btnApproval').click(function () {
+            var workOrderID = 0;
+            var status = 1;
+            var createUserID = 1;
+            var approvalUserID = 1;
+            SaveWorkOrder(workOrderID, status, createUserID, approvalUserID);
+        });
+
+        $('#btnCancel').click(function () {
+            window.location.href = "/WorkOrder/WorkOrderList/";
+        });
+
+        function SaveWorkOrder(workOrderID, status, createUserID, approvalUserID)
+        {
+            var workOrderCode = $('#txtCode').val();
+            var createDate = $('#txtDate').val();
+            var stockID = $('#ddlStock').val();
+            var parentGoodID = $('#ddlGood').val();
+            var parentQuantity = $('#txtParentQuantity').val();
+            var description = $('#txtdescription').val();
+            var workOrderDetail = BuildJSON();
+
+            $.ajax({
+                type: "POST",
+                url: "/Services/WorkOrderService.asmx/SaveWorkOrder",
+                data: JSON.stringify({
+                    workOrderID: workOrderID,
+                    workOrderCode: workOrderCode,
+                    createDate: createDate,
+                    createUserID: createUserID,
+                    approvalUserID: approvalUserID,
+                    stockID: stockID,
+                    parentGoodID: parentGoodID,
+                    parentQuantity: parentQuantity,
+                    description: description,
+                    workOrderDetail: workOrderDetail,
+                    status: status
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    
+                    var retValue = JSON.parse(data.d);
+                    if (retValue == "Success")
+                        window.location.href = "/WorkOrder/WorkOrderList/";
+                }
+            });
+        }
+
+        function BuildJSON() {
+            var arrayData = [];
+            $("#tbcomponents tr").each(function () {
+                var tr = $(this).closest('tr');
+                var subGoodID = $("#hdGoodID", tr).val();
+                if (subGoodID != "-1" && parseInt(subGoodID) > 0) {
+                    var item = {
+                        "SubGoodId": subGoodID,
+                        "SubQuantity": $("#txtSubQuantity", tr).val(),
+                    };
+                    arrayData.push(item);
+                }
+            });
+            return JSON.stringify(arrayData);
+        }
+
+    });
+
+    function ChangeByGoodID(goodID) {
+        $('#txtParentQuantity').val("0");
+        if (goodID != "") {
+            $.ajax({
+                type: "POST",
+                url: "/Services/GoodService.asmx/GetByParentID",
+                data: JSON.stringify({
+                    parentID: goodID
+                }),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (data) {
+                    try {
+                        var goodItems = JSON.parse(data.d);
+                        //$('#tbcomponents').empty();
+                        $('#tbcomponents tr:not(:first)').remove();
+                        if (goodItems instanceof Array) {
+                            $.each(goodItems, function () {
+                                var rowcontent =
+                                    "<tr><input type='hidden' id='hdGoodID' class='goodid' value=" + this.ID + " />" +
+                                        "<td style ='text-align:left'>" + this.Code + "</td>" +
+                                        "<td style ='text-align:left'>" + this.Description + "</td>" +
+                                        "<td style ='text-align:left'><input type=text id='txtSubQuantity' class='quantity' value='0' /></td>" +
+                                    "</tr>";
+                                add_new_row('#tbcomponents', rowcontent);
+                            });
+                        }
+
+                    } catch (ex) { }
+                }
+            })
+
+        }
+    }
+
+    $(document).ready(function () {
+        $("#ddlGood").change(function () {
+            ChangeByGoodID($('#ddlGood').val());
+        });
+    });
+
+    $(document).ready(function () {
+        $("#txtParentQuantity").change(function () {
+            var parentQuantity = $('#txtParentQuantity').val();
+            if (parentQuantity != "") {
+                $(".quantity").each(function () {
+                    $(this).val(parentQuantity);
+                });
+            }
+        });
+    });
+
+    function add_new_row(table, rowcontent) {
+        if ($(table).length > 0) {
+            if ($(table + ' > tbody').length == 0) $(table).append('<tbody />');
+            ($(table + ' > tr').length > 0) ? $(table).children('tbody:last').children('tr:last').append(rowcontent) : $(table).children('tbody:last').append(rowcontent);
+        }
+    }
+</script>
+
+<div id="apDiv4" class="divcontent">
+    <div id="button11" class="x-boxed">
+        <a href="#" class="btn" id="btnSave">Save</a>
+        <a href="#" class="btn" id="btnApproval">Approval</a>
+        <a href="#" class="btn" id="btnCancel">Cancel</a>
+        <input type="hidden" id="hdWorkOrderID" value="@Model.ID" class="invoiceid" />
+    </div>
+    <br/>
+</div>
+
+<table style ="width:100%" border="0"> 
+    <tr>
+        <td width="15%">@Resources.Resource.Common_WorkOrder</td>
+        <td>@Html.TextBox("txtCode", (String)ViewBag.NextCode, new {  @class="txt_box1" })</td>
+        <td>@Resources.Resource.Common_Stock</td>
+        <td>@Html.DropDownList("ddlStock", (IEnumerable<SelectListItem>)ViewData["Stock"], new { @class = "stock" } )</td>
+    </tr>
+    <tr>
+        <td width="15%">@Resources.Resource.Common_CreateDate </td>
+        <td>@Html.TextBox("txtDate", Model.CreatedDate.ToShortDateString(), new {  @class="txt_box1 datepicker" })</td>
+        <td>@Resources.Resource.WorkOrder_List_AssembledBy</td>
+        <td><input id="txtAssembledBy" type="text" size="25" style="width:119px;"/></td>
+    </tr>
+    <tr>
+        <td width="15%">@Resources.Resource.Common_Description</td>
+        <td style ="text-align:left;" colspan="3">@Html.TextArea("txtdescription",Model.Description, new { @class = "description" })</td>        
+    </tr>
+</table>
+<p><b> Details: </b> </p>
+
+<table style="width:100%; border="0">
+    <tr> 
+        <td width="15%">@Resources.Resource.Common_Item</td>
+        <td> @Html.DropDownList("ddlGood", (IEnumerable<SelectListItem>)ViewData["GoodItems"], new { @class="gooditem"}) </td>
+        <td>@Resources.Resource.Common_Quantity</td>
+        <td>@Html.TextBox("txtParentQuantity", Model.OrderQuantity, new { @class = "parentquantity" })</td>
+    </tr>
+
+    <tr>
+        <td style="text-align:left; vertical-align:top">Components</td>
+        <td colspan="3" style ="width:100%;text-align:left;"> 
+            <!-- Detail for goods -->	
+            <table id="tbcomponents" style="width:100%; vertical-align:top">
+                <thead>
+                    <tr bgcolor="#e2efff">
+	                    <td style ="text-align:left;"> <b> @Resources.Resource.Common_Item </b> </td>
+	                    <td style ="text-align:left;"> <b> @Resources.Resource.Common_Description </b></td>
+	                    <td style ="text-align:left;"> <b> @Resources.Resource.Common_Quantity </b></td>
+                    </tr>
+                </thead> 
+                <tbody>
+                    @foreach(var item in Model.WorkOrderDetails)
+                    {                    
+                    <tr><input type='hidden' id='hdGoodID' class='goodid' value='@item.GoodID' />
+	                    <td style ="text-align:left">@item.Good.Code</td>
+	                    <td style ="text-align:left;">@item.Good.Description</td>
+	                    <td style ="text-align:left;"><input type=text id='txtSubQuantity' class='quantity' value='@item.OrderQuantity' /></td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+            <br/> 	
+
+        </td>
+    </tr>
+</table>

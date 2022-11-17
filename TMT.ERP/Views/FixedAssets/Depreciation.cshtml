@@ -1,0 +1,271 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model IEnumerable<TMT.ERP.DataAccess.Model.Account>
+
+@{
+    ViewBag.Title = "Depreciation";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<script type="text/ecmascript">
+
+    var amount = 0;
+    var error = 0;
+    var hasValue = 0;
+    $(document).ready(function () {
+
+        $('#btnClose').click(function (e) {
+            location.href = '/FixedAssets/Index/';
+        });
+
+        
+        var moy = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        var year = $('#hidYear').val();
+        for (i = 0; i < 12; i++) {
+            var lastDate = new Date(year, i + 1, 0);
+            var option =
+            $('#DepreciateTime').append("<option value='" + lastDate.getDate() + ' ' + moy[i] + ' ' + year + "'>" + lastDate.getDate() + ' ' + moy[i] + ' ' + year + "</option>");
+        }
+
+        $('#btnStart').click(function (e) {
+            
+            location.href = '/FixedAssets/ChangeStartDate/';
+        });
+
+        $('#btnUpdate').click(function () {
+            
+            var date = $('#DepreciateTime').val();
+            if (date != null && date.trim() != "" && date != "undefined") {
+                $("#tbDepreciation tr").each(function () {
+                    
+                    amount = 0;
+                    var tr = $(this).closest('tr');
+                    var id = $('.amount', tr).attr('id');
+                    $('#' + id + '').text(function (e) {
+                        DepreciationAmount(date, id);
+                        return amount;
+                    }).formatCurrency();
+                });
+            }
+            var depreInfo = CheckDepreciation();
+            if (hasValue == 0) {
+                $('#btnApprove').attr("disabled", "disabled");
+                $('#tblAccount').hide();
+                $('#NoDepreciation').show();
+            } else if (hasValue > 0){
+                $('#btnApprove').removeAttr("disabled", "disabled");
+                $('#tblAccount').show();
+                $('#NoDepreciation').hide();
+            }
+        });
+
+        $('#btnApprove').click(function (e) {
+            
+            var depreInfo = BuildJSON();
+            if (error > 0) {
+                error = 0;
+                $('#Inform').empty();
+                $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">Please select Accumulated Account !</p>');
+                $("#Inform").dialog({
+                    modal: true,
+                    height: 'auto',
+                    width: 300,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#Inform').dialog('open');
+                return false;
+            }
+            var date = $('#DepreciateTime').val();
+            $.ajax({
+                type: 'POST',
+                traditional: true,
+                url: '/FixedAssets/ApproveDepreciation/',
+                data: {
+                    'depreInfo': depreInfo, 'date': date
+                },
+                dataType: 'text',
+                success: function (data) {
+                    
+                    if (data = "Approve") {
+                        $('#Inform').empty();
+                        $('#Inform').append('<p style="width: 100%; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_ApprovalSuccess</p>');
+                        $("#Inform").dialog({
+                            modal: true,
+                            height: 'auto',
+                            width: 300,
+                            autoOpen: false,
+                            buttons: {
+                                'OK': function () {
+                                    $(this).dialog('close');
+                                    location.href = '/FixedAssets/Index/';
+                                }
+                            }
+                        });
+                        $('#Inform').dialog('open');
+                    } else {
+                        $('#Inform').empty();
+                        $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Error</p>');
+                        $("#Inform").dialog({
+                            modal: true,
+                            height: 'auto',
+                            width: 300,
+                            autoOpen: false,
+                            buttons: {
+                                'OK': function () {
+                                    $(this).dialog('close');
+                                    location.href = '/FixedAssets/Index/';
+                                }
+                            }
+                        });
+                        $('#Inform').dialog('open');
+                    }
+                },
+            });
+        });
+    });
+
+    function DepreciationAmount(date, id) {
+        $.ajax(
+        {
+            type: 'POST',
+            traditional: true,
+            url: '/FixedAssets/DepreciationAmount/',
+            data: {
+                date: date, id: id
+            },
+            success: function (data) {
+                
+                amount = data;
+            },
+            async: false
+        });
+    }
+
+    function BuildJSON() {
+        
+        var arrayData = [];
+        $("#tbDepreciation tr").each(function () {
+            
+            var tr = $(this).closest('tr');
+            var accID = $("#AccountID", tr).asNumber();
+            var depreciation = $(".amount", tr).asNumber();
+            alert(depreciation);
+            if (accID > 0 && depreciation > 0) {
+                var item = {
+                    "accID": $("#AccountID", tr).val(),
+                    "depreciation": $(".amount", tr).text(),
+                };
+                arrayData.push(item);
+            } else if (depreciation > 0 && accID == 0) {
+                $("#AccountID", tr).css("border", "2px solid red");
+                error++;
+            }
+        });
+        return JSON.stringify(arrayData);
+    }
+
+    function CheckDepreciation() {
+        
+        var arrayData = [];
+        $("#tbDepreciation tr").each(function () {
+            
+            var tr = $(this).closest('tr');
+            var depreciation = $(".amount", tr).asNumber();
+            if (depreciation > 0) {
+                hasValue++;
+            }
+        });
+    }
+
+</script>
+
+<input type="hidden" id="hidYear" value="@ViewBag.Year"/>
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container">
+            <h3>@Resources.Resource.FixedAsset_Depreciation_Title</h3>
+            <div id="breadcrumbs">
+                <ul>
+                    <li><span>Accounting</span></li>
+                    <li><a href="/FixedAssets/Depreciation">@Resources.Resource.FixedAsset_Depreciation_Title</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="breadcrumb" style="background-color: white">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <div id="dialog"></div>
+                <div id="confirmDel" title="Confirm" style="background: white"></div>
+                <div id="Inform" title="Inform" style="background: white"></div>
+                <input type="button" class="btn btn-defaultxero" value="@Resources.Resource.FixedAsset_StartDate" id="btnStart"/>
+                <div style="margin-bottom: 20px; border: 1px solid darkgrey; background: #E8F1FF; height: 75px; margin-top: 15px; border-radius: 6px;">
+                    <div style="margin-left: 10px;">
+                        <div style="display: inline-block; width: 150px; margin-top: 15px;">
+                            Depreciate from
+                        <br />
+                            <label style="font-weight: normal">1 - Jan - @ViewBag.Year</label>
+                        </div>
+                        <div style="display: inline-block; width: 150px;">
+                            Depreciate to
+                        <br />
+                            <select id="DepreciateTime">
+                                <option>&nbsp;</option>
+                            </select>
+                        </div>
+                        <div style="display: inline-block; width: 150px; margin-top: -10px;">
+                            <input type="button" class="btn btn-defaultxero" value="@Resources.Resource.FixedAsset_Update" id="btnUpdate"/>
+                        </div>
+                    </div>
+                </div>
+                <div id="NoDepreciation" style="display: none; height: 50px;">
+                    @{
+                         @Html.Raw("<div id='divNoRecord'>"+ @Resources.Resource.Common_Msg_CountDisplay+ "</div>")
+                        }
+                </div>
+                @if (ViewBag.Count > 0)
+                {
+                    <table class="table" id="tblAccount">
+                        <thead>
+                            <tr>
+                                <th>Account
+                                </th>
+                                <th>Amount to be depreciated
+                                </th>
+                                <th>Accumulated Depreciation Account
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbDepreciation">
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@item.Name</td>
+                                    <td><span class="currency amount" id="@item.ID">0.00</span></td>
+                                    <td>
+                                        @Html.DropDownList("AccountID", null, string.Empty, new { style = "width: 200px;" })
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }else{
+                    @Html.Raw("<div id='divNoRecord'>"+ @Resources.Resource.Common_Msg_CountDisplay+ "</div>")
+                }
+                <div style="background: #ccc; border: 1px solid darkgrey; border-radius: 6px; height: 50px;">
+                    <div style="float: right; margin-right: 10px; margin-top: 10px;">
+                        <input id="btnApprove" disabled type="button" class="btn btn-defaultxero" value="@Resources.Resource.FixedAsset_Approve" />
+                        <input id="btnClose" type="button" class="btn btn-defaultxero" value="@Resources.Resource.FixedAsset_Cancel" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

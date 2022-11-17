@@ -1,0 +1,160 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.StockMovement>
+@{
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+<script>
+    var tabNum = '0';
+    $('#cbCheckAllDraft').click(function () {
+        $("input[name=chkStockMovement]").prop('checked', $(this).prop('checked'));
+    });
+    $('#sPageSize').html($('#hdfPageSize').val());
+    function SetPageSize(pageSize) {
+        
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/StockMovement/SetPageSize/',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.reload();
+                }
+            });
+    }
+    $('#aApproved').click(function () {
+        
+        var valueString = [];
+        $("input[name=chkStockMovement]:checked").each(
+        function () {
+            valueString.push(this.id);
+        }
+        );
+        var stockMovement = {
+            stockMovementID: valueString,
+            status: '1',
+            tabNum: tabNum
+        }
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/StockMovement/Approved/',
+                traditional: true,
+                data: stockMovement,
+                success: function (data) {
+                    window.location.href = encodeURI('/StockMovement/Index?tabNum=' + tabNum);
+                }
+            });
+
+    });
+
+    $('#aDelete').click(function () {
+        
+        var valueString = [];
+        $("input[name=chkStockMovement]:checked").each(
+        function () {
+            valueString.push(this.id);
+        }
+        );
+        if (valueString.length > 0) {
+            var stockMovement = {
+                stockMovementID: valueString,
+                tabNum: tabNum
+            }
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/StockMovement/DelStockMovement/',
+                    traditional: true,
+                    data: stockMovement,
+                    success: function (data) {
+                        window.location.href = encodeURI('/StockMovement/Index?tabNum=' + tabNum);
+                    }
+                });
+        } else {
+            $('#confirmDel').empty();
+            $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Please select item !</p>');
+            $("#confirmDel").dialog({
+                modal: true,
+                height: 140,
+                autoOpen: false,
+                buttons: {
+                    'Agree': function () {
+                        $(this).dialog('close');
+                    },
+                    Cancel: function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#confirmDel').dialog('open');
+        }
+
+    });
+</script>
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<div id="tabbody">   
+     <div style="clear: both; height: 10px;"></div>     
+    @if(Model.ToList().Count > 0){        
+        <div class="buttontab" id="buttontab">
+            <a class="btn btn-default" href="javascript:void(0);" id="aApproved">Approve</a>
+            <a class="btn btn-default"  href="javascript:void(0);" id="aDelete">Delete</a>
+        </div>        
+
+        <div id="confirmDel" title="Confirm!"></div>        
+        <table>
+            <thead>
+            <tr>
+                 <th>
+                  <input type="checkbox" id="cbCheckAllDraft" />
+                 </th>
+                <th><span>@Resources.Resource.Common_Code</span></th>
+                <th><span>@Resources.Resource.Common_CreateDate</span></th>
+                <th><span>@Resources.Resource.Common_CreatedUser</span></th>
+                <th><span>@Resources.Resource.Common_Approve</span></th>
+                <th><span>@Resources.Resource.Common_FromStock</span></th>
+                <th><span>@Resources.Resource.Common_ToStock</span></th>
+                <th><span>@Resources.Resource.Common_Quantity</span></th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model) {    
+            var quantity =  item.StockMovementDetails.Sum(details => details.Quantity);    
+            <tr>
+                <td>@Html.CheckBox("chkStockMovement", false, new {id = item.ID })</td>
+                <td><a href="/StockMovement/Edit?id=@item.ID"> @Html.DisplayFor(modelItem => item.Code)</a></td>
+                <td>@item.CreatedDate.ToString("d")</td>
+                <td>@Html.DisplayFor(modelItem => item.User.FullName)</td>
+                <td>@Html.DisplayFor(modelItem => item.ApprovalUserID)</td>
+                <td>@Html.DisplayFor(modelItem => item.Stock.Name)</td>
+                <td>@Html.DisplayFor(modelItem => item.Stock1.Name)</td>
+                <td>@quantity</td>
+            </tr>
+        }
+        </tbody>
+        </table>
+    } 
+    else 
+    {
+        <div class="pager"> <h4> no records </h4></div>
+    }
+                        <div style="display: inline;">
+                        <div style="width: 70%; float: left;">
+                            @*Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount*@
+                            @Html.PagedListPager(Model, page => Url.Action("GetStockMovement", new { page, type = 0 }))
+                        </div>
+                        <div style="width: 25%; float: right;">
+                            <label style="margin-left: 70px; margin-top: 10px;">Showing&nbsp;</label>
+                            <div id="showpag" class="dropdown" style="float: right;">
+                                <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                                <ul class="dropdown-menu">
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+</div>

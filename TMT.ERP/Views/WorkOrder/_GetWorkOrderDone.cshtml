@@ -1,0 +1,30 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.WorkOrder>
+@{
+    ViewBag.Title = "_GetWorkOrderDone";
+}
+
+    <table id="WorkOrder" class="table">
+        <thead>
+            <tr>
+                <th><input type="checkbox" id="cbCheckAll" /></th>
+                <th>@Resources.Resource.Common_WorkOrder</th>
+                <th>@Resources.Resource.WorkOrder_List_AssembledBy</th>
+                <th>@Resources.Resource.Common_CreateDate</th>
+                <th>@Resources.Resource.Common_Stock</th>
+                <th>@Resources.Resource.Common_ReOrder</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+            <tr>
+                <td>@Html.CheckBox("chkDraft", false, new { id = item.ID })</td>
+                <td><a href="/WorkOrder/Edit/@item.ID">@Html.DisplayFor(modelItem => item.Code)</a></td>
+                <td>@Html.DisplayFor(modelItem => item.User.UserName)</td>            
+                <td>@item.CreatedDate.ToShortDateString()</td>
+                <td>@Html.DisplayFor(modelItem => item.Stock.Name)</td>
+                <td><a href="/WorkOrder/ReOrder/@item.ID">@Resources.Resource.Common_ReOrder</a></td>
+            </tr>            
+            }
+        </tbody>
+    </table>

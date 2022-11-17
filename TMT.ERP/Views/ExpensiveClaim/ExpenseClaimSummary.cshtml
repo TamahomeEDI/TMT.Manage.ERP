@@ -1,0 +1,382 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model IEnumerable<TMT.ERP.DataAccess.Model.ExpenseClaim>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.datepicker').click(function () {
+            $(this).datepicker();
+        });
+    });
+    $(document).ready(function () {
+        $('#AddPament').click(function () {
+            
+            var id = $('#expenseClaimID').val();
+            var money = $('#txtsotienthanhtoan').val();
+            var datepaid = $('#txtDatePaid').val();
+            var paidTo = $('#txtDateTo').val();
+            var ref = $('#txtReference').val();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/ExpensiveClaim/CreatePaymentByExpenseClaimID/',
+                    data:
+                        {
+                            "id": id,
+                            "money": money,
+                            "createDate": datepaid,
+                            "datePaid": paidTo,
+                            "reference": ref
+                        }
+                    , success: function () {
+                    }
+                });
+            addPaymentNote();
+            location.reload();
+        });
+
+        $('table#BankAccount > tbody > tr > td > a#viewbill').click(function () {
+            
+            var giatri = $(this).attr('title');
+            var tongtien = $('#totalmoney').attr('title');
+            /*   $.ajax(
+                   {
+                       type: 'POST',
+                       url: '/Purchase/ViewBill/',
+                       data:
+                           {
+                               "id": giatri,
+                               "tongtien": tongtien
+                           },
+                       success: function (data) {
+                           $('#body').empty();
+                           $('#body').html(data);
+                       }
+                   }); */
+            window.location.href = encodeURI('/ExpensiveClaim/ViewBill?id=' + giatri + '&tongtien=' + tongtien);
+        });
+        $('#btnAdd').click(function () {
+            var value = $('#noteAdd').css('display');
+            if (value == 'none') {
+                $('#noteAdd').css('display', 'block');
+            } else {
+                $('#noteAdd').css('display', 'none');
+            }
+        });
+        $('#btnCancel').click(function () {
+            $('#noteAdd').css('display', 'none');
+        });
+        $('#btnShow').click(function () {
+            
+            var expenseClaimID = $('#expenseClaimID').val();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Note/GetNotesAwaitingAuthorisation/',
+                    data: { 'ExpenseClaimID': expenseClaimID },
+                    success: function (data) {
+                        $('#noteShow').html(data);
+                    }
+                });
+            var value = $('#noteShow').css('display');
+            if (value == 'none') {
+                $('#noteShow').css('display', 'block');
+            } else {
+                $('#noteShow').css('display', 'none');
+            }
+        });
+        $('#btnSave').click(function () {
+            
+            var noteFromId = $('#expenseClaimID').val();
+            var createDate = "";
+            var notes = $('#txtNotes').val();
+            var type = 9;
+            var expectedDate = $('#txtExpectedPaymentDate').val();
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Note/Create/',
+                    data: {
+                        "noteFromId": noteFromId,
+                        "createDate": createDate,
+                        "notes": notes,
+                        "type": type,
+                        "status": 0,
+                        "changes": "Note",
+                        "expectedDate": expectedDate
+                    },
+                    success: function (data) {
+                    }
+                });
+            var value = $('#noteAdd').css('display');
+            if (value == 'none') {
+                $('#noteAdd').css('display', 'block');
+            } else {
+                $('#txtNotes').val('');
+                $('#txtExpectedPaymentDate').val('');
+                $('#noteAdd').css('display', 'none');
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/Note/GetNotesAwaitingAuthorisation/',
+                        data: { 'ExpenseClaimID': noteFromId },
+                        success: function (data) {
+                            $('#noteShow').empty();
+                            $('#noteShow').html(data);
+                            var valueShow = $('#noteShow').css('display');
+                            if (valueShow == 'none') {
+                                $('#noteShow').css('display', 'block');
+                            }
+                        }
+                    });
+            }
+        });
+
+        function addPaymentNote() {
+            
+            var noteFromId = $('#expenseClaimID').val();
+            //var employeeId = "";
+            var createDate = "";
+            var amoutDue = $('#txtsotienthanhtoan').val();
+            var totalAmountDue = $('#hdfAmountDue').val();
+            var amoutEnd = totalAmountDue - amoutDue;
+            var toSupplier = $('#hdfTo').val();
+            var expectedDate = $('#txtExpectedPaymentDate').val();
+            var notes = "Payment received from " + toSupplier + " on " + expectedDate + " for " + amoutDue + ". There is " + amoutEnd + " due for this invoice. ";
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Note/Create/',
+                    data:
+                        {
+                            "noteFromId": noteFromId,
+                            //"employeeId": employeeId,
+                            "createDate": createDate,
+                            "notes": notes,
+                            "type": 9,
+                            "status": 0,
+                            "changes": "Partially Paid ",
+                            "expectedDate": expectedDate
+                        },
+                    success: function () {
+                    }
+                });
+        }
+    });
+</script>
+
+@*Information customer*@
+<div class="container">
+               <div class="container">
+            <div id="con_top">
+                <div class="c_container">
+                    <h3>@ViewBag.To @ViewBag.SubmitDate</h3>
+                    <div id="breadcrumbs">
+                        <ul>
+                            <li><a href="/ExpensiveClaim/CurrentClaim/"><span>@Resources.Resource.Expensive_Claim_List_Expensive_Claim</span></a></li>
+                            <li><a href="/ExpensiveClaim/PreviousClaim/">@Resources.Resource.Expensive_Claim_List_Previous_Claim</a></li>
+                        </ul>
+                    </div>
+                </div>
+               
+
+            </div>
+             <div class="c_container" style="float: right; width: 40%;display: inline;">
+                     <h3>@Resources.Resource.Expensive_Claim_Edit_Payment_Due  @ViewBag.DueDate</h3>
+            </div>
+        </div>
+    <div class="c_container">
+        <div id="con_body">
+<div style="width: 60%; float: left;">
+      <input type="hidden" id="hdfTo" value="@ViewBag.To"/>
+      <input type="hidden" value="@ViewBag.expenseClaimID" id="expenseClaimID" name="expenseClaimID"/>                                      @{           
+                        var db = new ErpEntities();
+                        var expenseClaims = db.ExpenseClaims.ToList();
+                    }
+     @*Information ExpenseClaim*@
+                  <table id="AwaitAuthorization" class="table">
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th>
+                                    @Resources.Resource.Expense_Claims_Reference
+                                </th>
+                                <th>
+                                    @Resources.Resource.Expense_Claims_Receipt_From
+                                </th>
+
+                                <th>
+                                    @Resources.Resource.Expense_Claims_Receipt_Date
+                                </th>
+                                <th>Date Submitted
+
+                                </th>
+                                <th>@Resources.Resource.Expense_Claims_Items
+                                </th>
+                                <th>
+                                    @Resources.Resource.Expense_Claims_Amount
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>@Html.CheckBox("chkClaim", false, new { id = item.ID })</td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Reference)
+                                    </td>
+                                    <td>
+                                         @Html.DisplayFor(modelItem => item.ReceiptFrom)
+                                    </td>
+
+                                    <td>
+                                        @{
+                                          DateTime due = item.ReceiptDate != null ? Convert.ToDateTime(item.ReceiptDate) : DateTime.Now;
+                                        }
+                                        @due.ToString("d")
+                                    </td>
+                                    <td>
+                                        @item.CreatedDate.ToString("d")
+                                    </td>
+                                    <td>
+                                        @{           
+                                   
+                                          var items = db.ExpenseClaimDetails.Where(ex => ex.ExpenseClaimID == item.ID).Count();
+                                        }
+
+                                        @items
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.TotalMoney)
+                                    </td>
+
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+
+                      <div style="width: 100%;float: right">
+                    <div style="width: 40%; float: right; margin-left: 10px;">
+                        <div>
+
+                            <b>Total</b>:&nbsp;<span id="txtClaimTotal" class="approveTotal">@Html.Raw(ViewBag.Amount)</span>
+                        </div>
+                        <hr />
+                        <div>
+                            <b>Approved Total:  <span id="txtApproveTotal" class="approveTotal">@Html.Raw(ViewBag.ApproveAmount)</span></b>
+                        </div>
+                    </div>
+                     </div>
+                  <div style="clear: both; height: 10px;"></div>
+<div>
+    <b>Make a payment</b>
+    <table style="width: 100%">
+        <thead>
+            <tr>
+                <th>Amount Paid</th>
+                <th>Date Paid</th>
+                <th>Paid To</th>
+                <th>Reference</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                
+                <td>
+                    <input type="text" id="txtsotienthanhtoan" value="@ViewBag.amountRemain" class="txt_box1"/>
+                </td>
+                <td>
+                    <input style="width: 150px" type="text" name="txtDatePaid" id="txtDatePaid" class="datepicker"></td>
+                <td>
+                    <input style="width: 150px" type="text" name="txtDateTo" id="txtDateTo">
+                    @*@Html.DropDownList("")*@
+                </td>
+
+                <td>
+                    <input type="text" id="txtReference" name="txtReference" class="txt_box1" />
+                </td>
+                <td>
+                    <input type="submit" class="btn" value="Add payment" id="AddPament" /></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+                        @*End*@
+                    @*Notes*@
+<div>
+    <b>History & Notes</b>
+    <br />
+    <div style="display: inline;">
+        <input type="submit" value="Show History" id="btnShow" class="btn" />
+        <input type="submit" value="Add Note" id="btnAdd" class="btn" />
+    </div>
+</div>
+    <br />
+<div style="width: 100%; display: inline; display: none" id="noteAdd">
+    <div style="width: 25%;"><b><i>@ViewBag.To</i></b></div>
+    <div style="width: 25%;">
+        Notes:<textarea cols="40" rows="5" id="txtNotes" class="txt_box1"></textarea>
+    </div>
+    <div style="width: 25%;">
+        Expected Payment Date :<input type="text" id="txtExpectedPaymentDate" class="datepicker" />
+    </div>
+    <div style="width: 25%;">
+        <input type="submit" value="Save" id="btnSave" class="btn" />
+        <input type="submit" value="Cancel" id="btnCancel" class="btn" />
+    </div>
+</div>
+<div style="width: 100%; display: none" id="noteShow">
+</div>
+<input type="hidden" id="hdfUserID" value="@TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser.ID"/>
+</div>
+
+    @*View Bill*@
+    <div style="width: 38%; float: left; margin-left: 10px;">
+     <div>
+
+        <table id="BankAccount" class="table" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Create Pay</th>
+                    <th>Money</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var itemPayment in (ViewBag.PayList as List<Payment>))
+                {
+                    <tr>
+                        <td>@{
+                    DateTime createDate = Convert.ToDateTime(itemPayment.CreatedDate);
+                                
+                        }
+                            @Html.Raw(createDate.ToString("d"))
+                        </td>
+                        <td>@itemPayment.TotalMoney</td>
+                        <td>
+                            <a href="javascript:void(0);" id="viewbill" title="@itemPayment.ID">View Detail</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <b>Less Payment</b>:&nbsp;@Html.Raw(ViewBag.PaidPaymentAmount)
+    </div>
+    <hr />
+    <div>
+        @{
+            double total = Convert.ToDouble(ViewBag.Amount);
+            double lesspayment = Convert.ToDouble(ViewBag.PaidPaymentAmount);
+            var result = total - lesspayment;
+
+        }
+        <b>Amount Due</b>:&nbsp;@Html.Raw(total - lesspayment)<div>
+            <input type="hidden" id="hdfAmountDue" value="@result" />
+        </div>
+    </div>
+                </div>
+                @*End*@
+        </div>
+    </div>
+        </div>
+    

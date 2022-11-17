@@ -1,0 +1,53 @@
+﻿@model TMT.ERP.DataAccess.Model.Budget
+
+@{
+    ViewBag.Title = "Create";
+    Layout = null;  
+}
+<script type="text/ecmascript">
+
+    $(document).ready(function () {
+        $('#btnClose').click(function (e) {
+            e.preventDefault();
+            location.reload();
+        });
+    });
+</script>
+
+
+@using (Html.BeginForm()) {
+    @Html.AntiForgeryToken()
+    @Html.ValidationSummary(true)
+<div class="container">
+    <div class="c_container">
+        <div id="breadcrumb">
+            <div class="container">
+                <div id="con_top">
+                    <div class="c_container">
+                        <fieldset>
+                            <legend>User</legend>
+
+                            <div class="editor-label">
+                                @Html.LabelFor(model => model.Name)
+                            </div>
+                            <div class="editor-field">
+                                @Html.EditorFor(model => model.Name)
+                                @Html.ValidationMessageFor(model => model.Name)
+                            </div>
+
+                            <p>
+                                <input type="submit" class="btn" value="@Resources.Resource.UOM_Create_Add" />
+                                <input type="button" class="btn" value="@Resources.Resource.UOM_Create_Close" id="btnClose"/>
+                            </p>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>    
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

@@ -1,0 +1,73 @@
+﻿@using System.Globalization
+@using TMT.ERP
+@using System.Threading;
+
+@*@if (Request.IsAuthenticated) {
+    <text>
+        Hello, @Html.ActionLink(User.Identity.Name, "Manage", "Account", routeValues: null, htmlAttributes: new { @class = "username", title = "Manage" })!
+        @using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" })) {
+            @Html.AntiForgeryToken()
+            <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+        }
+    </text>
+*@
+
+@{ var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+   if (user != null)
+   {
+    <text>
+    <a href="/Login/Profile/">@user.FullName</a>
+    @using (Html.BeginForm("Logout", "Login", FormMethod.Post, new { id = "logoutForm" }))
+    {
+        @Html.AntiForgeryToken()
+        <a href="javascript:document.getElementById('logoutForm').submit()">Log off</a>
+    }
+    </text>
+   }
+   else
+   {
+    @*
+    <ul>
+        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
+        <li>@Html.ActionLink("Login", "Index", "Login", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    </ul>*@
+   }
+}
+
+@*<ul style="margin-top: 10px;">
+    @{
+        CultureInfo currentCulture = Thread.CurrentThread.CurrentCulture;
+        @currentCulture.Name
+        if (currentCulture.Name == "en-US")
+        {
+        <li><a href="/Home/ChangeCurrentCulture/1">Deutsch</a></li>
+        }
+        else
+        {
+        <li><a href="/Home/ChangeCurrentCulture/0">English</a></li>
+        }
+    }
+</ul>*@
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#logout').click(function () {            
+            var url = "/Login/Logout";
+            
+            $.ajax(
+                {
+                    type: "POST",
+                    url: url,
+                    data: {},
+                    success: function (data) {
+                        
+                        if (data == "success") {
+                            window.location.href = "/Login";
+                        } else {
+                            return false;
+                        }
+                    }
+                });
+        });
+
+    });
+</script>

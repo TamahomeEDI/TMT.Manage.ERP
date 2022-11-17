@@ -1,0 +1,353 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.Good>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<script type="text/javascript">
+
+    window.onload = function () {
+        $("#cbCheckAll").prop('checked', false);
+        $(".cbCheck").prop('checked', false);
+    }
+
+    $(document).ready(function () {
+        debugger;
+
+        $("#Good").find("input:first").focus();
+
+        $('.currency').blur(function () {
+            $('.currency').formatCurrency();
+        });
+
+        $('#sPageSize').html($('#hdfPageSize').val());
+
+        if ($('#hidError').val() == "Restore") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Restore</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 120,
+                width: 300,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() == "Error") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%; color: red; font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_Error</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 120,
+                width: 'auto',
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() == "Create") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%;  font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_CreateSuccess</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 120,
+                width: 300,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        } else if ($('#hidError').val() == "Edit") {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="width: 100%;  font-weight: bold; font-size: 12px; height:0px !important; text-align: center;">@Resources.Resource.Common_Msg_EditSuccess</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 120,
+                width: 300,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        }
+    });
+
+$(document).ready(function () {
+    //Add New Good
+    $('#btnAddNew').bind('click', function (e) {
+        debugger;
+        $.ajax(
+            {
+                type: 'GET',
+                url: "/Good/Create/",
+                success: function () {
+                    debugger;
+                    New_Popup("#dialog", "Add New Inventory", 720, 'auto', "/Good/Create/", false);
+                    $("#dialog").dialog("open");
+                }
+            });
+    });
+
+    //Edit good
+    $("table > tbody > tr > td > a#GoodEditID").unbind('click').click(function (e) {
+        e.preventDefault();
+        debugger;
+        var _url = "/Good/Edit/" + $(this).find('input').val();
+        $.ajax(
+            {
+                type: 'GET',
+                url: _url,
+                success: function () {
+                    New_Popup("#dialog", "Edit Inventory", 720, 'auto', _url, false);
+                    $("#dialog").dialog("open");
+                }
+            });
+    });
+
+    //Search
+    $('#btnArchive').click(function () {
+        debugger;
+        var valueString = [];
+        $("input[name=cbCheck]:checked").each(
+        function () {
+            valueString.push(this.value);
+        });
+        if (valueString.length > 0) {
+            var DelConfirmed = {
+                delConfirm: valueString,
+            }
+            $('#confirmDel').empty();
+            $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Archive the selected items ?</p>');
+            $("#confirmDel").dialog({
+                modal: true,
+                height: 120,
+                width: 300,
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                        $.ajax(
+                       {
+                           type: 'POST',
+                           url: '/Good/Archived/',
+                           traditional: true,
+                           data: DelConfirmed,
+                           success: function (data) {
+                               location.href = '/Good/Archive/';
+                           }
+                       });
+                    },
+                    'Cancel': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#confirmDel').dialog('open');
+        } else {
+            $('#Inform').empty();
+            $('#Inform').append('<p style="height:0px !important;text-align:center;">You have not selected items to archive !</p>');
+            $("#Inform").dialog({
+                modal: true,
+                height: 120,
+                width: 'auto',
+                autoOpen: false,
+                buttons: {
+                    'OK': function () {
+                        $(this).dialog('close');
+                    }
+                }
+            });
+            $('#Inform').dialog('open');
+        }
+    });
+});
+function SetPageSize(pageSize) {
+    debugger;
+    $.ajax(
+        {
+            type: 'POST',
+            url: '/Good/SetPageSize',
+            data: { "pageSize": pageSize },
+            success: function () {
+                location.reload();
+            }
+        });
+}
+
+function New_Popup(_dialog, _title, _width, _height, _url, _openStatus) {
+    $(_dialog).dialog({
+        title: _title,
+        modal: true,
+        autoOpen: _openStatus,
+        open: function () {
+            $(this).load(_url);
+        },
+        width: _width,
+        height: _height,
+        minWidth: _width,
+        minHeight: _height,
+        resizable: false,
+        overlay: true
+    });
+}
+
+
+</script>
+
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<input type="hidden" id="hidError" value="@ViewBag.Error">
+<div class="container" style="background: #f7f7f7; color: #252525; font-size: 14px;">
+    <div id="con_top">
+        <div class="c_container">
+            <h3>@Resources.Resource.Good_Index_Title</h3>
+        </div>
+    </div>
+</div>
+
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div class="Error"></div>
+            <input style="margin-top: 10px;" type="button" id="btnAddNew" class="btn btn-defaultxero" value="@Resources.Resource.Good_Index_Create"/>
+            @{
+                var db = new ErpEntities();
+                List<Good> good = db.Goods.ToList();
+            }
+            <ul style="margin-bottom: 20px; margin-top: 10px; width: 100%;" class="group nav nav-tabs">
+                <li class="active">
+                    <a href="/Good/Index/">Items ( @good.Count(g => g.Active == 1) )</a></li>
+                <li class="selected">
+                    <a href="/Good/Archive/">Archive ( @good.Count(g => g.Active == 0) )</a></li>
+            </ul>
+            <div id="dialog"></div>
+            <div id="confirmDel" title="Confirm" style="background: white"></div>
+            <div id="Inform" title="Inform" style="background: white"></div>
+            <div class="bovien" style="margin-bottom: 10px;">
+                @if (good.Count(g => g.Active == 1) > 0)
+                {
+                    <input type="button" id="btnArchive" class="btn btn-defaultxero" value="@Resources.Resource.Good_Index_Archive"/>
+                }
+                <div style="float: right;">
+                    @using (Html.BeginForm("Index", "Good", FormMethod.Get, new { style = "margin:0px !important;" }))
+                    {
+                        @Html.TextBox("searchString", ViewBag.CurrentFilter as string, new { @class = "form-control", placeholder = "Input Inventory Code or Description", style = "margin-top: 2px; margin-right: 10px;" })
+                        <input type="submit" id="btnSearch" style="margin-right: 2px;" value="@Resources.Resource.Category_Search" class="btn btn-defaultxero" />
+                    }
+                </div>
+            </div>
+            @if (Model.Count > 0)
+            {
+                <table style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th style="width: 30px;">
+                                <input type="checkbox" id="cbCheckAll" />
+                            </th>
+                            <th>
+                                @Resources.Resource.Good_Index_Categories
+                            </th>
+                            <th>
+                                @Resources.Resource.Good_Create_Code
+                            </th>
+                            <th>
+                                @Resources.Resource.Good_Create_Description
+                            </th>
+                            <th>
+                                @Resources.Resource.Good_Create_UOM
+                            </th>
+                            <th>
+                                @Resources.Resource.Good_Create_InputPrice
+                            </th>
+                            <th>
+                                @Resources.Resource.Good_Create_OutputPrice
+                            </th>
+                            <th>
+                                @Resources.Resource.Good_Create_Type
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody id="Good">
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                @*<td>
+                                        @{ int? _valueLock = item.Lock;
+                                           if (_valueLock == 1)
+                                           {
+                                            <img src="/Uploads/locked.gif" alt="This item is used in a repeating transaction so cannot be deleted." title="This item is used in a repeating transaction so cannot be deleted." />
+                                           }
+                                           if (_valueLock == 0)
+                                           {
+                                            <input type="checkbox" id="cbLock" name="cbLock" class="cbLock" value="@item.ID"/>
+                                           }
+                                        }
+                                    </td>*@
+                                <td>
+                                    <input type="checkbox" id="cbCheck" name="cbCheck" class="cbCheck" value="@item.ID"/>
+                                </td>
+                                <td style="width: 150px; word-break: break-all">
+                                    @Html.DisplayFor(modelItem => item.Category.Name)
+                                </td>
+                                <td style="word-break: break-all; width: 150px;">
+                                    <a id="GoodEditID" href="#">@Html.DisplayFor(modelItem => item.Code)@Html.HiddenFor(modelItem => item.ID)</a>
+                                </td>
+                                <td style="width: 200px; word-break: break-all">
+                                    @Html.DisplayFor(modelItem => item.Description)
+                                </td>
+                                <td style="width: 100px; word-break: break-all">
+                                    @Html.DisplayFor(modelItem => item.UOM.Name)
+                                </td>
+                                <td style="width: 100px; word-break: break-all">
+                                    <p class="currency">@item.InputPrice</p>
+                                </td>
+                                <td style="width: 100px; word-break: break-all">
+                                    <p class="currency">@item.OutputPrice</p>
+                                </td>
+                                <td style="width: 100px; word-break: break-all">
+                                    @Html.DisplayFor(modelItem => item.ProductType.Name)
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+                <div style="display: inline;">
+                    <div style="width: 60%; float: left; margin-top: 10px;">
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page, currentFilter = ViewBag.CurrentFilter }))
+                    </div>
+                    <div style="float: left; margin-top: 10px; margin-left: 225px;">
+                        <label style="width: 70px; margin-top: 10px; font-size: 12px; font-weight: bold">@Resources.Resource.Common_PageSize</label>
+                        <div id="showpag" class="dropdown" style="float: right;">
+                            <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                            <ul class="dropdown-menu">
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                @Html.Raw("<div id='divNoRecord'>" + @Resources.Resource.Common_Msg_CountDisplay + "</div>")
+            }
+        </div>
+    </div>
+</div>

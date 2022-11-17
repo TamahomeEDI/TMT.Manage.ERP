@@ -1,0 +1,172 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.Employee>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+
+        /******************** Code area *************************/
+        /******************** Begin Add New Employee ************************/
+        $("#btnAddNew").click(function (e) {
+            
+            $.ajax({
+                type: 'GET',
+                url: "/Employees/Create/",
+                success: function () {
+                    
+                    custom.CreatePopup("#dialog", "Create New Employee", 750, 600, "/Employees/Create/", false);
+                    $("#dialog").dialog("open");
+                }
+            });
+
+        });
+
+        /******************** Begin Edit a Employee ************************/
+        /*********************/
+        $("table > tbody > tr > td > a#EmployeeEditID").unbind('click').click(function (e) {
+            e.preventDefault();
+            
+            var _url = "/Employees/Edit/" + $(this).find('input').val()
+            $.ajax({
+                type: 'GET',
+                url: _url,
+                success: function () {
+                    custom.CreatePopup("#dialog", "Edit Employee", 750, 600 , _url, false);
+                    $("#dialog").dialog("open");
+                }
+            });
+
+        });
+
+        //Delete Employee
+        $('#btnDelete').click(function () {
+            
+            var valueString = [];
+            $("input[name=cbCheck]:checked").each(
+            function () {
+                valueString.push(this.value);
+            });
+            if (valueString.length > 0) {
+                var DelConfirmed = {
+                    delConfirm: valueString,
+                }
+                $.ajax(
+                    {
+                        type: 'POST',
+                        url: '/Employees/DeleteConfirmed/',
+                        traditional: true,
+                        data: DelConfirmed,
+                        success: function (data) {
+                            location.reload();
+                        }
+                    });
+            } else {
+                $('#confirmDel').empty();
+                $('#confirmDel').append('<p style="height:0px !important;text-align:center;">Please select item !</p>');
+                $("#confirmDel").dialog({
+                    modal: true,
+                    height: 140,
+                    autoOpen: false,
+                    buttons: {
+                        'Agree': function () {
+                            $(this).dialog('close');
+                        },
+                        Cancel: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#confirmDel').dialog('open');
+            }
+        });
+
+        //Checked all or Uncheck all element is checkbox
+        $('#cbCheckAll').click(function () {
+            $(".cbCheck").prop('checked', $(this).prop('checked'));
+        });
+    })
+
+</script>
+
+<div class="container">
+    <div class="c_container">
+        <div id="breadcrumb">
+            <div class="container">
+                <div id="con_top">
+                    <div class="c_container"> 
+                        <h2>Index</h2>
+                        <div style="float: left; width: 50%; margin-bottom: 10px; margin-top: 10px;">
+                                <button id="btnAddNew" class="btn">@Resources.Resource.Employees_Index_AddNew</button>
+                                <button id="btnDelete" class="btn">@Resources.Resource.Employees_Index_Delete</button>
+                        </div>
+
+                        <div id="dialog" title="Basic modal dialog"></div>
+                        <div id="confirmDel" title="Confirm!"></div> 
+
+                        <table class="table" style="width: 700px;" id="Employee">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        <input type="checkbox" id="cbCheckAll"/>
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.Employees_Code
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.Employees_FirstName
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.Employees_Lastname
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.Employees_Tel_AreaNum
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.Employees_Tel_CtryNum
+                                    <th>
+                                        @Resources.Resource.Employees_Tel_Num
+                                    </th>
+                                    <th>
+                                        @Resources.Resource.Employees_Email
+                                    </th>
+                                </tr>
+                            </thead>
+                        @foreach (var item in Model) {
+                            <tr>
+                                <td>
+                                    <input type="checkbox" id="cbCheck" name="cbCheck" class="cbCheck" value="@item.ID"/>
+                                </td>
+                                <td>
+                                    <a id="EmployeeEditID" href="#" title="@item.Code">@Html.DisplayFor(modelItem => item.Code)@Html.HiddenFor(modelItem => item.ID)</a>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.FirstName)
+                                </td>
+                                 <td>
+                                    @Html.DisplayFor(modelItem => item.LastName)
+                                </td>
+                                 <td>
+                                    @Html.DisplayFor(modelItem => item.Tel_Country)
+                                </td>
+                                 <td>
+                                    @Html.DisplayFor(modelItem => item.Tel_Area)
+                                </td>
+                                 <td>
+                                    @Html.DisplayFor(modelItem => item.Tel_Num)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Email)
+                                </td>
+                            </tr>
+                        }
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>   

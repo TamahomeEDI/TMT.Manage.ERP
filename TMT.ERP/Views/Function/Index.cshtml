@@ -1,0 +1,308 @@
+﻿@using PagedList.Mvc;
+@using TMT.ERP.DataAccess.Model
+@model PagedList.IPagedList<TMT.ERP.DataAccess.Model.Function>
+@{
+    var user = TMT.ERP.Commons.AppContext.RequestVariables.CurrentUser;
+}
+<script src="@Url.Content("~/Scripts/custom.js")"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var fId = $('#hdfFeture').val();
+        if (fId == 0 || fId == undefined) {
+            $('#FeatureID').val("");
+        } else {
+            $('#FeatureID').val(fId);
+        }
+        $('#sPageSize').html($('#hdfPageSize').val());
+        var countModel = $('#hdfCountList').val();
+        if (countModel == 0) {
+            $('#error').css('display', 'block');
+            $('#tabs-1').css('display', 'none');
+            $('#function').css('display', 'none');
+        } else {
+            $('#error').css('display', 'none');
+        }
+
+        $('#FeatureID').change(function () {
+            
+            var featureId = $(this).val();
+            if (featureId == "" || featureId == undefined) {
+                window.location.href = "/Function/";
+            } else {
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "/Function/SetFeature/",
+                        data: { "featureId": featureId },
+                        success: function() {
+                            location.href = "/Function/";
+                        }
+                    });
+            }
+        });
+        $('#btnAdd').click(function () {
+            $.ajax({
+                type: 'GET',
+                url: "/Function/Create/",
+                async: false,
+                success: function (result) {                                        
+                    if (result.indexOf("<html") < 0) {
+                        Create_Popup("#dialog", "Add New Function", 300, 520, "/Function/Create/", false);
+                        $("#dialog").dialog("open");
+                    }
+                    else {
+                        window.location.href = "/Login/";
+                    }
+                }
+            });
+            
+        });
+        $('.aEdit').unbind('click').click(function () {
+            
+            var tr = $(this).closest('tr');
+            var id = $('input[name=hdfFunctionId]', tr).val();
+            var url = "/Function/Edit?id=" + id;
+            $.ajax({
+                type: 'GET',
+                url: "/Function/Edit/",
+                data: { "id": id },
+                success: function () {
+                    
+                    Create_Popup("#dialog", "Edit Function", 300, 520, url, false);
+                    $("#dialog").dialog("open");
+                }
+            });
+        });
+        
+        $('#btnDelete').click(function (e) {
+            e.preventDefault();
+            
+            var valueString = [];
+            $("input[name=cbCheck]:checked").each(
+                function () {
+                    valueString.push($(this).val());
+                });
+            if (valueString.length != 0) {
+                $('#confirmDel').empty();
+                $('#confirmDel').append('<p style="text-align:center;font-weight:bold;">@Resources.Resource.TMT_Index_ConfirmDel</p>');
+                $("#confirmDel").dialog({
+                    modal: true,
+                    height: 140,
+                    autoOpen: false,
+                    buttons: {
+                        'Agree': function () {
+                            deleteObject(valueString);
+                            $(this).dialog('close');
+                        },
+                        Cancel: function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#confirmDel').dialog('open');
+            } else {
+                $('#confirmDel').empty();
+                $('#confirmDel').append('<p style="text-align:center;font-weight:bold;">@Resources.Resource.Common_Msg_NotSelectDelete</p>');
+                $("#confirmDel").dialog({
+                    modal: true,
+                    height: 140,
+                    autoOpen: false,
+                    buttons: {
+                        'OK': function () {
+                            $(this).dialog('close');
+                        }
+                    }
+                });
+                $('#confirmDel').dialog('open');
+            }
+        });
+
+        function deleteObject(value) {
+            if (value.length > 0) {
+                var functions = {
+                    id: value
+                };
+                $.ajax(
+                    {
+                        type: "POST",
+                        url: "/Function/Delete/",
+                        traditional: true,
+                        data: functions,
+                        success: function (data) {
+                            
+                            if (data.length > 0) {
+                                var url = '/Function/';
+                                var msg = '@Resources.Resource.Common_Msg_DeleteFail';
+                                CreatePopupMessage('divMessage', msg, '@Resources.Resource.Common_Message', 160, 400, url);
+                            } else {
+
+                                var urlSuccess = '/Function/';
+                                var msgSuccess = '@Resources.Resource.Common_Msg_DeleteSuccess';
+                                CreatePopupMessage('divMessage', msgSuccess, '@Resources.Resource.Common_Message', 160, 400, urlSuccess);
+                            }
+                        }
+                    });
+            }
+        }
+        
+    });
+    function SetPageSize(pageSize) {
+        
+        $.ajax(
+            {
+                type: 'POST',
+                url: '/Function/SetPageSize',
+                data: { "pageSize": pageSize },
+                success: function () {
+                    location.href = "/Function/";
+                }
+            });
+    }
+    function Create_Popup(_dialog, _title, _width, _height, _url, _openStatus) {
+        
+        $(_dialog).dialog({
+            title: _title,
+            modal: true,
+            autoOpen: _openStatus,
+            open: function (data) {
+                var test = data;
+                $(this).load(_url);
+               
+            },
+            width: _width,
+            height: _height,
+            minWidth: _width,
+            minHeight: _height,
+            resizable: false,
+            overlay: true
+        });
+        
+    }
+</script>
+<input type="hidden" value="@user.ID" id="hdfUserLogin"/>
+<input type="hidden" value="@ViewBag.PageSize" id="hdfPageSize"/>
+<input type="hidden" value="@Model.Count" id="hdfCountList"/>
+<input type="hidden" value="@ViewBag.Feature" id="hdfFeture"/>
+<div id="dialog" title="Basic modal dialog" style="background: white !important;"></div>
+<div id="confirmDel" title="Confirm!" style="background: white !important;"></div>
+<div id="divMessage" style="background: white;"></div>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.Function_Index</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.Common_Permission</span></li>
+                        <li><a href="/Function/">@Resources.Resource.Function_Index</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="con_body">
+    <div class="container">
+        <div class="c_container">
+            <div class="cleardiv"></div>
+            <div>
+                <div style="float: left;">
+                    <input type="submit" id="btnAdd" value="@Resources.Resource.Function_AddNew" class="btn btn-defaultxero" />
+                    <input type="submit" id="btnDelete" value="@Resources.Resource.Function_Delete" class="btn btn-defaultxero" />
+                </div>
+                <div style="float: right; text-align: right; margin-top: 5px;">
+                    <label>@Resources.Resource.Function_Feature:&nbsp;</label>
+                    @*@Html.DropDownList("FeatureID", null, String.Empty, new { style = "width:150px;height:25px;" })*@
+                    @{
+                        var ooFeature = ViewBag.FeatureID as List<Feature>;
+                    }
+                    <select id="FeatureID" name="FeatureID" style="width: 200px; height: 25px;">
+                        <option value="">@Resources.Resource.Common_SelectItem</option>
+                        @if (ooFeature != null && ooFeature.Count > 0)
+                        {
+                            foreach (var item in ooFeature)
+                            {
+                            <option value="@item.ID">@item.FeatureName</option>
+                            }
+                        }
+                    </select>
+                </div>
+            </div>
+            <div class="cleardiv"></div>
+            <div id="tabbody">
+                <div id="tabs-1">
+                    <table class="tableOver">
+                        <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" id="cbCheckAll" />
+                                </th>
+                                <th>@Resources.Resource.Function_Name</th>
+                                <th>@Resources.Resource.Function_Description</th>
+                                <th>@Resources.Resource.Function_Feature</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model)
+                            {
+                                <tr>
+                                    <td>
+                                        <input type="checkbox" id="cbCheck" name="cbCheck" class="cbCheck" value="@item.ID"/>
+                                    </td>
+                                    <td>
+                                        @if (item.Name != null)
+                                        {
+                                            <a href="javascript:void(0);" id="aEdit" class="aEdit">
+                                                <input type="hidden" value="@item.ID" id="hdfFunctionId" name="hdfFunctionId"/>
+                                                @item.Name
+                                            </a>
+                                        }
+
+                                    </td>
+                                    <td>
+                                        @if (item.Description != null)
+                                        {
+                                            @item.Description
+                                        }
+                                    </td>
+                                    <td>
+                                        @if (item.Feature.FeatureName != null)
+                                        {
+                                            @item.Feature.FeatureName
+                                        }
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                    <div style="height: 50px; padding-top: 5px;">
+                        <div style="float: left;">
+                            @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+                        </div>
+                        <div style="width: 25%; float: right;">
+                            <label style="margin-left: 70px; margin-top: 10px;">Showing&nbsp;</label>
+                            <div id="showpag" class="dropdown" style="float: right;">
+                                <span class="dropdown-toggle" data-toggle="dropdown" id="sPageSize"></span>
+                                <ul class="dropdown-menu" style="max-width: 140px !important; min-width: 0px !important;">
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(10);">10</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(25);">25</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(50);">50</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(100);">100</a></li>
+                                    <li><a href="javascript:void(0);" onclick="SetPageSize(200);">200</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="cleardiv"></div>
+                <div id="error">
+                    <label>
+                        @Resources.Resource.SaleInvoices_Error
+                    </label>
+                </div>
+                <div class="cleardiv"></div>
+            </div>
+        </div>
+    </div>
+</div>

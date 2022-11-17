@@ -1,0 +1,15 @@
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.DataAccess\obj\Debug\TMT.ERP.DataAccess.csprojResolveAssemblyReference.cache
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.DataAccess\bin\Debug\TMT.ERP.DataAccess.dll.config
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.DataAccess\bin\Debug\TMT.ERP.DataAccess.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.DataAccess\bin\Debug\TMT.ERP.DataAccess.pdb
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.DataAccess\bin\Debug\CommonLib.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.DataAccess\bin\Debug\EntityFramework.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.DataAccess\bin\Debug\LinqKit.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.DataAccess\bin\Debug\PagedList.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.DataAccess\bin\Debug\PagedList.Mvc.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.DataAccess\bin\Debug\CommonLib.pdb
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.DataAccess\bin\Debug\EntityFramework.xml
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.DataAccess\bin\Debug\PagedList.xml
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.DataAccess\bin\Debug\PagedList.Mvc.xml
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.DataAccess\obj\Debug\TMT.ERP.DataAccess.dll
+E:\TMT.ERP\erpproject\TMT.ERP\TMT.ERP.DataAccess\obj\Debug\TMT.ERP.DataAccess.pdb

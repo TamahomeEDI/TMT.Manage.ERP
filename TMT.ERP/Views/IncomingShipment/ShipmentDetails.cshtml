@@ -1,0 +1,226 @@
+﻿@using System.Web.Mvc.Html
+@model IEnumerable<TMT.ERP.DataAccess.Model.StockInCardsDetail>
+<script type="text/javascript">
+    $(document).ready(function () {
+        
+        var enable = $('#hdfEnable').val();
+        var stockCardId = $('#hdfID').val();
+        var type = $('#hdfType').val();
+
+        var url = "";
+        if (enable == 'Enable') {
+            $('#btnShipmentSubmit').css('display', 'inline-block');
+        } else {
+            $('#btnShipmentSubmit').css('display', 'none');
+        }
+
+        if (type == 0) {
+            url = "/IncomingShipment/ViewForPurcharse/";
+        }
+        if (type == 3) {
+            url = "/IncomingShipment/ViewForStockMovement/";
+        }
+        $.ajax(
+            {
+                type: 'POST',
+                url: url,
+                data: { "stockInCardId": stockCardId },
+                success: function (data) {
+                    $('#loadContent').html(data);
+                }
+            });
+
+        $('#btnShipmentSubmit').click(function () {
+            
+            var stockCardId = $('#hdfID').val();
+            var quatity = [];
+            var id = [];
+            $('#BankAccount > tbody > tr > td#qty').each(function () {
+                
+                var giatri = $(this).find('#txtQuantity').val();
+                quatity.push(giatri.toString());
+            });
+            $('#BankAccount > tbody > tr').each(function () {
+                var valueId = $(this).find('#hdfStockInCardDetailID').val();
+                id.push(valueId.toString());
+            });
+
+            var packaged = {
+                quatity: quatity,
+                listid: id,
+                stockInCardId: stockCardId
+            };
+
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/IncomingShipment/UpdateStatus/',
+                    traditional: true,
+                    data: packaged,
+                    success: function () {
+                        window.location.href = "/IncomingShipment/";
+                    }
+                });
+        });
+        $('#btnShipmentClose').click(function () {
+            location.href = "/IncomingShipment/";
+        });
+    });
+    function OnChange(element) {
+        var tr = $(element).closest('tr');
+        var input = $('#txtQuantity', tr).val();
+        var req = $('#qtydathang', tr).html();
+        var ost = $('#qtytotal', tr).html();
+
+        if (ost == 0) {
+            if (parseInt(input) > parseInt(req)) {
+                $('#txtQuantity', tr).val(req);
+                $('#qtytotal', tr).html(0);
+                $('#txtQuantity', tr).attr('readonly', 'readonly');
+            } else {
+                $('#qtytotal', tr).html(parseInt(req) - parseInt(input));
+                $('#txtQuantity', tr).attr('readonly', 'readonly');
+            }
+        } else {
+            if (parseInt(input) > parseInt(ost)) {
+                $('#txtQuantity', tr).val(ost);
+                $('#qtytotal', tr).html(0);
+                $('#txtQuantity', tr).attr('readonly', 'readonly');
+            } else {
+                var output = parseInt(ost) - parseInt(input);
+                $('#qtytotal', tr).html(output);
+                $('#txtQuantity', tr).attr('readonly', 'readonly');
+            }
+        }
+    }
+    function isNumber(evt) {
+        evt = (evt) ? evt : window.event;
+        var charCode = (evt.which) ? evt.which : evt.keyCode;
+        if (charCode > 31 && (charCode < 48 || charCode > 57)) {
+            return false;
+        }
+        return true;
+    }
+</script>
+<input type="hidden" id="hdfEnable" value="@ViewBag.Enable"/>
+<input type="hidden" id="hdfID" value="@ViewBag.ID"/>
+<input type="hidden" id="hdfType" value="@ViewBag.Type"/>
+
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.IncomingShipment_Index_Details</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><span>@Resources.Resource.Allocate_List_Stock</span></li>
+                        <li><a href="/IncomingShipment/Index">@Resources.Resource.Common_IncomingShipment</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<div id="con_form">
+    <div class="container">
+        <div class="c_container">
+            <div class="cleardiv"></div>
+            <div style="display: inline;">
+                <input type="submit" value="@Resources.Resource.IncomingShipment_Details_Close" class="btn btn-default" id="btnShipmentClose" />
+                <input type="submit" value="@Resources.Resource.IncomingShipment_Details_Submit" class="btn btn-default" id="btnShipmentSubmit" />
+            </div>
+            <div class="cleardiv"></div>
+            <div id="loadContent" style="display: block; width: 100%;">
+            </div>
+            <div class="cleardiv"></div>
+            <table id="BankAccount" style="width: 940px;">
+                <thead>
+                    <tr>
+                        <th>@Resources.Resource.IncomingShipment_Details_SKU
+                        </th>
+                        <th>@Resources.Resource.IncomingShipment_Details_Description
+                        </th>
+                        <th>@Resources.Resource.IncomingShipment_Details_UOM
+                        </th>
+                        <th>@Resources.Resource.IncomingShipment_Details_Qty
+                        </th>
+                        <th>@Resources.Resource.IncomingShipment_Details_QtyReq
+                        </th>
+                        <th>@Resources.Resource.IncomingShipment_Details_OstQty</th>
+                        <th>@Resources.Resource.IncomingShipment_Details_UnitPrice</th>
+                        <th>@Resources.Resource.IncomingShipment_Details_DISC</th>
+                        <th>@Resources.Resource.IncomingShipment_Details_SubTotal</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        var qty = item.Quantity ?? 0;
+                        if (item.QuantityReq > qty)
+                        {
+                        <tr>
+                            <td style="display: none;">
+                                <input type="hidden" id="hdfStockInCardDetailID" value="@item.ID"/>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Good.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Good.Description)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.UOM.Name)
+                            </td>
+                            <td id="qty">
+                                <input type="text" id="txtQuantity" value="0" onchange="OnChange(this)" onkeypress="return isNumber(event)" maxlength="4" onfocus="if (this.value=='0') this.value='';" onblur="if (this.value=='') this.value='0';" />
+                            </td>
+                            <td id="qtydathang">
+                                @Html.DisplayFor(modelItem => item.QuantityReq)
+                            </td>
+                            <td id="qtytotal">
+                                @{
+                            var value = @item.QuantityReq - @item.Quantity;
+                                }
+                                @if (value == null)
+                                {
+                                    @Html.Raw("0")
+                                }
+                                else
+                                {
+                                    @value
+                                }
+                            </td>
+                            <td>
+                                @item.Price
+                            </td>
+                            <td>
+                                @{
+                                var disc = item.Discount;
+                                }
+                                @if (disc != null)
+                                {
+                                    @disc
+                                }
+                                else
+                                {
+                                    @Html.Raw("0")
+                                }
+                            </td>
+                            <td>
+                                @{
+                                var sub = item.QuantityReq * item.Price;
+                                }
+                                @sub
+                            </td>
+                        </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+

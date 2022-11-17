@@ -1,0 +1,214 @@
+﻿@using TMT.ERP.DataAccess.Model
+@model IEnumerable<TMT.ERP.DataAccess.Model.BankAccount>
+
+@{
+                    //Layout = null;
+}
+
+<style type="text/css">
+    .box3 {
+        width: 47.5%;
+        float: left;
+        height: auto;
+        border: 0px solid #ccc;
+    }
+
+    .box4 {
+        width: 5%;
+        float: left;
+        height: 200px;
+        border: 1px solid #ccc;
+    }
+
+    #header_r, #footer {
+        background: #313d53;
+    }
+
+    .boxtitle {
+        width: 100%;
+        float: left;
+        height: 25px;
+        border: 1px solid #ccc;
+        background: #313d53;
+        font-family: Arial;
+        font-size: medium;
+        font-weight: bold;
+        color: white;
+        padding: 1px 1px 1px 1px;
+    }
+
+    .boxcontent {
+        width: 100%;
+        float: left;
+        height: 60px;
+        border: 1px solid #ccc;
+        font-family: Arial;
+        font-size: small;
+        padding: 2px 2px 2px 2px;
+    }
+
+    .boxPadding {
+        width: 100%;
+        float: left;
+        height: 20px;
+        border: 0px solid #ccc;
+        font-family: Arial;
+        font-size: small;
+        padding: 0px;
+    }
+
+    .boxtrans {
+        width: 99%;
+        float: left;
+        height: 55px;
+        border: 1px solid #ccc;
+        font-family: Arial;
+        font-size: small;
+        padding: 2px 2px 2px 2px;
+    }
+</style>
+
+
+<!DOCTYPE html>
+
+@*<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewInDashboard</title>
+</head>
+<body>*@
+<section class="featured">
+    <div class="content-wrapper">
+
+        <div class="gs-container container" id="ext-gen47">
+            <div class="table">
+                <br />
+                <h4>Getting TMT Inventory </h4>
+            </div>
+
+            <div id="left" class="box3">
+                <div class="boxtitle">
+                    <a href="/BankAccounts/">Bank Accounts  
+                    </a>
+                </div>
+                @foreach (var item in Model)
+                {         
+                         
+                    <!-- Begin A Bank Account Informations -->  
+                    <div class="boxcontent">
+                        <div style="width: 50%; float: left;">
+                            <b>@Html.DisplayFor(modelItem => item.BankName) </b>
+                            <br />
+                            @Html.DisplayFor(modelItem => item.AccoutNum)
+                        </div>
+
+                        <div style="width: 50%; text-align: right; float: right;">
+                            
+                            <!-- Begin Dropdownlist Button -->
+                            
+                            <div class="dropdown">
+                                <a class="dropdown-toggle; btn" style="color: black; background: none repeat scroll 0px 0px rgb(209, 240, 255);" href="#" data-toggle="dropdown">Manage Account </a>
+                                <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel" style="text-align: center">
+                                    <li><a href="#" style="font-weight: bold">Find </a>
+                                        <ul class="dropdown-submenu">
+                                            <li><a href="/AccountTrans/Index?id=16">Account Transactions </a></li>
+                                            <li><a href="/AccountTrans/BankStatement?id=16">Bank Statements</a> </li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#" style="font-weight: bold">New </a>
+                                        <ul class="dropdown-submenu">
+                                            <li><a href="#" id="BankAccountSpendID">
+                                                <input data-val="true" data-val-number="The field ID must be a number." data-val-required="The ID field is required." id="item_ID" name="item.ID" type="hidden" value="16">Spend Money</a></li>
+                                            <li><a href="#" id="BankAccountReceivedID">
+                                                <input id="item_ID" name="item.ID" type="hidden" value="16">
+                                                Receive Money</a> </li>
+                                            <li><a href="#" id="BankAccountTransID">Transfer Money</a> </li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="#" style="font-weight: bold">Reconcile</a>
+                                        <ul class="dropdown-submenu">
+                                            <li><a href="#">Reconcile Account </a></li>
+                                            <li><a href="#">Reconciliation Report </a></li>
+                                            <li><a href="/BankAccounts/ImportStatement?id=16">
+                                                <input id="item_ID" name="item.ID" type="hidden" value="16">
+                                                Import a Statement </a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a id="BankAccountEditID" class="btn" style="font-weight: bold">
+                                        <input id="item_ID" name="item.ID" type="hidden" value="16">Edit Account Detail</a></li>
+                                </ul>
+                            </div>
+
+                            <!-- End Dropdownlist Button -->
+                            
+                        </div>
+                    </div>   
+
+                    <!-- Begin process Bank Statement -->
+                    var bankStatement = item.BankStatements.ToList();
+                    var bankStementDetails = new List<BankStatementDetail>();
+                    foreach (var x in bankStatement)
+                    {
+                        var BankStatementDetails = x.BankStatementDetails.ToList();
+                        foreach (var obj in BankStatementDetails)
+                        {
+                            bankStementDetails.Add(obj);
+                        }
+                    }
+                    var _BSTValue = bankStementDetails.Sum(x => x.Received);
+                    <!-- End process Bank Statement -->
+                    
+                    <div class="boxcontent">
+                        <div style="width: 50%; float: left;">
+                            Statement Balance
+                            <br />
+                            
+                            <b>
+                                <label>@string.Format("{0:+0.00;-0.00}",_BSTValue.Value)</label>
+                            </b>
+
+                            <br />
+                            No transactions imported
+                        </div>
+
+                        <div style="width: 50%; text-align: right; float: right;">
+                            <div class="boxtrans">
+                                <b>No transactions imported </b>
+                                <br />
+                                Import a bank statement
+                            </div>
+                        </div>
+                    </div>   
+
+                    <div class="boxcontent">
+                        <div style="width: 100%; float: left;">
+                            Balance in TMT
+                            <br />
+                            0.00
+                        </div>
+                    </div>   
+                    
+                    <div class="boxPadding"></div>
+                    
+                       
+                    <!-- End A Bank Account Informations -->   
+                    
+                    
+                    @*<div style ="background-color:red">  AAAAAAA
+                        @Html.TextBox("TXT", abc)
+                        AAAAAA
+                    </div>*@
+                    
+                    break;
+                }
+            
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+
+@*</body>
+</html>*@

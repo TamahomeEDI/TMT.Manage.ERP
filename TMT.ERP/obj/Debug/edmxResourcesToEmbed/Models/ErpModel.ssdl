@@ -1,0 +1,1621 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="TMT.ERPModel.Store" Alias="Self" Provider="System.Data.SqlClient" ProviderManifestToken="2008" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityContainer Name="TMTERPModelStoreContainer">
+    <EntitySet Name="AccountBalances" EntityType="TMT.ERPModel.Store.AccountBalances" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Accounts" EntityType="TMT.ERPModel.Store.Accounts" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ActualGoodInStocks" EntityType="TMT.ERPModel.Store.ActualGoodInStocks" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="BankAccounts" EntityType="TMT.ERPModel.Store.BankAccounts" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Companies" EntityType="TMT.ERPModel.Store.Companies" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Contacts" EntityType="TMT.ERPModel.Store.Contacts" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Currencies" EntityType="TMT.ERPModel.Store.Currencies" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="DueDateTypes" EntityType="TMT.ERPModel.Store.DueDateTypes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Employees" EntityType="TMT.ERPModel.Store.Employees" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ExpenseClaimDetails" EntityType="TMT.ERPModel.Store.ExpenseClaimDetails" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="ExpenseClaims" EntityType="TMT.ERPModel.Store.ExpenseClaims" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="FinancialSettings" EntityType="TMT.ERPModel.Store.FinancialSettings" store:Type="Tables" store:Schema="dbo" store:Name="FinancialSettings">
+      <DefiningQuery>SELECT 
+      [FinancialSettings].[ID] AS [ID], 
+      [FinancialSettings].[FinancialYEDay] AS [FinancialYEDay], 
+      [FinancialSettings].[FinancialYEMonth] AS [FinancialYEMonth], 
+      [FinancialSettings].[SaleTaxBasicID] AS [SaleTaxBasicID], 
+      [FinancialSettings].[TaxIDNumber] AS [TaxIDNumber], 
+      [FinancialSettings].[TaxIDDisplayName] AS [TaxIDDisplayName], 
+      [FinancialSettings].[TaxPeriod] AS [TaxPeriod], 
+      [FinancialSettings].[LockDate] AS [LockDate], 
+      [FinancialSettings].[TimeZone] AS [TimeZone]
+      FROM [dbo].[FinancialSettings] AS [FinancialSettings]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="FixedAsset_Details" EntityType="TMT.ERPModel.Store.FixedAsset_Details" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="FixedAssets" EntityType="TMT.ERPModel.Store.FixedAssets" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Good_Details" EntityType="TMT.ERPModel.Store.Good_Details" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Good_Processes" EntityType="TMT.ERPModel.Store.Good_Processes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Goods" EntityType="TMT.ERPModel.Store.Goods" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Machines" EntityType="TMT.ERPModel.Store.Machines" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Notes" EntityType="TMT.ERPModel.Store.Notes" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PayItems" EntityType="TMT.ERPModel.Store.PayItems" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Payments" EntityType="TMT.ERPModel.Store.Payments" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PayRunEmployeeDetails" EntityType="TMT.ERPModel.Store.PayRunEmployeeDetails" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PayRunEmployees" EntityType="TMT.ERPModel.Store.PayRunEmployees" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="PayRuns" EntityType="TMT.ERPModel.Store.PayRuns" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Process_Machines" EntityType="TMT.ERPModel.Store.Process_Machines" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Purchase_Details" EntityType="TMT.ERPModel.Store.Purchase_Details" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Purchases" EntityType="TMT.ERPModel.Store.Purchases" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="SaleInvoice_Details" EntityType="TMT.ERPModel.Store.SaleInvoice_Details" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="SaleInvoices" EntityType="TMT.ERPModel.Store.SaleInvoices" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="SaleInvoiceSettings" EntityType="TMT.ERPModel.Store.SaleInvoiceSettings" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="StockInCards" EntityType="TMT.ERPModel.Store.StockInCards" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="StockInCards_Details" EntityType="TMT.ERPModel.Store.StockInCards_Details" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="StockMovement_Details" EntityType="TMT.ERPModel.Store.StockMovement_Details" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="StockMovements" EntityType="TMT.ERPModel.Store.StockMovements" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="StockOutCards" EntityType="TMT.ERPModel.Store.StockOutCards" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="StockOutCards_Details" EntityType="TMT.ERPModel.Store.StockOutCards_Details" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Stocks" EntityType="TMT.ERPModel.Store.Stocks" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="TaxRates" EntityType="TMT.ERPModel.Store.TaxRates" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="Tmp_StockInBills" EntityType="TMT.ERPModel.Store.Tmp_StockInBills" store:Type="Tables" Schema="dbo" />
+    <EntitySet Name="UOMs" EntityType="TMT.ERPModel.Store.UOMs" store:Type="Tables" Schema="dbo" />
+    <AssociationSet Name="FK__SaleInvoi__BillD__54CB950F" Association="TMT.ERPModel.Store.FK__SaleInvoi__BillD__54CB950F">
+      <End Role="DueDateTypes" EntitySet="DueDateTypes" />
+      <End Role="SaleInvoiceSettings" EntitySet="SaleInvoiceSettings" />
+    </AssociationSet>
+    <AssociationSet Name="FK__SaleInvoi__SaleI__55BFB948" Association="TMT.ERPModel.Store.FK__SaleInvoi__SaleI__55BFB948">
+      <End Role="DueDateTypes" EntitySet="DueDateTypes" />
+      <End Role="SaleInvoiceSettings" EntitySet="SaleInvoiceSettings" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Accounts_TaxRate" Association="TMT.ERPModel.Store.FK_Accounts_TaxRate">
+      <End Role="TaxRates" EntitySet="TaxRates" />
+      <End Role="Accounts" EntitySet="Accounts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_BankAccounts_Companies" Association="TMT.ERPModel.Store.FK_BankAccounts_Companies">
+      <End Role="Companies" EntitySet="Companies" />
+      <End Role="BankAccounts" EntitySet="BankAccounts" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Employees_Companies" Association="TMT.ERPModel.Store.FK_Employees_Companies">
+      <End Role="Companies" EntitySet="Companies" />
+      <End Role="Employees" EntitySet="Employees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ExpenseClaimDetails_Accounts" Association="TMT.ERPModel.Store.FK_ExpenseClaimDetails_Accounts">
+      <End Role="Accounts" EntitySet="Accounts" />
+      <End Role="ExpenseClaimDetails" EntitySet="ExpenseClaimDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ExpenseClaimDetails_ExpenseClaims" Association="TMT.ERPModel.Store.FK_ExpenseClaimDetails_ExpenseClaims">
+      <End Role="ExpenseClaims" EntitySet="ExpenseClaims" />
+      <End Role="ExpenseClaimDetails" EntitySet="ExpenseClaimDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ExpenseClaimDetails_TaxRate" Association="TMT.ERPModel.Store.FK_ExpenseClaimDetails_TaxRate">
+      <End Role="TaxRates" EntitySet="TaxRates" />
+      <End Role="ExpenseClaimDetails" EntitySet="ExpenseClaimDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ExpenseClaims_Employees" Association="TMT.ERPModel.Store.FK_ExpenseClaims_Employees">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="ExpenseClaims" EntitySet="ExpenseClaims" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ExpenseClaims_Employees1" Association="TMT.ERPModel.Store.FK_ExpenseClaims_Employees1">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="ExpenseClaims" EntitySet="ExpenseClaims" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Good_Details_Good_Processes" Association="TMT.ERPModel.Store.FK_Good_Details_Good_Processes">
+      <End Role="Good_Processes" EntitySet="Good_Processes" />
+      <End Role="Good_Details" EntitySet="Good_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Notes_SaleInvoices" Association="TMT.ERPModel.Store.FK_Notes_SaleInvoices">
+      <End Role="SaleInvoices" EntitySet="SaleInvoices" />
+      <End Role="Notes" EntitySet="Notes" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PayItems_Accounts" Association="TMT.ERPModel.Store.FK_PayItems_Accounts">
+      <End Role="Accounts" EntitySet="Accounts" />
+      <End Role="PayItems" EntitySet="PayItems" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Payments_Currencies" Association="TMT.ERPModel.Store.FK_Payments_Currencies">
+      <End Role="Currencies" EntitySet="Currencies" />
+      <End Role="Payments" EntitySet="Payments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Payments_ExpenseClaims1" Association="TMT.ERPModel.Store.FK_Payments_ExpenseClaims1">
+      <End Role="ExpenseClaims" EntitySet="ExpenseClaims" />
+      <End Role="Payments" EntitySet="Payments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Payments_PayRuns1" Association="TMT.ERPModel.Store.FK_Payments_PayRuns1">
+      <End Role="PayRuns" EntitySet="PayRuns" />
+      <End Role="Payments" EntitySet="Payments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Payments_Purchases1" Association="TMT.ERPModel.Store.FK_Payments_Purchases1">
+      <End Role="Purchases" EntitySet="Purchases" />
+      <End Role="Payments" EntitySet="Payments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Payments_SaleInvoices1" Association="TMT.ERPModel.Store.FK_Payments_SaleInvoices1">
+      <End Role="SaleInvoices" EntitySet="SaleInvoices" />
+      <End Role="Payments" EntitySet="Payments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PayRunEmployee_Employees" Association="TMT.ERPModel.Store.FK_PayRunEmployee_Employees">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="PayRunEmployees" EntitySet="PayRunEmployees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PayRunEmployee_PayRuns" Association="TMT.ERPModel.Store.FK_PayRunEmployee_PayRuns">
+      <End Role="PayRuns" EntitySet="PayRuns" />
+      <End Role="PayRunEmployees" EntitySet="PayRunEmployees" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PayRunEmployeeDetail_PayItems" Association="TMT.ERPModel.Store.FK_PayRunEmployeeDetail_PayItems">
+      <End Role="PayItems" EntitySet="PayItems" />
+      <End Role="PayRunEmployeeDetails" EntitySet="PayRunEmployeeDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PayRunEmployeeDetail_PayRunEmployee" Association="TMT.ERPModel.Store.FK_PayRunEmployeeDetail_PayRunEmployee">
+      <End Role="PayRunEmployees" EntitySet="PayRunEmployees" />
+      <End Role="PayRunEmployeeDetails" EntitySet="PayRunEmployeeDetails" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PayRuns_Employees" Association="TMT.ERPModel.Store.FK_PayRuns_Employees">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="PayRuns" EntitySet="PayRuns" />
+    </AssociationSet>
+    <AssociationSet Name="FK_PayRuns_Employees1" Association="TMT.ERPModel.Store.FK_PayRuns_Employees1">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="PayRuns" EntitySet="PayRuns" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Purchase_Details_Accounts" Association="TMT.ERPModel.Store.FK_Purchase_Details_Accounts">
+      <End Role="Accounts" EntitySet="Accounts" />
+      <End Role="Purchase_Details" EntitySet="Purchase_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Purchase_Details_Goods" Association="TMT.ERPModel.Store.FK_Purchase_Details_Goods">
+      <End Role="Goods" EntitySet="Goods" />
+      <End Role="Purchase_Details" EntitySet="Purchase_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Purchase_Details_Purchases" Association="TMT.ERPModel.Store.FK_Purchase_Details_Purchases">
+      <End Role="Purchases" EntitySet="Purchases" />
+      <End Role="Purchase_Details" EntitySet="Purchase_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Purchase_Details_TaxRate" Association="TMT.ERPModel.Store.FK_Purchase_Details_TaxRate">
+      <End Role="TaxRates" EntitySet="TaxRates" />
+      <End Role="Purchase_Details" EntitySet="Purchase_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Purchase_Details_UOM" Association="TMT.ERPModel.Store.FK_Purchase_Details_UOM">
+      <End Role="UOMs" EntitySet="UOMs" />
+      <End Role="Purchase_Details" EntitySet="Purchase_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Purchases_Contacts" Association="TMT.ERPModel.Store.FK_Purchases_Contacts">
+      <End Role="Contacts" EntitySet="Contacts" />
+      <End Role="Purchases" EntitySet="Purchases" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Purchases_Currencies" Association="TMT.ERPModel.Store.FK_Purchases_Currencies">
+      <End Role="Currencies" EntitySet="Currencies" />
+      <End Role="Purchases" EntitySet="Purchases" />
+    </AssociationSet>
+    <AssociationSet Name="FK_Purchases_Employees" Association="TMT.ERPModel.Store.FK_Purchases_Employees">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="Purchases" EntitySet="Purchases" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SaleInvoice_Details_Accounts" Association="TMT.ERPModel.Store.FK_SaleInvoice_Details_Accounts">
+      <End Role="Accounts" EntitySet="Accounts" />
+      <End Role="SaleInvoice_Details" EntitySet="SaleInvoice_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SaleInvoice_Details_Accounts1" Association="TMT.ERPModel.Store.FK_SaleInvoice_Details_Accounts1">
+      <End Role="Accounts" EntitySet="Accounts" />
+      <End Role="SaleInvoice_Details" EntitySet="SaleInvoice_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SaleInvoice_Details_SaleInvoices" Association="TMT.ERPModel.Store.FK_SaleInvoice_Details_SaleInvoices">
+      <End Role="SaleInvoices" EntitySet="SaleInvoices" />
+      <End Role="SaleInvoice_Details" EntitySet="SaleInvoice_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SaleInvoice_Details_UOM" Association="TMT.ERPModel.Store.FK_SaleInvoice_Details_UOM">
+      <End Role="UOMs" EntitySet="UOMs" />
+      <End Role="SaleInvoice_Details" EntitySet="SaleInvoice_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SaleInvoices_Contacts" Association="TMT.ERPModel.Store.FK_SaleInvoices_Contacts">
+      <End Role="Contacts" EntitySet="Contacts" />
+      <End Role="SaleInvoices" EntitySet="SaleInvoices" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SaleInvoices_Currencies" Association="TMT.ERPModel.Store.FK_SaleInvoices_Currencies">
+      <End Role="Currencies" EntitySet="Currencies" />
+      <End Role="SaleInvoices" EntitySet="SaleInvoices" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SaleInvoices_Employees" Association="TMT.ERPModel.Store.FK_SaleInvoices_Employees">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="SaleInvoices" EntitySet="SaleInvoices" />
+    </AssociationSet>
+    <AssociationSet Name="FK_SaleInvoices_Employees1" Association="TMT.ERPModel.Store.FK_SaleInvoices_Employees1">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="SaleInvoices" EntitySet="SaleInvoices" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockInBills_Purchases1" Association="TMT.ERPModel.Store.FK_StockInBills_Purchases1">
+      <End Role="Purchases" EntitySet="Purchases" />
+      <End Role="Tmp_StockInBills" EntitySet="Tmp_StockInBills" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockInCards_Details_Goods" Association="TMT.ERPModel.Store.FK_StockInCards_Details_Goods">
+      <End Role="Goods" EntitySet="Goods" />
+      <End Role="StockInCards_Details" EntitySet="StockInCards_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockInCards_Details_StockInCards" Association="TMT.ERPModel.Store.FK_StockInCards_Details_StockInCards">
+      <End Role="StockInCards" EntitySet="StockInCards" />
+      <End Role="StockInCards_Details" EntitySet="StockInCards_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockInCards_Details_UOM" Association="TMT.ERPModel.Store.FK_StockInCards_Details_UOM">
+      <End Role="UOMs" EntitySet="UOMs" />
+      <End Role="StockInCards_Details" EntitySet="StockInCards_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockInCards_Employees" Association="TMT.ERPModel.Store.FK_StockInCards_Employees">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="StockInCards" EntitySet="StockInCards" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockInCards_Employees1" Association="TMT.ERPModel.Store.FK_StockInCards_Employees1">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="StockInCards" EntitySet="StockInCards" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockInCards_Good_Processes1" Association="TMT.ERPModel.Store.FK_StockInCards_Good_Processes1">
+      <End Role="Good_Processes" EntitySet="Good_Processes" />
+      <End Role="StockInCards" EntitySet="StockInCards" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockInCards_Purchases1" Association="TMT.ERPModel.Store.FK_StockInCards_Purchases1">
+      <End Role="Purchases" EntitySet="Purchases" />
+      <End Role="StockInCards" EntitySet="StockInCards" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockInCards_StockMovements" Association="TMT.ERPModel.Store.FK_StockInCards_StockMovements">
+      <End Role="StockMovements" EntitySet="StockMovements" />
+      <End Role="StockInCards" EntitySet="StockInCards" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockInCards_Stocks2" Association="TMT.ERPModel.Store.FK_StockInCards_Stocks2">
+      <End Role="Stocks" EntitySet="Stocks" />
+      <End Role="StockInCards" EntitySet="StockInCards" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockOutCards_Details_Goods" Association="TMT.ERPModel.Store.FK_StockOutCards_Details_Goods">
+      <End Role="Goods" EntitySet="Goods" />
+      <End Role="StockOutCards_Details" EntitySet="StockOutCards_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockOutCards_Details_StockOutCards" Association="TMT.ERPModel.Store.FK_StockOutCards_Details_StockOutCards">
+      <End Role="StockOutCards" EntitySet="StockOutCards" />
+      <End Role="StockOutCards_Details" EntitySet="StockOutCards_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockOutCards_Details_UOM" Association="TMT.ERPModel.Store.FK_StockOutCards_Details_UOM">
+      <End Role="UOMs" EntitySet="UOMs" />
+      <End Role="StockOutCards_Details" EntitySet="StockOutCards_Details" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockOutCards_Employees" Association="TMT.ERPModel.Store.FK_StockOutCards_Employees">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="StockOutCards" EntitySet="StockOutCards" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockOutCards_Employees1" Association="TMT.ERPModel.Store.FK_StockOutCards_Employees1">
+      <End Role="Employees" EntitySet="Employees" />
+      <End Role="StockOutCards" EntitySet="StockOutCards" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockOutCards_Good_Processes" Association="TMT.ERPModel.Store.FK_StockOutCards_Good_Processes">
+      <End Role="Good_Processes" EntitySet="Good_Processes" />
+      <End Role="StockOutCards" EntitySet="StockOutCards" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockOutCards_SaleInvoices" Association="TMT.ERPModel.Store.FK_StockOutCards_SaleInvoices">
+      <End Role="SaleInvoices" EntitySet="SaleInvoices" />
+      <End Role="StockOutCards" EntitySet="StockOutCards" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockOutCards_SaleInvoices1" Association="TMT.ERPModel.Store.FK_StockOutCards_SaleInvoices1">
+      <End Role="SaleInvoices" EntitySet="SaleInvoices" />
+      <End Role="StockOutCards" EntitySet="StockOutCards" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockOutCards_StockMovements" Association="TMT.ERPModel.Store.FK_StockOutCards_StockMovements">
+      <End Role="StockMovements" EntitySet="StockMovements" />
+      <End Role="StockOutCards" EntitySet="StockOutCards" />
+    </AssociationSet>
+    <AssociationSet Name="FK_StockOutCards_Stocks" Association="TMT.ERPModel.Store.FK_StockOutCards_Stocks">
+      <End Role="Stocks" EntitySet="Stocks" />
+      <End Role="StockOutCards" EntitySet="StockOutCards" />
+    </AssociationSet>
+  </EntityContainer>
+  <EntityType Name="AccountBalances">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="AccoutID" Type="int" Nullable="false" />
+    <Property Name="Debit" Type="float" Nullable="false" />
+    <Property Name="Credit" Type="float" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Accounts">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="TaxRateID" Type="int" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="ActualGoodInStocks">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="GoodID" Type="int" />
+    <Property Name="DateIn" Type="datetime" />
+    <Property Name="UOMID" Type="int" />
+    <Property Name="Quantity" Type="int" />
+    <Property Name="StockID" Type="int" />
+  </EntityType>
+  <EntityType Name="BankAccounts">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="CompanyID" Type="int" Nullable="false" />
+    <Property Name="BankName" Type="nvarchar" Nullable="false" MaxLength="1000" />
+    <Property Name="AccoutName" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="CurrencyID" Type="int" Nullable="false" />
+    <Property Name="AccoutNum" Type="nvarchar" MaxLength="250" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="Companies">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="DisplayName" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="TradingName" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="Logo" Type="nvarchar" MaxLength="1000" />
+    <Property Name="Business" Type="nvarchar" Nullable="false" MaxLength="1000" />
+    <Property Name="OrgaType" Type="nvarchar" MaxLength="250" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+    <Property Name="PostAttention" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="PostAddress" Type="nvarchar" Nullable="false" MaxLength="1000" />
+    <Property Name="PostCity" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="PostState" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="PostZipCode" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="PostCountry" Type="varchar" Nullable="false" MaxLength="40" />
+    <Property Name="PhysAttention" Type="nvarchar" MaxLength="250" />
+    <Property Name="PhysAddress" Type="nvarchar" MaxLength="1000" />
+    <Property Name="PhysCity" Type="nvarchar" MaxLength="250" />
+    <Property Name="PhysState" Type="nvarchar" MaxLength="250" />
+    <Property Name="PhysZipCode" Type="nvarchar" MaxLength="40" />
+    <Property Name="PhysCountry" Type="nvarchar" MaxLength="250" />
+    <Property Name="Tel_Country" Type="nvarchar" MaxLength="40" />
+    <Property Name="Tel_Area" Type="nvarchar" MaxLength="40" />
+    <Property Name="Tel_Num" Type="nvarchar" MaxLength="40" />
+    <Property Name="Email" Type="nvarchar" MaxLength="250" />
+    <Property Name="Website" Type="nvarchar" MaxLength="250" />
+  </EntityType>
+  <EntityType Name="Contacts">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="ContactName" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="FullName" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="ShortName" Type="nvarchar" MaxLength="50" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="Email" Type="nvarchar" MaxLength="50" />
+    <Property Name="Address" Type="nvarchar" Nullable="false" MaxLength="1000" />
+    <Property Name="CountryID" Type="int" />
+    <Property Name="ZipCode" Type="varchar" Nullable="false" MaxLength="3" />
+    <Property Name="State" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="City" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="TeleNum" Type="nvarchar" Nullable="false" MaxLength="50" />
+    <Property Name="MobileNum" Type="nvarchar" MaxLength="50" />
+    <Property Name="FaxNum" Type="nvarchar" MaxLength="50" />
+    <Property Name="SkypeName" Type="nvarchar" MaxLength="50" />
+    <Property Name="TaxCode" Type="nvarchar" MaxLength="50" />
+    <Property Name="BankAccoutNum" Type="nvarchar" MaxLength="50" />
+    <Property Name="BankAccountName" Type="nvarchar" MaxLength="50" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="Currencies">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="ForeignExchange" Type="float" />
+    <Property Name="HomeExchange" Type="float" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="Descripttion" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="DueDateTypes">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" MaxLength="40" />
+    <Property Name="Name" Type="nvarchar" MaxLength="250" />
+  </EntityType>
+  <EntityType Name="Employees">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="varchar" Nullable="false" MaxLength="40" />
+    <Property Name="FirstName" Type="varchar" MaxLength="40" />
+    <Property Name="LastName" Type="varchar" Nullable="false" MaxLength="40" />
+    <Property Name="Email" Type="nvarchar" MaxLength="50" />
+    <Property Name="Password" Type="nvarchar" MaxLength="250" />
+    <Property Name="CompanyID" Type="int" Nullable="false" />
+    <Property Name="PostAttention" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="PostAddress" Type="nvarchar" Nullable="false" MaxLength="1000" />
+    <Property Name="PostCity" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="PostState" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="PostZipCode" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="PostCountry" Type="varchar" Nullable="false" MaxLength="40" />
+    <Property Name="PhysAttention" Type="nvarchar" MaxLength="250" />
+    <Property Name="PhysAddress" Type="nvarchar" MaxLength="1000" />
+    <Property Name="PhysCity" Type="nvarchar" MaxLength="250" />
+    <Property Name="PhysState" Type="nvarchar" MaxLength="250" />
+    <Property Name="PhysZipCode" Type="nvarchar" MaxLength="40" />
+    <Property Name="PhysCountry" Type="nvarchar" MaxLength="250" />
+    <Property Name="CountryName" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="Tel_Country" Type="nvarchar" MaxLength="40" />
+    <Property Name="Tel_Area" Type="nvarchar" MaxLength="40" />
+    <Property Name="Tel_Num" Type="nvarchar" MaxLength="40" />
+    <Property Name="Fax_Country" Type="nvarchar" MaxLength="40" />
+    <Property Name="Fax_Area" Type="nvarchar" MaxLength="40" />
+    <Property Name="Fax_Num" Type="nvarchar" MaxLength="40" />
+    <Property Name="Mobi_Country" Type="nvarchar" MaxLength="50" />
+    <Property Name="Mobi_Area" Type="nvarchar" MaxLength="40" />
+    <Property Name="Mobi_Num" Type="nvarchar" MaxLength="40" />
+    <Property Name="Direct_Country" Type="nvarchar" MaxLength="40" />
+    <Property Name="Direct_Area" Type="nvarchar" MaxLength="40" />
+    <Property Name="Direct_Num" Type="nvarchar" MaxLength="40" />
+    <Property Name="Facebook" Type="nvarchar" MaxLength="1000" />
+    <Property Name="Twitter" Type="nvarchar" MaxLength="1000" />
+    <Property Name="LinkedIn" Type="nvarchar" MaxLength="1000" />
+    <Property Name="Google" Type="nvarchar" MaxLength="1000" />
+    <Property Name="TaxNumber" Type="nvarchar" MaxLength="40" />
+    <Property Name="OrdinaryRate" Type="nvarchar" MaxLength="40" />
+    <Property Name="BankAccountNumber" Type="nvarchar" MaxLength="40" />
+    <Property Name="BankAccountName" Type="nvarchar" MaxLength="250" />
+    <Property Name="PaymentDetails" Type="nvarchar" MaxLength="250" />
+  </EntityType>
+  <EntityType Name="ExpenseClaimDetails">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="ExpenseClaimID" Type="int" Nullable="false" />
+    <Property Name="Quantity" Type="int" Nullable="false" />
+    <Property Name="Price" Type="float" Nullable="false" />
+    <Property Name="TotalMoney" Type="float" Nullable="false" />
+    <Property Name="AccountID" Type="int" Nullable="false" />
+    <Property Name="TaxRateID" Type="int" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="ExpenseClaims">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="Code" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="CreatedEmployeeID" Type="int" Nullable="false" />
+    <Property Name="ApprovalEmployeeID" Type="int" Nullable="false" />
+    <Property Name="CreatedDate" Type="date" Nullable="false" />
+    <Property Name="Reference" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="Attachment" Type="nvarchar" MaxLength="1000" />
+    <Property Name="TotalMoney" Type="float" Nullable="false" />
+    <Property Name="IncludeTax" Type="int" Nullable="false" />
+    <Property Name="TotalMoneyIncludeTax" Type="int" />
+    <Property Name="Status" Type="int" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+      warning 6002: The table/view 'TMT.ERP.dbo.FinancialSettings' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.
+      -->
+  <EntityType Name="FinancialSettings">
+    <Key>
+      <PropertyRef Name="ID" />
+      <PropertyRef Name="FinancialYEDay" />
+      <PropertyRef Name="FinancialYEMonth" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="FinancialYEDay" Type="int" Nullable="false" />
+    <Property Name="FinancialYEMonth" Type="date" Nullable="false" />
+    <Property Name="SaleTaxBasicID" Type="int" />
+    <Property Name="TaxIDNumber" Type="nvarchar" MaxLength="50" />
+    <Property Name="TaxIDDisplayName" Type="nvarchar" MaxLength="250" />
+    <Property Name="TaxPeriod" Type="nvarchar" MaxLength="50" />
+    <Property Name="LockDate" Type="date" />
+    <Property Name="TimeZone" Type="nvarchar" MaxLength="250" />
+  </EntityType>
+  <EntityType Name="FixedAsset_Details">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="FixedAssetID" Type="int" />
+    <Property Name="Item" Type="nvarchar" MaxLength="250" />
+    <Property Name="Code" Type="nvarchar" MaxLength="40" />
+    <Property Name="AccountID" Type="int" />
+    <Property Name="PurchaseDate" Type="datetime" />
+    <Property Name="PurchasePrice" Type="float" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+    <Property Name="AssetType" Type="nvarchar" MaxLength="40" />
+    <Property Name="DepreciationRate" Type="float" />
+    <Property Name="DepreciationMethod" Type="nvarchar" MaxLength="250" />
+    <Property Name="DepreciationAccountID" Type="int" />
+    <Property Name="CreatedEmployeeID" Type="int" />
+    <Property Name="ApprovalEmployeeID" Type="int" />
+  </EntityType>
+  <EntityType Name="FixedAssets">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="StartedDate" Type="datetime" />
+    <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="CreatedEmployeeID" Type="int" />
+  </EntityType>
+  <EntityType Name="Good_Details">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Good_ProcessID" Type="int" Nullable="false" />
+    <Property Name="GoodID" Type="int" Nullable="false" />
+    <Property Name="UOMID" Type="int" />
+    <Property Name="Quatity" Type="int" Nullable="false" />
+    <Property Name="Price" Type="float" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="Good_Processes">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="GoodID" Type="int" Nullable="false" />
+    <Property Name="MachineID" Type="int" Nullable="false" />
+    <Property Name="StartedDate" Type="date" />
+    <Property Name="EndedDate" Type="date" />
+    <Property Name="Quatity" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Goods">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="Attachment" Type="nvarchar" MaxLength="250" />
+    <Property Name="ContactID" Type="int" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="UnitID" Type="int" Nullable="false" />
+    <Property Name="InputPrice" Type="float" />
+    <Property Name="OutputPrice" Type="float" />
+    <Property Name="DomesticPrice" Type="float" />
+    <Property Name="StartedDate" Type="date" />
+    <Property Name="PeriodDate" Type="date" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="Machines">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="Price" Type="float" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="Notes">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="NoteFromID" Type="int" Nullable="false" />
+    <Property Name="EmployeeID" Type="int" Nullable="false" />
+    <Property Name="CreatedDate" Type="datetime" Nullable="false" />
+    <Property Name="Note" Type="nvarchar" Nullable="false" MaxLength="1000" />
+    <Property Name="Type" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" />
+  </EntityType>
+  <EntityType Name="PayItems">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="Code" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="Type" Type="int" />
+    <Property Name="AccountID" Type="int" Nullable="false" />
+    <Property Name="ShowOnSlip" Type="int" />
+  </EntityType>
+  <EntityType Name="Payments">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" MaxLength="40" />
+    <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="CreatedEmployeeID" Type="int" />
+    <Property Name="ApprovalEmployeeID" Type="int" />
+    <Property Name="SaleInvoiceID" Type="int" />
+    <Property Name="PurchaseID" Type="int" />
+    <Property Name="ExpenseClaimID" Type="int" />
+    <Property Name="PayRunID" Type="int" />
+    <Property Name="PaymetnTo" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="TotalMoney" Type="float" Nullable="false" />
+    <Property Name="CurrencyID" Type="int" Nullable="false" />
+    <Property Name="DatePaid" Type="date" Nullable="false" />
+    <Property Name="PayToAccount" Type="int" Nullable="false" />
+    <Property Name="Reference" Type="nvarchar" MaxLength="1000" />
+    <Property Name="Status" Type="int" />
+  </EntityType>
+  <EntityType Name="PayRunEmployeeDetails">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="PayRunEmployeeID" Type="int" Nullable="false" />
+    <Property Name="PayItemID" Type="int" Nullable="false" />
+    <Property Name="Quantity" Type="int" Nullable="false" />
+    <Property Name="Rate" Type="float" />
+    <Property Name="TotalMoney" Type="float" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PayRunEmployees">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" />
+    <Property Name="PayRunID" Type="int" Nullable="false" />
+    <Property Name="EmployeeID" Type="int" Nullable="false" />
+    <Property Name="GrossWage" Type="float" Nullable="false" />
+    <Property Name="Allowances" Type="float" />
+    <Property Name="Deductions" Type="float" />
+    <Property Name="Taxes" Type="float" />
+    <Property Name="NonTaxableAllow" Type="float" />
+    <Property Name="PostTaxDeduction" Type="float" />
+    <Property Name="NetPay" Type="float" Nullable="false" />
+  </EntityType>
+  <EntityType Name="PayRuns">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="CreatedEmployeeID" Type="int" Nullable="false" />
+    <Property Name="ApprovalEmployeeID" Type="int" />
+    <Property Name="PayFrequency" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="FromDate" Type="date" Nullable="false" />
+    <Property Name="ToDate" Type="date" Nullable="false" />
+    <Property Name="PaymentDate" Type="date" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Process_Machines">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="MachineID" Type="int" />
+    <Property Name="GoodProcessID" Type="int" />
+    <Property Name="GoodID" Type="int" />
+    <Property Name="WorkingMinute" Type="int" />
+    <Property Name="CostPerMinute" Type="int" />
+  </EntityType>
+  <EntityType Name="Purchase_Details">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="GoodID" Type="int" Nullable="false" />
+    <Property Name="UOMID" Type="int" Nullable="false" />
+    <Property Name="PurchaseID" Type="int" Nullable="false" />
+    <Property Name="Quantity" Type="int" Nullable="false" />
+    <Property Name="Price" Type="float" Nullable="false" />
+    <Property Name="AccountID" Type="int" Nullable="false" />
+    <Property Name="TaxRateID" Type="int" Nullable="false" />
+    <Property Name="Discount" Type="float" />
+    <Property Name="TotalMoney" Type="float" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="Purchases">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="varchar" Nullable="false" MaxLength="40" />
+    <Property Name="Reference" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="Attactment" Type="nvarchar" MaxLength="250" />
+    <Property Name="CreatedDate" Type="date" Nullable="false" />
+    <Property Name="EmployeeID" Type="int" />
+    <Property Name="DueDate" Type="date" />
+    <Property Name="ContactID" Type="int" Nullable="false" />
+    <Property Name="Tax" Type="float" />
+    <Property Name="Discount" Type="float" />
+    <Property Name="TotalMoney" Type="float" />
+    <Property Name="CurrencyID" Type="int" Nullable="false" />
+    <Property Name="Vat" Type="float" />
+    <Property Name="Status" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="SaleInvoice_Details">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="SaleInvoiceID" Type="int" Nullable="false" />
+    <Property Name="GoodID" Type="int" Nullable="false" />
+    <Property Name="UOMID" Type="int" />
+    <Property Name="Quantity" Type="int" />
+    <Property Name="Price" Type="float" />
+    <Property Name="TaxRateID" Type="int" />
+    <Property Name="Discount" Type="float" />
+    <Property Name="Subtotal" Type="float" />
+    <Property Name="AccountID" Type="int" />
+    <Property Name="TotalMoney" Type="float" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="SaleInvoices">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="CreatedEmployeeID" Type="int" Nullable="false" />
+    <Property Name="ApprovalEmployeeID" Type="int" Nullable="false" />
+    <Property Name="ContactID" Type="int" Nullable="false" />
+    <Property Name="CreatedDate" Type="date" Nullable="false" />
+    <Property Name="DueDate" Type="date" />
+    <Property Name="Reference" Type="nvarchar" Nullable="false" MaxLength="1000" />
+    <Property Name="CurrencyID" Type="int" Nullable="false" />
+    <Property Name="TotalTax" Type="float" Nullable="false" />
+    <Property Name="VAT" Type="float" />
+    <Property Name="TaxAmountType" Type="int" />
+    <Property Name="TotalMoney" Type="float" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="SaleInvoiceSettings">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="BillDefaultDueDate" Type="int" />
+    <Property Name="SaleInvoiceDefaultDueDate" Type="int" />
+    <Property Name="InvoicePrefix" Type="nvarchar" MaxLength="20" />
+    <Property Name="CreditNotePrefix" Type="nvarchar" MaxLength="20" />
+    <Property Name="NextNumber" Type="nvarchar" MaxLength="20" />
+    <Property Name="BillDefaultTypeID" Type="int" Nullable="false" />
+    <Property Name="SaleInvoiceDefaultTypeID" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="StockInCards">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="varchar" Nullable="false" MaxLength="40" />
+    <Property Name="CreatedEmployeeID" Type="int" Nullable="false" />
+    <Property Name="ApprovalEmployeeID" Type="int" />
+    <Property Name="StockID" Type="int" Nullable="false" />
+    <Property Name="CreatedDate" Type="date" Nullable="false" />
+    <Property Name="PurchaseID" Type="int" />
+    <Property Name="GoodProcessID" Type="int" />
+    <Property Name="StockMovementID" Type="int" />
+    <Property Name="Type" Type="int" />
+    <Property Name="Sender" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="Tax" Type="float" />
+    <Property Name="TotalMoney" Type="float" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="Attachment" Type="nvarchar" MaxLength="1000" />
+    <Property Name="Reason" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="StockInCards_Details">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="StockInCardID" Type="int" Nullable="false" />
+    <Property Name="GoodID" Type="int" Nullable="false" />
+    <Property Name="UOMID" Type="int" Nullable="false" />
+    <Property Name="Quantity" Type="int" Nullable="false" />
+    <Property Name="DateIn" Type="date" Nullable="false" />
+  </EntityType>
+  <EntityType Name="StockMovement_Details">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="StockMovementID" Type="int" Nullable="false" />
+    <Property Name="GoodID" Type="int" />
+    <Property Name="DateIn" Type="datetime" />
+    <Property Name="UOMID" Type="int" Nullable="false" />
+    <Property Name="Quantity" Type="int" />
+  </EntityType>
+  <EntityType Name="StockMovements">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="CreatedDate" Type="datetime" />
+    <Property Name="CreatedEmployeeID" Type="int" />
+    <Property Name="ApprovalEmployeeID" Type="int" />
+    <Property Name="FromStockID" Type="int" />
+    <Property Name="ToStockID" Type="int" />
+    <Property Name="Status" Type="int" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="StockOutCards">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="varchar" Nullable="false" MaxLength="40" />
+    <Property Name="CreatedEmployeeID" Type="int" Nullable="false" />
+    <Property Name="ApprovalEmployeeID" Type="int" />
+    <Property Name="StockID" Type="int" Nullable="false" />
+    <Property Name="CreatedDate" Type="date" Nullable="false" />
+    <Property Name="SaleInvoiceID" Type="int" Nullable="false" />
+    <Property Name="GoodProcessID" Type="int" />
+    <Property Name="StockMovementID" Type="int" />
+    <Property Name="Type" Type="int" />
+    <Property Name="Receiver" Type="nvarchar" MaxLength="250" />
+    <Property Name="Tax" Type="int" />
+    <Property Name="TotalMoney" Type="int" />
+    <Property Name="Status" Type="int" />
+    <Property Name="Reason" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="StockOutCards_Details">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="StockOutCardID" Type="int" Nullable="false" />
+    <Property Name="GoodID" Type="int" Nullable="false" />
+    <Property Name="UOMID" Type="int" />
+    <Property Name="Quantity" Type="int" Nullable="false" />
+    <Property Name="DateOut" Type="date" />
+  </EntityType>
+  <EntityType Name="Stocks">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="CurrentCompanyID" Type="int" Nullable="false" />
+    <Property Name="MaxQuatity" Type="int" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="TaxRates">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="Name" Type="nvarchar" Nullable="false" MaxLength="250" />
+    <Property Name="Rate" Type="float" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="Tmp_StockInBills">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="CreatedDate" Type="date" Nullable="false" />
+    <Property Name="Code" Type="nvarchar" Nullable="false" MaxLength="40" />
+    <Property Name="CreatedEmployeeID" Type="int" Nullable="false" />
+    <Property Name="ApprovalEmployeeID" Type="int" Nullable="false" />
+    <Property Name="ImportFromID" Type="int" Nullable="false" />
+    <Property Name="Sender" Type="nvarchar" MaxLength="250" />
+    <Property Name="StockID" Type="int" Nullable="false" />
+    <Property Name="Status" Type="int" Nullable="false" />
+    <Property Name="Tax" Type="float" />
+    <Property Name="TotalMoney" Type="float" />
+    <Property Name="Attachment" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <EntityType Name="UOMs">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" Nullable="false" StoreGeneratedPattern="Identity" />
+    <Property Name="Code" Type="nvarchar" MaxLength="40" />
+    <Property Name="Name" Type="nvarchar" MaxLength="250" />
+    <Property Name="Description" Type="nvarchar" MaxLength="1000" />
+  </EntityType>
+  <Association Name="FK__SaleInvoi__BillD__54CB950F">
+    <End Role="DueDateTypes" Type="TMT.ERPModel.Store.DueDateTypes" Multiplicity="1" />
+    <End Role="SaleInvoiceSettings" Type="TMT.ERPModel.Store.SaleInvoiceSettings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DueDateTypes">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SaleInvoiceSettings">
+        <PropertyRef Name="BillDefaultTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK__SaleInvoi__SaleI__55BFB948">
+    <End Role="DueDateTypes" Type="TMT.ERPModel.Store.DueDateTypes" Multiplicity="1" />
+    <End Role="SaleInvoiceSettings" Type="TMT.ERPModel.Store.SaleInvoiceSettings" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="DueDateTypes">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SaleInvoiceSettings">
+        <PropertyRef Name="SaleInvoiceDefaultTypeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Accounts_TaxRate">
+    <End Role="TaxRates" Type="TMT.ERPModel.Store.TaxRates" Multiplicity="1" />
+    <End Role="Accounts" Type="TMT.ERPModel.Store.Accounts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TaxRates">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Accounts">
+        <PropertyRef Name="TaxRateID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_BankAccounts_Companies">
+    <End Role="Companies" Type="TMT.ERPModel.Store.Companies" Multiplicity="1" />
+    <End Role="BankAccounts" Type="TMT.ERPModel.Store.BankAccounts" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Companies">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="BankAccounts">
+        <PropertyRef Name="CompanyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Employees_Companies">
+    <End Role="Companies" Type="TMT.ERPModel.Store.Companies" Multiplicity="1" />
+    <End Role="Employees" Type="TMT.ERPModel.Store.Employees" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Companies">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Employees">
+        <PropertyRef Name="CompanyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ExpenseClaimDetails_Accounts">
+    <End Role="Accounts" Type="TMT.ERPModel.Store.Accounts" Multiplicity="1" />
+    <End Role="ExpenseClaimDetails" Type="TMT.ERPModel.Store.ExpenseClaimDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Accounts">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="ExpenseClaimDetails">
+        <PropertyRef Name="AccountID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ExpenseClaimDetails_ExpenseClaims">
+    <End Role="ExpenseClaims" Type="TMT.ERPModel.Store.ExpenseClaims" Multiplicity="1" />
+    <End Role="ExpenseClaimDetails" Type="TMT.ERPModel.Store.ExpenseClaimDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ExpenseClaims">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="ExpenseClaimDetails">
+        <PropertyRef Name="ExpenseClaimID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ExpenseClaimDetails_TaxRate">
+    <End Role="TaxRates" Type="TMT.ERPModel.Store.TaxRates" Multiplicity="0..1" />
+    <End Role="ExpenseClaimDetails" Type="TMT.ERPModel.Store.ExpenseClaimDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TaxRates">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="ExpenseClaimDetails">
+        <PropertyRef Name="TaxRateID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ExpenseClaims_Employees">
+    <End Role="Employees" Type="TMT.ERPModel.Store.Employees" Multiplicity="1" />
+    <End Role="ExpenseClaims" Type="TMT.ERPModel.Store.ExpenseClaims" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employees">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="ExpenseClaims">
+        <PropertyRef Name="CreatedEmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ExpenseClaims_Employees1">
+    <End Role="Employees" Type="TMT.ERPModel.Store.Employees" Multiplicity="1" />
+    <End Role="ExpenseClaims" Type="TMT.ERPModel.Store.ExpenseClaims" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employees">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="ExpenseClaims">
+        <PropertyRef Name="ApprovalEmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Good_Details_Good_Processes">
+    <End Role="Good_Processes" Type="TMT.ERPModel.Store.Good_Processes" Multiplicity="1" />
+    <End Role="Good_Details" Type="TMT.ERPModel.Store.Good_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Good_Processes">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Good_Details">
+        <PropertyRef Name="Good_ProcessID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Notes_SaleInvoices">
+    <End Role="SaleInvoices" Type="TMT.ERPModel.Store.SaleInvoices" Multiplicity="1" />
+    <End Role="Notes" Type="TMT.ERPModel.Store.Notes" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SaleInvoices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Notes">
+        <PropertyRef Name="NoteFromID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PayItems_Accounts">
+    <End Role="Accounts" Type="TMT.ERPModel.Store.Accounts" Multiplicity="1" />
+    <End Role="PayItems" Type="TMT.ERPModel.Store.PayItems" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Accounts">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="PayItems">
+        <PropertyRef Name="AccountID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Payments_Currencies">
+    <End Role="Currencies" Type="TMT.ERPModel.Store.Currencies" Multiplicity="1" />
+    <End Role="Payments" Type="TMT.ERPModel.Store.Payments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Currencies">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Payments">
+        <PropertyRef Name="CurrencyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Payments_ExpenseClaims1">
+    <End Role="ExpenseClaims" Type="TMT.ERPModel.Store.ExpenseClaims" Multiplicity="0..1" />
+    <End Role="Payments" Type="TMT.ERPModel.Store.Payments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="ExpenseClaims">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Payments">
+        <PropertyRef Name="ExpenseClaimID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Payments_PayRuns1">
+    <End Role="PayRuns" Type="TMT.ERPModel.Store.PayRuns" Multiplicity="0..1" />
+    <End Role="Payments" Type="TMT.ERPModel.Store.Payments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PayRuns">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Payments">
+        <PropertyRef Name="PayRunID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Payments_Purchases1">
+    <End Role="Purchases" Type="TMT.ERPModel.Store.Purchases" Multiplicity="0..1" />
+    <End Role="Payments" Type="TMT.ERPModel.Store.Payments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Purchases">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Payments">
+        <PropertyRef Name="PurchaseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Payments_SaleInvoices1">
+    <End Role="SaleInvoices" Type="TMT.ERPModel.Store.SaleInvoices" Multiplicity="0..1" />
+    <End Role="Payments" Type="TMT.ERPModel.Store.Payments" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SaleInvoices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Payments">
+        <PropertyRef Name="SaleInvoiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PayRunEmployee_Employees">
+    <End Role="Employees" Type="TMT.ERPModel.Store.Employees" Multiplicity="1" />
+    <End Role="PayRunEmployees" Type="TMT.ERPModel.Store.PayRunEmployees" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employees">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="PayRunEmployees">
+        <PropertyRef Name="EmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PayRunEmployee_PayRuns">
+    <End Role="PayRuns" Type="TMT.ERPModel.Store.PayRuns" Multiplicity="1" />
+    <End Role="PayRunEmployees" Type="TMT.ERPModel.Store.PayRunEmployees" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PayRuns">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="PayRunEmployees">
+        <PropertyRef Name="PayRunID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PayRunEmployeeDetail_PayItems">
+    <End Role="PayItems" Type="TMT.ERPModel.Store.PayItems" Multiplicity="1" />
+    <End Role="PayRunEmployeeDetails" Type="TMT.ERPModel.Store.PayRunEmployeeDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PayItems">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="PayRunEmployeeDetails">
+        <PropertyRef Name="PayItemID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PayRunEmployeeDetail_PayRunEmployee">
+    <End Role="PayRunEmployees" Type="TMT.ERPModel.Store.PayRunEmployees" Multiplicity="1" />
+    <End Role="PayRunEmployeeDetails" Type="TMT.ERPModel.Store.PayRunEmployeeDetails" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="PayRunEmployees">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="PayRunEmployeeDetails">
+        <PropertyRef Name="PayRunEmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PayRuns_Employees">
+    <End Role="Employees" Type="TMT.ERPModel.Store.Employees" Multiplicity="1" />
+    <End Role="PayRuns" Type="TMT.ERPModel.Store.PayRuns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employees">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="PayRuns">
+        <PropertyRef Name="CreatedEmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_PayRuns_Employees1">
+    <End Role="Employees" Type="TMT.ERPModel.Store.Employees" Multiplicity="0..1" />
+    <End Role="PayRuns" Type="TMT.ERPModel.Store.PayRuns" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employees">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="PayRuns">
+        <PropertyRef Name="ApprovalEmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Purchase_Details_Accounts">
+    <End Role="Accounts" Type="TMT.ERPModel.Store.Accounts" Multiplicity="1" />
+    <End Role="Purchase_Details" Type="TMT.ERPModel.Store.Purchase_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Accounts">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Purchase_Details">
+        <PropertyRef Name="AccountID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Purchase_Details_Goods">
+    <End Role="Goods" Type="TMT.ERPModel.Store.Goods" Multiplicity="1" />
+    <End Role="Purchase_Details" Type="TMT.ERPModel.Store.Purchase_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Goods">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Purchase_Details">
+        <PropertyRef Name="GoodID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Purchase_Details_Purchases">
+    <End Role="Purchases" Type="TMT.ERPModel.Store.Purchases" Multiplicity="1" />
+    <End Role="Purchase_Details" Type="TMT.ERPModel.Store.Purchase_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Purchases">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Purchase_Details">
+        <PropertyRef Name="PurchaseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Purchase_Details_TaxRate">
+    <End Role="TaxRates" Type="TMT.ERPModel.Store.TaxRates" Multiplicity="1" />
+    <End Role="Purchase_Details" Type="TMT.ERPModel.Store.Purchase_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TaxRates">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Purchase_Details">
+        <PropertyRef Name="TaxRateID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Purchase_Details_UOM">
+    <End Role="UOMs" Type="TMT.ERPModel.Store.UOMs" Multiplicity="1" />
+    <End Role="Purchase_Details" Type="TMT.ERPModel.Store.Purchase_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UOMs">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Purchase_Details">
+        <PropertyRef Name="UOMID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Purchases_Contacts">
+    <End Role="Contacts" Type="TMT.ERPModel.Store.Contacts" Multiplicity="1" />
+    <End Role="Purchases" Type="TMT.ERPModel.Store.Purchases" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Contacts">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Purchases">
+        <PropertyRef Name="ContactID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Purchases_Currencies">
+    <End Role="Currencies" Type="TMT.ERPModel.Store.Currencies" Multiplicity="1" />
+    <End Role="Purchases" Type="TMT.ERPModel.Store.Purchases" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Currencies">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Purchases">
+        <PropertyRef Name="CurrencyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_Purchases_Employees">
+    <End Role="Employees" Type="TMT.ERPModel.Store.Employees" Multiplicity="0..1" />
+    <End Role="Purchases" Type="TMT.ERPModel.Store.Purchases" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employees">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Purchases">
+        <PropertyRef Name="EmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SaleInvoice_Details_Accounts">
+    <End Role="Accounts" Type="TMT.ERPModel.Store.Accounts" Multiplicity="0..1" />
+    <End Role="SaleInvoice_Details" Type="TMT.ERPModel.Store.SaleInvoice_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Accounts">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SaleInvoice_Details">
+        <PropertyRef Name="AccountID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SaleInvoice_Details_Accounts1">
+    <End Role="Accounts" Type="TMT.ERPModel.Store.Accounts" Multiplicity="0..1" />
+    <End Role="SaleInvoice_Details" Type="TMT.ERPModel.Store.SaleInvoice_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Accounts">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SaleInvoice_Details">
+        <PropertyRef Name="AccountID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SaleInvoice_Details_SaleInvoices">
+    <End Role="SaleInvoices" Type="TMT.ERPModel.Store.SaleInvoices" Multiplicity="1" />
+    <End Role="SaleInvoice_Details" Type="TMT.ERPModel.Store.SaleInvoice_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SaleInvoices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SaleInvoice_Details">
+        <PropertyRef Name="SaleInvoiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SaleInvoice_Details_UOM">
+    <End Role="UOMs" Type="TMT.ERPModel.Store.UOMs" Multiplicity="0..1" />
+    <End Role="SaleInvoice_Details" Type="TMT.ERPModel.Store.SaleInvoice_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UOMs">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SaleInvoice_Details">
+        <PropertyRef Name="UOMID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SaleInvoices_Contacts">
+    <End Role="Contacts" Type="TMT.ERPModel.Store.Contacts" Multiplicity="1" />
+    <End Role="SaleInvoices" Type="TMT.ERPModel.Store.SaleInvoices" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Contacts">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SaleInvoices">
+        <PropertyRef Name="ContactID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SaleInvoices_Currencies">
+    <End Role="Currencies" Type="TMT.ERPModel.Store.Currencies" Multiplicity="1" />
+    <End Role="SaleInvoices" Type="TMT.ERPModel.Store.SaleInvoices" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Currencies">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SaleInvoices">
+        <PropertyRef Name="CurrencyID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SaleInvoices_Employees">
+    <End Role="Employees" Type="TMT.ERPModel.Store.Employees" Multiplicity="1" />
+    <End Role="SaleInvoices" Type="TMT.ERPModel.Store.SaleInvoices" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employees">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SaleInvoices">
+        <PropertyRef Name="CreatedEmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_SaleInvoices_Employees1">
+    <End Role="Employees" Type="TMT.ERPModel.Store.Employees" Multiplicity="1" />
+    <End Role="SaleInvoices" Type="TMT.ERPModel.Store.SaleInvoices" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employees">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="SaleInvoices">
+        <PropertyRef Name="ApprovalEmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockInBills_Purchases1">
+    <End Role="Purchases" Type="TMT.ERPModel.Store.Purchases" Multiplicity="1" />
+    <End Role="Tmp_StockInBills" Type="TMT.ERPModel.Store.Tmp_StockInBills" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Purchases">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="Tmp_StockInBills">
+        <PropertyRef Name="ImportFromID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockInCards_Details_Goods">
+    <End Role="Goods" Type="TMT.ERPModel.Store.Goods" Multiplicity="1" />
+    <End Role="StockInCards_Details" Type="TMT.ERPModel.Store.StockInCards_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Goods">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockInCards_Details">
+        <PropertyRef Name="GoodID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockInCards_Details_StockInCards">
+    <End Role="StockInCards" Type="TMT.ERPModel.Store.StockInCards" Multiplicity="1" />
+    <End Role="StockInCards_Details" Type="TMT.ERPModel.Store.StockInCards_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StockInCards">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockInCards_Details">
+        <PropertyRef Name="StockInCardID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockInCards_Details_UOM">
+    <End Role="UOMs" Type="TMT.ERPModel.Store.UOMs" Multiplicity="1" />
+    <End Role="StockInCards_Details" Type="TMT.ERPModel.Store.StockInCards_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UOMs">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockInCards_Details">
+        <PropertyRef Name="UOMID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockInCards_Employees">
+    <End Role="Employees" Type="TMT.ERPModel.Store.Employees" Multiplicity="1" />
+    <End Role="StockInCards" Type="TMT.ERPModel.Store.StockInCards" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employees">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockInCards">
+        <PropertyRef Name="CreatedEmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockInCards_Employees1">
+    <End Role="Employees" Type="TMT.ERPModel.Store.Employees" Multiplicity="0..1" />
+    <End Role="StockInCards" Type="TMT.ERPModel.Store.StockInCards" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employees">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockInCards">
+        <PropertyRef Name="ApprovalEmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockInCards_Good_Processes1">
+    <End Role="Good_Processes" Type="TMT.ERPModel.Store.Good_Processes" Multiplicity="0..1" />
+    <End Role="StockInCards" Type="TMT.ERPModel.Store.StockInCards" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Good_Processes">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockInCards">
+        <PropertyRef Name="GoodProcessID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockInCards_Purchases1">
+    <End Role="Purchases" Type="TMT.ERPModel.Store.Purchases" Multiplicity="0..1" />
+    <End Role="StockInCards" Type="TMT.ERPModel.Store.StockInCards" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Purchases">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockInCards">
+        <PropertyRef Name="PurchaseID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockInCards_StockMovements">
+    <End Role="StockMovements" Type="TMT.ERPModel.Store.StockMovements" Multiplicity="0..1" />
+    <End Role="StockInCards" Type="TMT.ERPModel.Store.StockInCards" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StockMovements">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockInCards">
+        <PropertyRef Name="StockMovementID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockInCards_Stocks2">
+    <End Role="Stocks" Type="TMT.ERPModel.Store.Stocks" Multiplicity="1" />
+    <End Role="StockInCards" Type="TMT.ERPModel.Store.StockInCards" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Stocks">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockInCards">
+        <PropertyRef Name="StockID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockOutCards_Details_Goods">
+    <End Role="Goods" Type="TMT.ERPModel.Store.Goods" Multiplicity="1" />
+    <End Role="StockOutCards_Details" Type="TMT.ERPModel.Store.StockOutCards_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Goods">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockOutCards_Details">
+        <PropertyRef Name="GoodID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockOutCards_Details_StockOutCards">
+    <End Role="StockOutCards" Type="TMT.ERPModel.Store.StockOutCards" Multiplicity="1" />
+    <End Role="StockOutCards_Details" Type="TMT.ERPModel.Store.StockOutCards_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StockOutCards">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockOutCards_Details">
+        <PropertyRef Name="StockOutCardID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockOutCards_Details_UOM">
+    <End Role="UOMs" Type="TMT.ERPModel.Store.UOMs" Multiplicity="0..1" />
+    <End Role="StockOutCards_Details" Type="TMT.ERPModel.Store.StockOutCards_Details" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="UOMs">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockOutCards_Details">
+        <PropertyRef Name="UOMID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockOutCards_Employees">
+    <End Role="Employees" Type="TMT.ERPModel.Store.Employees" Multiplicity="1" />
+    <End Role="StockOutCards" Type="TMT.ERPModel.Store.StockOutCards" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employees">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockOutCards">
+        <PropertyRef Name="CreatedEmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockOutCards_Employees1">
+    <End Role="Employees" Type="TMT.ERPModel.Store.Employees" Multiplicity="0..1" />
+    <End Role="StockOutCards" Type="TMT.ERPModel.Store.StockOutCards" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Employees">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockOutCards">
+        <PropertyRef Name="ApprovalEmployeeID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockOutCards_Good_Processes">
+    <End Role="Good_Processes" Type="TMT.ERPModel.Store.Good_Processes" Multiplicity="0..1" />
+    <End Role="StockOutCards" Type="TMT.ERPModel.Store.StockOutCards" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Good_Processes">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockOutCards">
+        <PropertyRef Name="GoodProcessID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockOutCards_SaleInvoices">
+    <End Role="SaleInvoices" Type="TMT.ERPModel.Store.SaleInvoices" Multiplicity="1" />
+    <End Role="StockOutCards" Type="TMT.ERPModel.Store.StockOutCards" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SaleInvoices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockOutCards">
+        <PropertyRef Name="SaleInvoiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockOutCards_SaleInvoices1">
+    <End Role="SaleInvoices" Type="TMT.ERPModel.Store.SaleInvoices" Multiplicity="1" />
+    <End Role="StockOutCards" Type="TMT.ERPModel.Store.StockOutCards" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="SaleInvoices">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockOutCards">
+        <PropertyRef Name="SaleInvoiceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockOutCards_StockMovements">
+    <End Role="StockMovements" Type="TMT.ERPModel.Store.StockMovements" Multiplicity="0..1" />
+    <End Role="StockOutCards" Type="TMT.ERPModel.Store.StockOutCards" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="StockMovements">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockOutCards">
+        <PropertyRef Name="StockMovementID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_StockOutCards_Stocks">
+    <End Role="Stocks" Type="TMT.ERPModel.Store.Stocks" Multiplicity="1" />
+    <End Role="StockOutCards" Type="TMT.ERPModel.Store.StockOutCards" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Stocks">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="StockOutCards">
+        <PropertyRef Name="StockID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+</Schema>

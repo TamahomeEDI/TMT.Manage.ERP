@@ -1,0 +1,61 @@
+﻿@model TMT.ERP.DataAccess.Model.BOM
+<script type="text/javascript">
+    $(document).ready(function () {
+        //BOM
+        $('#btnDeleteGood').click(function (e) {
+            e.preventDefault();
+            
+            var _url = "/Good/SubGood/" + $(this).find('input').val();
+            jQuery.ajax(
+                {
+                    type: 'GET',
+                    traditional: true,
+                    url: _url,
+                    success: function (e) {
+                        custom.CreatePopup("#dialog", "Add BOMs for good", 700, 500, _url, false);
+                        $('#dialog').dialog('open');
+                    }
+                });
+        });
+    });
+    </script>
+<div id="breadcrumb">
+    <div class="container">
+        <div id="con_top">
+            <div class="c_container">
+                <h3>@Resources.Resource.BOM_List</h3>
+                <div id="breadcrumbs">
+                    <ul>
+                        <li><a href="/BOM/Index">@Resources.Resource.BOM_List</a></li>
+                        <li><a href="/BOM/SetBOM">@Resources.Resource.BOM_Set</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+<input type="hidden" id="BOMID" value="@Model.ID" />
+@using (Html.BeginForm())
+{
+    <div class="container">
+        <div class="c_container">
+            <div id="form_body">
+
+                <div class="form_position1">
+                    <div class="form_right">
+                        <div class="form-group">
+                            <label for="name">@Resources.Resource.BOM_Name_Column:</label>
+                            @Html.EditorFor(model => model.Name, new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                            <label for="name">@Resources.Resource.BOM_Finish_Good:</label>
+                            @Html.Label("lblFinishGood", "");                           
+                             <input type="button" value="@Resources.Resource.BOM_Add_Finish_Good" id="btnAddFinishGood" class="btn-defaultxero" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}

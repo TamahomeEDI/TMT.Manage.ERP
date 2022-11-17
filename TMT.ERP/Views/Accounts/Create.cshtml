@@ -1,0 +1,247 @@
+﻿@model IEnumerable<TMT.ERP.DataAccess.Model.AccountType>
+
+@{
+    Layout = null;
+}
+<script type="text/ecmascript">
+
+    var resultName = 0;
+    var resultCode = 0;
+    $(document).ready(function () {
+
+        //Press enter
+        $('.noEnterSubmit').keypress(function (e) {
+            debugger;
+            if (e.which == 13) return false;
+            //or...
+            if (e.which == 13) e.preventDefault();
+        });
+
+        $('#btnClose').click(function (e) {
+            $("#dialog").dialog("close");
+            return false;
+        });
+
+        $('#Code').focus();
+
+        jQuery.validator.messages.required = "";
+
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $('#AlertCode').hide();
+                    $('#AlertName').hide();
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+        });
+
+        // Create
+        $('#AddNew').click(function (e) {
+            debugger;
+            var code = $('#Code').val();
+            var isValid = $("#frmMain").valid();
+            if (!isValid) {
+                return false;
+            }
+            ExistsCode(code);
+            if (resultCode == 1) {
+                $('#AlertCode').show();
+                $('#AlertName').hide();
+                $("div.error").hide();
+                return false;
+            } else {
+                $('#AlertCode').hide();
+            }
+            var name = $('#Name').val();
+            ExistsName(name);
+            if (resultName == 1) {
+                $('#AlertName').show();
+                $('#AlertCode').hide();
+                $("div.error").hide();
+                return false;
+            } else {
+                $('#AlertName').hide();
+            }
+            var taxID = $($('#TaxRateID option').filter(':selected')[1]).val();
+
+            var type = $("input[name=Group]:checked").val();
+            var status = 1;
+            if ($('#DashBroad').is(":checked")) {
+                var dash = 1;
+            } else {
+                var dash = 0;
+            }
+            if ($('#ExpensesClaim').is(":checked")) {
+                var claim = 1;
+            } else {
+                var claim = 0;
+            }
+            if ($('#Payment').is(":checked")) {
+                var payment = 1;
+            } else {
+                var payment = 0;
+            }
+            $.ajax(
+                {
+                    type: 'POST',
+                    url: '/Accounts/Create/',
+                    traditional: true,
+                    data: {
+                        code: code, name: name, taxID: taxID, status: status,
+                        type: type, dash: dash, claim: claim, payment: payment
+                    },
+                    success: function (data) {
+                        location.reload();
+                    }
+                });
+        });
+    });
+
+    //Check Name
+    function ExistsName(name) {
+        var id = 0;
+        $.ajax({
+            type: 'POST',
+            url: '/Accounts/ExistsName/',
+            data: { "name": name, "id": id },
+            success: function (data) {
+                debugger;
+                if (data == 1) {
+                    resultName = 1;
+                }
+                if (data == 0)
+                    resultName = 0;
+            },
+            async: false
+        });
+    }
+
+    //Check Code
+    function ExistsCode(code) {
+        var id = 0;
+        $.ajax({
+            type: 'POST',
+            url: '/Accounts/ExistsCode/',
+            data: { "code": code, "id": id },
+            success: function (data) {
+                debugger;
+                if (data == 1) {
+                    resultCode = 1;
+                }
+                if (data == 0)
+                    resultCode = 0;
+            },
+            async: false
+        });
+    }
+</script>
+
+<style type="text/css">
+    #colright, #colcenter, #colleft {
+        width: 33%;
+        float: left;
+    }
+</style>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+    <div id="popup-breadcrumb" style="margin-top: -6px; width: 102%">
+        <div style="margin-left: 20px; margin-top: 10px; margin-bottom: 10px;">
+            <div class="error" style="display: none; margin-top: 5px; margin-bottom: 10px; border: 2px solid red; height: 30px; border-radius: 6px; line-height: 2">
+                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                <span></span>.<br clear="all" />
+            </div>
+            <div id="AlertCode" style="display: none; margin-top: 5px; margin-bottom: 10px; border: 2px solid red; height: 30px; border-radius: 6px; line-height: 2">
+                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                <label style="color: red; font-weight: normal;">Please enter a unique Code.</label>
+            </div>
+            <div id="AlertName" style="display: none; margin-top: 5px; margin-bottom: 10px; border: 2px solid red; height: 30px; border-radius: 6px; line-height: 2">
+                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 0px 10px 0px 0px;" />
+                <label style="color: red; font-weight: normal;">Please enter a unique Name. </label>
+            </div>
+            <div style="height: 30px; width: 100%">
+                <div style="float: left; width: 30%">
+                    <label>@Resources.Resource.Account_Create_Code </label>
+                </div>
+                <div style="float: right; width: 70%">
+                    <input id="Code" name="Code" type="text" class="required noEnterSubmit" style="width: 170px;" maxlength="40" />
+                </div>
+            </div>
+            <div style="height: 30px; width: 100%">
+                <div style="float: left; width: 30%">
+                    <label>@Resources.Resource.Account_Create_Name </label>
+                </div>
+                <div style="float: right; width: 70%">
+                    <input id="Name" name="Name" type="text" class="required noEnterSubmit" style="width: 170px;" maxlength="250" />
+                </div>
+            </div>
+            <div style="height: 30px; width: 100%">
+                <div style="float: left; width: 30%">
+                    <label>@Resources.Resource.Account_Create_AccTypeID </label>
+                </div>
+                <div style="float: right; width: 69%; border: 1px solid #ccc; border-radius: 6px; margin-right: 7px;">
+                    @foreach (var item in Model)
+                    {
+                        if (item.ID == 24)
+                        {
+                        <input id="@item.Name" type="radio" name="Group" style="margin-left: 5px;" value="@item.ID" checked/> 
+                        <label style="font-weight: normal">@item.Name </label>
+                        }
+                        else
+                        {
+                        <input id="@item.Name" type="radio" name="Group" style="margin-left: 5px;" value="@item.ID"/> 
+                        <label style="font-weight: normal">@item.Name </label>
+                        }
+                    }
+                </div>
+            </div>
+            <div style="height: 30px; width: 100%; line-height: 2;">
+                <div style="float: left; width: 30%">
+                    <label>@Resources.Resource.Account_Index_TaxRate</label>
+                </div>
+                <div style="float: right; width: 70%">
+                    @Html.DropDownList("TaxRateID", null, String.Empty, new { @class = "required", style = "width: 170px;" })
+                </div>
+            </div>
+            @*<div style="height: 30px; width: 100%">
+                <div style="float: left; width: 30%">
+                    <label>@Resources.Resource.Account_Index_Status</label>
+                </div>
+                <div style="float: right; width: 70%">
+                    <input type="checkbox" id="Status" checked />
+                </div>
+            </div>*@
+            <div style="height: 40px; display: inline-block; border: 1px solid #ccc; width: 99%; line-height: 2.5; border-radius: 6px;">
+                <div id="colleft" style="display: inline; width: 31%">
+                    <label>@Resources.Resource.Account_DashBroad</label>
+                    <input type="checkbox" id="DashBroad" style="margin-left: 15px;" />
+                </div>
+                <div id="colcenter" style="display: inline; width: 36%">
+                    <label>@Resources.Resource.Account_ExpenseClaim</label>
+                    <input type="checkbox" id="ExpensesClaim" style="margin-left: 15px;" />
+                </div>
+                <div id="colright" style="display: inline; width: 33%">
+                    <label>@Resources.Resource.Account_Payment</label>
+                    <input type="checkbox" id="Payment" style="margin-left: 15px;" />
+                </div>
+            </div>
+            <div>
+                <input type="button" class="btn btn-defaultxero" id="AddNew" value="@Resources.Resource.Account_Index_Save" />
+                <input type="button" style="margin-left: 6px;" class="btn btn-defaultxero" id="btnClose" value="@Resources.Resource.Account_Index_Close"/>
+            </div>
+        </div>
+    </div>
+}

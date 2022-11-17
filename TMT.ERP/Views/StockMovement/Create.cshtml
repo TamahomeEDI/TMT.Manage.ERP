@@ -1,0 +1,349 @@
+﻿@model TMT.ERP.DataAccess.Model.StockMovement
+
+@{
+    ViewBag.Title = "Create stock movement";
+}
+
+<script src="@Url.Content("~/Scripts/ERPScripts/StockMovement/StockMovement.js")"></script>
+<script>
+
+    $(document).ready(function () {
+        
+        $("#btnSaveStockMovement").unbind("click").click(function () {
+            debugger;
+            SaveStockMovement(0);
+        });
+        $("#btnApproveStockMovement").unbind("click").click(function () {
+            
+            SaveStockMovement(1);
+        });
+        $("#btnCancelStockMovement").unbind("click").click(function () {
+            
+            location.href = '/StockMovement/Draft';
+        });
+        //Validate
+        jQuery.validator.messages.required = "";
+        $("#frmMain").validate({
+            invalidHandler: function (e, validator) {
+                debugger;
+                var errors = validator.numberOfInvalids();
+                if (errors) {
+                    var errorMiss = '@Resources.Resource.Common_ErrorMissed';
+                    var field = '@Resources.Resource.Common_field';
+                    var error = '@Resources.Resource.Common_error';
+                    var highligh_below = '@Resources.Resource.Common_highligh_below';
+                    var message = errors == 1
+                        ? errorMiss + ' 1 ' + field + '. ' + highligh_below
+                        : errorMiss + ' ' + errors + ' ' + field + 's. ' + highligh_below;
+                    $("div.error span").html(message);
+                    $("div.error").show();
+                } else {
+                    $("div.error").hide();
+                }
+            },
+            //debug: true
+        });
+    });
+
+    function CalTotal() {
+        $("#txtStockMovementTotal").text(function () {
+            var value = 0;
+            $(".qty").each(function () {
+                if ($(this).val() != "")
+                    //  value += parseInt($(this).val());
+                    value += $(this).asNumber();
+            });
+            return value;
+        }).asNumber();
+    }
+
+    $(".qty").change(function () {
+        if (parseInt($(this).val()) > parseInt($('#totalAmount').val())) {
+            // alert("Quantity input must be less than " + $('#totalAmount').val());
+            var msg = '@Resources.Resource.StockMovement_Alert_Quantity_Less_Than' + $('#totalAmount').val();
+                         CreatePopupMessage('divMessage', msg, '@Resources.Resource.Common_Message', 120, 300, '#');
+                         //return;
+                     }
+        CalTotal();
+    });
+
+    function SaveStockMovement(status) {        
+        var isValid = $("#frmMain").valid();
+        if (!isValid) {
+            return false;
+        }
+        var code = $('#Code').val();
+        var createDate = $('#CreatedDate123').val();
+        var stockID = $('#ddlStockID').val();
+        var stockIDDes = $('#ddlStockIDDes').val();
+        var createdEmployeeID = 1;
+        var totalMoney = $('#txtStockMovementTotal').text();
+        var status = parseInt(status);
+        var type = 0;
+        //var accountIDFrom = $('#ddlAccountIDFrom').val();
+        //var accountIDTo = $('#ddlAccountIDTo').val();
+        var stockMovementDetail = BuildJSON();
+        $.ajax({
+            type: "POST",
+            url: "/Services/StockMovementService.asmx/SaveStockMovement",
+            data: JSON.stringify({
+                stockMovementID: 0,
+                code: code,
+                createDate: createDate,      
+                stockID: stockID,
+                createdEmployeeID: createdEmployeeID,
+                stockIDDes: stockIDDes,
+                totalMoney: totalMoney,
+                status: status,
+                type: type,  
+                stockMovementDetail: stockMovementDetail
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            async: false,
+            success: function (data) {
+                
+                var retValue = JSON.parse(data.d);
+                if (!isNaN(retValue)) {
+                    var _url = "/StockMovement/Draft/";
+                    var msg = '@Resources.Resource.Common_Msg_CreateSuccess';
+                    CreatePopupMessage('divMessage', msg, '@Resources.Resource.Common_Message', 120, 300, _url);
+                }
+            }        
+        }).error(function (data) {
+                alert('Error in save purchase\n' + data);
+            });
+    }
+
+    function BuildJSON() {
+        var arrayData = [];
+        $("#tblStockMovementDetails tr").each(function () {
+            var tr = $(this).closest('tr');
+            var goodID = $("#ddlGoodID", tr).val();
+            if (goodID != "-1" && parseInt(goodID) > 0) {
+                var item = {
+                    "goodId": goodID,
+                    "description": $("#txtDescription", tr).val(),                 
+                    "umo": $("#hidUmoId", tr).val(),
+                    "qty": $("#txtQty", tr).val()
+                };
+                arrayData.push(item);
+            }
+        });
+        return JSON.stringify(arrayData);
+    }
+
+</script>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "frmMain" }))
+{
+   // @Html.ValidationSummary(true)
+    <div id="breadcrumb">
+        <div class="container">
+            <div id="con_top">
+                <div class="c_container">
+                    @*<h3>@Resources.Resource.StockMovement_Create_NewTranfer</h3>*@
+                    <h3>New Stock Transfer</h3>
+                    <div id="breadcrumbs">
+                        <ul>
+                           @* <li><span>@Resources.Resource.Common_Accounts</span></li>
+                            <li><a href="/StockMovement/Index">@Resources.Resource.Common_TranferStock</a></li>*@
+                             <li><span>Inventory</span></li>
+                            <li><a href="/StockMovement/Index">Stocks</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+<div id="divMessage" style="background:white;"></div>    
+    <div id="con_form">
+        <div class="container">
+               <div class="error" style="display: none; border: 1px solid rgb(204, 204, 204); border-radius: 4px 4px 4px 4px; height: 38px; line-height: 33px;">
+                <img src="~/images/warning.gif" alt="Warning!" width="24" height="24" style="float: left; margin: 4px 10px 0 0;" />
+                <span></span>.<br clear="all" />
+            </div>
+            <div class="c_container">
+                <div class="form_position1">
+                    <div class="form_left">
+                        <div class="form-group">
+                            @*<label for="to">@Resources.Resource.Common_Code:</label>*@
+                            <label for="to">Transfer#</label>
+                            @Html.TextBox("Code", TMT.ERP.Commons.Utility.GetCode(CommonLib.EnumHelper.GetDescription(TMT.ERP.Models.Lookups.CodeType.TranferStock)), new { @class = "form-control" })
+                        </div>
+                        <div class="form-group">
+                           @* <label for="invoice">@Resources.Resource.StockMovement_Source_Stock</label>*@
+                             <label for="invoice">From Stock</label>
+                            @Html.DropDownList("ddlStockID", (IEnumerable<SelectListItem>)ViewData["StockList"], new { @class = "required form-control stockchange" })
+                        </div>
+@*                        <div class="form-group">
+                            <label for="invoice">From Account</label>
+                            @Html.DropDownList("ddlAccountIDFrom", new SelectList(ViewBag.AccountID, "Value", "Text" ) , new { @class = "form-control account" })
+                        </div>*@
+                    </div>
+
+                    <div class="form_right">
+                        <div class="form-group">
+                           @* <label for="createdate">@Resources.Resource.StockMovement_RecieveDate</label>*@
+                             <label for="createdate">Transfer date</label>
+                            <input id="CreatedDate123" type ="text" class="datepicker"/>
+                            @* @Html.TextBox("CreatedDate","", new { @class = "datepicker" })*@
+                           @* @Html.TextBoxFor(model => model.CreatedDate, new { @class = "datepicker" })*@
+                        </div>
+                        <div class="form-group form_input">
+                            @*<label for="createdate">@Resources.Resource.StockMovement_Des_Stock</label>*@
+                            <label for="toStock">To Stock</label>
+                            @Html.DropDownList("ddlStockIDDes", (IEnumerable<SelectListItem>)ViewData["StockList"], new { @class = "required form-control"})
+                        </div>
+@*                        <div class="form-group form_input">
+                            <label for="createdate">To Account</label>
+                            @Html.DropDownList("ddlAccountIDTo", new SelectList(ViewBag.AccountID, "Value", "Text"), new { @class = "form-control account" })
+                        </div>*@
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    
+    <div id="con_body">
+        <div class="container">
+            <div class="c_container">
+                <div id="form_body">
+                    <div id="myDiv">
+                        <div id="tblStockMovement">
+                            <table id="tblStockMovementDetails">
+                                <thead>
+                                    <tr>
+                                        @*<th colspan="2">@Resources.Resource.StockMovement_SKU</th>*@
+                                        <th colspan="2">Item Code</th>
+                                        <th>@Resources.Resource.StockMovement_Description</th>
+                                        <th>@Resources.Resource.StockMovement_UOM</th>
+                                        <th>@Resources.Resource.StockMovement_QTY</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="insertRow">
+                                    @for (int iIndex = 0; iIndex < 5; iIndex++)
+                            {
+                                        <tr>
+                                            <td></td>
+                                            <td>
+                                                @Html.DropDownList("ddlGoodID", (IEnumerable<SelectListItem>)ViewData["GoodList"], new { @class = "form-control ddlgoodchange" })
+                                            </td>
+                                            <td>
+                                                <input type="text" id="txtDescription" class="form-control description" /></td>
+                                            <td>
+                                                <input type="text" id="txtUOM" class="form-control uom" /><input type="hidden" id="hidUmoId" class="txt1 umoID" /></td>
+                                            <td>
+                                                <input type="text" id="txtQty" class="form-control qty numeric text-right" /><input type="hidden" id="totalAmount" class="txt1 totalAmount" /></td>
+                                            <td><a id="delRow" class="remove"></a></td>
+                                        </tr>
+                            }
+                                </tbody>
+                            </table>
+                        </div>                        
+                        <div class="tablefooter">
+                            <div class="pos1">
+                               
+                               @* <button id="addNewLine_Purchase" class="addline">@Resources.Resource.Common_AddNewLine</button>*@
+                                 <input type="button" id="addNewLineEdit_TS" class="addline" value="@Resources.Resource.Common_AddNewLine" />
+                            </div>
+                            <div class="pos3 posprice">
+                                <p>
+                                   @* <span class="ta_label">@Resources.Resource.Common_Total</span>*@
+                                     <span class="ta_label">Total Qty</span>
+                                     <span id="txtStockMovementTotal" class="price total ">0</span>                                     
+                                    @*<input id="txtStockMovementTotal" class="totalField total" type="text" value="0.00" readonly="" style="color: rgb(0, 0, 0);">*@
+                                </p>
+                            </div>
+                        </div>                      
+                            <input type="button" value="Save" id="btnSaveStockMovement" name="btnSaveStockMovement"  class="btn btn-defaultxero" />                            
+                            <input type="button" value="Approve"  id="btnApproveStockMovement" name="btnApproveStockMovement" class="btn btn-defaultxero" />                            
+                            <input type="button" value="Cancel" id="btnCancelStockMovement" name="btnCancelStockMovement" class="btn btn-defaultxero" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    
+
+    
+    
+    @*
+        <div id="myDiv">
+            <div id="tblStockMovement">
+                <table class="table table-striped" style="width: 100%" id ="tblStockMovementDetails">
+                    <thead>
+                        <tr bgcolor="#e2efff">
+                            <th></th>
+                            <th>@Resources.Resource.StockMovement_SKU</th>
+                            <th>@Resources.Resource.StockMovement_Description</th>
+                            <th>@Resources.Resource.StockMovement_UOM</th>
+                            <th>@Resources.Resource.StockMovement_QTY</th>
+                                <th></th>  
+                        </tr>
+                    </thead>   
+                    <tbody id="insertRow">
+                    @for (int iIndex = 0; iIndex < 5; iIndex++)
+                    {
+                        <tr>
+                            <td></td>
+                            <td class="" tabindex="0" style="width: 89px;">
+                                 @Html.DropDownList("ddlGoodID", (IEnumerable<SelectListItem>)ViewData["GoodList"], new { @class = "ddlgoodchange" })
+                            </td>
+                            <td style="width: 206px;"><input type="text" id="txtDescription" class="txt1 description" /></td>
+                            <td style="width: 206px;"><input type="text" id="txtUOM" class="txt1 uom" /><input type="hidden" id="hidUmoId" class="txt1 umoID" /></td>
+                            <td style="width: 206px;"><input type="text" id="txtQty" class="txt1 qty" /><input type="hidden" id="totalAmount" class="txt1 totalAmount" /></td>  
+                            <td style="width: 206px;"><a id="delRow">Del</a></td>
+                        </tr>
+                    }
+                    </tbody>
+
+                </table>
+                </div>
+            <div id="tableFooter">
+                <table border="0" cellspacing="0" style="width: 100%">
+                    <tr>
+                        <td width="600px">
+                            <input type="button" id="addNewLine" value="Add a new line" />
+                        </td>
+                        <td>
+                            <div class="grid-total">
+                                <div id="adjustmentRow" style="display: none;"></div>
+                                <div id="roundingRow" style="display:none;"></div>
+                                <div class="total">
+                                    <label> TOTAL </label>
+                                    <span id="totalQuantity">
+                                        <em id="currency_exchangeTotal" style="display: none;"></em>
+                                        <input id="txtStockMovementTotal" class="totalField total" type="text" value="0.00" readonly="" style="color: rgb(0, 0, 0);">
+                                    </span>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+                
+                <div id="total">
+
+                </div>
+            </div>
+
+        </div>
+            <p>
+            <input type="button" id="btnCreate" value="Create" onclick="SaveStockMovement();" />
+        </p>
+
+}
+
+<div>
+     
+</div>
+*@
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
